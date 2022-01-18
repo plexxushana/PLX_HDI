@@ -1,0 +1,290 @@
+PROCEDURE "plx_etl::SP_COEJ_TEST_Z" ( 
+   --in :p_kokrs varchar(4), 
+   out t_out "ECC_COEJ_ZZ"
+    
+)
+
+   LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+	READS SQL DATA AS
+
+BEGIN
+   /*************************************
+       build where clause with timestamp for COEP.
+       
+       our where clause will fetch last timestamp to current timestamp
+       for each company code.
+       
+       COEP timestamp is 
+       seconds since 1.1.1990 0:00 Uhr Greenwich Meantime multiplied by 10000
+   *************************************/
+   declare where_clause     varchar(3000) := '' ;   
+   declare lv_controlling_area	        varchar(4)    := '';
+   declare lv_start_time	decimal(16)	  := 0;
+   declare lv_end_time		decimal(16)	  := 0;
+   declare lv_row_count     integer;
+   declare i			    integer;
+   
+   -- select company codes
+   -- why?  we use company codes as a partition criteria 
+   -- in the fetch statments
+	lv_controlling_areas_list = 
+		select distinct kokrs 
+		from "ECC_TKA01"
+		where kokrs = '1800';
+		--where kokrs = :p_kokrs;
+   
+   -- store dataset size in row_count variable
+	SELECT COUNT(kokrs)
+	INTO lv_row_count
+	FROM :lv_controlling_areas_list;
+	
+   -- select last timestamp from local coep
+  	SELECT max( timestmp ) 
+  	into lv_start_time
+  	FROM "ECC_COEJ_ZZ"
+  	where kokrs = '1800';
+  	--where kokrs = :p_kokrs;
+   
+   
+ /* 
+    -- select last timestamp from remote coep
+    -- this statement actually sends 'select * from coep where mandt' to ECC.  
+ 	-- unusable!!
+  	SELECT max( timestmp ) 
+  	into lv_end_time
+  	FROM "PLX_DW"."V_ECC_COEP";
+*/
+
+	-- calculate our ending timestamp (now) as seconds from 1990/01/01 0:00 
+	--(to set upper boundry as coep type timestmp)
+	select 
+	nano100_between('1990-01-01', current_timestamp) / 1000
+	into lv_end_time
+	from "DUMMY";
+
+	FOR i IN 0 .. :lv_row_count-1 DO
+	
+	   -- walk through the company codes
+	   -- one at a time.  This is supplied in the where below.
+		SELECT "KOKRS"
+		INTO lv_controlling_area
+		FROM :lv_controlling_areas_list
+		LIMIT 1 OFFSET :i; -- notice OFFSET indexes at 0, not 1
+
+    -- here we fetch the whole table one chunk at a time.
+	-- The time range and single company code 
+	-- are pushed down to ECC as part of the where clause.
+		temp_coej =
+        SELECT 
+        	"KOKRS",
+        	"BELNR",
+        	"BUZEI",
+        	"PERBL",
+        	"WTG001",
+        	"WTG002",
+        	"WTG003",
+        	"WTG004",
+        	"WTG005",
+        	"WTG006",
+        	"WTG007",
+        	"WTG008",
+        	"WTG009",
+        	"WTG010",
+        	"WTG011",
+        	"WTG012",
+        	"WTG013",
+        	"WTG014",
+        	"WTG015",
+        	"WTG016",
+        	"WOG001",
+        	"WOG002",
+        	"WOG003",
+        	"WOG004",
+        	"WOG005",
+        	"WOG006",
+        	"WOG007",
+        	"WOG008",
+        	"WOG009",
+        	"WOG010",
+        	"WOG011",
+        	"WOG012",
+        	"WOG013",
+        	"WOG014",
+        	"WOG015",
+        	"WOG016",
+        	"WKG001",
+        	"WKG002",
+        	"WKG003",
+        	"WKG004",
+        	"WKG005",
+        	"WKG006",
+        	"WKG007",
+        	"WKG008",
+        	"WKG009",
+        	"WKG010",
+        	"WKG011",
+        	"WKG012",
+        	"WKG013",
+        	"WKG014",
+        	"WKG015",
+        	"WKG016",
+        	"WKF001",
+        	"WKF002",
+        	"WKF003",
+        	"WKF004",
+        	"WKF005",
+        	"WKF006",
+        	"WKF007",
+        	"WKF008",
+        	"WKF009",
+        	"WKF010",
+        	"WKF011",
+        	"WKF012",
+        	"WKF013",
+        	"WKF014",
+        	"WKF015",
+        	"WKF016",
+        	"PAG001",
+        	"PAG002",
+        	"PAG003",
+        	"PAG004",
+        	"PAG005",
+        	"PAG006",
+        	"PAG007",
+        	"PAG008",
+        	"PAG009",
+        	"PAG010",
+        	"PAG011",
+        	"PAG012",
+        	"PAG013",
+        	"PAG014",
+        	"PAG015",
+        	"PAG016",
+        	"PAF001",
+        	"PAF002",
+        	"PAF003",
+        	"PAF004",
+        	"PAF005",
+        	"PAF006",
+        	"PAF007",
+        	"PAF008",
+        	"PAF009",
+        	"PAF010",
+        	"PAF011",
+        	"PAF012",
+        	"PAF013",
+        	"PAF014",
+        	"PAF015",
+        	"PAF016",
+        	"MEG001",
+        	"MEG002",
+        	"MEG003",
+        	"MEG004",
+        	"MEG005",
+        	"MEG006",
+        	"MEG007",
+        	"MEG008",
+        	"MEG009",
+        	"MEG010",
+        	"MEG011",
+        	"MEG012",
+        	"MEG013",
+        	"MEG014",
+        	"MEG015",
+        	"MEG016",
+        	"MEF001",
+        	"MEF002",
+        	"MEF003",
+        	"MEF004",
+        	"MEF005",
+        	"MEF006",
+        	"MEF007",
+        	"MEF008",
+        	"MEF009",
+        	"MEF010",
+        	"MEF011",
+        	"MEF012",
+        	"MEF013",
+        	"MEF014",
+        	"MEF015",
+        	"MEF016",
+        	"MBG001",
+        	"MBG002",
+        	"MBG003",
+        	"MBG004",
+        	"MBG005",
+        	"MBG006",
+        	"MBG007",
+        	"MBG008",
+        	"MBG009",
+        	"MBG010",
+        	"MBG011",
+        	"MBG012",
+        	"MBG013",
+        	"MBG014",
+        	"MBG015",
+        	"MBG016",
+        	"MBF001",
+        	"MBF002",
+        	"MBF003",
+        	"MBF004",
+        	"MBF005",
+        	"MBF006",
+        	"MBF007",
+        	"MBF008",
+        	"MBF009",
+        	"MBF010",
+        	"MBF011",
+        	"MBF012",
+        	"MBF013",
+        	"MBF014",
+        	"MBF015",
+        	"MBF016",
+        	"LEDNR",
+        	"OBJNR",
+        	"GJAHR",
+        	"WRTTP",
+        	"VERSN",
+        	"KSTAR",
+        	"HRKFT",
+        	"VRGNG",
+        	"PAROB",
+        	"PAROB1",
+        	"USPOB",
+        	"VBUND",
+        	"PARGB",
+        	"BEKNZ",
+        	"TWAER",
+        	"MEINH",
+        	"MEINB",
+        	"SGTXT",
+        	"REFBZ",
+        	"ZLENR",
+        	"BW_REFBZ",
+        	"BELTP",
+        	"TIMESTMP",
+        	"PAOBJNR",
+        	"FKBER",
+        	"PFKBER",
+        	"GEBER",
+        	"PGEBER",
+        	"GRANT_NBR",
+        	"PGRANT_NBR",
+        	"SEGMENT",
+        	"PSEGMENT"
+        FROM "V_ECC_COEJ"
+		where	kokrs     = :lv_controlling_area
+		and 	timestmp >= :lv_start_time
+		and 	timestmp <= :lv_end_time;
+		
+		-- append each fetched chunk to our 
+		-- output dataset 
+		t_out = 
+		select * from :temp_coej
+		union all
+		select * from :t_out;
+	END FOR;
+    
+END;
+

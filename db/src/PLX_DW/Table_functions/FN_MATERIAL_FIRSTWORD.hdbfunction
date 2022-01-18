@@ -1,0 +1,46 @@
+FUNCTION "plx_analytics::FN_MATERIAL_FIRSTWORD" ( ) 
+	RETURNS	"Z_MAKTX_FIRSTWORD"
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER AS
+BEGIN
+
+ /***************************** 
+ return set of 
+	 first words of material descriptions
+	 count of first words
+ *****************************/
+ 	declare v_matnr   nvarchar(18);
+ 	declare v_maktx	   varchar(40);
+ 	
+ 	-- arrays for internal table
+    declare a_matnr    NVARCHAR(18) array;
+    declare a_word1	   varchar(40)  array;        
+    
+    --get cursor for all entries with no space (IE single word entries)    
+    DECLARE CURSOR c_cursor1 (v_matnr nvarchar(18)) FOR    
+	select matnr,
+    	   maktx,
+    	   left(maktx, instr(maktx, ' ')) as word_1
+    from   "ECC_MAKT"
+    where  maktx not like '% %';
+       	
+    FOR cur_row AS c_cursor1(v_matnr) 
+	DO
+		a_matnr[c_cursor1::rowcount] := cur_row.matnr;												
+		a_word1[c_cursor1::rowcount] := cur_row.maktx;		
+    END FOR;
+        
+    t_firstwords = unnest(:a_matnr, 
+    					  :a_word1
+    					  ) as (
+    					  "MATNR", 
+    					  "FIRST_WORD"
+    					  );
+    
+    --------------------------------
+    return (select matnr, first_word from :t_firstwords)
+    		union
+    	   (select matnr, left(maktx, instr(maktx, ' ')-1) as first_word
+    	    from "ECC_MAKT"
+    	    where   MAKTX like '% %');
+END

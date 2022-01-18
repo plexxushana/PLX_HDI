@@ -1,0 +1,22 @@
+PROCEDURE "plx_etl::SP_SPEND_PUR_PO_INVOICES" ( ) 
+	LANGUAGE SQLSCRIPT
+	
+   SQL SECURITY INVOKER AS
+   
+   
+BEGIN SEQUENTIAL EXECUTION
+/***************************** 
+	Write your procedure logic 
+ *****************************/
+ --drop table  plx_dw.backup_hana_pur_po_sto_invoices;
+-- create column table plx_dw.backup_hana_pur_po_sto_invoices as 
+--( select * from plx_dw.hana_pur_po_sto_invoices where gjahr >= '2020') ;
+delete from "BACKUP_HANA_PUR_PO_STO_INVOICES";
+
+insert into "BACKUP_HANA_PUR_PO_STO_INVOICES" ( 
+select * from hana_pur_po_sto_invoices where gjahr >= '2020') ;
+
+delete from hana_pur_po_sto_invoices where gjahr >= '2021';
+
+CALL "FG_PUR_PO_STO_INVOICES_SP"();
+END;

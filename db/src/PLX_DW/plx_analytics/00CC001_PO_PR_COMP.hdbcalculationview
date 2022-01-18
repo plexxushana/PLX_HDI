@@ -1,0 +1,726 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="3.0" id="plx_analytics::00CC001_PO_PR_COMP" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+<origin/>
+  <descriptions defaultDescription="CA_PLX_CC001_PO_PR_COMP"/>
+  <metadata changedAt="2019-08-26 15:12:44.206"/>
+  <localVariables>
+    <variable id="PO_Created_Date_Range">
+      <descriptions defaultDescription="PO Created Date 
+PO Created Date Range"/>
+      <variableProperties datatype="VARCHAR" mandatory="false">
+        <valueDomain type="AttributeValue">
+          <attribute name="AEDAT_EKKO"/>
+        </valueDomain>
+        <selection multiLine="false" type="Interval"/>
+      </variableProperties>
+    </variable>
+    <variable id="Company_Code">
+      <descriptions defaultDescription="Company Code"/>
+      <variableProperties datatype="VARCHAR" mandatory="false">
+        <valueDomain type="AttributeValue">
+          <attribute name="BUKRS"/>
+        </valueDomain>
+        <selection multiLine="true" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="PO_Type">
+      <descriptions defaultDescription="PO Type"/>
+      <variableProperties datatype="VARCHAR" mandatory="false">
+        <valueDomain type="AttributeValue">
+          <attribute name="BSART"/>
+        </valueDomain>
+        <selection multiLine="true" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="32"/>
+  <dataSources>
+    <DataSource id="ECC_EKKO">
+      <resourceUri>ECC_EKKO</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_EKPO">
+      <resourceUri>ECC_EKPO</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_EBAN">
+      <resourceUri>ECC_EBAN</resourceUri>
+    </DataSource>
+  </dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EKGRP"/>
+        <viewAttribute id="EKORG"/>
+        <viewAttribute id="BSART_PO"/>
+        <viewAttribute id="BSTYP_PO"/>
+        <viewAttribute id="FRGRL_EKKO"/>
+        <viewAttribute id="ERNAM"/>
+        <viewAttribute id="AEDAT_EKKO"/>
+        <viewAttribute id="FRGZU"/>
+        <viewAttribute id="FRGGR"/>
+        <viewAttribute id="FRGKE"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="ECC_EKKO">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART_PO" source="BSART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSTYP_PO" source="BSTYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FRGRL_EKKO" source="FRGRL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKKO" source="AEDAT"/></input>
+    <filter>(&quot;BSTYP_PO&quot; ='F') AND (&quot;FRGRL_EKKO&quot; ='X')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="BANFN_PO"/>
+        <viewAttribute id="BNFPO_PO"/>
+        <viewAttribute id="TXZ01_PO"/>
+        <viewAttribute id="NETPR_PO"/>
+        <viewAttribute id="MENGE_PO"/>
+        <viewAttribute id="MEINS_PO"/>
+        <viewAttribute id="BPRME_PO"/>
+        <viewAttribute id="BPUMZ_PO"/>
+        <viewAttribute id="BPUMN_PO"/>
+        <viewAttribute id="UMREZ_PO"/>
+        <viewAttribute id="UMREN_PO"/>
+        <viewAttribute id="PEINH_PO"/>
+        <viewAttribute id="NETWR_PO"/>
+        <viewAttribute id="BRTWR_PO"/>
+        <viewAttribute id="LMEIN_PO"/>
+        <viewAttribute id="LOEKZ_PO"/>
+        <viewAttribute id="AEDAT_EKPO"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="ECC_EKPO">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BANFN_PO" source="BANFN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BNFPO_PO" source="BNFPO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TXZ01_PO" source="TXZ01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETPR_PO" source="NETPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE_PO" source="MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS_PO" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BPRME_PO" source="BPRME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BPUMZ_PO" source="BPUMZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BPUMN_PO" source="BPUMN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UMREZ_PO" source="UMREZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UMREN_PO" source="UMREN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PEINH_PO" source="PEINH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETWR_PO" source="NETWR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRTWR_PO" source="BRTWR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LMEIN_PO" source="LMEIN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOEKZ_PO" source="LOEKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKPO" source="AEDAT"/>
+      </input>
+    <filter>(&quot;BANFN_PO&quot; &gt;'0') AND (&quot;BNFPO_PO&quot; &gt;'0')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinType="leftOuter">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="EKGRP"/>
+        <viewAttribute id="EKORG"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="BSTYP"/>
+        <viewAttribute id="BANFN_PO"/>
+        <viewAttribute id="BNFPO_PO"/>
+        <viewAttribute id="TXZ01_PO"/>
+        <viewAttribute id="NETPR_PO"/>
+        <viewAttribute id="MENGE_PO"/>
+        <viewAttribute id="MEINS_PO"/>
+        <viewAttribute id="BPRME_PO"/>
+        <viewAttribute id="BPUMZ_PO"/>
+        <viewAttribute id="BPUMN_PO"/>
+        <viewAttribute id="UMREZ_PO"/>
+        <viewAttribute id="UMREN_PO"/>
+        <viewAttribute id="PEINH_PO"/>
+        <viewAttribute id="NETWR_PO"/>
+        <viewAttribute id="BRTWR_PO"/>
+        <viewAttribute id="LMEIN_PO"/>
+        <viewAttribute id="LOEKZ_PO"/>
+        <viewAttribute id="ERNAM"/>
+        <viewAttribute id="AEDAT_EKKO"/>
+        <viewAttribute id="AEDAT_EKPO"/>
+        <viewAttribute id="FRGRL_EKKO"/>
+        <viewAttribute id="FRGZU"/>
+        <viewAttribute id="FRGGR"/>
+        <viewAttribute id="FRGKE"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="Projection_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BANFN_PO" source="BANFN_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BNFPO_PO" source="BNFPO_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TXZ01_PO" source="TXZ01_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETPR_PO" source="NETPR_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE_PO" source="MENGE_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS_PO" source="MEINS_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BPRME_PO" source="BPRME_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BPUMZ_PO" source="BPUMZ_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BPUMN_PO" source="BPUMN_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UMREZ_PO" source="UMREZ_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UMREN_PO" source="UMREN_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PEINH_PO" source="PEINH_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETWR_PO" source="NETWR_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRTWR_PO" source="BRTWR_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LMEIN_PO" source="LMEIN_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOEKZ_PO" source="LOEKZ_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKPO" source="AEDAT_EKPO"/>
+      </input>
+      <input node="Projection_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKGRP" source="EKGRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKORG" source="EKORG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART" source="BSART_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSTYP" source="BSTYP_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERNAM" source="ERNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKKO" source="AEDAT_EKKO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FRGRL_EKKO" source="FRGRL_EKKO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FRGZU" source="FRGZU"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FRGGR" source="FRGGR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FRGKE" source="FRGKE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+      </input>
+    <joinAttribute name="EBELN"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="BANFN_PR"/>
+        <viewAttribute id="BNFPO_PR"/>
+        <viewAttribute id="LOEKZ"/>
+        <viewAttribute id="ERNAM"/>
+        <viewAttribute id="ERDAT"/>
+        <viewAttribute id="AFNAM"/>
+        <viewAttribute id="TXZ01"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="EKGRP"/>
+        <viewAttribute id="MATNR_PR"/>
+        <viewAttribute id="WERKS_PR"/>
+        <viewAttribute id="MENGE_PR"/>
+        <viewAttribute id="MEINS_PR"/>
+        <viewAttribute id="PREIS_PR"/>
+        <viewAttribute id="PEINH_PR"/>
+        <viewAttribute id="REVNO_PR"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="BSMNG"/>
+        <viewAttribute id="BMEIN"/>
+        <viewAttribute id="GMMNG"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="ECC_EBAN">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BANFN_PR" source="BANFN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BNFPO_PR" source="BNFPO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR_PR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS_PR" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE_PR" source="MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS_PR" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREIS_PR" source="PREIS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PEINH_PR" source="PEINH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVNO_PR" source="REVNO"/></input>
+    </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2" joinType="leftOuter">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="EKGRP"/>
+        <viewAttribute id="EKORG"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="BSTYP"/>
+        <viewAttribute id="LOEKZ"/>
+        <viewAttribute id="ERNAM"/>
+        <viewAttribute id="ERDAT"/>
+        <viewAttribute id="AFNAM"/>
+        <viewAttribute id="BANFN_PO"/>
+        <viewAttribute id="BNFPO_PO"/>
+        <viewAttribute id="TXZ01_PO"/>
+        <viewAttribute id="NETPR_PO"/>
+        <viewAttribute id="MENGE_PO"/>
+        <viewAttribute id="MEINS_PO"/>
+        <viewAttribute id="BPRME_PO"/>
+        <viewAttribute id="BPUMZ_PO"/>
+        <viewAttribute id="BPUMN_PO"/>
+        <viewAttribute id="UMREZ_PO"/>
+        <viewAttribute id="UMREN_PO"/>
+        <viewAttribute id="PEINH_PO"/>
+        <viewAttribute id="NETWR_PO"/>
+        <viewAttribute id="BRTWR_PO"/>
+        <viewAttribute id="LMEIN_PO"/>
+        <viewAttribute id="MATNR_PR"/>
+        <viewAttribute id="WERKS_PR"/>
+        <viewAttribute id="MENGE_PR"/>
+        <viewAttribute id="MEINS_PR"/>
+        <viewAttribute id="PREIS_PR"/>
+        <viewAttribute id="PEINH_PR"/>
+        <viewAttribute id="REVNO_PR"/>
+        <viewAttribute id="BSMNG_PR"/>
+        <viewAttribute id="BMEIN_PR"/>
+        <viewAttribute id="GMMNG_PR"/>
+        <viewAttribute id="LOEKZ_PO"/>
+        <viewAttribute id="AEDAT_EKKO"/>
+        <viewAttribute id="AEDAT_EKPO"/>
+        <viewAttribute id="FRGRL_EKKO"/>
+        <viewAttribute id="FRGZU"/>
+        <viewAttribute id="FRGGR"/>
+        <viewAttribute id="FRGKE"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="Join_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKGRP" source="EKGRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKORG" source="EKORG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART" source="BSART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSTYP" source="BSTYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BANFN_PO" source="BANFN_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BNFPO_PO" source="BNFPO_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TXZ01_PO" source="TXZ01_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETPR_PO" source="NETPR_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE_PO" source="MENGE_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS_PO" source="MEINS_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BPRME_PO" source="BPRME_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BPUMZ_PO" source="BPUMZ_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BPUMN_PO" source="BPUMN_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UMREZ_PO" source="UMREZ_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UMREN_PO" source="UMREN_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PEINH_PO" source="PEINH_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETWR_PO" source="NETWR_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRTWR_PO" source="BRTWR_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LMEIN_PO" source="LMEIN_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOEKZ_PO" source="LOEKZ_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKKO" source="AEDAT_EKKO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKPO" source="AEDAT_EKPO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FRGRL_EKKO" source="FRGRL_EKKO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FRGZU" source="FRGZU"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FRGGR" source="FRGGR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FRGKE" source="FRGKE"/>
+      </input>
+      <input node="Projection_3">
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOEKZ" source="LOEKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERNAM" source="ERNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERDAT" source="ERDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AFNAM" source="AFNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR_PR" source="MATNR_PR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS_PR" source="WERKS_PR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE_PR" source="MENGE_PR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS_PR" source="MEINS_PR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREIS_PR" source="PREIS_PR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PEINH_PR" source="PEINH_PR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVNO_PR" source="REVNO_PR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSMNG_PR" source="BSMNG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BMEIN_PR" source="BMEIN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GMMNG_PR" source="GMMNG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BANFN_PO" source="BANFN_PR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BNFPO_PO" source="BNFPO_PR"/>
+      </input>
+    <joinAttribute name="BANFN_PO"/>
+    <joinAttribute name="BNFPO_PO"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_4">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="EKGRP"/>
+        <viewAttribute id="EKORG"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="BSTYP"/>
+        <viewAttribute id="ERNAM"/>
+        <viewAttribute id="ERDAT"/>
+        <viewAttribute id="AFNAM"/>
+        <viewAttribute id="BANFN_PO"/>
+        <viewAttribute id="BNFPO_PO"/>
+        <viewAttribute id="TXZ01_PO"/>
+        <viewAttribute id="NETPR_PO"/>
+        <viewAttribute id="MENGE_PO"/>
+        <viewAttribute id="MEINS_PO"/>
+        <viewAttribute id="BPRME_PO"/>
+        <viewAttribute id="BPUMZ_PO"/>
+        <viewAttribute id="BPUMN_PO"/>
+        <viewAttribute id="UMREZ_PO"/>
+        <viewAttribute id="UMREN_PO"/>
+        <viewAttribute id="PEINH_PO"/>
+        <viewAttribute id="NETWR_PO"/>
+        <viewAttribute id="BRTWR_PO"/>
+        <viewAttribute id="LMEIN_PO"/>
+        <viewAttribute id="MATNR_PR"/>
+        <viewAttribute id="WERKS_PR"/>
+        <viewAttribute id="MENGE_PR"/>
+        <viewAttribute id="MEINS_PR"/>
+        <viewAttribute id="PREIS_PR"/>
+        <viewAttribute id="PEINH_PR"/>
+        <viewAttribute id="REVNO_PR"/>
+        <viewAttribute id="BSMNG_PR"/>
+        <viewAttribute id="BMEIN_PR"/>
+        <viewAttribute id="GMMNG_PR"/>
+        <viewAttribute id="LOEKZ_PO"/>
+        <viewAttribute id="AEDAT_EKKO"/>
+        <viewAttribute id="AEDAT_EKPO"/>
+        <viewAttribute id="FRGRL_EKKO"/>
+        <viewAttribute id="FRGZU"/>
+        <viewAttribute id="FRGGR"/>
+        <viewAttribute id="FRGKE"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DECIMAL" id="Z_PR_Calculated_Price" length="13" scale="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(ISNULL(&quot;PEINH_PR&quot;) or (&quot;PEINH_PR&quot;=0),null,(&quot;PREIS_PR&quot;/&quot;PEINH_PR&quot;)*&quot;MENGE_PR&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="Z_Variance" length="13" scale="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(ISNULL(&quot;Z_PR_Calculated_Price&quot;) or ISNULL(&quot;NETWR_PO&quot;) ,null,(&quot;Z_PR_Calculated_Price&quot;-&quot;NETWR_PO&quot;))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="VARCHAR" id="Z_Yes_or_No" length="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(abs(&quot;Z_Variance&quot;)&gt;=5000,'Yes','No')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="Join_2"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_5">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="EKGRP"/>
+        <viewAttribute id="EKORG"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="BSTYP"/>
+        <viewAttribute id="ERNAM"/>
+        <viewAttribute id="ERDAT"/>
+        <viewAttribute id="AFNAM"/>
+        <viewAttribute id="BANFN_PO"/>
+        <viewAttribute id="BNFPO_PO"/>
+        <viewAttribute id="TXZ01_PO"/>
+        <viewAttribute id="NETPR_PO"/>
+        <viewAttribute id="MENGE_PO"/>
+        <viewAttribute id="MEINS_PO"/>
+        <viewAttribute id="BPRME_PO"/>
+        <viewAttribute id="BPUMZ_PO"/>
+        <viewAttribute id="BPUMN_PO"/>
+        <viewAttribute id="UMREZ_PO"/>
+        <viewAttribute id="UMREN_PO"/>
+        <viewAttribute id="PEINH_PO"/>
+        <viewAttribute id="NETWR_PO"/>
+        <viewAttribute id="BRTWR_PO"/>
+        <viewAttribute id="LMEIN_PO"/>
+        <viewAttribute id="MATNR_PR"/>
+        <viewAttribute id="WERKS_PR"/>
+        <viewAttribute id="MENGE_PR"/>
+        <viewAttribute id="MEINS_PR"/>
+        <viewAttribute id="PREIS_PR"/>
+        <viewAttribute id="PEINH_PR"/>
+        <viewAttribute id="REVNO_PR"/>
+        <viewAttribute id="BSMNG_PR"/>
+        <viewAttribute id="BMEIN_PR"/>
+        <viewAttribute id="GMMNG_PR"/>
+        <viewAttribute id="Z_PR_Calculated_Price"/>
+        <viewAttribute id="Z_Variance"/>
+        <viewAttribute id="Z_Yes_or_No"/>
+        <viewAttribute id="LOEKZ_PO"/>
+        <viewAttribute id="AEDAT_EKKO"/>
+        <viewAttribute id="AEDAT_EKPO"/>
+        <viewAttribute id="FRGRL_EKKO"/>
+        <viewAttribute id="FRGZU"/>
+        <viewAttribute id="FRGGR"/>
+        <viewAttribute id="FRGKE"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="Projection_4"/>
+    <filter>(&quot;Z_Yes_or_No&quot; ='Yes')</filter>
+  </calculationView>
+</calculationViews>
+  <logicalModel id="Projection_5">
+    <descriptions/>
+    <attributes>
+      <attribute id="EBELN" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchasing Document Number"/>
+        <keyMapping columnObjectName="Projection_5" columnName="EBELN"/>
+      </attribute>
+      <attribute id="EBELP" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Item Number of Purchasing Document"/>
+        <keyMapping columnObjectName="Projection_5" columnName="EBELP"/>
+      </attribute>
+      <attribute id="BUKRS" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Company Code"/>
+        <localVariable>Company_Code</localVariable>
+        <keyMapping columnObjectName="Projection_5" columnName="BUKRS"/>
+      </attribute>
+      <attribute id="LGORT" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Storage Location"/>
+        <keyMapping columnObjectName="Projection_5" columnName="LGORT"/>
+      </attribute>
+      <attribute id="WERKS" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Plant"/>
+        <keyMapping columnObjectName="Projection_5" columnName="WERKS"/>
+      </attribute>
+      <attribute id="LIFNR" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Vendor Account Number"/>
+        <keyMapping columnObjectName="Projection_5" columnName="LIFNR"/>
+      </attribute>
+      <attribute id="EKGRP" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchasing Group"/>
+        <keyMapping columnObjectName="Projection_5" columnName="EKGRP"/>
+      </attribute>
+      <attribute id="EKORG" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchasing Organization"/>
+        <keyMapping columnObjectName="Projection_5" columnName="EKORG"/>
+      </attribute>
+      <attribute id="BSART" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchasing Document Type"/>
+        <localVariable>PO_Type</localVariable>
+        <keyMapping columnObjectName="Projection_5" columnName="BSART"/>
+      </attribute>
+      <attribute id="BSTYP" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchasing Document Category"/>
+        <keyMapping columnObjectName="Projection_5" columnName="BSTYP"/>
+      </attribute>
+      <attribute id="ERNAM" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Created by"/>
+        <keyMapping columnObjectName="Projection_5" columnName="ERNAM"/>
+      </attribute>
+      <attribute id="ERDAT" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Changed on"/>
+        <keyMapping columnObjectName="Projection_5" columnName="ERDAT"/>
+      </attribute>
+      <attribute id="AFNAM" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Requisitioner"/>
+        <keyMapping columnObjectName="Projection_5" columnName="AFNAM"/>
+      </attribute>
+      <attribute id="BANFN_PO" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchase Req."/>
+        <keyMapping columnObjectName="Projection_5" columnName="BANFN_PO"/>
+      </attribute>
+      <attribute id="BNFPO_PO" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Requisn Item"/>
+        <keyMapping columnObjectName="Projection_5" columnName="BNFPO_PO"/>
+      </attribute>
+      <attribute id="TXZ01_PO" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Product/Service Description"/>
+        <keyMapping columnObjectName="Projection_5" columnName="TXZ01_PO"/>
+      </attribute>
+      <attribute id="MEINS_PO" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchase Order Unit of Measure"/>
+        <keyMapping columnObjectName="Projection_5" columnName="MEINS_PO"/>
+      </attribute>
+      <attribute id="BPRME_PO" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Order Price Unit (Purchasing)"/>
+        <keyMapping columnObjectName="Projection_5" columnName="BPRME_PO"/>
+      </attribute>
+      <attribute id="LMEIN_PO" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Base Unit of Measure"/>
+        <keyMapping columnObjectName="Projection_5" columnName="LMEIN_PO"/>
+      </attribute>
+      <attribute id="MATNR_PR" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material"/>
+        <keyMapping columnObjectName="Projection_5" columnName="MATNR_PR"/>
+      </attribute>
+      <attribute id="WERKS_PR" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Plant"/>
+        <keyMapping columnObjectName="Projection_5" columnName="WERKS_PR"/>
+      </attribute>
+      <attribute id="MEINS_PR" order="32" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PR Unit of Measure"/>
+        <keyMapping columnObjectName="Projection_5" columnName="MEINS_PR"/>
+      </attribute>
+      <attribute id="REVNO_PR" order="35" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Version"/>
+        <keyMapping columnObjectName="Projection_5" columnName="REVNO_PR"/>
+      </attribute>
+      <attribute id="BMEIN_PR" order="37" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Order Unit"/>
+        <keyMapping columnObjectName="Projection_5" columnName="BMEIN_PR"/>
+      </attribute>
+      <attribute id="LOEKZ_PO" order="39" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Deletion Indicator in Purchasing Document"/>
+        <keyMapping columnObjectName="Projection_5" columnName="LOEKZ_PO"/>
+      </attribute>
+      <attribute id="Z_Yes_or_No" order="42" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Comp PO and PR"/>
+        <keyMapping columnObjectName="Projection_5" columnName="Z_Yes_or_No"/>
+      </attribute>
+      <attribute id="AEDAT_EKKO" order="43" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Created on (Header)"/>
+        <localVariable>PO_Created_Date_Range</localVariable>
+        <keyMapping columnObjectName="Projection_5" columnName="AEDAT_EKKO"/>
+      </attribute>
+      <attribute id="AEDAT_EKPO" order="44" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchasing Document Item Change Date"/>
+        <keyMapping columnObjectName="Projection_5" columnName="AEDAT_EKPO"/>
+      </attribute>
+      <attribute id="FRGRL_EKKO" order="45" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Release Not Yet Completely Effected"/>
+        <keyMapping columnObjectName="Projection_5" columnName="FRGRL_EKKO"/>
+      </attribute>
+      <attribute id="FRGZU" order="46" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Release status"/>
+        <keyMapping columnObjectName="Projection_5" columnName="FRGZU"/>
+      </attribute>
+      <attribute id="FRGGR" order="47" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Release group"/>
+        <keyMapping columnObjectName="Projection_5" columnName="FRGGR"/>
+      </attribute>
+      <attribute id="FRGKE" order="48" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Release Indicator: Purchasing Document"/>
+        <keyMapping columnObjectName="Projection_5" columnName="FRGKE"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="NETPR_PO" order="17" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Net Price in Purchasing Document (in Document Currency)"/>
+        <measureMapping columnObjectName="Projection_5" columnName="NETPR_PO"/>
+      </measure>
+      <measure id="MENGE_PO" order="18" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Purchase Order Quantity"/>
+        <measureMapping columnObjectName="Projection_5" columnName="MENGE_PO"/>
+      </measure>
+      <measure id="BPUMZ_PO" order="21" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Numerator for Conversion of Order Price Unit into Order Unit"/>
+        <measureMapping columnObjectName="Projection_5" columnName="BPUMZ_PO"/>
+      </measure>
+      <measure id="BPUMN_PO" order="22" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Denominator for Conv. of Order Price Unit into Order Unit"/>
+        <measureMapping columnObjectName="Projection_5" columnName="BPUMN_PO"/>
+      </measure>
+      <measure id="UMREZ_PO" order="23" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Numerator for Conversion of Order Unit to Base Unit"/>
+        <measureMapping columnObjectName="Projection_5" columnName="UMREZ_PO"/>
+      </measure>
+      <measure id="UMREN_PO" order="24" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Denominator for Conversion of Order Unit to Base Unit"/>
+        <measureMapping columnObjectName="Projection_5" columnName="UMREN_PO"/>
+      </measure>
+      <measure id="PEINH_PO" order="25" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Price Unit"/>
+        <measureMapping columnObjectName="Projection_5" columnName="PEINH_PO"/>
+      </measure>
+      <measure id="NETWR_PO" order="26" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Net Order Value in PO Currency"/>
+        <measureMapping columnObjectName="Projection_5" columnName="NETWR_PO"/>
+      </measure>
+      <measure id="BRTWR_PO" order="27" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Gross order value in PO currency"/>
+        <measureMapping columnObjectName="Projection_5" columnName="BRTWR_PO"/>
+      </measure>
+      <measure id="MENGE_PR" order="31" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="PR Quantity"/>
+        <measureMapping columnObjectName="Projection_5" columnName="MENGE_PR"/>
+      </measure>
+      <measure id="PREIS_PR" order="33" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="PR Valuation Price"/>
+        <measureMapping columnObjectName="Projection_5" columnName="PREIS_PR"/>
+      </measure>
+      <measure id="PEINH_PR" order="34" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="PR Price Unit"/>
+        <measureMapping columnObjectName="Projection_5" columnName="PEINH_PR"/>
+      </measure>
+      <measure id="BSMNG_PR" order="36" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="PO Quantity"/>
+        <measureMapping columnObjectName="Projection_5" columnName="BSMNG_PR"/>
+      </measure>
+      <measure id="GMMNG_PR" order="38" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="PO Qty on Hold"/>
+        <measureMapping columnObjectName="Projection_5" columnName="GMMNG_PR"/>
+      </measure>
+      <measure id="Z_PR_Calculated_Price" order="40" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="PR Calculated Price"/>
+        <measureMapping columnObjectName="Projection_5" columnName="Z_PR_Calculated_Price"/>
+      </measure>
+      <measure id="Z_Variance" order="41" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Variance"/>
+        <measureMapping columnObjectName="Projection_5" columnName="Z_Variance"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/></logicalModel>
+<layout>
+  <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="176" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="533"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="533"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="437"/>
+        <rectangleSize height="86" width="140"/>
+      </shape>
+    <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="437"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="341"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    <shape modelObjectName="Join_1" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_3" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="Projection_4" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="263"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_5" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="185"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape></shapes>
+</layout>
+</Calculation:scenario>

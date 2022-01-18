@@ -1,0 +1,121 @@
+FUNCTION "plx_analytics::FN_MATERIAL_DUPLICATES" ( ) 
+	RETURNS "Z_MATERIAL_DUPLICATES"
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER AS
+BEGIN
+
+/***************************** 
+	Write your function logic
+ *****************************/
+ 
+ --select materials with same MPN
+t_mpn = select 	matnr, 
+				trim(mfrpn) as mpn,
+				(select count(matnr) 
+				 from "ECC_MARA" mara1 
+				 where "ECC_MARA".mfrpn = mara1.mfrpn) as count_of_mpn
+		from "ECC_MARA"
+		where trim(mfrpn) <> '';
+
+t_mpn_count = select matnr,
+					 mpn,
+					 count_of_mpn
+				from :t_mpn
+			   where :t_mpn.count_of_mpn > 1;
+		
+ --select materials where first word of name of manufacturer matches
+t_mfrnr	      = select matnr,
+ 					   mfrnr,
+ 					   (select first_word
+						from "plx_analytics::FN_VENDOR_FIRSTWORD"()
+						where lifnr = mfrnr) as first_word			
+ 			      from "ECC_MARA"
+ 			      where mfrnr <> '';
+
+t_mfrnr_count = select count (matnr) as count_of_mfrnr,
+				 	   first_word 	 as first_word_mfrnr
+				  from :t_mfrnr
+			  group by first_word
+			  having   count(matnr) > 1;  
+ 
+t_mfrnr_firstwords = select :t_mfrnr.matnr,
+							:t_mfrnr.mfrnr,
+							:t_mfrnr_count.first_word_mfrnr,
+							:t_mfrnr_count.count_of_mfrnr
+					  from  :t_mfrnr 
+					  join  :t_mfrnr_count
+					  on	:t_mfrnr.first_word = :t_mfrnr_count.first_word_mfrnr
+					  ;
+
+ 
+ --select materials where first word of description matches
+ t_firstwords = select matnr,
+ 					   first_word as first_word_maktx
+ 				from "plx_analytics::FN_MATERIAL_FIRSTWORD"();
+ 				
+ t_firstword_counts = select count(matnr) as count_of_maktx, 
+ 							 first_word_maktx 
+ 					    from :t_firstwords
+ 					    group by first_word_maktx
+ 					    having   count(matnr) > 1;
+ 					    
+ t_material_firstwords = select :t_firstwords.matnr, 
+ 						 	    :t_firstword_counts.first_word_maktx, 
+ 							    :t_firstword_counts.count_of_maktx 
+	 					  from  :t_firstwords 
+	 					  join  :t_firstword_counts 
+	 					  on    :t_firstwords.first_word_maktx = :t_firstword_counts.first_word_maktx;
+
+--- put the results together
+--- use full outer join to match keys when possible, and remember to keep all matnr fields
+/**
+t_result = 
+select  :t_material_firstwords.matnr as MATNR_MAKTX
+	   ,:t_mpn_count.matnr			 as MATNR_MPN
+	   ,:t_mfrnr_firstwords.matnr	 as MATNR_MFRNR
+	   ,:t_material_firstwords.first_word_maktx
+	   ,:t_material_firstwords.count_of_maktx
+	   ,:t_mpn_count.mpn
+	   ,:t_mpn_count.count_of_mpn
+	   ,:t_mfrnr_firstwords.mfrnr
+	   ,:t_mfrnr_firstwords.first_word_mfrnr
+	   ,:t_mfrnr_firstwords.count_of_mfrnr
+from	:t_material_firstwords
+full outer join :t_mfrnr_firstwords
+on	:t_material_firstwords.matnr = :t_mfrnr_firstwords.matnr
+full outer join :t_mpn_count
+on  :t_mpn_count.matnr = :t_mfrnr_firstwords.matnr;	   
+**/
+
+t_result = 
+select   makt.matnr
+		,makt.maktx
+	   ,:t_material_firstwords.first_word_maktx
+	   ,:t_material_firstwords.count_of_maktx
+	   ,:t_mpn_count.mpn
+	   ,:t_mpn_count.count_of_mpn
+	   ,:t_mfrnr_firstwords.mfrnr
+	   ,:t_mfrnr_firstwords.first_word_mfrnr
+	   ,:t_mfrnr_firstwords.count_of_mfrnr
+from	
+"ECC_MAKT" as makt
+left join :t_material_firstwords on makt.matnr = :t_material_firstwords.matnr
+left join :t_mfrnr_firstwords	 on makt.matnr = :t_mfrnr_firstwords.matnr
+left join :t_mpn_count			 on makt.matnr = :t_mpn_count.matnr;	   
+
+return select * 
+	   from :t_result 
+	   order by matnr;
+
+/**
+--- we only need to return set where at least 2 of 3 attributes match
+-------------
+return select * 
+		 from :t_result 
+		where (MATNR_MAKTX is not null and MATNR_MPN   is not null)
+		or    (MATNR_MPN   is not null and MATNR_MFRNR is not null)
+		or    (MATNR_MAKTX is not null and MATNR_MFRNR is not null)	 
+        order by MATNR_MAKTX, MATNR_MPN, MATNR_MFRNR;
+**/
+	   
+END

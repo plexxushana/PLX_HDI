@@ -1,0 +1,976 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="3.0" id="plx_analytics::CA_DIM_ARIBA_CONTRACTS" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+  <descriptions defaultDescription="Ariba Contracts"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="29"/>
+  <dataSources>
+    <DataSource id="ARIBA_CONTRACT_HEADERS">
+      <resourceUri>ARIBA_CONTRACT_HEADERS</resourceUri>
+    </DataSource>
+    <DataSource id="ARIBA_TASKS">
+      <resourceUri>ARIBA_TASKS</resourceUri>
+    </DataSource>
+    <DataSource id="MANUAL_ARIBA_START_END_TASKS">
+      <resourceUri>MANUAL_ARIBA_START_END_TASKS</resourceUri>
+    </DataSource>
+  </dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="contracts">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="CONTRACT_ID"/>
+        <viewAttribute id="PROJECT_ID"/>
+        <viewAttribute id="START_DATE"/>
+        <viewAttribute id="PROJECT_NAME"/>
+        <viewAttribute id="STATE"/>
+        <viewAttribute id="OWNER"/>
+        <viewAttribute id="AMMENDMENT_TYPE"/>
+        <viewAttribute id="BASED_ON_PROJECT_ID"/>
+        <viewAttribute id="IS_EVERGREEN"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="DUE_DATE"/>
+        <viewAttribute id="EARLIEST_CONTRACT_EXPIRY"/>
+        <viewAttribute id="END_DATE"/>
+        <viewAttribute id="EXTENSION_TYPE"/>
+        <viewAttribute id="HIERARCHY_TYPE"/>
+        <viewAttribute id="HOSPITAL_CONTACT"/>
+        <viewAttribute id="INITIATIVE_TYPE"/>
+        <viewAttribute id="IS_PERPETUAL"/>
+        <viewAttribute id="IS_TEST_PROJECT"/>
+        <viewAttribute id="MAX_NUMBER_OF_RENEWALS"/>
+        <viewAttribute id="METHOD"/>
+        <viewAttribute id="NUMBER_OF_AUTOMATIC_RENEWALS"/>
+        <viewAttribute id="NUMBER_OF_LINE_ITMES_FOR_SAP_UPDATE"/>
+        <viewAttribute id="NUMBER_OF_OPTION_YEARS_AVAILABLE_MONTHS"/>
+        <viewAttribute id="NUMBER_OF_OPTION_YEARS_EXERCISED_MONTHS"/>
+        <viewAttribute id="ON_TIME_LATE"/>
+        <viewAttribute id="PARENT_AGREEMENT_PROJECT_ID"/>
+        <viewAttribute id="PLANNED_END_DATE_DATE"/>
+        <viewAttribute id="PLAN_ONCE_CONTRACT_EXPIRES"/>
+        <viewAttribute id="PLEXXUS_AGREEMENT_TYPE"/>
+        <viewAttribute id="PRICE_ESCALATION"/>
+        <viewAttribute id="RENEWAL_INTERVAL_MONTHS"/>
+        <viewAttribute id="REVENUE_GENERATING_AGREEMENT"/>
+        <viewAttribute id="REVISED_END_DATE"/>
+        <viewAttribute id="SCOPE"/>
+        <viewAttribute id="TERM_TYPE"/>
+        <viewAttribute id="VERSION"/>
+        <viewAttribute id="SAVINGS_COMMENTS"/>
+        <viewAttribute id="CONTRACT_AMOUNT"/>
+        <viewAttribute id="HEADER_DURATION"/>
+        <viewAttribute id="PROPOSED_CONTRACT_AMOUNT"/>
+        <viewAttribute id="ANNUAL_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <viewAttribute id="CAPITAL_ONE_TIME_SAVINGS_AMOUNT"/>
+        <viewAttribute id="INFLATION_FACTOR"/>
+        <viewAttribute id="ANNUAL_SAVINGS_AMOUNT"/>
+        <viewAttribute id="CAPITAL_ONE_TIME_SPEND_AMOUNT"/>
+        <viewAttribute id="EXTENSION_ANNUAL_SAVINGS_VALUE_INCREMENTAL_AMOUNT"/>
+        <viewAttribute id="ONE_TIME_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <viewAttribute id="TOTAL_CONTRACT_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <viewAttribute id="TOTAL_CONTRACT_SAVINGS_AMOUNT"/>
+        <viewAttribute id="CLIENT"/>
+        <viewAttribute id="CONTRACT_STATUS"/>
+        <viewAttribute id="CATEGORY"/>
+        <viewAttribute id="APPROVAL_STATUS"/>
+        <viewAttribute id="RELATED_ID"/>
+        <viewAttribute id="SUPPLIER"/>
+        <viewAttribute id="DESCRIPTION"/>
+        <viewAttribute id="CAPITAL_ONE_TIME_EXPENSE"/>
+        <viewAttribute id="CONTRACT_SPECIALIST"/>
+        <viewAttribute id="CAPITAL"/>
+        <viewAttribute id="COMMENTS"/>
+        <viewAttribute id="REBATE"/>
+        <viewAttribute id="BUDGET_OWNER"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="zcomposite_key" length="68" expressionLanguage="COLUMN_ENGINE">
+          <formula>lower(replace(&quot;INITIATIVE_TYPE&quot;+&quot;HIERARCHY_TYPE&quot;+&quot;METHOD&quot;,' ',''))</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="ARIBA_CONTRACT_HEADERS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_ID" source="[PCW]Contract (Contract Id)"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROJECT_ID" source="[PCW]Project (Project Id)"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="START_DATE" source="[PCW]Start Date (Date)"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROJECT_NAME" source="[PCW]Project (Project Name)"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATE" source="[PCW] State"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OWNER" source="[PCW]Owner (User)"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMMENDMENT_TYPE" source="[PCW] Amendment Type"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BASED_ON_PROJECT_ID" source="[PCW]Based on Project... (Project Id)"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_EVERGREEN" source="[PCW]Contract (Is Evergreen)"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="[PCW]Contract (Effective Date)"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="[PCW]Contract (Expiration Date)"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DUE_DATE" source="[PCW]Due Date (Date)"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EARLIEST_CONTRACT_EXPIRY" source="[PCW]Earliest Contract Expiry (Date)"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_DATE" source="[PCW]End Date (Date)"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTENSION_TYPE" source="[PCW] Extension Type"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HIERARCHY_TYPE" source="[PCW] Hierarchy Type"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HOSPITAL_CONTACT" source="[PCW] Hospital Contact"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INITIATIVE_TYPE" source="[PCW] Initiative Type"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_PERPETUAL" source="[PCW] Is Perpetual"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_TEST_PROJECT" source="[PCW] Is Test Project"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAX_NUMBER_OF_RENEWALS" source="[PCW] Maximum number of Renewals"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="METHOD" source="[PCW] Method"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NUMBER_OF_AUTOMATIC_RENEWALS" source="[PCW] Number Of Automatic Renewals"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NUMBER_OF_LINE_ITMES_FOR_SAP_UPDATE" source="[PCW] Number of Line Items for SAP Update"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NUMBER_OF_OPTION_YEARS_AVAILABLE_MONTHS" source="[PCW] Number of Option Years Available (in months)"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NUMBER_OF_OPTION_YEARS_EXERCISED_MONTHS" source="[PCW] Number of Option Years Exercised (in months)"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ON_TIME_LATE" source="[PCW] On Time/Late"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_AGREEMENT_PROJECT_ID" source="[PCW]Parent Agreement (Project Id)"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PLANNED_END_DATE_DATE" source="[PCW]Planned End Date (Date)"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PLAN_ONCE_CONTRACT_EXPIRES" source="[PCW] Plan Once Contract Expires"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PLEXXUS_AGREEMENT_TYPE" source="[PCW] Plexxus Agreement Type"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRICE_ESCALATION" source="[PCW] Price Escalation"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RENEWAL_INTERVAL_MONTHS" source="[PCW] Renewal Interval(in months)"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVENUE_GENERATING_AGREEMENT" source="[PCW] Revenue Generating Agreement"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVISED_END_DATE" source="[PCW]Revised End Date (Date)"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SCOPE" source="[PCW] Scope"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_TYPE" source="[PCW] Term Type"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="[PCW] Version"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS_COMMENTS" source="[Additional Activity Report Fields Template] Savings Comments"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_AMOUNT" source="sum(Contract Amount)"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_DURATION" source="sum(Duration)"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROPOSED_CONTRACT_AMOUNT" source="sum(Proposed Contract Amount)"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANNUAL_COST_AVOIDANCE_VALUE_ADDS_AMOUNT" source="sum(Annual Cost Avoidance &amp; Value Adds Amount)"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAPITAL_ONE_TIME_SAVINGS_AMOUNT" source="sum(Capital/One-Time Savings Amount)"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INFLATION_FACTOR" source="sum(Inflation Factor)"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANNUAL_SAVINGS_AMOUNT" source="sum(Annual Savings Amount)"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAPITAL_ONE_TIME_SPEND_AMOUNT" source="sum(Capital/One-Time Spend Amount)"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTENSION_ANNUAL_SAVINGS_VALUE_INCREMENTAL_AMOUNT" source="sum(Extension Annual Savings Value (Incremental) Amount)"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ONE_TIME_COST_AVOIDANCE_VALUE_ADDS_AMOUNT" source="sum(One-Time Cost Avoidance &amp; Value Adds Amount)"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_CONTRACT_COST_AVOIDANCE_VALUE_ADDS_AMOUNT" source="sum(Total Contract Cost Avoidance &amp; Value Adds Amount)"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_CONTRACT_SAVINGS_AMOUNT" source="sum(Total Contract Savings Amount)"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="[PCW] Client"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_STATUS" source="[PCW] Contract Status"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CATEGORY" source="[PCW]Organization (Department (L1))"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="APPROVAL_STATUS" source="[PCW]Affected Parties (Approval Status)"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RELATED_ID" source="[PCW] Related ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUPPLIER" source="[PCW]Supplier (Common Supplier)"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DESCRIPTION" source="[PCW] Description"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAPITAL_ONE_TIME_EXPENSE" source="sum(Capital/One-time Expense Amount)"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_SPECIALIST" source="[PCW]Contract Specialist (User)"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAPITAL" source="[PCW] Capital"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMMENTS" source="[PCW] Comments"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REBATE" source="[PCW] Rebate"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDGET_OWNER" source="[PCW] Budget Owner"/>
+      </input>
+    </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="tasks">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="TASK_NAME"/>
+        <viewAttribute id="TASK_START_DATE"/>
+        <viewAttribute id="TASK_END_DATE"/>
+        <viewAttribute id="TASK_STATUS"/>
+        <viewAttribute id="TASK_TYPE"/>
+        <viewAttribute id="TASK_DESCRIPTION"/>
+        <viewAttribute id="TASK_DUE_DATE"/>
+        <viewAttribute id="TASK_ON_TIME_LATE"/>
+        <viewAttribute id="PROJECT_ID"/>
+        <viewAttribute id="TEMPLATE_ID"/>
+        <viewAttribute id="REQUIRED_OPTIONAL"/>
+        <viewAttribute id="TASK_ID"/>
+        <viewAttribute id="TASK_PROCESS_ID"/>
+        <viewAttribute id="TASK_AVG_DURATION"/>
+        <viewAttribute id="TASK_LINE_COUNT"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="ARIBA_TASKS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="TASK_NAME" source="Task Name - Task Name"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TASK_START_DATE" source="Start Date"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TASK_END_DATE" source="End Date"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TASK_STATUS" source="Status"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TASK_TYPE" source="Type"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TASK_DESCRIPTION" source="Description"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TASK_DUE_DATE" source="Due Date - Date"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TASK_ON_TIME_LATE" source="On Time/Late"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROJECT_ID" source="Project - Project Id"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEMPLATE_ID" source="Project - Template Id"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REQUIRED_OPTIONAL" source="Required/Optional"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TASK_ID" source="Task Id"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TASK_PROCESS_ID" source="Task Name - Process Id"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TASK_AVG_DURATION" source="sum(Avg Duration)"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TASK_LINE_COUNT" source="count()"/>
+      </input>
+    </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="CONTRACTS_TASKS" joinType="leftOuter">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="CONTRACT_ID"/>
+        <viewAttribute id="PROJECT_ID"/>
+        <viewAttribute id="START_DATE"/>
+        <viewAttribute id="PROJECT_NAME"/>
+        <viewAttribute id="STATE"/>
+        <viewAttribute id="OWNER"/>
+        <viewAttribute id="AMMENDMENT_TYPE"/>
+        <viewAttribute id="BASED_ON_PROJECT_ID"/>
+        <viewAttribute id="IS_EVERGREEN"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="DUE_DATE"/>
+        <viewAttribute id="EARLIEST_CONTRACT_EXPIRY"/>
+        <viewAttribute id="END_DATE"/>
+        <viewAttribute id="EXTENSION_TYPE"/>
+        <viewAttribute id="HIERARCHY_TYPE"/>
+        <viewAttribute id="HOSPITAL_CONTACT"/>
+        <viewAttribute id="INITIATIVE_TYPE"/>
+        <viewAttribute id="IS_PERPETUAL"/>
+        <viewAttribute id="IS_TEST_PROJECT"/>
+        <viewAttribute id="MAX_NUMBER_OF_RENEWALS"/>
+        <viewAttribute id="METHOD"/>
+        <viewAttribute id="NUMBER_OF_AUTOMATIC_RENEWALS"/>
+        <viewAttribute id="NUMBER_OF_LINE_ITMES_FOR_SAP_UPDATE"/>
+        <viewAttribute id="NUMBER_OF_OPTION_YEARS_AVAILABLE_MONTHS"/>
+        <viewAttribute id="NUMBER_OF_OPTION_YEARS_EXERCISED_MONTHS"/>
+        <viewAttribute id="ON_TIME_LATE"/>
+        <viewAttribute id="PARENT_AGREEMENT_PROJECT_ID"/>
+        <viewAttribute id="PLANNED_END_DATE_DATE"/>
+        <viewAttribute id="PLAN_ONCE_CONTRACT_EXPIRES"/>
+        <viewAttribute id="PLEXXUS_AGREEMENT_TYPE"/>
+        <viewAttribute id="PRICE_ESCALATION"/>
+        <viewAttribute id="RENEWAL_INTERVAL_MONTHS"/>
+        <viewAttribute id="REVENUE_GENERATING_AGREEMENT"/>
+        <viewAttribute id="REVISED_END_DATE"/>
+        <viewAttribute id="SCOPE"/>
+        <viewAttribute id="TERM_TYPE"/>
+        <viewAttribute id="VERSION"/>
+        <viewAttribute id="SAVINGS_COMMENTS"/>
+        <viewAttribute id="CONTRACT_AMOUNT"/>
+        <viewAttribute id="HEADER_DURATION"/>
+        <viewAttribute id="PROPOSED_CONTRACT_AMOUNT"/>
+        <viewAttribute id="ANNUAL_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <viewAttribute id="CAPITAL_ONE_TIME_SAVINGS_AMOUNT"/>
+        <viewAttribute id="INFLATION_FACTOR"/>
+        <viewAttribute id="ANNUAL_SAVINGS_AMOUNT"/>
+        <viewAttribute id="CAPITAL_ONE_TIME_SPEND_AMOUNT"/>
+        <viewAttribute id="EXTENSION_ANNUAL_SAVINGS_VALUE_INCREMENTAL_AMOUNT"/>
+        <viewAttribute id="ONE_TIME_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <viewAttribute id="TOTAL_CONTRACT_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <viewAttribute id="TOTAL_CONTRACT_SAVINGS_AMOUNT"/>
+        <viewAttribute id="CLIENT"/>
+        <viewAttribute id="CONTRACT_STATUS"/>
+        <viewAttribute id="TASK_NAME"/>
+        <viewAttribute id="TASK_START_DATE"/>
+        <viewAttribute id="TASK_END_DATE"/>
+        <viewAttribute id="TASK_STATUS"/>
+        <viewAttribute id="TASK_TYPE"/>
+        <viewAttribute id="TASK_DESCRIPTION"/>
+        <viewAttribute id="TASK_DUE_DATE"/>
+        <viewAttribute id="TASK_ON_TIME_LATE"/>
+        <viewAttribute id="TEMPLATE_ID"/>
+        <viewAttribute id="REQUIRED_OPTIONAL"/>
+        <viewAttribute id="TASK_ID"/>
+        <viewAttribute id="TASK_PROCESS_ID"/>
+        <viewAttribute id="TASK_AVG_DURATION"/>
+        <viewAttribute id="TASK_COUNT"/>
+        <viewAttribute id="CATEGORY"/>
+        <viewAttribute id="zmethod_join"/>
+        <viewAttribute id="SUPPLIER"/>
+        <viewAttribute id="RELATED_ID"/>
+        <viewAttribute id="APPROVAL_STATUS"/>
+        <viewAttribute id="DESCRIPTION"/>
+        <viewAttribute id="CAPITAL_ONE_TIME_EXPENSE"/>
+        <viewAttribute id="CONTRACT_SPECIALIST"/>
+        <viewAttribute id="CAPITAL"/>
+        <viewAttribute id="COMMENTS"/>
+        <viewAttribute id="REBATE"/>
+        <viewAttribute id="BUDGET_OWNER"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="contracts">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_ID" source="CONTRACT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROJECT_ID" source="PROJECT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="START_DATE" source="START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROJECT_NAME" source="PROJECT_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATE" source="STATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OWNER" source="OWNER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMMENDMENT_TYPE" source="AMMENDMENT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BASED_ON_PROJECT_ID" source="BASED_ON_PROJECT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_EVERGREEN" source="IS_EVERGREEN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DUE_DATE" source="DUE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EARLIEST_CONTRACT_EXPIRY" source="EARLIEST_CONTRACT_EXPIRY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_DATE" source="END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTENSION_TYPE" source="EXTENSION_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HIERARCHY_TYPE" source="HIERARCHY_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HOSPITAL_CONTACT" source="HOSPITAL_CONTACT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INITIATIVE_TYPE" source="INITIATIVE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_PERPETUAL" source="IS_PERPETUAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_TEST_PROJECT" source="IS_TEST_PROJECT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAX_NUMBER_OF_RENEWALS" source="MAX_NUMBER_OF_RENEWALS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="METHOD" source="METHOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NUMBER_OF_AUTOMATIC_RENEWALS" source="NUMBER_OF_AUTOMATIC_RENEWALS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NUMBER_OF_LINE_ITMES_FOR_SAP_UPDATE" source="NUMBER_OF_LINE_ITMES_FOR_SAP_UPDATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NUMBER_OF_OPTION_YEARS_AVAILABLE_MONTHS" source="NUMBER_OF_OPTION_YEARS_AVAILABLE_MONTHS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NUMBER_OF_OPTION_YEARS_EXERCISED_MONTHS" source="NUMBER_OF_OPTION_YEARS_EXERCISED_MONTHS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ON_TIME_LATE" source="ON_TIME_LATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_AGREEMENT_PROJECT_ID" source="PARENT_AGREEMENT_PROJECT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PLANNED_END_DATE_DATE" source="PLANNED_END_DATE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PLAN_ONCE_CONTRACT_EXPIRES" source="PLAN_ONCE_CONTRACT_EXPIRES"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PLEXXUS_AGREEMENT_TYPE" source="PLEXXUS_AGREEMENT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRICE_ESCALATION" source="PRICE_ESCALATION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RENEWAL_INTERVAL_MONTHS" source="RENEWAL_INTERVAL_MONTHS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVENUE_GENERATING_AGREEMENT" source="REVENUE_GENERATING_AGREEMENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVISED_END_DATE" source="REVISED_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SCOPE" source="SCOPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_TYPE" source="TERM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS_COMMENTS" source="SAVINGS_COMMENTS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_AMOUNT" source="CONTRACT_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_DURATION" source="HEADER_DURATION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROPOSED_CONTRACT_AMOUNT" source="PROPOSED_CONTRACT_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANNUAL_COST_AVOIDANCE_VALUE_ADDS_AMOUNT" source="ANNUAL_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAPITAL_ONE_TIME_SAVINGS_AMOUNT" source="CAPITAL_ONE_TIME_SAVINGS_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INFLATION_FACTOR" source="INFLATION_FACTOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANNUAL_SAVINGS_AMOUNT" source="ANNUAL_SAVINGS_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAPITAL_ONE_TIME_SPEND_AMOUNT" source="CAPITAL_ONE_TIME_SPEND_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTENSION_ANNUAL_SAVINGS_VALUE_INCREMENTAL_AMOUNT" source="EXTENSION_ANNUAL_SAVINGS_VALUE_INCREMENTAL_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ONE_TIME_COST_AVOIDANCE_VALUE_ADDS_AMOUNT" source="ONE_TIME_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_CONTRACT_COST_AVOIDANCE_VALUE_ADDS_AMOUNT" source="TOTAL_CONTRACT_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_CONTRACT_SAVINGS_AMOUNT" source="TOTAL_CONTRACT_SAVINGS_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_STATUS" source="CONTRACT_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CATEGORY" source="CATEGORY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="zmethod_join" source="zcomposite_key"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUPPLIER" source="SUPPLIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RELATED_ID" source="RELATED_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="APPROVAL_STATUS" source="APPROVAL_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DESCRIPTION" source="DESCRIPTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAPITAL_ONE_TIME_EXPENSE" source="CAPITAL_ONE_TIME_EXPENSE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_SPECIALIST" source="CONTRACT_SPECIALIST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAPITAL" source="CAPITAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMMENTS" source="COMMENTS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REBATE" source="REBATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDGET_OWNER" source="BUDGET_OWNER"/>
+      </input>
+      <input node="tasks">
+        <mapping xsi:type="Calculation:AttributeMapping" target="TASK_NAME" source="TASK_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TASK_START_DATE" source="TASK_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TASK_END_DATE" source="TASK_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TASK_STATUS" source="TASK_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TASK_TYPE" source="TASK_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TASK_DESCRIPTION" source="TASK_DESCRIPTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TASK_DUE_DATE" source="TASK_DUE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TASK_ON_TIME_LATE" source="TASK_ON_TIME_LATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEMPLATE_ID" source="TEMPLATE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REQUIRED_OPTIONAL" source="REQUIRED_OPTIONAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TASK_ID" source="TASK_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TASK_PROCESS_ID" source="TASK_PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TASK_AVG_DURATION" source="TASK_AVG_DURATION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TASK_COUNT" source="TASK_LINE_COUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROJECT_ID" source="PROJECT_ID"/>
+      </input>
+    <joinAttribute name="PROJECT_ID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="RULES">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="METHOD"/>
+        <viewAttribute id="INITIATIVE_TYPE"/>
+        <viewAttribute id="HIERARCHY_TYPE"/>
+        <viewAttribute id="EXCLUDE"/>
+        <viewAttribute id="START_IN_PARENT"/>
+        <viewAttribute id="START_PROCESS_ID"/>
+        <viewAttribute id="START_TASK"/>
+        <viewAttribute id="END_IN_SUB"/>
+        <viewAttribute id="END_PROCESS_ID"/>
+        <viewAttribute id="END_TASK"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="zcomposite_key" length="68" expressionLanguage="COLUMN_ENGINE">
+          <formula>lower(replace(&quot;INITIATIVE_TYPE&quot;+&quot;HIERARCHY_TYPE&quot;+&quot;METHOD&quot;,' ',''))</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="MANUAL_ARIBA_START_END_TASKS"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="CONTRACTS_RULES" cardinality="C1_N" joinType="leftOuter">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="CONTRACT_ID"/>
+        <viewAttribute id="PROJECT_ID"/>
+        <viewAttribute id="START_DATE"/>
+        <viewAttribute id="PROJECT_NAME"/>
+        <viewAttribute id="STATE"/>
+        <viewAttribute id="OWNER"/>
+        <viewAttribute id="AMMENDMENT_TYPE"/>
+        <viewAttribute id="BASED_ON_PROJECT_ID"/>
+        <viewAttribute id="IS_EVERGREEN"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="DUE_DATE"/>
+        <viewAttribute id="EARLIEST_CONTRACT_EXPIRY"/>
+        <viewAttribute id="END_DATE"/>
+        <viewAttribute id="EXTENSION_TYPE"/>
+        <viewAttribute id="HIERARCHY_TYPE"/>
+        <viewAttribute id="HOSPITAL_CONTACT"/>
+        <viewAttribute id="INITIATIVE_TYPE"/>
+        <viewAttribute id="IS_PERPETUAL"/>
+        <viewAttribute id="IS_TEST_PROJECT"/>
+        <viewAttribute id="MAX_NUMBER_OF_RENEWALS"/>
+        <viewAttribute id="METHOD"/>
+        <viewAttribute id="NUMBER_OF_AUTOMATIC_RENEWALS"/>
+        <viewAttribute id="NUMBER_OF_LINE_ITMES_FOR_SAP_UPDATE"/>
+        <viewAttribute id="NUMBER_OF_OPTION_YEARS_AVAILABLE_MONTHS"/>
+        <viewAttribute id="NUMBER_OF_OPTION_YEARS_EXERCISED_MONTHS"/>
+        <viewAttribute id="ON_TIME_LATE"/>
+        <viewAttribute id="PARENT_AGREEMENT_PROJECT_ID"/>
+        <viewAttribute id="PLANNED_END_DATE_DATE"/>
+        <viewAttribute id="PLAN_ONCE_CONTRACT_EXPIRES"/>
+        <viewAttribute id="PLEXXUS_AGREEMENT_TYPE"/>
+        <viewAttribute id="PRICE_ESCALATION"/>
+        <viewAttribute id="RENEWAL_INTERVAL_MONTHS"/>
+        <viewAttribute id="REVENUE_GENERATING_AGREEMENT"/>
+        <viewAttribute id="REVISED_END_DATE"/>
+        <viewAttribute id="SCOPE"/>
+        <viewAttribute id="TERM_TYPE"/>
+        <viewAttribute id="VERSION"/>
+        <viewAttribute id="SAVINGS_COMMENTS"/>
+        <viewAttribute id="CONTRACT_AMOUNT"/>
+        <viewAttribute id="HEADER_DURATION"/>
+        <viewAttribute id="PROPOSED_CONTRACT_AMOUNT"/>
+        <viewAttribute id="ANNUAL_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <viewAttribute id="CAPITAL_ONE_TIME_SAVINGS_AMOUNT"/>
+        <viewAttribute id="INFLATION_FACTOR"/>
+        <viewAttribute id="ANNUAL_SAVINGS_AMOUNT"/>
+        <viewAttribute id="CAPITAL_ONE_TIME_SPEND_AMOUNT"/>
+        <viewAttribute id="EXTENSION_ANNUAL_SAVINGS_VALUE_INCREMENTAL_AMOUNT"/>
+        <viewAttribute id="ONE_TIME_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <viewAttribute id="TOTAL_CONTRACT_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <viewAttribute id="TOTAL_CONTRACT_SAVINGS_AMOUNT"/>
+        <viewAttribute id="CLIENT"/>
+        <viewAttribute id="CONTRACT_STATUS"/>
+        <viewAttribute id="TASK_NAME"/>
+        <viewAttribute id="TASK_START_DATE"/>
+        <viewAttribute id="TASK_END_DATE"/>
+        <viewAttribute id="TASK_STATUS"/>
+        <viewAttribute id="TASK_TYPE"/>
+        <viewAttribute id="TASK_DESCRIPTION"/>
+        <viewAttribute id="TASK_DUE_DATE"/>
+        <viewAttribute id="TASK_ON_TIME_LATE"/>
+        <viewAttribute id="TEMPLATE_ID"/>
+        <viewAttribute id="REQUIRED_OPTIONAL"/>
+        <viewAttribute id="TASK_ID"/>
+        <viewAttribute id="TASK_PROCESS_ID"/>
+        <viewAttribute id="TASK_AVG_DURATION"/>
+        <viewAttribute id="TASK_COUNT"/>
+        <viewAttribute id="EXCLUDE"/>
+        <viewAttribute id="START_IN_PARENT"/>
+        <viewAttribute id="START_TASK"/>
+        <viewAttribute id="START_PROCESS_ID"/>
+        <viewAttribute id="END_IN_SUB"/>
+        <viewAttribute id="END_PROCESS_ID"/>
+        <viewAttribute id="END_TASK"/>
+        <viewAttribute id="CATEGORY"/>
+        <viewAttribute id="SUPPLIER"/>
+        <viewAttribute id="RELATED_ID"/>
+        <viewAttribute id="APPROVAL_STATUS"/>
+        <viewAttribute id="DESCRIPTION"/>
+        <viewAttribute id="CAPITAL_ONE_TIME_EXPENSE"/>
+        <viewAttribute id="CONTRACT_SPECIALIST"/>
+        <viewAttribute id="CAPITAL"/>
+        <viewAttribute id="COMMENTS"/>
+        <viewAttribute id="REBATE"/>
+        <viewAttribute id="BUDGET_OWNER"/>
+      <viewAttribute hidden="true" id="JOIN$zmethod_join$zcomposite_key"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="CONTRACTS_TASKS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_ID" source="CONTRACT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROJECT_ID" source="PROJECT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="START_DATE" source="START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROJECT_NAME" source="PROJECT_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATE" source="STATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OWNER" source="OWNER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMMENDMENT_TYPE" source="AMMENDMENT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BASED_ON_PROJECT_ID" source="BASED_ON_PROJECT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_EVERGREEN" source="IS_EVERGREEN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DUE_DATE" source="DUE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EARLIEST_CONTRACT_EXPIRY" source="EARLIEST_CONTRACT_EXPIRY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_DATE" source="END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTENSION_TYPE" source="EXTENSION_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HIERARCHY_TYPE" source="HIERARCHY_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HOSPITAL_CONTACT" source="HOSPITAL_CONTACT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INITIATIVE_TYPE" source="INITIATIVE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_PERPETUAL" source="IS_PERPETUAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_TEST_PROJECT" source="IS_TEST_PROJECT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAX_NUMBER_OF_RENEWALS" source="MAX_NUMBER_OF_RENEWALS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="METHOD" source="METHOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NUMBER_OF_AUTOMATIC_RENEWALS" source="NUMBER_OF_AUTOMATIC_RENEWALS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NUMBER_OF_LINE_ITMES_FOR_SAP_UPDATE" source="NUMBER_OF_LINE_ITMES_FOR_SAP_UPDATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NUMBER_OF_OPTION_YEARS_AVAILABLE_MONTHS" source="NUMBER_OF_OPTION_YEARS_AVAILABLE_MONTHS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NUMBER_OF_OPTION_YEARS_EXERCISED_MONTHS" source="NUMBER_OF_OPTION_YEARS_EXERCISED_MONTHS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ON_TIME_LATE" source="ON_TIME_LATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_AGREEMENT_PROJECT_ID" source="PARENT_AGREEMENT_PROJECT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PLANNED_END_DATE_DATE" source="PLANNED_END_DATE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PLAN_ONCE_CONTRACT_EXPIRES" source="PLAN_ONCE_CONTRACT_EXPIRES"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PLEXXUS_AGREEMENT_TYPE" source="PLEXXUS_AGREEMENT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRICE_ESCALATION" source="PRICE_ESCALATION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RENEWAL_INTERVAL_MONTHS" source="RENEWAL_INTERVAL_MONTHS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVENUE_GENERATING_AGREEMENT" source="REVENUE_GENERATING_AGREEMENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVISED_END_DATE" source="REVISED_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SCOPE" source="SCOPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_TYPE" source="TERM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS_COMMENTS" source="SAVINGS_COMMENTS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_AMOUNT" source="CONTRACT_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_DURATION" source="HEADER_DURATION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROPOSED_CONTRACT_AMOUNT" source="PROPOSED_CONTRACT_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANNUAL_COST_AVOIDANCE_VALUE_ADDS_AMOUNT" source="ANNUAL_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAPITAL_ONE_TIME_SAVINGS_AMOUNT" source="CAPITAL_ONE_TIME_SAVINGS_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INFLATION_FACTOR" source="INFLATION_FACTOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANNUAL_SAVINGS_AMOUNT" source="ANNUAL_SAVINGS_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAPITAL_ONE_TIME_SPEND_AMOUNT" source="CAPITAL_ONE_TIME_SPEND_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTENSION_ANNUAL_SAVINGS_VALUE_INCREMENTAL_AMOUNT" source="EXTENSION_ANNUAL_SAVINGS_VALUE_INCREMENTAL_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ONE_TIME_COST_AVOIDANCE_VALUE_ADDS_AMOUNT" source="ONE_TIME_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_CONTRACT_COST_AVOIDANCE_VALUE_ADDS_AMOUNT" source="TOTAL_CONTRACT_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_CONTRACT_SAVINGS_AMOUNT" source="TOTAL_CONTRACT_SAVINGS_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_STATUS" source="CONTRACT_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TASK_NAME" source="TASK_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TASK_START_DATE" source="TASK_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TASK_END_DATE" source="TASK_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TASK_STATUS" source="TASK_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TASK_TYPE" source="TASK_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TASK_DESCRIPTION" source="TASK_DESCRIPTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TASK_DUE_DATE" source="TASK_DUE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TASK_ON_TIME_LATE" source="TASK_ON_TIME_LATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEMPLATE_ID" source="TEMPLATE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REQUIRED_OPTIONAL" source="REQUIRED_OPTIONAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TASK_ID" source="TASK_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TASK_PROCESS_ID" source="TASK_PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TASK_AVG_DURATION" source="TASK_AVG_DURATION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TASK_COUNT" source="TASK_COUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CATEGORY" source="CATEGORY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUPPLIER" source="SUPPLIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RELATED_ID" source="RELATED_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="APPROVAL_STATUS" source="APPROVAL_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DESCRIPTION" source="DESCRIPTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAPITAL_ONE_TIME_EXPENSE" source="CAPITAL_ONE_TIME_EXPENSE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_SPECIALIST" source="CONTRACT_SPECIALIST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAPITAL" source="CAPITAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMMENTS" source="COMMENTS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REBATE" source="REBATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDGET_OWNER" source="BUDGET_OWNER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$zmethod_join$zcomposite_key" source="zmethod_join"/>
+      </input>
+      <input node="RULES">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXCLUDE" source="EXCLUDE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="START_IN_PARENT" source="START_IN_PARENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="START_TASK" source="START_TASK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="START_PROCESS_ID" source="START_PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_IN_SUB" source="END_IN_SUB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_PROCESS_ID" source="END_PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_TASK" source="END_TASK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$zmethod_join$zcomposite_key" source="zcomposite_key"/>
+      </input>
+    <joinAttribute name="JOIN$zmethod_join$zcomposite_key"/>
+  </calculationView>
+</calculationViews>
+  <logicalModel id="CONTRACTS_RULES">
+    <descriptions/>
+    <attributes>
+      <attribute id="CONTRACT_ID" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Contract ID"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="CONTRACT_ID"/>
+      </attribute>
+      <attribute id="PROJECT_ID" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Project ID"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="PROJECT_ID"/>
+      </attribute>
+      <attribute id="START_DATE" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Start Date"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="START_DATE"/>
+      </attribute>
+      <attribute id="PROJECT_NAME" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Project Name"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="PROJECT_NAME"/>
+      </attribute>
+      <attribute id="STATE" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="State"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="STATE"/>
+      </attribute>
+      <attribute id="OWNER" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Owner"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="OWNER"/>
+      </attribute>
+      <attribute id="AMMENDMENT_TYPE" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Amendment Type"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="AMMENDMENT_TYPE"/>
+      </attribute>
+      <attribute id="BASED_ON_PROJECT_ID" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Based on Project ID"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="BASED_ON_PROJECT_ID"/>
+      </attribute>
+      <attribute id="IS_EVERGREEN" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Is Evergreen"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="IS_EVERGREEN"/>
+      </attribute>
+      <attribute id="EFFECTIVE_DATE" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Effective Date"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="EFFECTIVE_DATE"/>
+      </attribute>
+      <attribute id="EXPIRATION_DATE" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Expiration Date"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="EXPIRATION_DATE"/>
+      </attribute>
+      <attribute id="DUE_DATE" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Due Date"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="DUE_DATE"/>
+      </attribute>
+      <attribute id="EARLIEST_CONTRACT_EXPIRY" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Earliest Contract Expiry Date"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="EARLIEST_CONTRACT_EXPIRY"/>
+      </attribute>
+      <attribute id="END_DATE" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="End Date"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="END_DATE"/>
+      </attribute>
+      <attribute id="EXTENSION_TYPE" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Extension Type"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="EXTENSION_TYPE"/>
+      </attribute>
+      <attribute id="HIERARCHY_TYPE" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Hierarchy Type"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="HIERARCHY_TYPE"/>
+      </attribute>
+      <attribute id="HOSPITAL_CONTACT" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Hospital Contact"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="HOSPITAL_CONTACT"/>
+      </attribute>
+      <attribute id="INITIATIVE_TYPE" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Initiative Type"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="INITIATIVE_TYPE"/>
+      </attribute>
+      <attribute id="IS_PERPETUAL" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Is Perpetual"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="IS_PERPETUAL"/>
+      </attribute>
+      <attribute id="IS_TEST_PROJECT" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Is Test Project"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="IS_TEST_PROJECT"/>
+      </attribute>
+      <attribute id="MAX_NUMBER_OF_RENEWALS" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Maximum Number of Renewals"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="MAX_NUMBER_OF_RENEWALS"/>
+      </attribute>
+      <attribute id="METHOD" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Method"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="METHOD"/>
+      </attribute>
+      <attribute id="NUMBER_OF_LINE_ITMES_FOR_SAP_UPDATE" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Number of Line Items for SAP update"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="NUMBER_OF_LINE_ITMES_FOR_SAP_UPDATE"/>
+      </attribute>
+      <attribute id="ON_TIME_LATE" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="On Time/Late"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="ON_TIME_LATE"/>
+      </attribute>
+      <attribute id="PARENT_AGREEMENT_PROJECT_ID" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Parent Agreement Project ID"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="PARENT_AGREEMENT_PROJECT_ID"/>
+      </attribute>
+      <attribute id="PLANNED_END_DATE_DATE" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Planned End Date"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="PLANNED_END_DATE_DATE"/>
+      </attribute>
+      <attribute id="PLAN_ONCE_CONTRACT_EXPIRES" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Plan Once Contract Expires"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="PLAN_ONCE_CONTRACT_EXPIRES"/>
+      </attribute>
+      <attribute id="PLEXXUS_AGREEMENT_TYPE" order="31" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Plexxus Agreement Type"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="PLEXXUS_AGREEMENT_TYPE"/>
+      </attribute>
+      <attribute id="PRICE_ESCALATION" order="32" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Price Escalation"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="PRICE_ESCALATION"/>
+      </attribute>
+      <attribute id="REVENUE_GENERATING_AGREEMENT" order="34" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Revenue Generating Agreement"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="REVENUE_GENERATING_AGREEMENT"/>
+      </attribute>
+      <attribute id="REVISED_END_DATE" order="35" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Revised End Date"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="REVISED_END_DATE"/>
+      </attribute>
+      <attribute id="SCOPE" order="36" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Scope"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="SCOPE"/>
+      </attribute>
+      <attribute id="TERM_TYPE" order="37" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Term Type"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="TERM_TYPE"/>
+      </attribute>
+      <attribute id="VERSION" order="38" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Version"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="VERSION"/>
+      </attribute>
+      <attribute id="SAVINGS_COMMENTS" order="39" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Savings Comments"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="SAVINGS_COMMENTS"/>
+      </attribute>
+      <attribute id="CLIENT" order="52" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Client"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="CLIENT"/>
+      </attribute>
+      <attribute id="CONTRACT_STATUS" order="53" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Contract Status"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="CONTRACT_STATUS"/>
+      </attribute>
+      <attribute id="TASK_NAME" order="54" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Task Name"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="TASK_NAME"/>
+      </attribute>
+      <attribute id="TASK_START_DATE" order="55" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Task Start Date"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="TASK_START_DATE"/>
+      </attribute>
+      <attribute id="TASK_END_DATE" order="56" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Task End Date"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="TASK_END_DATE"/>
+      </attribute>
+      <attribute id="TASK_STATUS" order="57" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Task Status"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="TASK_STATUS"/>
+      </attribute>
+      <attribute id="TASK_TYPE" order="58" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Task Type"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="TASK_TYPE"/>
+      </attribute>
+      <attribute id="TASK_DESCRIPTION" order="59" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Task Description"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="TASK_DESCRIPTION"/>
+      </attribute>
+      <attribute id="TASK_DUE_DATE" order="60" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Task Due Date"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="TASK_DUE_DATE"/>
+      </attribute>
+      <attribute id="TASK_ON_TIME_LATE" order="61" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Task On Time/Late"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="TASK_ON_TIME_LATE"/>
+      </attribute>
+      <attribute id="TEMPLATE_ID" order="62" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Project Template ID"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="TEMPLATE_ID"/>
+      </attribute>
+      <attribute id="REQUIRED_OPTIONAL" order="63" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Required/Optional"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="REQUIRED_OPTIONAL"/>
+      </attribute>
+      <attribute id="TASK_ID" order="64" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Task ID"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="TASK_ID"/>
+      </attribute>
+      <attribute id="TASK_PROCESS_ID" order="65" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Task Process ID"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="TASK_PROCESS_ID"/>
+      </attribute>
+      <attribute id="EXCLUDE" order="68" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Exclude"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="EXCLUDE"/>
+      </attribute>
+      <attribute id="START_IN_PARENT" order="69" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Start In Parent?"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="START_IN_PARENT"/>
+      </attribute>
+      <attribute id="START_TASK" order="70" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Start Process Task Name"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="START_TASK"/>
+      </attribute>
+      <attribute id="START_PROCESS_ID" order="71" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Start Process ID"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="START_PROCESS_ID"/>
+      </attribute>
+      <attribute id="END_IN_SUB" order="72" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="End In SubContract?"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="END_IN_SUB"/>
+      </attribute>
+      <attribute id="END_PROCESS_ID" order="73" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="End Process ID"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="END_PROCESS_ID"/>
+      </attribute>
+      <attribute id="END_TASK" order="74" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="End Process Task Name"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="END_TASK"/>
+      </attribute>
+      <attribute id="CATEGORY" order="75" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Category"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="CATEGORY"/>
+      </attribute>
+      <attribute id="SUPPLIER" order="76" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Supplier"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="SUPPLIER"/>
+      </attribute>
+      <attribute id="RELATED_ID" order="77" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PR or HPRO Number"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="RELATED_ID"/>
+      </attribute>
+      <attribute id="APPROVAL_STATUS" order="78" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Approval Status"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="APPROVAL_STATUS"/>
+      </attribute>
+      <attribute id="DESCRIPTION" order="79" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Description"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="DESCRIPTION"/>
+      </attribute>
+      <attribute id="CAPITAL_ONE_TIME_EXPENSE" order="80" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CAPITAL_ONE_TIME_EXPENSE"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="CAPITAL_ONE_TIME_EXPENSE"/>
+      </attribute>
+      <attribute id="CONTRACT_SPECIALIST" order="81" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTRACT_SPECIALIST"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="CONTRACT_SPECIALIST"/>
+      </attribute>
+      <attribute id="CAPITAL" order="82" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CAPITAL"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="CAPITAL"/>
+      </attribute>
+      <attribute id="COMMENTS" order="83" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="COMMENTS"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="COMMENTS"/>
+      </attribute>
+      <attribute id="REBATE" order="84" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REBATE"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="REBATE"/>
+      </attribute>
+      <attribute id="BUDGET_OWNER" order="85" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BUDGET_OWNER"/>
+        <keyMapping columnObjectName="CONTRACTS_RULES" columnName="BUDGET_OWNER"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="NUMBER_OF_AUTOMATIC_RENEWALS" order="23" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Number of Automatic Renewals"/>
+        <measureMapping columnObjectName="CONTRACTS_RULES" columnName="NUMBER_OF_AUTOMATIC_RENEWALS"/>
+      </measure>
+      <measure id="NUMBER_OF_OPTION_YEARS_AVAILABLE_MONTHS" order="25" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Option Years Available in Months"/>
+        <measureMapping columnObjectName="CONTRACTS_RULES" columnName="NUMBER_OF_OPTION_YEARS_AVAILABLE_MONTHS"/>
+      </measure>
+      <measure id="NUMBER_OF_OPTION_YEARS_EXERCISED_MONTHS" order="26" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Option Years Exercised in Months"/>
+        <measureMapping columnObjectName="CONTRACTS_RULES" columnName="NUMBER_OF_OPTION_YEARS_EXERCISED_MONTHS"/>
+      </measure>
+      <measure id="RENEWAL_INTERVAL_MONTHS" order="33" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Renewal Interval in Months"/>
+        <measureMapping columnObjectName="CONTRACTS_RULES" columnName="RENEWAL_INTERVAL_MONTHS"/>
+      </measure>
+      <measure id="CONTRACT_AMOUNT" order="40" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Annual Contract Value"/>
+        <measureMapping columnObjectName="CONTRACTS_RULES" columnName="CONTRACT_AMOUNT"/>
+      </measure>
+      <measure id="HEADER_DURATION" order="41" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Contract Duration"/>
+        <measureMapping columnObjectName="CONTRACTS_RULES" columnName="HEADER_DURATION"/>
+      </measure>
+      <measure id="PROPOSED_CONTRACT_AMOUNT" order="42" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total Contract Value"/>
+        <measureMapping columnObjectName="CONTRACTS_RULES" columnName="PROPOSED_CONTRACT_AMOUNT"/>
+      </measure>
+      <measure id="ANNUAL_COST_AVOIDANCE_VALUE_ADDS_AMOUNT" order="43" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Annual Cost Avoidance &amp; Value Adds Amount"/>
+        <measureMapping columnObjectName="CONTRACTS_RULES" columnName="ANNUAL_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+      </measure>
+      <measure id="CAPITAL_ONE_TIME_SAVINGS_AMOUNT" order="44" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Capital/One-time Savings Amount"/>
+        <measureMapping columnObjectName="CONTRACTS_RULES" columnName="CAPITAL_ONE_TIME_SAVINGS_AMOUNT"/>
+      </measure>
+      <measure id="INFLATION_FACTOR" order="45" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Inflation Factor"/>
+        <measureMapping columnObjectName="CONTRACTS_RULES" columnName="INFLATION_FACTOR"/>
+      </measure>
+      <measure id="ANNUAL_SAVINGS_AMOUNT" order="46" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Annual Savings Amount"/>
+        <measureMapping columnObjectName="CONTRACTS_RULES" columnName="ANNUAL_SAVINGS_AMOUNT"/>
+      </measure>
+      <measure id="CAPITAL_ONE_TIME_SPEND_AMOUNT" order="47" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Capital/One-Time Spend Amount"/>
+        <measureMapping columnObjectName="CONTRACTS_RULES" columnName="CAPITAL_ONE_TIME_SPEND_AMOUNT"/>
+      </measure>
+      <measure id="EXTENSION_ANNUAL_SAVINGS_VALUE_INCREMENTAL_AMOUNT" order="48" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Extension Annual Savings Value Amount"/>
+        <measureMapping columnObjectName="CONTRACTS_RULES" columnName="EXTENSION_ANNUAL_SAVINGS_VALUE_INCREMENTAL_AMOUNT"/>
+      </measure>
+      <measure id="ONE_TIME_COST_AVOIDANCE_VALUE_ADDS_AMOUNT" order="49" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="One-time Cost Avoidance &amp; Value Adds Amount"/>
+        <measureMapping columnObjectName="CONTRACTS_RULES" columnName="ONE_TIME_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+      </measure>
+      <measure id="TOTAL_CONTRACT_COST_AVOIDANCE_VALUE_ADDS_AMOUNT" order="50" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total Contract Cost Avoiance &amp; Value Adds Amount"/>
+        <measureMapping columnObjectName="CONTRACTS_RULES" columnName="TOTAL_CONTRACT_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+      </measure>
+      <measure id="TOTAL_CONTRACT_SAVINGS_AMOUNT" order="51" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total Contract Savings Amount"/>
+        <measureMapping columnObjectName="CONTRACTS_RULES" columnName="TOTAL_CONTRACT_SAVINGS_AMOUNT"/>
+      </measure>
+      <measure id="TASK_AVG_DURATION" order="66" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Task Duration"/>
+        <measureMapping columnObjectName="CONTRACTS_RULES" columnName="TASK_AVG_DURATION"/>
+      </measure>
+      <measure id="TASK_LINE_COUNT" order="67" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Count of Tasks"/>
+        <measureMapping columnObjectName="CONTRACTS_RULES" columnName="TASK_COUNT"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+<layout>
+  <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="176" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="contracts" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="357"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="tasks" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="357"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="CONTRACTS_TASKS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    <shape modelObjectName="contracts" modelObjectNameSpace="CONTRACTS_TASKS" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="tasks" modelObjectNameSpace="CONTRACTS_TASKS" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="RULES" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="CONTRACTS_RULES" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    
+    <shape modelObjectName="CONTRACTS_TASKS" modelObjectNameSpace="CONTRACTS_RULES" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="RULES" modelObjectNameSpace="CONTRACTS_RULES" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

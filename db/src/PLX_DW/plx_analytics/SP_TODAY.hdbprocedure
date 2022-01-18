@@ -1,0 +1,24 @@
+PROCEDURE "plx_analytics::SP_TODAY" ( out TODAY varchar(8)  ) 
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+	READS SQL DATA AS
+BEGIN
+/***************************** 
+    returns scalar: today's date formatted
+    as ABAP date, EG. '20150101' for 2015, Jan 01.
+    
+    This is used to filter certain records 
+    which only have validity periods and no 
+    deletion indicators, such as price conditions
+    and source list entries.
+    
+    Create an input variable on the view, then do
+    valid from <= $$TODAY$$, valid to >= $$TODAY$$
+ *****************************/
+ 
+ TODAY := 
+ TO_DATS( CURRENT_DATE );
+ 
+ select TODAY from "DUMMY";
+ 
+END;

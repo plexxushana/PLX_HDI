@@ -1,0 +1,533 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="3.0" id="plx_analytics::CA_CO_PLX_COST_CENTER_ANALYSIS_LINE_ITEM_CONSOLIDATION_ACTUAL" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+<origin/>
+  <descriptions defaultDescription="CA_CO_PLX_COST_CENTER_ANALYSIS_LINT_ITEM_CONSOLIDATION_ACTUAL"/>
+  <metadata changedAt="2021-06-30 13:26:56.531"/>
+  <localVariables>
+    <variable id="IP_KOKRS" parameter="true">
+      <descriptions defaultDescription="IP_KOKRS"/>
+      <variableProperties datatype="NVARCHAR" length="4" mandatory="true" scale="0">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_CONTROLLING_AREAS</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>KOKRS</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="true" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="FISCAL_YEAR" parameter="true">
+      <descriptions defaultDescription="FISCAL_YEAR"/>
+      <variableProperties datatype="VARCHAR" length="4" mandatory="true" scale="0" defaultValue="undefined">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_FISC_CAL</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>ZFISCAL_YEAR</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="IP_CHART" parameter="true">
+      <descriptions defaultDescription="IP_CHART"/>
+      <variableProperties datatype="NVARCHAR" length="4" mandatory="false" scale="0" defaultValue="undefined">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_CHART_OF_ACCOUNTS</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>KTOPL</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="FN_HIERARCHY_KOSTL_KSTAR_RESTRICT">
+      <targetVariable name="CHART_OF_ACCOUNTS" resourceUri="plx_analytics::FN_HIERARCHY_KOSTL_KSTAR_RESTRICT"/>
+      <localVariable>IP_CHART</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="FN_HIERARCHY_KOSTL_KSTAR_RESTRICT">
+      <targetVariable name="CONTROLLINGAREA" resourceUri="plx_analytics::FN_HIERARCHY_KOSTL_KSTAR_RESTRICT"/>
+      <localVariable>IP_KOKRS</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="42"/>
+  <dataSources>
+    <DataSource id="ECC_COBK">
+      <resourceUri>ECC_COBK</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_COEP">
+      <resourceUri>ECC_COEP</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_ONRKS">
+      <resourceUri>ECC_ONRKS</resourceUri>
+    </DataSource>
+    <DataSource id="FN_HIERARCHY_KOSTL_KSTAR_RESTRICT" type="TABLE_FUNCTION">
+      <resourceUri>plx_analytics::FN_HIERARCHY_KOSTL_KSTAR_RESTRICT</resourceUri>
+    </DataSource>
+  </dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="VRGNG"/>
+        <viewAttribute id="TIMESTMP"/>
+        <viewAttribute id="PERAB"/>
+        <viewAttribute id="PERBI"/>
+        <viewAttribute id="BLDAT"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="USNAM"/>
+        <viewAttribute id="BLTXT"/>
+        <viewAttribute id="STFLG"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="SUMBZ"/>
+        <viewAttribute id="DELBZ"/>
+        <viewAttribute id="KURST"/>
+        <viewAttribute id="VARNR"/>
+        <viewAttribute id="KWAER"/>
+        <viewAttribute id="AWTYP"/>
+        <viewAttribute id="AWORG"/>
+        <viewAttribute id="LOGSYSTEM"/>
+        <viewAttribute id="AWSYS"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="ECC_COBK"/>
+    <filter>(in (&quot;KOKRS&quot;,'$$IP_KOKRS$$')) AND (&quot;GJAHR&quot; ='$$FISCAL_YEAR$$')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="PERIO"/>
+        <viewAttribute id="WTGBTR"/>
+        <viewAttribute id="WOGBTR"/>
+        <viewAttribute id="WKGBTR"/>
+        <viewAttribute id="LEDNR"/>
+        <viewAttribute id="OBJNR"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="WRTTP"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="BEKNZ"/>
+        <viewAttribute id="ZLENR"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="GSBER"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="ECC_COEP"/>
+    <filter>(in (&quot;KOKRS&quot;,'$$IP_KOKRS$$')) AND (&quot;GJAHR&quot; ='$$FISCAL_YEAR$$') AND (&quot;WRTTP&quot; ='04')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinType="inner">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="VRGNG"/>
+        <viewAttribute id="TIMESTMP"/>
+        <viewAttribute id="PERAB"/>
+        <viewAttribute id="PERBI"/>
+        <viewAttribute id="BLDAT"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="USNAM"/>
+        <viewAttribute id="BLTXT"/>
+        <viewAttribute id="STFLG"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="SUMBZ"/>
+        <viewAttribute id="DELBZ"/>
+        <viewAttribute id="KURST"/>
+        <viewAttribute id="VARNR"/>
+        <viewAttribute id="KWAER"/>
+        <viewAttribute id="AWTYP"/>
+        <viewAttribute id="AWORG"/>
+        <viewAttribute id="LOGSYSTEM"/>
+        <viewAttribute id="AWSYS"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="PERIO"/>
+        <viewAttribute id="WTGBTR"/>
+        <viewAttribute id="WOGBTR"/>
+        <viewAttribute id="WKGBTR"/>
+        <viewAttribute id="LEDNR"/>
+        <viewAttribute id="OBJNR"/>
+        <viewAttribute id="WRTTP"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="BEKNZ"/>
+        <viewAttribute id="ZLENR"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="GSBER"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="Projection_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VERSN" source="VERSN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VRGNG" source="VRGNG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIMESTMP" source="TIMESTMP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERAB" source="PERAB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERBI" source="PERBI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT" source="CPUDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="USNAM" source="USNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLTXT" source="BLTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STFLG" source="STFLG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUMBZ" source="SUMBZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DELBZ" source="DELBZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KURST" source="KURST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VARNR" source="VARNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KWAER" source="KWAER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWTYP" source="AWTYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWORG" source="AWORG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOGSYSTEM" source="LOGSYSTEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWSYS" source="AWSYS"/>
+      </input>
+      <input node="Projection_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERIO" source="PERIO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTGBTR" source="WTGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WOGBTR" source="WOGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WKGBTR" source="WKGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LEDNR" source="LEDNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OBJNR" source="OBJNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WRTTP" source="WRTTP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="KSTAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEKNZ" source="BEKNZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZLENR" source="ZLENR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GSBER" source="GSBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+      </input>
+    <joinAttribute name="KOKRS"/>
+    <joinAttribute name="BELNR"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="OBJNR"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="KOSTL"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="ECC_ONRKS"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2" joinType="inner">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="VRGNG"/>
+        <viewAttribute id="TIMESTMP"/>
+        <viewAttribute id="PERAB"/>
+        <viewAttribute id="PERBI"/>
+        <viewAttribute id="BLDAT"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="USNAM"/>
+        <viewAttribute id="BLTXT"/>
+        <viewAttribute id="STFLG"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="SUMBZ"/>
+        <viewAttribute id="DELBZ"/>
+        <viewAttribute id="KURST"/>
+        <viewAttribute id="VARNR"/>
+        <viewAttribute id="KWAER"/>
+        <viewAttribute id="AWTYP"/>
+        <viewAttribute id="AWORG"/>
+        <viewAttribute id="LOGSYSTEM"/>
+        <viewAttribute id="AWSYS"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="PERIO"/>
+        <viewAttribute id="WTGBTR"/>
+        <viewAttribute id="WOGBTR"/>
+        <viewAttribute id="WKGBTR"/>
+        <viewAttribute id="LEDNR"/>
+        <viewAttribute id="OBJNR"/>
+        <viewAttribute id="WRTTP"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="BEKNZ"/>
+        <viewAttribute id="ZLENR"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="GSBER"/>
+        <viewAttribute id="KOSTL"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="REVERSE" length="7" expressionLanguage="COLUMN_ENGINE">
+          <formula>TRIM(&quot;GJAHR&quot;)+TRIM(&quot;PERIO&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="Join_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VERSN" source="VERSN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VRGNG" source="VRGNG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIMESTMP" source="TIMESTMP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERAB" source="PERAB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERBI" source="PERBI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT" source="CPUDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="USNAM" source="USNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLTXT" source="BLTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STFLG" source="STFLG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUMBZ" source="SUMBZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DELBZ" source="DELBZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KURST" source="KURST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VARNR" source="VARNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KWAER" source="KWAER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWTYP" source="AWTYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWORG" source="AWORG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOGSYSTEM" source="LOGSYSTEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWSYS" source="AWSYS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERIO" source="PERIO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTGBTR" source="WTGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WOGBTR" source="WOGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WKGBTR" source="WKGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LEDNR" source="LEDNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OBJNR" source="OBJNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WRTTP" source="WRTTP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="KSTAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEKNZ" source="BEKNZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZLENR" source="ZLENR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GSBER" source="GSBER"/>
+      </input>
+      <input node="Projection_3">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OBJNR" source="OBJNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+      </input>
+    <joinAttribute name="OBJNR"/>
+    <joinAttribute name="KOKRS"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_4">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="CONTROLLING_AREA"/>
+        <viewAttribute id="CHART_OF_ACCOUNTS"/>
+        <viewAttribute id="LEVEL"/>
+        <viewAttribute id="PARENT"/>
+        <viewAttribute id="CHILD"/>
+        <viewAttribute id="CHILD_CONCAT"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="FN_HIERARCHY_KOSTL_KSTAR_RESTRICT"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_3" joinType="inner">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="KWAER"/>
+        <viewAttribute id="PERIO"/>
+        <viewAttribute id="OBJNR"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="BEKNZ"/>
+        <viewAttribute id="GSBER"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="REVERSE"/>
+        <viewAttribute id="WTGBTR"/>
+        <viewAttribute id="WOGBTR"/>
+        <viewAttribute id="WKGBTR"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="Join_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VERSN" source="VERSN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KWAER" source="KWAER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERIO" source="PERIO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OBJNR" source="OBJNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="KSTAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEKNZ" source="BEKNZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GSBER" source="GSBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVERSE" source="REVERSE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTGBTR" source="WTGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WOGBTR" source="WOGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WKGBTR" source="WKGBTR"/>
+      </input>
+      <input node="Projection_4">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="CONTROLLING_AREA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="CHILD"/>
+      </input>
+    <joinAttribute name="KOKRS"/>
+    <joinAttribute name="KOSTL"/>
+  </calculationView>
+</calculationViews>
+  <logicalModel id="Join_3">
+    <descriptions/>
+    <attributes>
+      <attribute id="KOKRS" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Controlling Area"/>
+        <keyMapping columnObjectName="Join_3" columnName="KOKRS"/>
+      </attribute>
+      <attribute id="GJAHR" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Year"/>
+        <keyMapping columnObjectName="Join_3" columnName="GJAHR"/>
+      </attribute>
+      <attribute id="VERSN" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Version in CO Document Header"/>
+        <keyMapping columnObjectName="Join_3" columnName="VERSN"/>
+      </attribute>
+      <attribute id="KWAER" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Controlling area currency"/>
+        <keyMapping columnObjectName="Join_3" columnName="KWAER"/>
+      </attribute>
+      <attribute id="PERIO" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Period"/>
+        <keyMapping columnObjectName="Join_3" columnName="PERIO"/>
+      </attribute>
+      <attribute id="OBJNR" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Object number"/>
+        <keyMapping columnObjectName="Join_3" columnName="OBJNR"/>
+      </attribute>
+      <attribute id="KSTAR" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cost Element"/>
+        <keyMapping columnObjectName="Join_3" columnName="KSTAR"/>
+      </attribute>
+      <attribute id="BUKRS" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Company Code"/>
+        <keyMapping columnObjectName="Join_3" columnName="BUKRS"/>
+      </attribute>
+      <attribute id="BEKNZ" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Debit/credit indicator"/>
+        <keyMapping columnObjectName="Join_3" columnName="BEKNZ"/>
+      </attribute>
+      <attribute id="GSBER" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Business Area"/>
+        <keyMapping columnObjectName="Join_3" columnName="GSBER"/>
+      </attribute>
+      <attribute id="KOSTL" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cost Center"/>
+        <keyMapping columnObjectName="Join_3" columnName="KOSTL"/>
+      </attribute>
+      <attribute id="REVERSE" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REVERSE"/>
+        <keyMapping columnObjectName="Join_3" columnName="REVERSE"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="WTGBTR" order="13" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total Value in Transaction Currency"/>
+        <measureMapping columnObjectName="Join_3" columnName="WTGBTR"/>
+      </measure>
+      <measure id="WOGBTR" order="14" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total Value in Object Currency"/>
+        <measureMapping columnObjectName="Join_3" columnName="WOGBTR"/>
+      </measure>
+      <measure id="WKGBTR" order="15" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total Value in Controlling Area Currency"/>
+        <measureMapping columnObjectName="Join_3" columnName="WKGBTR"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+<layout>
+  <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="422" y="112"/>
+        <rectangleSize height="0" width="160"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="92" y="696"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="302" y="696"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="118" y="536"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+    <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="384" y="536"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="145" y="376"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+    <shape modelObjectName="Join_1" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_3" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="Projection_4" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="489" y="376"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="422" y="217"/>
+        <rectangleSize height="0" width="160"/>
+      </shape>
+    
+    <shape modelObjectName="Join_2" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_4" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

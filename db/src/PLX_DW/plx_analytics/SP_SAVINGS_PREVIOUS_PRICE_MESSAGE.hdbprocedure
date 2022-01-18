@@ -1,0 +1,34 @@
+PROCEDURE "plx_analytics::SP_SAVINGS_PREVIOUS_PRICE_MESSAGE" ( out t_out "MANUAL_SAVINGS_PREVIOUS_PRICE") 
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER 
+	--DEFAULT SCHEMA <default_schema_name>
+	READS SQL DATA AS
+BEGIN
+
+t_out = 
+	select 
+
+	"ORG_ID",
+	"NEW_CONTRACT_ID",
+	"PRICE_EFFECTIVE_START_DATE",
+	"PRICE_EFFECTIVE_END_DATE",
+	"CURRENT_ANNUAL_USAGE",
+	"VENDOR_PART_NUMBER",
+	"VENDOR_ID",
+	"BUKRS",
+	"PREVIOUS_PRICE_EA",
+	
+	"plx_analytics::FN_SAVINGS_MESSAGE" (
+	  in_bukrs=> BUKRS
+	, in_vendor_part_number=> vendor_part_number  
+	, in_vendor_id=> vendor_id
+	, in_price_start=> price_effective_start_date
+	, in_price_end=> price_effective_end_date
+	, in_previous_price=> previous_price_ea
+	)
+	as "MESSAGE",
+	"SURROGATE_ID"
+
+	 from "MANUAL_SAVINGS_PREVIOUS_PRICE";
+
+END;

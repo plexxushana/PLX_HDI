@@ -1,0 +1,157 @@
+PROCEDURE "plx_etl::SP_POC_BSEG_DELTA" (out t_out  "V_ECC_BSEG")
+--out t_out  "PLX_DW"."V_ECC_BSEG") 
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+	READS SQL DATA
+	 AS
+
+
+BEGIN
+/***************************** 
+	Write your procedure logic 
+ *****************************/
+ 
+	DECLARE lv_start_date VARCHAR(8) := '20180301';
+	DECLARE lv_end_date VARCHAR(8) := '20180301';
+	DECLARE lv_cpudt_start, lv_cpudt_end, lv_aedat_start, lv_aedat_end VARCHAR(8) := '29990101';
+	
+	
+	DECLARE lv_row_count, lv_step INTEGER;
+	DECLARE i, lv_mod, lv_rest,  lv_div , lv_first_time, lv_counter  INTEGER;
+	declare lv_belnr,lv_belnr1,lv_belnr2,lv_belnr3,lv_belnr4,lv_belnr5,lv_belnr6,lv_belnr7,lv_belnr8,lv_belnr9 nvarchar(10):='9999999999';
+	declare lv_belnr10,lv_belnr11,lv_belnr12,lv_belnr13,lv_belnr14,lv_belnr15,lv_belnr16,lv_belnr17,lv_belnr18,lv_belnr19 nvarchar(10):='9999999999';
+	declare lv_belnr20,lv_belnr21,lv_belnr22,lv_belnr23,lv_belnr24,lv_belnr25,lv_belnr26,lv_belnr27,lv_belnr28,lv_belnr29 nvarchar(10):='9999999999';
+	
+	DECLARE lv_bukrs nvarchar(4) := '9999'; 
+	DECLARE lv_gjahr nvarchar(4) := '9999'; 
+ 	DECLARE arr_dates  VARCHAR(8) ARRAY;
+ 	  DECLARE UPSERT_QUERY, IN_WHERE_CLAUSE,  IN_WHERE_BUKRS,  IN_WHERE_GJAHR , IN_WHERE_CLAUSE1 NVARCHAR(30000) := '' ;
+  
+	DECLARE ARR_BKPF_NR  NVARCHAR(10) ARRAY;
+	DECLARE ARR_BKPF_BUKRS  NVARCHAR(4) ARRAY;
+	DECLARE ARR_BKPF_GJAHR  VARCHAR(4) ARRAY;
+	--GET DATES FROM PLX_DW.HANA_CNTRL_BSEG_LOADS
+	
+	--CREATE LOCAL TEMPORARY TABLE "PLX_DW"."#TEST_TABLE" AS (SELECT TOP 1 *  FROM  "PLX_DW"."V_ECC_BSEG") ;
+	
+	
+	     
+	
+	select cpudt_start into  lv_cpudt_start from "HANA_CNTRL_BSEG_LOADS";
+	select cpudt_end   into  lv_cpudt_end from "HANA_CNTRL_BSEG_LOADS";
+	select aedat_start into  lv_aedat_start from "HANA_CNTRL_BSEG_LOADS";
+	select aedat_end   into  lv_aedat_end from "HANA_CNTRL_BSEG_LOADS";
+	
+					
+	
+	-- get list of docs in BKPF within this 
+	-- start & end time frame
+	lt_bkpf_doc_list = 
+	SELECT  BUKRS, BELNR, GJAHR
+	FROM    "ECC_BKPF"
+	WHERE   "CPUDT" BETWEEN lv_cpudt_start AND lv_cpudt_end 
+	and "BUKRS" = '1100' and gjahr = '2019'; 
+   
+	ARR_BKPF_NR  := ARRAY_AGG(:lt_bkpf_doc_list.BELNR ORDER BY BUKRS, BELNR, GJAHR);
+	--ARR_BKPF_BUKRS := ARRAY_AGG(:lt_bkpf_doc_list.BUKRS ORDER BY BUKRS, BELNR, GJAHR);
+  --	ARR_BKPF_GJAHR := ARRAY_AGG(:lt_bkpf_doc_list.GJAHR ORDER BY BUKRS, BELNR, GJAHR);
+	-- After each record set is returned, add it to our accumulated t_out table
+		lv_step := 30;
+		lv_rest := mod(CARDINALITY(:arr_bkpf_nr), 30);
+		lv_div :=  floor(CARDINALITY(:arr_bkpf_nr)/ 30 ) ;
+   FOR lv_row_count IN 1..lv_div  do
+   --CARDINALITY(:arr_bkpf_nr) DO 
+   
+   if lv_first_time = 0 then 
+        lv_first_time := 1;
+     else 
+      lv_counter := lv_row_count * lv_step  ;
+   end if;
+   
+   IF lv_counter + 30 <= CARDINALITY(:arr_bkpf_nr) THEN 
+   
+    lv_belnr  := :ARR_BKPF_NR[lv_counter];
+    lv_belnr1 := :ARR_BKPF_NR[lv_counter+1];
+    lv_belnr2 := :ARR_BKPF_NR[lv_counter+2];
+    lv_belnr3 := :ARR_BKPF_NR[lv_counter+3];
+    lv_belnr4 := :ARR_BKPF_NR[lv_counter+4];
+    lv_belnr5 := :ARR_BKPF_NR[lv_counter+5];
+    lv_belnr6 := :ARR_BKPF_NR[lv_counter+6];
+    lv_belnr7 := :ARR_BKPF_NR[lv_counter+7];
+    lv_belnr8 := :ARR_BKPF_NR[lv_counter+8];
+    lv_belnr9 := :ARR_BKPF_NR[lv_counter+9];
+    lv_belnr10 := :ARR_BKPF_NR[lv_counter+10];
+    lv_belnr11 := :ARR_BKPF_NR[lv_counter+11];
+    lv_belnr12 := :ARR_BKPF_NR[lv_counter+12];
+    lv_belnr13 := :ARR_BKPF_NR[lv_counter+13];
+    lv_belnr14 := :ARR_BKPF_NR[lv_counter+14];
+    lv_belnr15 := :ARR_BKPF_NR[lv_counter+15];
+    lv_belnr16 := :ARR_BKPF_NR[lv_counter+16];
+    lv_belnr17 := :ARR_BKPF_NR[lv_counter+17];
+    lv_belnr18 := :ARR_BKPF_NR[lv_counter+18];
+    lv_belnr19 := :ARR_BKPF_NR[lv_counter+19];
+    lv_belnr20 := :ARR_BKPF_NR[lv_counter+20];
+    lv_belnr21 := :ARR_BKPF_NR[lv_counter+21];
+    lv_belnr22 := :ARR_BKPF_NR[lv_counter+22];
+    lv_belnr23 := :ARR_BKPF_NR[lv_counter+23];
+    lv_belnr24 := :ARR_BKPF_NR[lv_counter+24];
+    lv_belnr25 := :ARR_BKPF_NR[lv_counter+25];
+    lv_belnr26 := :ARR_BKPF_NR[lv_counter+26];
+    lv_belnr27 := :ARR_BKPF_NR[lv_counter+27];
+    lv_belnr28 := :ARR_BKPF_NR[lv_counter+28];
+    lv_belnr29 := :ARR_BKPF_NR[lv_counter+29];
+      
+    
+	--   lv_belnr := :ARR_BKPF_NR[lv_row_count];
+	--    lv_bukrs := :ARR_BKPF_BUKRS[lv_row_count];
+	--	lv_gjahr := :ARR_BKPF_GJAHR[lv_row_count];
+		
+	 --CALL "PLX_DW"."SP_WRITE_BSEG_DELTA" (lv_belnr, lv_bukrs ,    lv_gjahr, t_out );
+  
+  
+  
+      t_bseg1 =  select 	*  FROM "V_ECC_BSEG"  
+                 WHERE BELNR IN (lv_belnr, lv_belnr1, lv_belnr2,  lv_belnr3,  lv_belnr4, lv_belnr5, lv_belnr6, lv_belnr7, lv_belnr8, lv_belnr9 ,
+                 lv_belnr10, lv_belnr11, lv_belnr12,  lv_belnr13,  lv_belnr14, lv_belnr15, lv_belnr16, lv_belnr17, lv_belnr18, lv_belnr19 ,
+                 lv_belnr20, lv_belnr21, lv_belnr22,  lv_belnr23,  lv_belnr24, lv_belnr25, lv_belnr26, lv_belnr27, lv_belnr28, lv_belnr29 )
+                 --= :lv_belnr
+                 and BUKRS = '1100'
+                 and GJAHR =  '2019';
+                 --and BUKRS = :lv_bukrs
+                 --and GJAHR =  :lv_gjahr;
+ 
+    	
+	   				
+	   				t_out = select * from :t_bseg1  where bukrs = '1100' and gjahr = '2019'
+	   							union all 
+               				select *  from :t_out ; 
+               				
+    
+   END IF;    
+	END FOR;
+
+--lv_rest := CARDINALITY(:arr_bkpf_nr) - lv_mod * 30 ; 
+--lv_rest := 3;
+for lv_row_count IN 1..lv_rest  do
+    lv_belnr := :ARR_BKPF_NR[lv_div * 30 +lv_row_count];
+    
+     t_bseg2 =  select 	*  FROM "V_ECC_BSEG"  
+                 WHERE BELNR IN (lv_belnr )
+                 and BUKRS = '1100'
+                 and GJAHR =  '2019';
+               
+    	
+	   				
+	   				t_out = select * from :t_bseg2
+	   							union all 
+              				select *  from :t_out ; 
+    
+end for;
+
+
+
+ --t_out = SELECT * FROM  "PLX_DW"."#TEST_TABLE";
+-- DROP TABLE "PLX_DW"."#TEST_TABLE"; 
+ 
+END;
+	

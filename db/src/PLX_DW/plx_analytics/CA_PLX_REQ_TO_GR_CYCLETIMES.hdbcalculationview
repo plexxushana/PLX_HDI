@@ -1,0 +1,782 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="3.0" id="plx_analytics::CA_PLX_REQ_TO_GR_CYCLETIMES" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+<origin/>
+  <descriptions defaultDescription="CA_PLX_REQ_TO_GR_CYCLETIMES"/>
+  <metadata changedAt="2019-05-22 15:47:06.427"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="33"/>
+  <dataSources>
+    <DataSource id="ECC_EKKO">
+      <resourceUri>ECC_EKKO</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_EKPO">
+      <resourceUri>ECC_EKPO</resourceUri>
+    </DataSource>
+    <DataSource id="CA_PUR_GOODS_MOVEMENT">
+      <resourceUri>plx_analytics::CA_PUR_GOODS_MOVEMENT</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_EKKN">
+      <resourceUri>ECC_EKKN</resourceUri>
+    </DataSource>
+    <DataSource id="CA_DIM_OUTPUTS">
+      <resourceUri>plx_analytics::CA_DIM_OUTPUTS</resourceUri>
+    </DataSource>
+    <DataSource id="CA_PUR_PREQ">
+      <resourceUri>plx_analytics::CA_PUR_PREQ</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_EREV">
+      <resourceUri>ECC_EREV</resourceUri>
+    </DataSource>
+  </dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="BSTYP"/>
+        <viewAttribute id="STATU"/>
+        <viewAttribute id="AEDAT_EKKO"/>
+        <viewAttribute id="BSART_EKKO"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="VARCHAR" id="Z_DETERMINE_STO" length="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(TRIM(&quot;BSTYP&quot;) = 'F' AND ( TRIM(&quot;BSART_EKKO&quot;)= 'ZA'or TRIM(&quot;BSART_EKKO&quot;)= 'ZD' or TRIM(&quot;BSART_EKKO&quot;)= 'ZR') , 'Yes' , 'No') </formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="ECC_EKKO">
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKKO" source="AEDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART_EKKO" source="BSART"/>
+      </input>
+    <filter>(&quot;BSTYP&quot; ='F')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="LOEKZ"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="NETWR"/>
+        <viewAttribute id="BANFN"/>
+        <viewAttribute id="BNFPO"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="AEDAT_EKPO"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="ECC_EKPO">
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKPO" source="AEDAT"/>
+      </input>
+    <filter>(not isNull(&quot;BANFN&quot;)) AND (not isNull(&quot;BNFPO&quot;))</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinType="inner">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="LOEKZ"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="NETWR"/>
+        <viewAttribute id="BANFN"/>
+        <viewAttribute id="BNFPO"/>
+        <viewAttribute id="STATU"/>
+        <viewAttribute id="BSTYP"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="AEDAT_EKKO"/>
+        <viewAttribute id="AEDAT_EKPO"/>
+        <viewAttribute id="Z_DETERMINE_STO"/>
+        <viewAttribute id="BSART_EKKO"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="Projection_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOEKZ" source="LOEKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETWR" source="NETWR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BANFN" source="BANFN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BNFPO" source="BNFPO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKPO" source="AEDAT_EKPO"/>
+      </input>
+      <input node="Projection_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATU" source="STATU"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSTYP" source="BSTYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKKO" source="AEDAT_EKKO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_DETERMINE_STO" source="Z_DETERMINE_STO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART_EKKO" source="BSART_EKKO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+      </input>
+    <joinAttribute name="EBELN"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="LOEKZ"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="NETWR"/>
+        <viewAttribute id="BANFN"/>
+        <viewAttribute id="BNFPO"/>
+        <viewAttribute id="STATU"/>
+        <viewAttribute id="BSTYP"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="AEDAT_EKKO"/>
+        <viewAttribute id="AEDAT_EKPO"/>
+        <viewAttribute id="Z_DETERMINE_STO"/>
+        <viewAttribute id="BSART_EKKO"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="Join_1"/>
+    <filter>(&quot;BANFN&quot; &gt;'0')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_4">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="BWART"/>
+        <viewAttribute id="MBLNR"/>
+        <viewAttribute id="ZEILE"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="Z_GR_Entry_Date" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;CPUDT&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="CA_PUR_GOODS_MOVEMENT"/>
+    <filter>(&quot;BWART&quot; !='645')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2" joinType="rightOuter">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="MBLNR"/>
+        <viewAttribute id="ZEILE"/>
+        <viewAttribute id="BWART"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="LOEKZ"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="NETWR"/>
+        <viewAttribute id="BANFN"/>
+        <viewAttribute id="BNFPO"/>
+        <viewAttribute id="STATU"/>
+        <viewAttribute id="BSTYP"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="AEDAT_EKKO"/>
+        <viewAttribute id="AEDAT_EKPO"/>
+        <viewAttribute id="Z_DETERMINE_STO"/>
+        <viewAttribute id="Z_GR_Entry_Date"/>
+        <viewAttribute id="BSART_EKKO"/>
+      <viewAttribute hidden="true" id="JOIN$EBELN$EBELN"/>
+      <viewAttribute hidden="true" id="JOIN$EBELP$EBELP"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="Projection_4">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT" source="CPUDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MBLNR" source="MBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZEILE" source="ZEILE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BWART" source="BWART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_GR_Entry_Date" source="Z_GR_Entry_Date"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$EBELN$EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$EBELP$EBELP" source="EBELP"/>
+      </input>
+      <input node="Projection_3">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOEKZ" source="LOEKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETWR" source="NETWR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BANFN" source="BANFN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BNFPO" source="BNFPO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATU" source="STATU"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSTYP" source="BSTYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKKO" source="AEDAT_EKKO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKPO" source="AEDAT_EKPO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_DETERMINE_STO" source="Z_DETERMINE_STO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART_EKKO" source="BSART_EKKO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$EBELN$EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$EBELP$EBELP" source="EBELP"/>
+      </input>
+    <joinAttribute name="JOIN$EBELN$EBELN"/>
+    <joinAttribute name="JOIN$EBELP$EBELP"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_5">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="VPROZ"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="ECC_EKKN"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_3" joinType="rightOuter">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="VPROZ"/>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="MBLNR"/>
+        <viewAttribute id="ZEILE"/>
+        <viewAttribute id="BWART"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="LOEKZ"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="NETWR"/>
+        <viewAttribute id="BANFN"/>
+        <viewAttribute id="BNFPO"/>
+        <viewAttribute id="STATU"/>
+        <viewAttribute id="BSTYP"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="AEDAT_EKKO"/>
+        <viewAttribute id="AEDAT_EKPO"/>
+        <viewAttribute id="Z_DETERMINE_STO"/>
+        <viewAttribute id="Z_GR_Entry_Date"/>
+        <viewAttribute id="BSART_EKKO"/>
+      <viewAttribute hidden="true" id="JOIN$EBELN$EBELN"/>
+      <viewAttribute hidden="true" id="JOIN$EBELP$EBELP"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="Projection_5">
+        <mapping xsi:type="Calculation:AttributeMapping" target="VPROZ" source="VPROZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$EBELN$EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$EBELP$EBELP" source="EBELP"/>
+      </input>
+      <input node="Join_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT" source="CPUDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MBLNR" source="MBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZEILE" source="ZEILE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BWART" source="BWART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOEKZ" source="LOEKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETWR" source="NETWR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BANFN" source="BANFN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BNFPO" source="BNFPO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATU" source="STATU"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSTYP" source="BSTYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKKO" source="AEDAT_EKKO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKPO" source="AEDAT_EKPO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_DETERMINE_STO" source="Z_DETERMINE_STO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_GR_Entry_Date" source="Z_GR_Entry_Date"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART_EKKO" source="BSART_EKKO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$EBELN$EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$EBELP$EBELP" source="EBELP"/>
+      </input>
+    <joinAttribute name="JOIN$EBELN$EBELN"/>
+    <joinAttribute name="JOIN$EBELP$EBELP"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_6">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="OBJKY_10_CHAR"/>
+        <viewAttribute id="KSCHL"/>
+        <viewAttribute id="NACHA"/>
+        <viewAttribute id="NATXT"/>
+        <viewAttribute id="USNAM"/>
+        <viewAttribute id="DATVR"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="CA_DIM_OUTPUTS"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_4" joinType="rightOuter">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="VPROZ"/>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="MBLNR"/>
+        <viewAttribute id="ZEILE"/>
+        <viewAttribute id="BWART"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="LOEKZ"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="NETWR"/>
+        <viewAttribute id="BANFN"/>
+        <viewAttribute id="BNFPO"/>
+        <viewAttribute id="STATU"/>
+        <viewAttribute id="BSTYP"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="AEDAT_EKKO"/>
+        <viewAttribute id="AEDAT_EKPO"/>
+        <viewAttribute id="OBJKY_10_CHAR"/>
+        <viewAttribute id="DATVR"/>
+        <viewAttribute id="Z_DETERMINE_STO"/>
+        <viewAttribute id="Z_GR_Entry_Date"/>
+        <viewAttribute id="BSART_EKKO"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="Z_PO_Creation_Date" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;Z_DETERMINE_STO&quot; = 'Yes' , &quot;AEDAT_EKKO&quot;, &quot;DATVR&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="Projection_6">
+        <mapping xsi:type="Calculation:AttributeMapping" target="OBJKY_10_CHAR" source="OBJKY_10_CHAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATVR" source="DATVR"/>
+      </input>
+      <input node="Join_3">
+        <mapping xsi:type="Calculation:AttributeMapping" target="VPROZ" source="VPROZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT" source="CPUDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MBLNR" source="MBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZEILE" source="ZEILE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BWART" source="BWART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOEKZ" source="LOEKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETWR" source="NETWR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BANFN" source="BANFN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BNFPO" source="BNFPO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATU" source="STATU"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSTYP" source="BSTYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKKO" source="AEDAT_EKKO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKPO" source="AEDAT_EKPO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_DETERMINE_STO" source="Z_DETERMINE_STO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_GR_Entry_Date" source="Z_GR_Entry_Date"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART_EKKO" source="BSART_EKKO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OBJKY_10_CHAR" source="EBELN"/>
+      </input>
+    <joinAttribute name="OBJKY_10_CHAR"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_7">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="MBLNR"/>
+        <viewAttribute id="ZEILE"/>
+        <viewAttribute id="BWART"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="LOEKZ"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="NETWR"/>
+        <viewAttribute id="BANFN"/>
+        <viewAttribute id="BNFPO"/>
+        <viewAttribute id="STATU"/>
+        <viewAttribute id="BSTYP"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="AEDAT_EKKO"/>
+        <viewAttribute id="AEDAT_EKPO"/>
+        <viewAttribute id="OBJKY_10_CHAR"/>
+        <viewAttribute id="DATVR"/>
+        <viewAttribute id="Z_PO_Creation_Date"/>
+        <viewAttribute id="Z_GR_Entry_Date"/>
+        <viewAttribute id="BSART_EKKO"/>
+        <viewAttribute id="CPUDT"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="Join_4"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_8">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="BANFN"/>
+        <viewAttribute id="BNFPO"/>
+        <viewAttribute id="BSART_PR"/>
+        <viewAttribute id="BADAT"/>
+        <viewAttribute id="AFNAM"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="CA_PUR_PREQ">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART_PR" source="BSART"/></input>
+    </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_9">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="BSTYP"/>
+        <viewAttribute id="EDOKN"/>
+        <viewAttribute id="EDOKP"/>
+        <viewAttribute id="REVNO"/>
+        <viewAttribute id="LOEKZ_EREV"/>
+        <viewAttribute id="FGDAT"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="ECC_EREV">
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOEKZ_EREV" source="LOEKZ"/></input>
+    <filter>(&quot;BSTYP&quot; ='B') AND (&quot;REVNO&quot; ='00000000')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_5" joinType="rightOuter">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="BANFN"/>
+        <viewAttribute id="BNFPO"/>
+        <viewAttribute id="BSART_PR"/>
+        <viewAttribute id="REVNO"/>
+        <viewAttribute id="LOEKZ_EREV"/>
+        <viewAttribute id="FGDAT"/>
+        <viewAttribute id="BADAT"/>
+        <viewAttribute id="AFNAM"/>
+      <viewAttribute hidden="true" id="JOIN$EDOKN$BANFN"/>
+      <viewAttribute hidden="true" id="JOIN$EDOKP$BNFPO"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="Z_Requisn_Date" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(Trim(&quot;BSART_PR&quot;)!='ZPS',&quot;BADAT&quot;,&quot;FGDAT&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="Projection_9">
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVNO" source="REVNO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOEKZ_EREV" source="LOEKZ_EREV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FGDAT" source="FGDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$EDOKN$BANFN" source="EDOKN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$EDOKP$BNFPO" source="EDOKP"/>
+      </input>
+      <input node="Projection_8">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BANFN" source="BANFN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BNFPO" source="BNFPO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART_PR" source="BSART_PR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BADAT" source="BADAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AFNAM" source="AFNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$EDOKN$BANFN" source="BANFN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$EDOKP$BNFPO" source="BNFPO"/>
+      </input>
+    <joinAttribute name="JOIN$EDOKN$BANFN"/>
+    <joinAttribute name="JOIN$EDOKP$BNFPO"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_6" joinType="rightOuter">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="MBLNR"/>
+        <viewAttribute id="ZEILE"/>
+        <viewAttribute id="BWART"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="LOEKZ"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="NETWR"/>
+        <viewAttribute id="BANFN"/>
+        <viewAttribute id="BNFPO"/>
+        <viewAttribute id="STATU"/>
+        <viewAttribute id="BSTYP"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="AEDAT_EKKO"/>
+        <viewAttribute id="AEDAT_EKPO"/>
+        <viewAttribute id="OBJKY_10_CHAR"/>
+        <viewAttribute id="DATVR"/>
+        <viewAttribute id="Z_PO_Creation_Date"/>
+        <viewAttribute id="Z_GR_Entry_Date"/>
+        <viewAttribute id="BSART_EKKO"/>
+        <viewAttribute id="BSART_PR"/>
+        <viewAttribute id="REVNO"/>
+        <viewAttribute id="LOEKZ_EREV"/>
+        <viewAttribute id="Z_Requisn_Date"/>
+        <viewAttribute id="AFNAM"/>
+      <viewAttribute hidden="true" id="JOIN$BANFN$BANFN"/>
+      <viewAttribute hidden="true" id="JOIN$BNFPO$BNFPO"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="Join_5">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART_PR" source="BSART_PR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVNO" source="REVNO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOEKZ_EREV" source="LOEKZ_EREV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_Requisn_Date" source="Z_Requisn_Date"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AFNAM" source="AFNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$BANFN$BANFN" source="BANFN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$BNFPO$BNFPO" source="BNFPO"/>
+      </input>
+      <input node="Projection_7">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MBLNR" source="MBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZEILE" source="ZEILE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BWART" source="BWART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOEKZ" source="LOEKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETWR" source="NETWR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BANFN" source="BANFN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BNFPO" source="BNFPO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATU" source="STATU"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSTYP" source="BSTYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKKO" source="AEDAT_EKKO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKPO" source="AEDAT_EKPO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OBJKY_10_CHAR" source="OBJKY_10_CHAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATVR" source="DATVR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_PO_Creation_Date" source="Z_PO_Creation_Date"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_GR_Entry_Date" source="Z_GR_Entry_Date"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART_EKKO" source="BSART_EKKO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$BANFN$BANFN" source="BANFN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$BNFPO$BNFPO" source="BNFPO"/>
+      </input>
+    <joinAttribute name="JOIN$BANFN$BANFN"/>
+    <joinAttribute name="JOIN$BNFPO$BNFPO"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_10">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="BANFN"/>
+        <viewAttribute id="BNFPO"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="BSTYP"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="NETWR"/>
+        <viewAttribute id="STATU"/>
+        <viewAttribute id="MBLNR"/>
+        <viewAttribute id="ZEILE"/>
+        <viewAttribute id="BWART"/>
+        <viewAttribute id="LOEKZ"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="AEDAT_EKKO"/>
+        <viewAttribute id="AEDAT_EKPO"/>
+        <viewAttribute id="OBJKY_10_CHAR"/>
+        <viewAttribute id="DATVR"/>
+        <viewAttribute id="Z_PO_Creation_Date"/>
+        <viewAttribute id="Z_GR_Entry_Date"/>
+        <viewAttribute id="BSART_EKKO"/>
+        <viewAttribute id="BSART_PR"/>
+        <viewAttribute id="REVNO"/>
+        <viewAttribute id="LOEKZ_EREV"/>
+        <viewAttribute id="Z_Requisn_Date"/>
+        <viewAttribute id="AFNAM"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="Join_6"/>
+    </calculationView>
+</calculationViews>
+  <logicalModel id="Projection_10">
+    <descriptions/>
+    <attributes>
+      <attribute id="BANFN" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchase Req."/>
+        <keyMapping columnObjectName="Projection_10" columnName="BANFN"/>
+      </attribute>
+      <attribute id="BNFPO" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Requisn Item"/>
+        <keyMapping columnObjectName="Projection_10" columnName="BNFPO"/>
+      </attribute>
+      <attribute id="EBELN" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchasing Document Number"/>
+        <keyMapping columnObjectName="Projection_10" columnName="EBELN"/>
+      </attribute>
+      <attribute id="EBELP" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Item Number of Purchasing Document"/>
+        <keyMapping columnObjectName="Projection_10" columnName="EBELP"/>
+      </attribute>
+      <attribute id="BSTYP" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchasing Document Category"/>
+        <keyMapping columnObjectName="Projection_10" columnName="BSTYP"/>
+      </attribute>
+      <attribute id="MATNR" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Number"/>
+        <keyMapping columnObjectName="Projection_10" columnName="MATNR"/>
+      </attribute>
+      <attribute id="STATU" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Status of Purchasing Document"/>
+        <keyMapping columnObjectName="Projection_10" columnName="STATU"/>
+      </attribute>
+      <attribute id="MBLNR" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Number of Material Document"/>
+        <keyMapping columnObjectName="Projection_10" columnName="MBLNR"/>
+      </attribute>
+      <attribute id="ZEILE" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Item in Material Document"/>
+        <keyMapping columnObjectName="Projection_10" columnName="ZEILE"/>
+      </attribute>
+      <attribute id="BWART" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Movement Type (Inventory Management)"/>
+        <keyMapping columnObjectName="Projection_10" columnName="BWART"/>
+      </attribute>
+      <attribute id="LOEKZ" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Deletion Indicator in Purchasing Document"/>
+        <keyMapping columnObjectName="Projection_10" columnName="LOEKZ"/>
+      </attribute>
+      <attribute id="BUKRS" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Company Code"/>
+        <keyMapping columnObjectName="Projection_10" columnName="BUKRS"/>
+      </attribute>
+      <attribute id="AEDAT_EKKO" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Created on"/>
+        <keyMapping columnObjectName="Projection_10" columnName="AEDAT_EKKO"/>
+      </attribute>
+      <attribute id="AEDAT_EKPO" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchasing Document Item Change Date"/>
+        <keyMapping columnObjectName="Projection_10" columnName="AEDAT_EKPO"/>
+      </attribute>
+      <attribute id="OBJKY_10_CHAR" order="16" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Object key"/>
+        <keyMapping columnObjectName="Projection_10" columnName="OBJKY_10_CHAR"/>
+      </attribute>
+      <attribute id="DATVR" order="17" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Processing date"/>
+        <keyMapping columnObjectName="Projection_10" columnName="DATVR"/>
+      </attribute>
+      <attribute id="BSART_EKKO" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchasing Document Type"/>
+        <keyMapping columnObjectName="Projection_10" columnName="BSART_EKKO"/>
+      </attribute>
+      <attribute id="BSART_PR" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Document Type"/>
+        <keyMapping columnObjectName="Projection_10" columnName="BSART_PR"/>
+      </attribute>
+      <attribute id="AFNAM" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Requisitioner"/>
+        <keyMapping columnObjectName="Projection_10" columnName="AFNAM"/>
+      </attribute>
+      <attribute id="REVNO" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Version number in Purchasing"/>
+        <keyMapping columnObjectName="Projection_10" columnName="REVNO"/>
+      </attribute>
+      <attribute id="LOEKZ_EREV" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Asset class marked for deletion"/>
+        <keyMapping columnObjectName="Projection_10" columnName="LOEKZ_EREV"/>
+      </attribute>
+      <attribute id="Z_Requisn_Date" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Requisition Date"/>
+        <keyMapping columnObjectName="Projection_10" columnName="Z_Requisn_Date"/>
+      </attribute>
+      <attribute id="Z_PO_Creation_Date" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PO Creation Date"/>
+        <keyMapping columnObjectName="Projection_10" columnName="Z_PO_Creation_Date"/>
+      </attribute>
+      <attribute id="Z_GR_Entry_Date" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GR Entry Date"/>
+        <keyMapping columnObjectName="Projection_10" columnName="Z_GR_Entry_Date"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="NETWR" order="7" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Net Order Value in PO Currency"/>
+        <measureMapping columnObjectName="Projection_10" columnName="NETWR"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+<layout>
+  <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="253" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="632" y="897"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="478" y="897"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="555" y="801"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="555" y="723"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_4" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="401" y="723"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="479" y="627"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    <shape modelObjectName="Projection_4" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_3" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="Projection_5" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="325" y="627"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="404" y="531"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    <shape modelObjectName="Projection_5" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Join_2" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="Projection_6" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="250" y="531"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_4" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="330" y="435"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    <shape modelObjectName="Projection_6" modelObjectNameSpace="Join_4" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Join_3" modelObjectNameSpace="Join_4" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="Projection_7" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="330" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_8" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="435"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_9" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="435"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_5" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    <shape modelObjectName="Projection_9" modelObjectNameSpace="Join_5" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_8" modelObjectNameSpace="Join_5" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="Join_6" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    <shape modelObjectName="Join_5" modelObjectNameSpace="Join_6" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_7" modelObjectNameSpace="Join_6" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="Projection_10" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+</layout>
+</Calculation:scenario>

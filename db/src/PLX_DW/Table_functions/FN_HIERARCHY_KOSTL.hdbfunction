@@ -1,0 +1,424 @@
+FUNCTION "plx_analytics::FN_HIERARCHY_KOSTL" (
+		ControllingArea NVARCHAR(12),
+		Group_Root_Node NVARCHAR(24)
+		--CHART_OF_ACCOUNTS NVARCHAR(12)
+	) 
+ 	RETURNS table(
+		 CONTROLLING_AREA NVARCHAR(4)
+		, LEVEL	INTEGER
+		,  PARENT nvarchar(24)
+		, CHILD NVARCHAR(24)
+		--, COST_ELEMENT NVARCHAR(24)
+	)
+
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER AS
+BEGIN
+
+/* Compute the Cost Element Standard Hierarchy */
+
+DECLARE NUM int := 0; 
+DECLARE LEV int := 1;
+DECLARE STCLS nvarchar(4) := '0101';
+DECLARE CCAUTHCOUNT int := 0;
+
+BEGIN
+
+	/*In case Group_Root_Node is empty, retrieve only leaf(Cost Center) node from SETLEAF table*/
+
+	if :Group_Root_Node = '' then
+
+	LT_CC_TMP = 
+	SELECT NULL AS PARENT, 
+		   NULL AS CHILD, 
+		   NULL AS CHILD_CONCAT, 
+		   VALOPTION AS VALOPTION, 
+		   VALFROM as VALFROM, 
+		   VALTO as VALTO, 
+		   1 AS LEVEL, 
+		   :ControllingArea AS ControllingArea
+		   --:CHART_OF_ACCOUNTS AS CHART_OF_ACCOUNTS	
+	FROM "ECC_SETLEAF"
+	WHERE SETCLASS = :STCLS 
+	AND	  trim(SUBCLASS)  = :ControllingArea;
+
+	var_out = 
+	SELECT PARENT, 
+		   --CHILD, 
+		   --VALFROM AS COST_ELEMENT, 
+		   VALFROM as CHILD,
+		   VALFROM as CHILD_CONCAT,
+		   LEVEL, 
+		   ControllingArea
+		   --CHART_OF_ACCOUNTS
+	FROM :LT_CC_TMP;
+
+	LT_CC_TMP2 = 
+	SELECT NULL AS PARENT, 
+		   -- CE.CHILD AS CHILD, 
+		   CSKT.KOSTL AS CHILD, 
+		   CSKT.KOSTL AS CHILD_CONCAT, 
+		   CE.LEVEL AS LEVEL, 
+		   :ControllingArea AS ControllingArea
+		   --:CHART_OF_ACCOUNTS AS CHART_OF_ACCOUNTS
+	FROM :LT_CC_TMP as CE 
+	inner join "ECC_CSKT" as CSKT 
+	ON (CSKT.KOSTL >= CE.VALFROM 
+	and CSKT.KOSTL <= CE.VALTO)
+	WHERE trim(cskt.KOKRS)  = :ControllingArea;
+
+	var_out = 
+	SELECT  PARENT, 
+			CHILD, 
+			CHILD_CONCAT,
+			--COST_ELEMENT, 
+			LEVEL, 
+			ControllingArea
+			--CHART_OF_ACCOUNTS 
+	  from :var_out
+	UNION
+	SELECT  PARENT, 
+			CHILD, 
+			CHILD_CONCAT,
+			--COST_ELEMENT, 
+			LEVEL, 
+			ControllingArea
+			--CHART_OF_ACCOUNTS 
+	  from :LT_CC_TMP2;
+
+	/*If Group_Root_Node is empty, empty cost element should also be considered*/
+
+	LT_CC_TMP_2 = 
+		SELECT DISTINCT NULL AS PARENT, 
+				    	--NULL AS CHILD, 
+				    	--'' AS COST_ELEMENT, 
+				    	'' as child,
+				    	'' as CHILD_CONCAT,
+				    	1 AS LEVEL, 
+				    	:ControllingArea AS ControllingArea
+				    	--:CHART_OF_ACCOUNTS AS CHART_OF_ACCOUNTS
+		FROM "ECC_SETLEAF"
+		WHERE SETCLASS = :STCLS
+		and   trim(SUBCLASS)  = :ControllingArea;
+
+	var_out = 
+		SELECT PARENT, 
+			   CHILD, 
+			   CHILD_CONCAT,
+			   --COST_ELEMENT, 
+			   LEVEL, 
+			   ControllingArea
+			   --CHART_OF_ACCOUNTS 
+		 from :var_out
+	UNION
+		SELECT  PARENT, 
+		    	CHILD, 
+		    	CHILD_CONCAT,
+		    	--COST_ELEMENT, 
+		    	LEVEL, 
+		    	ControllingArea
+		    	--CHART_OF_ACCOUNTS 
+		   from :LT_CC_TMP_2;
+
+	/*Retrieve all hierarchy groups and the cost center from both SETNODE and SETLEAF, incase Group_Root_Node is not empty*/
+
+	else
+	-- Get CC Group Permissions
+	
+	LT_CGAUTH = 
+						SELECT DISTINCT 
+							 "NODE" AS CG_NODE,
+							 "DESCRIPT" AS CG_DESCRIPT,
+							 "KOKRS" 
+						FROM "plx_analytics::CA_DIM_CC_VALUE_HELP";
+						
+	-- Get all cc auths based on username
+	
+	LT_USER =
+	SELECT 
+ 			CURRENT_USER AS CURR_USER,
+ 	 		SESSION_USER AS SESS_USER FROM "SYS::DUMMY";
+ 	 		
+	LT_CCAUTH = 
+			SELECT trim(agr.uname) as uname,
+				   trim(SUBSTR (low, 7)) as cc,
+				   SUBSTR (low, 3,4) as kokrs
+			FROM "ECC_AGR_USERS" as agr
+			INNER JOIN :LT_USER as user --COMMENT HERE
+			ON (trim(agr.uname) = user.CURR_USER) --COMMENT HERE
+			INNER JOIN "ECC_AGR_1251" as agr_1251
+			ON (agr.agr_name = agr_1251.agr_name)
+			WHERE trim(agr_1251.OBJECT) = 'K_CCA' AND trim(agr_1251.FIELD) = 'RESPAREA'
+			AND trim(substring (agr_1251.LOW,1,2)) = 'KS';
+			--AND trim(uname) = 'JSTOPCIATI';
+			--AND trim(uname) = 'OCHEN';
+			--AND trim(uname) = 'J_ASTA';
+			--AND trim(uname) = 'ACHACKO';
+
+	CCAUTHCOUNT = 0;
+	SELECT COUNT(*) INTO CCAUTHCOUNT FROM :LT_CCAUTH;
+	 -- check if no auths exist for the user 
+	-- CC GROUP
+	LT_ROOT = 
+		SELECT DISTINCT NULL AS PARENT, 
+						trim(SETNAME) AS CHILD, 
+						trim(SETNAME) AS CHILD_CONCAT,
+						--NULL AS COST_ELEMENT, 
+						1 AS LEVEL, 
+						:ControllingArea AS ControllingArea
+						--:CHART_OF_ACCOUNTS AS CHART_OF_ACCOUNTS
+		FROM "ECC_SETNODE"
+		WHERE SETCLASS = :STCLS
+		and   trim(SUBCLASS)  = :ControllingArea 
+		and   trim(SETNAME)  = :Group_Root_Node;
+
+	/*inacase for a group node, there is no subgroup, then it will not be in SETNODE, but only in SETLEAF*/
+	-- CC GROUP
+	LT_ROOT2 = 
+		SELECT DISTINCT NULL AS PARENT, 
+						trim(SETNAME) AS CHILD, 
+						trim(SETNAME) AS CHILD_CONCAT,
+						--NULL AS COST_ELEMENT, 
+						1 AS LEVEL, 
+						:ControllingArea AS ControllingArea
+						--:CHART_OF_ACCOUNTS AS CHART_OF_ACCOUNTS
+		FROM "ECC_SETLEAF"
+		WHERE SETCLASS = :STCLS 
+		and   trim(SUBCLASS)  = :ControllingArea 
+		and   trim(SETNAME)  = :Group_Root_Node;
+
+	LT_HIERARCHY = 
+		SELECT PARENT, 
+			   CHILD, 
+			   CHILD_CONCAT,
+			  -- COST_ELEMENT, 
+			   LEVEL, 
+			   ControllingArea
+			   from :LT_ROOT
+			   --CHART_OF_ACCOUNTS from :LT_ROOT
+
+		UNION
+
+		SELECT  PARENT, 
+				CHILD, 
+				CHILD_CONCAT,
+				--COST_ELEMENT, 
+				LEVEL, 
+				ControllingArea
+				from :LT_ROOT2;
+				--CHART_OF_ACCOUNTS from :LT_ROOT2;
+
+	while 1 = 1 do
+	    -- CC GROUP (parent and child)
+		LT_HIERARCHY_TMP = 
+		    SELECT 
+			    part.SETNAME AS PARENT, 
+			    trim(part.SUBSETNAME) AS CHILD, 
+			    trim(part.SUBSETNAME) AS CHILD_CONCAT,
+			   -- NULL AS COST_ELEMENT, 
+			    :LEV + 1 AS LEVEL, 
+			    :ControllingArea AS ControllingArea
+			   	--:CHART_OF_ACCOUNTS AS CHART_OF_ACCOUNTS
+		    FROM :LT_HIERARCHY as main 
+			    inner join "ECC_SETNODE" as part 
+			    ON (main.CHILD = part.SETNAME)
+		
+		    WHERE part.SETCLASS = :STCLS
+			    and   trim(part.SUBCLASS)  = :ControllingArea 
+			    and   main.LEVEL = :LEV;
+
+	    SELECT COUNT(*) INTO NUM FROM :LT_HIERARCHY_TMP;
+	
+	    if :NUM = 0 then
+	        break;
+	    end if;
+
+	    LT_HIERARCHY =
+		    SELECT PARENT,
+			    CHILD,
+			    CHILD_CONCAT,
+		--	    COST_ELEMENT,
+			    LEVEL,
+			    ControllingArea
+			    --CHART_OF_ACCOUNTS
+		    from :LT_HIERARCHY
+	        
+	        UNION
+		    
+		    SELECT PARENT,
+			    CHILD,
+			    CHILD_CONCAT,
+		--	    COST_ELEMENT,
+			    LEVEL,
+			    ControllingArea
+			    --CHART_OF_ACCOUNTS
+		    from :LT_HIERARCHY_TMP;
+	
+	    LEV := :LEV + 1;
+
+	end while;
+	
+	--Join on CG Permissions
+	LT_HIERARCHY = --LT_HIERARCHY_TEST = --edit for hier
+					SELECT PARENT,
+							    CHILD,
+							    CHILD_CONCAT,
+						--	    COST_ELEMENT,
+							    LEVEL,
+							    ControllingArea
+							    --CHART_OF_ACCOUNTS
+						    from :LT_HIERARCHY as HI
+						    inner join :LT_CGAUTH AS ALLOW
+						    ON HI.CHILD = ALLOW.cg_node
+						    AND HI.ControllingArea = ALLOW.kokrs;
+	LT_CC_TMP =
+	  	SELECT
+		  	CE.SETNAME AS PARENT,
+		  	NULL AS CHILD,
+		  	NULL AS CHILD_CONCAT,
+		  	CE.VALOPTION AS VALOPTION,
+		  	CE.VALFROM as VALFROM,
+		  	CE.VALTO as VALTO,
+		  	CC_gr.LEVEL + 1 AS LEVEL,
+		  	:ControllingArea AS ControllingArea
+		  	--:CHART_OF_ACCOUNTS AS CHART_OF_ACCOUNTS
+		FROM :LT_HIERARCHY as CC_gr
+	  	inner join "ECC_SETLEAF" as CE
+	  	ON (CC_gr.CHILD 	= CE.SETNAME)
+		WHERE CE.SETCLASS 		= :STCLS
+	  	and trim(CE.SUBCLASS) 		= :ControllingArea;
+
+-- CHILD = COST CENTER
+	LT_CC =
+		  SELECT PARENT,
+		        -- CHILD,
+		        -- VALFROM AS COST_ELEMENT,
+		        valfrom as child,
+		        valfrom as CHILD_CONCAT,
+		         LEVEL,
+		         ControllingArea
+		         --CHART_OF_ACCOUNTS
+			FROM :LT_CC_TMP;
+			
+-- check to see if cc is in CSKT, possible to pull CC text here
+/* edit for auth
+	LT_CC_TMP2 =
+	  SELECT
+		  CE.PARENT AS PARENT,
+		 -- CE.CHILD AS CHILD,
+		 -- CSKT.KOSTL AS COST_ELEMENT,
+		 CSKT.KOSTL as child,
+		 CSKT.KOSTL as CHILD_CONCAT,
+		  CE.LEVEL AS LEVEL,
+		  :ControllingArea AS ControllingArea,
+		  :CHART_OF_ACCOUNTS AS CHART_OF_ACCOUNTS
+	  FROM
+		  :LT_CC_TMP as CE
+		  inner join PLX_DW.ECC_CSKT as CSKT
+		  ON (CSKT.KOSTL >= CE.VALFROM
+	      and CSKT.KOSTL <= CE.VALTO)
+	  WHERE trim(CSKT.KOKRS)  = :ControllingArea;
+	  */
+	  
+	 if :CCAUTHCOUNT != 0 then
+	 LT_CC_TMP2 = --_TEST =
+	  SELECT
+		  CE.PARENT AS PARENT,
+		 -- CE.CHILD AS CHILD,
+		 -- CSKT.KOSTL AS COST_ELEMENT,
+		 CSKT.KOSTL as child,
+		 CSKT.KOSTL as CHILD_CONCAT,
+		  CE.LEVEL AS LEVEL,
+		  :ControllingArea AS ControllingArea
+		  --:CHART_OF_ACCOUNTS AS CHART_OF_ACCOUNTS
+	  FROM
+		  :LT_CC_TMP as CE
+		  inner join "ECC_CSKT" as CSKT
+		  ON (CSKT.KOSTL >= CE.VALFROM
+	      and CSKT.KOSTL <= CE.VALTO)
+	      inner join :LT_CCAUTH as CCAUTH
+	      ON CCAUTH.CC = CSKT.KOSTL
+	  WHERE trim(CSKT.KOKRS)  = :ControllingArea;
+	  
+	  else
+	  	LT_CC_TMP2 =
+	  SELECT
+		  CE.PARENT AS PARENT,
+		 -- CE.CHILD AS CHILD,
+		 -- CSKT.KOSTL AS COST_ELEMENT,
+		 CSKT.KOSTL as child,
+		 CSKT.KOSTL as CHILD_CONCAT,
+		  CE.LEVEL AS LEVEL,
+		  :ControllingArea AS ControllingArea
+		  --:CHART_OF_ACCOUNTS AS CHART_OF_ACCOUNTS
+	  FROM
+		  :LT_CC_TMP as CE
+		  inner join "ECC_CSKT" as CSKT
+		  ON (CSKT.KOSTL >= CE.VALFROM
+	      and CSKT.KOSTL <= CE.VALTO)
+	  WHERE trim(CSKT.KOKRS)  = :ControllingArea;
+	 end if; -- last edit
+	
+	
+	LT_CC =
+		SELECT
+			PARENT,
+			CHILD,
+			CHILD_CONCAT,
+		--	COST_ELEMENT,
+			LEVEL,
+			ControllingArea
+			--CHART_OF_ACCOUNTS
+		from :LT_CC
+	
+		UNION
+	
+		SELECT
+			  PARENT,
+			  CHILD,
+			  CHILD_CONCAT,
+		--	  COST_ELEMENT,
+			  LEVEL,
+			  ControllingArea
+			 -- CHART_OF_ACCOUNTS
+		from :LT_CC_TMP2
+				;
+		var_out =
+		  SELECT
+			  PARENT,
+			  CHILD,
+			  CHILD_CONCAT,
+		--	  COST_ELEMENT,
+			  LEVEL,
+			  ControllingArea
+			 -- CHART_OF_ACCOUNTS
+		  from :LT_HIERARCHY
+	
+	    UNION
+	
+			SELECT
+			  PARENT,
+			  CHILD,
+			  CHILD_CONCAT,
+		--	  COST_ELEMENT,
+			  LEVEL,
+			  ControllingArea
+			 -- CHART_OF_ACCOUNTS		  
+		  from :LT_CC;
+
+	end if;
+
+END;
+
+RETURN 
+
+--SELECT * FROM :VAR_OUT;
+select 
+ 	trim(ControllingArea) as CONTROLLING_AREA
+, 	LEVEL	
+,	PARENT
+,	trim(child) as CHILD
+from :var_out;
+
+
+end;

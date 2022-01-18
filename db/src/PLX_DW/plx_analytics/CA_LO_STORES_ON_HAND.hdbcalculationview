@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="plx_analytics::CA_LO_STORES_ON_HAND" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+  <origin/>
+  <descriptions defaultDescription="CA_LO_STORES_ON_HAND"/>
+  <metadata changedAt="2020-04-23 12:13:14.017"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="27"/>
+  <dataSources>
+    <DataSource id="ECC_MARD">
+      <resourceUri>ECC_MARD</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="PSTAT"/>
+        <viewAttribute id="LVORM"/>
+        <viewAttribute id="LFGJA"/>
+        <viewAttribute id="LFMON"/>
+        <viewAttribute id="SPERR"/>
+        <viewAttribute id="LABST"/>
+        <viewAttribute id="UMLME"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="Z_MATNR" length="18" expressionLanguage="COLUMN_ENGINE">
+          <formula>ltrim(&quot;MATNR&quot;, '0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#ECC_MARD">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PSTAT" source="PSTAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LVORM" source="LVORM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LFGJA" source="LFGJA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LFMON" source="LFMON"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPERR" source="SPERR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LABST" source="LABST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UMLME" source="UMLME"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="Projection_1">
+    <descriptions/>
+    <attributes>
+      <attribute id="MATNR" hidden="true" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Number"/>
+        <keyMapping columnObjectName="Projection_1" columnName="MATNR"/>
+      </attribute>
+      <attribute id="WERKS" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Plant"/>
+        <keyMapping columnObjectName="Projection_1" columnName="WERKS"/>
+      </attribute>
+      <attribute id="LGORT" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Storage Location"/>
+        <keyMapping columnObjectName="Projection_1" columnName="LGORT"/>
+      </attribute>
+      <attribute id="PSTAT" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Maintenance status"/>
+        <keyMapping columnObjectName="Projection_1" columnName="PSTAT"/>
+      </attribute>
+      <attribute id="LVORM" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Flag Material for Deletion at Storage Location Level"/>
+        <keyMapping columnObjectName="Projection_1" columnName="LVORM"/>
+      </attribute>
+      <attribute id="LFGJA" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Year of Current Period"/>
+        <keyMapping columnObjectName="Projection_1" columnName="LFGJA"/>
+      </attribute>
+      <attribute id="LFMON" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Current period (posting period)"/>
+        <keyMapping columnObjectName="Projection_1" columnName="LFMON"/>
+      </attribute>
+      <attribute id="SPERR" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Physical Inventory Blocking Indicator"/>
+        <keyMapping columnObjectName="Projection_1" columnName="SPERR"/>
+      </attribute>
+      <attribute id="Z_MATNR" hidden="false" order="11" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Number"/>
+        <keyMapping columnObjectName="Projection_1" columnName="Z_MATNR"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="LABST" order="9" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Valuated Unrestricted-Use Stock"/>
+        <measureMapping columnObjectName="Projection_1" columnName="LABST"/>
+      </measure>
+      <measure id="UMLME" order="10" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Stock in transfer (from one storage location to another)"/>
+        <measureMapping columnObjectName="Projection_1" columnName="UMLME"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="40" y="85"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="60" y="300"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

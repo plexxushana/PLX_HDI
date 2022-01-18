@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Dimension="http://www.sap.com/ndb/BiModelDimension.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" id="plx_analytics::CA_DIM_STATMT_GROUP_LIST_ALL" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" dataCategory="DIMENSION" dimensionType="STANDARD" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="CA_DIM_STATMT_GROUP_LIST_ALL"/>
+<localVariables>
+  <variable id="IP_CHART" parameter="true">
+    <descriptions defaultDescription="IP_CHART"/>
+    <variableProperties datatype="NVARCHAR" length="4" scale="NaN" mandatory="false" defaultValue="">
+      <valueDomain type="AttributeValue">
+        <externalLikeStructureName>plx_analytics::CA_DIM_CONTROLLING_AREAS</externalLikeStructureName>
+        <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+        <externalLikeElementName>KTOPL</externalLikeElementName>
+      </valueDomain>
+      <selection multiLine="false" type="SingleValue"/>
+    </variableProperties>
+  </variable>
+  <variable id="IP_HIER" parameter="true">
+    <descriptions defaultDescription="IP_HIER"/>
+    <variableProperties datatype="NVARCHAR" length="50" mandatory="false">
+      <valueDomain type="empty"/>
+      <selection multiLine="false" type="SingleValue"/>
+    </variableProperties>
+  </variable>
+  <variable id="IP_KOKRS" parameter="true">
+    <descriptions defaultDescription="IP_KOKRS"/>
+    <variableProperties datatype="NVARCHAR" length="4" scale="NaN" mandatory="false" defaultValue="">
+      <valueDomain type="AttributeValue">
+        <externalLikeStructureName>plx_analytics::CA_DIM_CONTROLLING_AREAS</externalLikeStructureName>
+        <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+        <externalLikeElementName>KOKRS</externalLikeElementName>
+      </valueDomain>
+      <selection multiLine="false" type="SingleValue"/>
+    </variableProperties>
+  </variable>
+</localVariables>
+<variableMappings>
+  <mapping xsi:type="Variable:VariableMapping" dataSource="plx_analytics::FN_STATMT_HIERARCHY_BUILD">
+    <targetVariable name="CHART_OF_ACCOUNTS" resourceUri="plx_analytics::FN_STATMT_HIERARCHY_BUILD"/>
+    <localVariable>IP_CHART</localVariable>
+  </mapping>
+  <mapping xsi:type="Variable:VariableMapping" dataSource="plx_analytics::FN_STATMT_HIERARCHY_BUILD">
+    <targetVariable name="CONTROLLING_AREA" resourceUri="plx_analytics::FN_STATMT_HIERARCHY_BUILD"/>
+    <localVariable>IP_KOKRS</localVariable>
+  </mapping>
+  <mapping xsi:type="Variable:VariableMapping" dataSource="plx_analytics::FN_STATMT_HIERARCHY_BUILD">
+    <targetVariable name="REPORT" resourceUri="plx_analytics::FN_STATMT_HIERARCHY_BUILD"/>
+    <localVariable>IP_HIER</localVariable>
+  </mapping>
+  <mapping xsi:type="Variable:VariableMapping" dataSource="plx_analytics::CA_DIM_FIN_STATMT_HIERARCHY">
+    <targetVariable name="IP_HIER_NAME" resourceUri="plx_analytics::CA_DIM_FIN_STATMT_HIERARCHY"/>
+    <localVariable>IP_HIER</localVariable>
+  </mapping>
+</variableMappings>
+<dataSources>
+  <DataSource id="plx_analytics::FN_STATMT_HIERARCHY_BUILD" type="TABLE_FUNCTION">
+    <resourceUri>plx_analytics::FN_STATMT_HIERARCHY_BUILD</resourceUri>
+  </DataSource>
+  <DataSource id="plx_analytics::CA_DIM_FIN_STATMT_HIERARCHY">
+    <resourceUri>plx_analytics::CA_DIM_FIN_STATMT_HIERARCHY</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <viewAttributes>
+      <viewAttribute id="CHILDDESCRIPTION"/>
+      <viewAttribute id="CHILDID"/>
+      <viewAttribute id="CC_GRPNM"/>
+      <viewAttribute id="COST_CENTER"/>
+      <viewAttribute id="COST_ELEMENT"/>
+      <viewAttribute id="HIERARCHYNAME"/>
+      <viewAttribute id="CE_GRPNM"/>
+      <viewAttribute id="PARENTID"/>
+      <viewAttribute id="LEVEL_CCCE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="plx_analytics::FN_STATMT_HIERARCHY_BUILD"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+    <viewAttributes>
+      <viewAttribute id="HIERARCHYNAME"/>
+      <viewAttribute id="PARENTID"/>
+      <viewAttribute id="CHILDID"/>
+      <viewAttribute id="CHILDDESCRIPTION"/>
+      <viewAttribute id="LEVEL_CCCE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="plx_analytics::CA_DIM_FIN_STATMT_HIERARCHY"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:UnionView" id="Union_1">
+    <viewAttributes>
+      <viewAttribute id="HIERARCHYNAME"/>
+      <viewAttribute id="PARENTID"/>
+      <viewAttribute id="CHILDID"/>
+      <viewAttribute id="CHILDDESCRIPTION"/>
+      <viewAttribute id="LEVEL_CCCE"/>
+      <viewAttribute id="CE_GRPNM"/>
+      <viewAttribute id="CC_GRPNM"/>
+      <viewAttribute id="COST_ELEMENT"/>
+      <viewAttribute id="COST_CENTER"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Projection_1" emptyUnionBehavior="NO_ROW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="HIERARCHYNAME" source="HIERARCHYNAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARENTID" source="PARENTID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHILDID" source="CHILDID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHILDDESCRIPTION" source="CHILDDESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LEVEL_CCCE" source="LEVEL_CCCE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CE_GRPNM" source="CE_GRPNM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_GRPNM" source="CC_GRPNM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COST_ELEMENT" source="COST_ELEMENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COST_CENTER" source="COST_CENTER"/>
+    </input>
+    <input node="Projection_2" emptyUnionBehavior="NO_ROW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="HIERARCHYNAME" source="HIERARCHYNAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARENTID" source="PARENTID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHILDID" source="CHILDID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHILDDESCRIPTION" source="CHILDDESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LEVEL_CCCE" source="LEVEL_CCCE"/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CE_GRPNM" null="true" value=""/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_GRPNM" null="true" value=""/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="COST_ELEMENT" null="true" value=""/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="COST_CENTER" null="true" value=""/>
+    </input>
+  </calculationView>
+</calculationViews>
+<inlineHierarchy xsi:type="Dimension:ParentChildHierarchy" id="FS_H" aggregateAllNodes="true" orphanedNodesHandling="ROOT_NODES" rootNodeVisibility="ADD_ROOT_NODE_IF_DEFINED" cacheEnabled="true" cycleHandling="BREAKUP" emptyValueIsNull="false">
+  <descriptions defaultDescription="FS_H"/>
+  <unassignedMemberProperties mode="FALSE"/>
+  <attributeParentPair attribute="CHILDID" parentAttribute="PARENTID"/>
+</inlineHierarchy>
+<logicalModel id="Union_1">
+  <attributes>
+    <attribute id="HIERARCHYNAME" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="HIERARCHYNAME"/>
+      <keyMapping columnObjectName="Union_1" columnName="HIERARCHYNAME"/>
+    </attribute>
+    <attribute id="PARENTID" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PARENTID"/>
+      <keyMapping columnObjectName="Union_1" columnName="PARENTID"/>
+    </attribute>
+    <attribute id="CHILDID" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHILDID"/>
+      <keyMapping columnObjectName="Union_1" columnName="CHILDID"/>
+    </attribute>
+    <attribute id="CHILDDESCRIPTION" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHILDDESCRIPTION"/>
+      <keyMapping columnObjectName="Union_1" columnName="CHILDDESCRIPTION"/>
+    </attribute>
+    <attribute id="LEVEL_CCCE" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LEVEL_CCCE"/>
+      <keyMapping columnObjectName="Union_1" columnName="LEVEL_CCCE"/>
+    </attribute>
+    <attribute id="CE_GRPNM" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CE_GRPNM"/>
+      <keyMapping columnObjectName="Union_1" columnName="CE_GRPNM"/>
+    </attribute>
+    <attribute id="CC_GRPNM" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_GRPNM"/>
+      <keyMapping columnObjectName="Union_1" columnName="CC_GRPNM"/>
+    </attribute>
+    <attribute id="COST_ELEMENT" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="COST_ELEMENT"/>
+      <keyMapping columnObjectName="Union_1" columnName="COST_ELEMENT"/>
+    </attribute>
+    <attribute id="COST_CENTER" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="COST_CENTER"/>
+      <keyMapping columnObjectName="Union_1" columnName="COST_CENTER"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-47" y="243"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="162" y="253"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Union_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="82" y="167"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

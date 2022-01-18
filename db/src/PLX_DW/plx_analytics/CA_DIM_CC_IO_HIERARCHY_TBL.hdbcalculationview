@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Dimension="http://www.sap.com/ndb/BiModelDimension.ecore" schemaVersion="2.3" id="plx_analytics::CA_DIM_CC_IO_HIERARCHY_TBL" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection" xscCompatibilityMode="true">
+  <descriptions defaultDescription="CA_CO_ELEM_HIERARCHY"/>
+  <localVariables>
+    <variable id="P_CONTROLLING_AREA" parameter="true">
+      <descriptions defaultDescription="Controlling Area"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="1100" length="4" mandatory="true" scale="0">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_CONTROLLING_AREAS</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>KOKRS</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="P_CC_GROUP_NODE" parameter="true">
+      <descriptions defaultDescription="Cost Center Group"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="UHN" length="40" mandatory="true" scale="0">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_CC_VALUE_HELP</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>NODE</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="53"/>
+  <dataSources>
+    <DataSource id="CC_IO_HIERARCHY">
+      <resourceUri>CC_IO_HIERARCHY</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PARENT"/>
+        <viewAttribute id="LEVEL"/>
+        <viewAttribute id="CHILD"/>
+        <viewAttribute id="CONTROLLING_AREA"/>
+        <viewAttribute id="GROUP_TEXT"/>
+        <viewAttribute id="ZINTERNAL_ORDER"/>
+        <viewAttribute id="ZCOST_CENTER"/>
+        <viewAttribute id="ROOT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CC_IO_HIERARCHY">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT" source="PARENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LEVEL" source="LEVEL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHILD" source="CHILD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTROLLING_AREA" source="CONTROLLING_AREA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GROUP_TEXT" source="GROUP_TEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZINTERNAL_ORDER" source="ZINTERNAL_ORDER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCOST_CENTER" source="ZCOST_CENTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROOT" source="ROOT"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <inlineHierarchy xsi:type="Dimension:ParentChildHierarchy" id="CC_IO_Hierarchy" aggregateAllNodes="true" cycleHandling="BREAKUP" multipleParents="true" orphanedNodesHandling="IGNORE" rootNodeVisibility="DO_NOT_ADD_ROOT_NODE" withRootNode="false">
+    <descriptions defaultDescription="Hierarchy"/>
+    <unassignedMemberProperties>
+      <name xsi:nil="true"/>
+      <nullConvertValue xsi:nil="true"/>
+    </unassignedMemberProperties>
+    <attributeParentPair attribute="#CHILD" parentAttribute="#PARENT"/>
+  </inlineHierarchy>
+  <logicalModel id="Projection_1">
+    <descriptions/>
+    <attributes>
+      <attribute id="PARENT" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PARENT"/>
+        <keyMapping columnObjectName="Projection_1" columnName="PARENT"/>
+      </attribute>
+      <attribute id="LEVEL" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="LEVEL"/>
+        <keyMapping columnObjectName="Projection_1" columnName="LEVEL"/>
+      </attribute>
+      <attribute id="CHILD" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CHILD"/>
+        <keyMapping columnObjectName="Projection_1" columnName="CHILD"/>
+      </attribute>
+      <attribute id="CONTROLLING_AREA" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTROLLING_AREA"/>
+        <keyMapping columnObjectName="Projection_1" columnName="CONTROLLING_AREA"/>
+      </attribute>
+      <attribute id="GROUP_TEXT" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GROUP_TEXT"/>
+        <keyMapping columnObjectName="Projection_1" columnName="GROUP_TEXT"/>
+      </attribute>
+      <attribute id="ZINTERNAL_ORDER" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZINTERNAL_ORDER"/>
+        <keyMapping columnObjectName="Projection_1" columnName="ZINTERNAL_ORDER"/>
+      </attribute>
+      <attribute id="ZCOST_CENTER" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZCOST_CENTER"/>
+        <keyMapping columnObjectName="Projection_1" columnName="ZCOST_CENTER"/>
+      </attribute>
+      <attribute id="ROOT" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ROOT"/>
+        <keyMapping columnObjectName="Projection_1" columnName="ROOT"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="330" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="320" y="220"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

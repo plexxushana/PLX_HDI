@@ -1,0 +1,515 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="plx_analytics::CA_POC_ALLSCRIPT_SPEND" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection" xscCompatibilityMode="true">
+  <origin/>
+  <descriptions defaultDescription="CA_POC_ALLSCRIPT_SPEND"/>
+  <metadata changedAt="2019-04-04 15:11:29.855"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="36"/>
+  <dataSources>
+    <DataSource id="MANUAL_ALLSCRIPT_SPEND_DATA">
+      <resourceUri>MANUAL_ALLSCRIPT_SPEND_DATA</resourceUri>
+    </DataSource>
+    <DataSource id="CA_DIM_FISC_CAL">
+      <resourceUri>plx_analytics::CA_DIM_FISC_CAL</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BASE_UNIT_OF_MEASURE"/>
+        <viewAttribute id="COMPANY_CODE"/>
+        <viewAttribute id="COMPANY_CODE_NAME"/>
+        <viewAttribute id="COST_CENTER"/>
+        <viewAttribute id="COST_CENTER_DESC"/>
+        <viewAttribute id="COST_ELEMENT"/>
+        <viewAttribute id="COST_ELEMENT_DESCRIPTION"/>
+        <viewAttribute id="END_OF_VALIDITY_PERIOD"/>
+        <viewAttribute id="ESTIMATED_CONTRACT_NUMBER"/>
+        <viewAttribute id="EXTERNAL_MATERIAL_GROUP"/>
+        <viewAttribute id="INVOICE_DATE"/>
+        <viewAttribute id="GL_ACCOUNT_SHORT_TEXT"/>
+        <viewAttribute id="GL_ACCOUNT_NUMBER"/>
+        <viewAttribute id="MANUFACTURER_NAME"/>
+        <viewAttribute id="MANUFACTURER_PART_NUMBER"/>
+        <viewAttribute id="MATERIAL_ID"/>
+        <viewAttribute id="ORDER_TYPE"/>
+        <viewAttribute id="ORG_ID"/>
+        <viewAttribute id="PACKAGING_STRING"/>
+        <viewAttribute id="PRODUCT_SERVICE_DESCRIPTION"/>
+        <viewAttribute id="SAP_CONTRACT_REFERENCE"/>
+        <viewAttribute id="SAP_CONTRACT_REFERENCE_LINE"/>
+        <viewAttribute id="START_OF_VALIDITY_PERIOD"/>
+        <viewAttribute id="UNSPSC_COMMODITY_DESC"/>
+        <viewAttribute id="UNSPSC_COMMODITY_ID"/>
+        <viewAttribute id="VENDOR_ACCOUNT_GROUP"/>
+        <viewAttribute id="VENDOR_ID"/>
+        <viewAttribute id="ID_VENDOR_NAME"/>
+        <viewAttribute id="VENDOR_PART_NUMBER"/>
+        <viewAttribute id="INVOICE_LINE_NO"/>
+        <viewAttribute id="SPEND_AMOUNT_INVOICE_LINE"/>
+        <viewAttribute id="SPEND_QTY_BASE_UNIT"/>
+        <viewAttribute id="SPEND_QTY_ORDER_UNIT_LINE_LEVEL"/>
+        <viewAttribute id="PO_NO"/>
+        <viewAttribute id="LINE_NO"/>
+        <viewAttribute id="Z_INV_BQTY"/>
+        <viewAttribute id="Z_INVOICE_QTY"/>
+        <viewAttribute id="Z_SAP_DATE"/>
+        <viewAttribute id="INV_LINE_ID"/>
+        <viewAttribute id="INV_LINE_NO"/>
+        <viewAttribute id="PO_LINE_ID"/>
+        <viewAttribute id="SPEND_AMOUNT_TOT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="Z_ORDER_TYPE" length="20" expressionLanguage="COLUMN_ENGINE">
+          <formula>case(&quot;ORDER_TYPE&quot; , 'C', 'Direct Payments','P', 'External PO')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="DATASOURCE" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>'ALLSCRIPT'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ORG_TYPE" length="20" expressionLanguage="COLUMN_ENGINE">
+          <formula>'Customer'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="Z_INVOICE_DATE" length="8" expressionLanguage="COLUMN_ENGINE">
+          <formula>leftstr(&quot;INVOICE_DATE&quot;, 10)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#MANUAL_ALLSCRIPT_SPEND_DATA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BASE_UNIT_OF_MEASURE" source="BASE_UNIT_OF_MEASURE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CODE" source="COMPANY_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CODE_NAME" source="COMPANY_CODE_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_CENTER" source="COST_CENTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_CENTER_DESC" source="COST_CENTER_DESC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_ELEMENT" source="COST_ELEMENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_ELEMENT_DESCRIPTION" source="COST_ELEMENT_DESCRIPTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_OF_VALIDITY_PERIOD" source="END_OF_VALIDITY_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ESTIMATED_CONTRACT_NUMBER" source="ESTIMATED_CONTRACT_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTERNAL_MATERIAL_GROUP" source="EXTERNAL_MATERIAL_GROUP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVOICE_DATE" source="INVOICE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCOUNT_SHORT_TEXT" source="GL_ACCOUNT_SHORT_TEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCOUNT_NUMBER" source="GL_ACCOUNT_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MANUFACTURER_NAME" source="MANUFACTURER_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MANUFACTURER_PART_NUMBER" source="MANUFACTURER_PART_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATERIAL_ID" source="MATERIAL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORDER_TYPE" source="ORDER_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORG_ID" source="ORG_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PACKAGING_STRING" source="PACKAGING_STRING"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_SERVICE_DESCRIPTION" source="PRODUCT_SERVICE_DESCRIPTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAP_CONTRACT_REFERENCE" source="SAP_CONTRACT_REFERENCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAP_CONTRACT_REFERENCE_LINE" source="SAP_CONTRACT_REFERENCE_LINE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="START_OF_VALIDITY_PERIOD" source="START_OF_VALIDITY_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UNSPSC_COMMODITY_DESC" source="UNSPSC_COMMODITY_DESC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UNSPSC_COMMODITY_ID" source="UNSPSC_COMMODITY_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VENDOR_ACCOUNT_GROUP" source="VENDOR_ACCOUNT_GROUP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VENDOR_ID" source="VENDOR_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ID_VENDOR_NAME" source="ID_VENDOR_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VENDOR_PART_NUMBER" source="VENDOR_PART_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVOICE_LINE_NO" source="INVOICE_LINE_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPEND_AMOUNT_INVOICE_LINE" source="SPEND_AMOUNT_INVOICE_LINE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPEND_QTY_BASE_UNIT" source="SPEND_QTY_BASE_UNIT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPEND_QTY_ORDER_UNIT_LINE_LEVEL" source="SPEND_QTY_ORDER_UNIT_LINE_LEVEL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_NO" source="PO_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LINE_NO" source="LINE_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_BQTY" source="Z_INV_BQTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INVOICE_QTY" source="Z_INVOICE_QTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_SAP_DATE" source="Z_SAP_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INV_LINE_ID" source="INV_LINE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INV_LINE_NO" source="INV_LINE_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_LINE_ID" source="PO_LINE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPEND_AMOUNT_TOT" source="SPEND_AMOUNT_TOT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SAP_DATE"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR_QUARTER"/>
+        <viewAttribute id="ZFISCAL_MONTH"/>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_DIM_FISC_CAL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAP_DATE" source="SAP_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR_QUARTER" source="ZFISCAL_YEAR_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_MONTH" source="ZFISCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCALENDAR_YEAR" source="ZCALENDAR_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BASE_UNIT_OF_MEASURE"/>
+        <viewAttribute id="COMPANY_CODE"/>
+        <viewAttribute id="COMPANY_CODE_NAME"/>
+        <viewAttribute id="COST_CENTER"/>
+        <viewAttribute id="COST_CENTER_DESC"/>
+        <viewAttribute id="COST_ELEMENT"/>
+        <viewAttribute id="COST_ELEMENT_DESCRIPTION"/>
+        <viewAttribute id="END_OF_VALIDITY_PERIOD"/>
+        <viewAttribute id="ESTIMATED_CONTRACT_NUMBER"/>
+        <viewAttribute id="EXTERNAL_MATERIAL_GROUP"/>
+        <viewAttribute id="INVOICE_DATE"/>
+        <viewAttribute id="GL_ACCOUNT_SHORT_TEXT"/>
+        <viewAttribute id="GL_ACCOUNT_NUMBER"/>
+        <viewAttribute id="MANUFACTURER_NAME"/>
+        <viewAttribute id="MANUFACTURER_PART_NUMBER"/>
+        <viewAttribute id="MATERIAL_ID"/>
+        <viewAttribute id="ORDER_TYPE"/>
+        <viewAttribute id="ORG_ID"/>
+        <viewAttribute id="PACKAGING_STRING"/>
+        <viewAttribute id="PRODUCT_SERVICE_DESCRIPTION"/>
+        <viewAttribute id="SAP_CONTRACT_REFERENCE"/>
+        <viewAttribute id="SAP_CONTRACT_REFERENCE_LINE"/>
+        <viewAttribute id="START_OF_VALIDITY_PERIOD"/>
+        <viewAttribute id="UNSPSC_COMMODITY_DESC"/>
+        <viewAttribute id="UNSPSC_COMMODITY_ID"/>
+        <viewAttribute id="VENDOR_ACCOUNT_GROUP"/>
+        <viewAttribute id="VENDOR_ID"/>
+        <viewAttribute id="ID_VENDOR_NAME"/>
+        <viewAttribute id="VENDOR_PART_NUMBER"/>
+        <viewAttribute id="INVOICE_LINE_NO"/>
+        <viewAttribute id="SPEND_AMOUNT_INVOICE_LINE"/>
+        <viewAttribute id="SPEND_QTY_BASE_UNIT"/>
+        <viewAttribute id="SPEND_QTY_ORDER_UNIT_LINE_LEVEL"/>
+        <viewAttribute id="PO_NO"/>
+        <viewAttribute id="LINE_NO"/>
+        <viewAttribute id="Z_INV_BQTY"/>
+        <viewAttribute id="Z_INVOICE_QTY"/>
+        <viewAttribute id="Z_ORDER_TYPE"/>
+        <viewAttribute id="DATASOURCE"/>
+        <viewAttribute id="ORG_TYPE"/>
+        <viewAttribute id="Z_INVOICE_DATE"/>
+        <viewAttribute id="Z_SAP_DATE"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR_QUARTER"/>
+        <viewAttribute id="ZFISCAL_MONTH"/>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="INV_LINE_ID"/>
+        <viewAttribute id="INV_LINE_NO"/>
+        <viewAttribute id="PO_LINE_ID"/>
+        <viewAttribute id="SPEND_AMOUNT_TOT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Projection_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BASE_UNIT_OF_MEASURE" source="BASE_UNIT_OF_MEASURE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CODE" source="COMPANY_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CODE_NAME" source="COMPANY_CODE_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_CENTER" source="COST_CENTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_CENTER_DESC" source="COST_CENTER_DESC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_ELEMENT" source="COST_ELEMENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_ELEMENT_DESCRIPTION" source="COST_ELEMENT_DESCRIPTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_OF_VALIDITY_PERIOD" source="END_OF_VALIDITY_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ESTIMATED_CONTRACT_NUMBER" source="ESTIMATED_CONTRACT_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTERNAL_MATERIAL_GROUP" source="EXTERNAL_MATERIAL_GROUP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVOICE_DATE" source="INVOICE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCOUNT_SHORT_TEXT" source="GL_ACCOUNT_SHORT_TEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCOUNT_NUMBER" source="GL_ACCOUNT_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MANUFACTURER_NAME" source="MANUFACTURER_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MANUFACTURER_PART_NUMBER" source="MANUFACTURER_PART_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATERIAL_ID" source="MATERIAL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORDER_TYPE" source="ORDER_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORG_ID" source="ORG_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PACKAGING_STRING" source="PACKAGING_STRING"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_SERVICE_DESCRIPTION" source="PRODUCT_SERVICE_DESCRIPTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAP_CONTRACT_REFERENCE" source="SAP_CONTRACT_REFERENCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAP_CONTRACT_REFERENCE_LINE" source="SAP_CONTRACT_REFERENCE_LINE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="START_OF_VALIDITY_PERIOD" source="START_OF_VALIDITY_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UNSPSC_COMMODITY_DESC" source="UNSPSC_COMMODITY_DESC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UNSPSC_COMMODITY_ID" source="UNSPSC_COMMODITY_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VENDOR_ACCOUNT_GROUP" source="VENDOR_ACCOUNT_GROUP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VENDOR_ID" source="VENDOR_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ID_VENDOR_NAME" source="ID_VENDOR_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VENDOR_PART_NUMBER" source="VENDOR_PART_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVOICE_LINE_NO" source="INVOICE_LINE_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPEND_AMOUNT_INVOICE_LINE" source="SPEND_AMOUNT_INVOICE_LINE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPEND_QTY_BASE_UNIT" source="SPEND_QTY_BASE_UNIT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPEND_QTY_ORDER_UNIT_LINE_LEVEL" source="SPEND_QTY_ORDER_UNIT_LINE_LEVEL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_NO" source="PO_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LINE_NO" source="LINE_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_BQTY" source="Z_INV_BQTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INVOICE_QTY" source="Z_INVOICE_QTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_ORDER_TYPE" source="Z_ORDER_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATASOURCE" source="DATASOURCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORG_TYPE" source="ORG_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INVOICE_DATE" source="Z_INVOICE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_SAP_DATE" source="Z_SAP_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INV_LINE_ID" source="INV_LINE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INV_LINE_NO" source="INV_LINE_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_LINE_ID" source="PO_LINE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPEND_AMOUNT_TOT" source="SPEND_AMOUNT_TOT"/>
+      </input>
+      <input node="#Projection_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR_QUARTER" source="ZFISCAL_YEAR_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_MONTH" source="ZFISCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCALENDAR_YEAR" source="ZCALENDAR_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVOICE_DATE" source="SAP_DATE"/>
+      </input>
+      <joinAttribute name="INVOICE_DATE"/>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="Join_1">
+    <descriptions/>
+    <attributes>
+      <attribute id="BASE_UNIT_OF_MEASURE" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BASE_UNIT_OF_MEASURE"/>
+        <keyMapping columnObjectName="Join_1" columnName="BASE_UNIT_OF_MEASURE"/>
+      </attribute>
+      <attribute id="COMPANY_CODE" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="COMPANY_CODE"/>
+        <keyMapping columnObjectName="Join_1" columnName="COMPANY_CODE"/>
+      </attribute>
+      <attribute id="COMPANY_CODE_NAME" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="COMPANY_CODE_NAME"/>
+        <keyMapping columnObjectName="Join_1" columnName="COMPANY_CODE_NAME"/>
+      </attribute>
+      <attribute id="COST_CENTER" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="COST_CENTER"/>
+        <keyMapping columnObjectName="Join_1" columnName="COST_CENTER"/>
+      </attribute>
+      <attribute id="COST_CENTER_DESC" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="COST_CENTER_DESC"/>
+        <keyMapping columnObjectName="Join_1" columnName="COST_CENTER_DESC"/>
+      </attribute>
+      <attribute id="COST_ELEMENT" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="COST_ELEMENT"/>
+        <keyMapping columnObjectName="Join_1" columnName="COST_ELEMENT"/>
+      </attribute>
+      <attribute id="COST_ELEMENT_DESCRIPTION" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="COST_ELEMENT_DESCRIPTION"/>
+        <keyMapping columnObjectName="Join_1" columnName="COST_ELEMENT_DESCRIPTION"/>
+      </attribute>
+      <attribute id="END_OF_VALIDITY_PERIOD" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="END_OF_VALIDITY_PERIOD"/>
+        <keyMapping columnObjectName="Join_1" columnName="END_OF_VALIDITY_PERIOD"/>
+      </attribute>
+      <attribute id="ESTIMATED_CONTRACT_NUMBER" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ESTIMATED_CONTRACT_NUMBER"/>
+        <keyMapping columnObjectName="Join_1" columnName="ESTIMATED_CONTRACT_NUMBER"/>
+      </attribute>
+      <attribute id="EXTERNAL_MATERIAL_GROUP" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EXTERNAL_MATERIAL_GROUP"/>
+        <keyMapping columnObjectName="Join_1" columnName="EXTERNAL_MATERIAL_GROUP"/>
+      </attribute>
+      <attribute id="INVOICE_DATE" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INVOICE_DATE"/>
+        <keyMapping columnObjectName="Join_1" columnName="INVOICE_DATE"/>
+      </attribute>
+      <attribute id="GL_ACCOUNT_SHORT_TEXT" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GL_ACCOUNT_SHORT_TEXT"/>
+        <keyMapping columnObjectName="Join_1" columnName="GL_ACCOUNT_SHORT_TEXT"/>
+      </attribute>
+      <attribute id="GL_ACCOUNT_NUMBER" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GL_ACCOUNT_NUMBER"/>
+        <keyMapping columnObjectName="Join_1" columnName="GL_ACCOUNT_NUMBER"/>
+      </attribute>
+      <attribute id="MANUFACTURER_NAME" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MANUFACTURER_NAME"/>
+        <keyMapping columnObjectName="Join_1" columnName="MANUFACTURER_NAME"/>
+      </attribute>
+      <attribute id="MANUFACTURER_PART_NUMBER" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MANUFACTURER_PART_NUMBER"/>
+        <keyMapping columnObjectName="Join_1" columnName="MANUFACTURER_PART_NUMBER"/>
+      </attribute>
+      <attribute id="MATERIAL_ID" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MATERIAL_ID"/>
+        <keyMapping columnObjectName="Join_1" columnName="MATERIAL_ID"/>
+      </attribute>
+      <attribute id="ORDER_TYPE" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ORDER_TYPE"/>
+        <keyMapping columnObjectName="Join_1" columnName="ORDER_TYPE"/>
+      </attribute>
+      <attribute id="ORG_ID" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ORG_ID"/>
+        <keyMapping columnObjectName="Join_1" columnName="ORG_ID"/>
+      </attribute>
+      <attribute id="PACKAGING_STRING" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PACKAGING_STRING"/>
+        <keyMapping columnObjectName="Join_1" columnName="PACKAGING_STRING"/>
+      </attribute>
+      <attribute id="PRODUCT_SERVICE_DESCRIPTION" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRODUCT_SERVICE_DESCRIPTION"/>
+        <keyMapping columnObjectName="Join_1" columnName="PRODUCT_SERVICE_DESCRIPTION"/>
+      </attribute>
+      <attribute id="SAP_CONTRACT_REFERENCE" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SAP_CONTRACT_REFERENCE"/>
+        <keyMapping columnObjectName="Join_1" columnName="SAP_CONTRACT_REFERENCE"/>
+      </attribute>
+      <attribute id="SAP_CONTRACT_REFERENCE_LINE" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SAP_CONTRACT_REFERENCE_LINE"/>
+        <keyMapping columnObjectName="Join_1" columnName="SAP_CONTRACT_REFERENCE_LINE"/>
+      </attribute>
+      <attribute id="START_OF_VALIDITY_PERIOD" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="START_OF_VALIDITY_PERIOD"/>
+        <keyMapping columnObjectName="Join_1" columnName="START_OF_VALIDITY_PERIOD"/>
+      </attribute>
+      <attribute id="UNSPSC_COMMODITY_DESC" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="UNSPSC_COMMODITY_DESC"/>
+        <keyMapping columnObjectName="Join_1" columnName="UNSPSC_COMMODITY_DESC"/>
+      </attribute>
+      <attribute id="UNSPSC_COMMODITY_ID" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="UNSPSC_COMMODITY_ID"/>
+        <keyMapping columnObjectName="Join_1" columnName="UNSPSC_COMMODITY_ID"/>
+      </attribute>
+      <attribute id="VENDOR_ACCOUNT_GROUP" order="26" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="VENDOR_ACCOUNT_GROUP"/>
+        <keyMapping columnObjectName="Join_1" columnName="VENDOR_ACCOUNT_GROUP"/>
+      </attribute>
+      <attribute id="VENDOR_ID" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="VENDOR_ID"/>
+        <keyMapping columnObjectName="Join_1" columnName="VENDOR_ID"/>
+      </attribute>
+      <attribute id="ID_VENDOR_NAME" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ID_VENDOR_NAME"/>
+        <keyMapping columnObjectName="Join_1" columnName="ID_VENDOR_NAME"/>
+      </attribute>
+      <attribute id="VENDOR_PART_NUMBER" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="VENDOR_PART_NUMBER"/>
+        <keyMapping columnObjectName="Join_1" columnName="VENDOR_PART_NUMBER"/>
+      </attribute>
+      <attribute id="INVOICE_LINE_NO" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INVOICE_LINE_NO"/>
+        <keyMapping columnObjectName="Join_1" columnName="INVOICE_LINE_NO"/>
+      </attribute>
+      <attribute id="SPEND_AMOUNT_INVOICE_LINE" order="31" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SPEND_AMOUNT_INVOICE_LINE"/>
+        <keyMapping columnObjectName="Join_1" columnName="SPEND_AMOUNT_INVOICE_LINE"/>
+      </attribute>
+      <attribute id="SPEND_QTY_BASE_UNIT" order="32" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SPEND_QTY_BASE_UNIT"/>
+        <keyMapping columnObjectName="Join_1" columnName="SPEND_QTY_BASE_UNIT"/>
+      </attribute>
+      <attribute id="SPEND_QTY_ORDER_UNIT_LINE_LEVEL" order="33" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SPEND_QTY_ORDER_UNIT_LINE_LEVEL"/>
+        <keyMapping columnObjectName="Join_1" columnName="SPEND_QTY_ORDER_UNIT_LINE_LEVEL"/>
+      </attribute>
+      <attribute id="PO_NO" order="34" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PO_NO"/>
+        <keyMapping columnObjectName="Join_1" columnName="PO_NO"/>
+      </attribute>
+      <attribute id="LINE_NO" order="35" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="LINE_NO"/>
+        <keyMapping columnObjectName="Join_1" columnName="LINE_NO"/>
+      </attribute>
+      <attribute id="Z_INV_BQTY" order="36" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Z_INV_BQTY"/>
+        <keyMapping columnObjectName="Join_1" columnName="Z_INV_BQTY"/>
+      </attribute>
+      <attribute id="Z_INVOICE_QTY" order="37" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Z_INVOICE_QTY"/>
+        <keyMapping columnObjectName="Join_1" columnName="Z_INVOICE_QTY"/>
+      </attribute>
+      <attribute id="Z_ORDER_TYPE" order="38" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Z_ORDER_TYPE"/>
+        <keyMapping columnObjectName="Join_1" columnName="Z_ORDER_TYPE"/>
+      </attribute>
+      <attribute id="DATASOURCE" order="39" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DATASOURCE"/>
+        <keyMapping columnObjectName="Join_1" columnName="DATASOURCE"/>
+      </attribute>
+      <attribute id="ORG_TYPE" order="40" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ORG_TYPE"/>
+        <keyMapping columnObjectName="Join_1" columnName="ORG_TYPE"/>
+      </attribute>
+      <attribute id="Z_INVOICE_DATE" order="41" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Z_INVOICE_DATE"/>
+        <keyMapping columnObjectName="Join_1" columnName="Z_INVOICE_DATE"/>
+      </attribute>
+      <attribute id="Z_SAP_DATE" order="42" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Z_SAP_DATE"/>
+        <keyMapping columnObjectName="Join_1" columnName="Z_SAP_DATE"/>
+      </attribute>
+      <attribute id="ZFISCAL_YEAR" order="43" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Yr"/>
+        <keyMapping columnObjectName="Join_1" columnName="ZFISCAL_YEAR"/>
+      </attribute>
+      <attribute id="ZFISCAL_PERIOD" order="44" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Period"/>
+        <keyMapping columnObjectName="Join_1" columnName="ZFISCAL_PERIOD"/>
+      </attribute>
+      <attribute id="ZFISCAL_QUARTER" order="45" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Qtr"/>
+        <keyMapping columnObjectName="Join_1" columnName="ZFISCAL_QUARTER"/>
+      </attribute>
+      <attribute id="ZFISCAL_YEAR_QUARTER" order="46" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Yr / Qtr"/>
+        <keyMapping columnObjectName="Join_1" columnName="ZFISCAL_YEAR_QUARTER"/>
+      </attribute>
+      <attribute id="ZFISCAL_MONTH" order="47" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Month"/>
+        <keyMapping columnObjectName="Join_1" columnName="ZFISCAL_MONTH"/>
+      </attribute>
+      <attribute id="ZCALENDAR_YEAR" order="48" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Calendar Yr"/>
+        <keyMapping columnObjectName="Join_1" columnName="ZCALENDAR_YEAR"/>
+      </attribute>
+      <attribute id="ZCAL_MONTH" order="49" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Calendar Month"/>
+        <keyMapping columnObjectName="Join_1" columnName="ZCAL_MONTH"/>
+      </attribute>
+      <attribute id="INV_LINE_ID" order="50" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INV_LINE_ID"/>
+        <keyMapping columnObjectName="Join_1" columnName="INV_LINE_ID"/>
+      </attribute>
+      <attribute id="INV_LINE_NO" order="51" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INV_LINE_NO"/>
+        <keyMapping columnObjectName="Join_1" columnName="INV_LINE_NO"/>
+      </attribute>
+      <attribute id="PO_LINE_ID" order="52" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PO_LINE_ID"/>
+        <keyMapping columnObjectName="Join_1" columnName="PO_LINE_ID"/>
+      </attribute>
+      <attribute id="SPEND_AMOUNT_TOT" order="53" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SPEND_AMOUNT_TOT"/>
+        <keyMapping columnObjectName="Join_1" columnName="SPEND_AMOUNT_TOT"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="22" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="-20" y="470"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="220" y="440"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="70" y="250"/>
+        <rectangleSize height="92" width="140"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="3.0" id="plx_analytics::CA_CO_SKF_ANALYSIS_EXPENSES" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="true" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation">
+<origin/>
+  <descriptions defaultDescription="CA_CO_SKF_ANALYSIS"/>
+  <metadata changedAt="2021-05-04 10:16:38.944"/>
+  <localVariables>
+    <variable id="FISCAL_YEAR" parameter="true">
+      <descriptions defaultDescription="Fiscal Year"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="" length="4" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="P_GROUP_NODE" parameter="true">
+      <descriptions defaultDescription="SKF Group Name"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="undefined" length="24" mandatory="true" scale="0">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_SKF_VALUE_HELP</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>Z_SETNAME</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="P_COST_GROUP" parameter="true">
+      <descriptions defaultDescription="CC Group Node"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="undefined" length="40" mandatory="false" scale="0">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_CC_VALUE_HELP</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>NODE</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="P_KOKRS" parameter="true">
+      <descriptions defaultDescription="Controlling Area"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="undefined" length="4" mandatory="false" scale="0">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_CONTROLLING_AREAS</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>KOKRS</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="IP_CHART" parameter="true">
+      <descriptions defaultDescription="Chart of Accounts"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="" length="4" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="P_CE_GROUP_NODE" parameter="true">
+      <descriptions defaultDescription="Cost Element Group Node"/>
+      <variableProperties datatype="NVARCHAR" length="24" mandatory="true" scale="0" defaultValue="undefined">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_CE_VALUE_HELP_BROADER</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>SETNAME</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="BUSINESS_AREA">
+      <descriptions defaultDescription="Business Area"/>
+      <variableProperties datatype="VARCHAR" mandatory="false">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_CONTROLLING_AREAS</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>GSBER</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="true" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="CCentre">
+      <descriptions defaultDescription="Cost Centre"/>
+      <variableProperties datatype="VARCHAR" defaultValue="" mandatory="false">
+        <valueDomain type="AttributeValue">
+          <attribute name="KOSTL"/>
+        </valueDomain>
+        <selection multiLine="true" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="CA_CO_SKF_ANALYSIS_EXTENDED">
+      <targetVariable name="FISCAL_YEAR" resourceUri="plx_analytics::CA_CO_SKF_ANALYSIS_EXTENDED"/>
+      <localVariable>FISCAL_YEAR</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="CA_CO_SKF_ANALYSIS_EXTENDED">
+      <targetVariable name="P_GROUP_NODE" resourceUri="plx_analytics::CA_CO_SKF_ANALYSIS_EXTENDED"/>
+      <localVariable>P_GROUP_NODE</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="CA_CO_SKF_ANALYSIS_EXTENDED">
+      <targetVariable name="P_COST_GROUP" resourceUri="plx_analytics::CA_CO_SKF_ANALYSIS_EXTENDED"/>
+      <localVariable>P_COST_GROUP</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="CA_CO_SKF_ANALYSIS_EXTENDED">
+      <targetVariable name="P_KOKRS" resourceUri="plx_analytics::CA_CO_SKF_ANALYSIS_EXTENDED"/>
+      <localVariable>P_KOKRS</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:ConstantVariableMapping" dataSource="CA_CO_SKF_ANALYSIS_EXTENDED" value="Y">
+      <targetVariable name="PREV_YEAR" resourceUri="plx_analytics::CA_CO_SKF_ANALYSIS_EXTENDED"/>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="CA_CO_PLX_COST_CENTER_ANALYSIS_CONSOLIDATED">
+      <targetVariable name="IP_KOKRS" resourceUri="plx_analytics::CA_CO_PLX_COST_CENTER_ANALYSIS_CONSOLIDATED"/>
+      <localVariable>P_KOKRS</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="CA_CO_PLX_COST_CENTER_ANALYSIS_CONSOLIDATED">
+      <targetVariable name="P_CC_GROUP_NODE" resourceUri="plx_analytics::CA_CO_PLX_COST_CENTER_ANALYSIS_CONSOLIDATED"/>
+      <localVariable>P_COST_GROUP</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:ConstantVariableMapping" dataSource="CA_CO_PLX_COST_CENTER_ANALYSIS_CONSOLIDATED" value="Y">
+      <targetVariable name="PREV_YEAR" resourceUri="plx_analytics::CA_CO_PLX_COST_CENTER_ANALYSIS_CONSOLIDATED"/>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="CA_CO_PLX_COST_CENTER_ANALYSIS_CONSOLIDATED">
+      <targetVariable name="FISCAL_YEAR" resourceUri="plx_analytics::CA_CO_PLX_COST_CENTER_ANALYSIS_CONSOLIDATED"/>
+      <localVariable>FISCAL_YEAR</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="CA_CO_PLX_COST_CENTER_ANALYSIS_CONSOLIDATED">
+      <targetVariable name="P_GROUP_NODE" resourceUri="plx_analytics::CA_CO_PLX_COST_CENTER_ANALYSIS_CONSOLIDATED"/>
+      <localVariable>P_CE_GROUP_NODE</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="CA_CO_PLX_COST_CENTER_ANALYSIS_CONSOLIDATED">
+      <targetVariable name="IP_CHART" resourceUri="plx_analytics::CA_CO_PLX_COST_CENTER_ANALYSIS_CONSOLIDATED"/>
+      <localVariable>IP_CHART</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="46"/>
+  <dataSources>
+    <DataSource id="CA_CO_SKF_ANALYSIS_EXTENDED">
+      <resourceUri>plx_analytics::CA_CO_SKF_ANALYSIS_EXTENDED</resourceUri>
+    </DataSource>
+    <DataSource id="CA_CO_PLX_COST_CENTER_ANALYSIS_CONSOLIDATED">
+      <resourceUri>plx_analytics::CA_CO_PLX_COST_CENTER_ANALYSIS_CONSOLIDATED</resourceUri>
+    </DataSource>
+  </dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1" filterExpressionLanguage="COLUMN_ENGINE">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="PERIO"/>
+        <viewAttribute id="WRTTP"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="SMEBTR"/>
+        <viewAttribute id="SME001"/>
+        <viewAttribute id="LEVEL"/>
+        <viewAttribute id="PARENT"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="CA_CO_SKF_ANALYSIS_EXTENDED"/>
+    <filter>&quot;LEVEL&quot; = '2' AND &quot;PARENT&quot; = 'RESID_DAYS'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="CONT_AREA"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="Z_PERIOD"/>
+        <viewAttribute id="Curr_Year"/>
+        <viewAttribute id="Expense"/>
+        <viewAttribute id="Plan"/>
+        <viewAttribute id="ZCOST_CENTER"/>
+        <viewAttribute id="VERSN"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="CA_CO_PLX_COST_CENTER_ANALYSIS_CONSOLIDATED"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:UnionView" id="Union_1">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="Z_PERIOD"/>
+        <viewAttribute id="Curr_Year"/>
+        <viewAttribute id="Expense"/>
+        <viewAttribute id="Plan"/>
+        <viewAttribute id="ZCOST_CENTER"/>
+        <viewAttribute id="WRTTP"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="SMEBTR"/>
+        <viewAttribute id="SME001"/>
+        <viewAttribute id="LEVEL"/>
+        <viewAttribute id="PARENT"/>
+        <viewAttribute id="VERSN_1"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input emptyUnionBehavior="NO_ROW" node="Projection_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="KSTAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_PERIOD" source="Z_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Curr_Year" source="Curr_Year"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Expense" source="Expense"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Plan" source="Plan"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCOST_CENTER" source="ZCOST_CENTER"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WRTTP" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="VERSN" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="KOKRS" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="SMEBTR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="SME001" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="LEVEL" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PARENT" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VERSN_1" source="VERSN"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="Projection_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="KSTAR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BUKRS" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_PERIOD" source="PERIO"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Curr_Year" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Expense" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Plan" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ZCOST_CENTER" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WRTTP" source="WRTTP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VERSN" source="VERSN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SMEBTR" source="SMEBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SME001" source="SME001"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LEVEL" source="LEVEL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT" source="PARENT"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="VERSN_1" null="true" value=""/>
+      </input>
+    </calculationView>
+</calculationViews>
+  <logicalModel id="Union_1">
+    <descriptions/>
+    <attributes>
+      <attribute id="GJAHR" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GJAHR"/>
+        <keyMapping columnObjectName="Union_1" columnName="GJAHR"/>
+      </attribute>
+      <attribute id="KOSTL" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="KOSTL"/>
+        <localVariable>CCentre</localVariable>
+        <keyMapping columnObjectName="Union_1" columnName="KOSTL"/>
+      </attribute>
+      <attribute id="KSTAR" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="KSTAR"/>
+        <keyMapping columnObjectName="Union_1" columnName="KSTAR"/>
+      </attribute>
+      <attribute id="BUKRS" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BUKRS"/>
+        <keyMapping columnObjectName="Union_1" columnName="BUKRS"/>
+      </attribute>
+      <attribute id="Z_PERIOD" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Z_PERIOD"/>
+        <keyMapping columnObjectName="Union_1" columnName="Z_PERIOD"/>
+      </attribute>
+      <attribute id="Curr_Year" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Curr_Year"/>
+        <keyMapping columnObjectName="Union_1" columnName="Curr_Year"/>
+      </attribute>
+      <attribute id="ZCOST_CENTER" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZCOST_CENTER"/>
+        <keyMapping columnObjectName="Union_1" columnName="ZCOST_CENTER"/>
+      </attribute>
+      <attribute id="WRTTP" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Value Type"/>
+        <keyMapping columnObjectName="Union_1" columnName="WRTTP"/>
+      </attribute>
+      <attribute id="VERSN_SKF" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Version"/>
+        <keyMapping columnObjectName="Union_1" columnName="VERSN"/>
+      </attribute>
+      <attribute id="KOKRS" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="KOKRS"/>
+        <keyMapping columnObjectName="Union_1" columnName="KOKRS"/>
+      </attribute>
+      <attribute id="LEVEL" order="15" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="LEVEL"/>
+        <keyMapping columnObjectName="Union_1" columnName="LEVEL"/>
+      </attribute>
+      <attribute id="PARENT" order="16" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PARENT"/>
+        <keyMapping columnObjectName="Union_1" columnName="PARENT"/>
+      </attribute>
+      <attribute id="VERSN_CC" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Version"/>
+        <keyMapping columnObjectName="Union_1" columnName="VERSN_1"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="Expense" order="7" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Expense"/>
+        <measureMapping columnObjectName="Union_1" columnName="Expense"/>
+      </measure>
+      <measure id="Plan" order="8" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Plan"/>
+        <measureMapping columnObjectName="Union_1" columnName="Plan"/>
+      </measure>
+      <measure id="SMEBTR" order="13" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Actual Value"/>
+        <measureMapping columnObjectName="Union_1" columnName="SMEBTR"/>
+      </measure>
+      <measure id="SME001" order="14" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Plan Value"/>
+        <measureMapping columnObjectName="Union_1" columnName="SME001"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures>
+      <measure id="Cost_Patient_Day" hidden="false" order="18" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="15" scale="3">
+        <descriptions defaultDescription="Cost Per Patient Day"/>
+        <formula> &quot;Expense&quot; / &quot;SMEBTR&quot; </formula>
+      </measure>
+    </calculatedMeasures>
+    <restrictedMeasures/>
+    <localDimensions/></logicalModel>
+<layout>
+  <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="540" y="300"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="411" y="550"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="640" y="550"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Union_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="520" y="420"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape></shapes>
+</layout>
+</Calculation:scenario>

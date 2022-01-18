@@ -1,0 +1,889 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="3.0" id="plx_analytics::CA_LO_CART_LOG" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+<origin/>
+  <descriptions defaultDescription="CA_LO_CART_LOG"/>
+  <metadata changedAt="2020-12-14 11:40:30.6"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="44"/>
+  <dataSources>
+    <DataSource id="ECC_ZTLO_CART_LOG">
+      <resourceUri>ECC_ZTLO_CART_LOG</resourceUri>
+    </DataSource>
+    <DataSource id="CA_DIM_FISC_CAL">
+      <resourceUri>plx_analytics::CA_DIM_FISC_CAL</resourceUri>
+    </DataSource>
+    <DataSource id="CA_DIM_CART_MASTER">
+      <resourceUri>plx_analytics::CA_DIM_CART_MASTER</resourceUri>
+    </DataSource>
+    <DataSource id="CA_DIM_CART_PROFILE">
+      <resourceUri>plx_analytics::CA_DIM_CART_PROFILE</resourceUri>
+    </DataSource>
+  </dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="CREA_DAY"/>
+        <viewAttribute id="CREA_DATE"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="PDA_USER"/>
+        <viewAttribute id="ROUTENAME"/>
+        <viewAttribute id="CART_LI_PLATE"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="ALT_UOM"/>
+        <viewAttribute id="MAX_QTY"/>
+        <viewAttribute id="QTY_COUNTED"/>
+        <viewAttribute id="ROP"/>
+        <viewAttribute id="EXTRA_QTY_CALC"/>
+        <viewAttribute id="EXTRA_QTY_ORDER"/>
+        <viewAttribute id="REASON"/>
+        <viewAttribute id="REASON_DESC"/>
+        <viewAttribute id="ITEMSCNFG"/>
+        <viewAttribute id="CARTSCNFG"/>
+        <viewAttribute id="DTLASTSCAN"/>
+        <viewAttribute id="TMSTARTSCAN"/>
+        <viewAttribute id="TMLASTSCAN"/>
+        <viewAttribute id="ROP_QUES_FLAG"/>
+        <viewAttribute id="QTYSAVEFLAG"/>
+        <viewAttribute id="MRP_ENTRY"/>
+        <viewAttribute id="FLD_EXT1"/>
+        <viewAttribute id="FLD_EXT2"/>
+        <viewAttribute id="FLD_EXT3"/>
+        <viewAttribute id="MUSTCTFG"/>
+        <viewAttribute id="MAKTX"/>
+        <viewAttribute id="SYNC_DATE"/>
+        <viewAttribute id="SYNC_TIME"/>
+        <viewAttribute id="QTYORDER"/>
+        <viewAttribute id="MRP_PROCESSED"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="INTEGER" id="Z_STOCKOUT_DETERMINE" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;MAX_QTY&quot; &gt;'000001' AND LEFTSTR(&quot;QTY_COUNTED&quot;,2) = '00' ,1,0)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="ECC_ZTLO_CART_LOG"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="SAP_DATE"/>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="CA_DIM_FISC_CAL"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinType="inner">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="CREA_DAY"/>
+        <viewAttribute id="CREA_DATE"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="PDA_USER"/>
+        <viewAttribute id="ROUTENAME"/>
+        <viewAttribute id="CART_LI_PLATE"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="ALT_UOM"/>
+        <viewAttribute id="MAX_QTY"/>
+        <viewAttribute id="QTY_COUNTED"/>
+        <viewAttribute id="ROP"/>
+        <viewAttribute id="EXTRA_QTY_CALC"/>
+        <viewAttribute id="EXTRA_QTY_ORDER"/>
+        <viewAttribute id="REASON"/>
+        <viewAttribute id="REASON_DESC"/>
+        <viewAttribute id="ITEMSCNFG"/>
+        <viewAttribute id="CARTSCNFG"/>
+        <viewAttribute id="DTLASTSCAN"/>
+        <viewAttribute id="TMSTARTSCAN"/>
+        <viewAttribute id="TMLASTSCAN"/>
+        <viewAttribute id="ROP_QUES_FLAG"/>
+        <viewAttribute id="QTYSAVEFLAG"/>
+        <viewAttribute id="MRP_ENTRY"/>
+        <viewAttribute id="FLD_EXT1"/>
+        <viewAttribute id="FLD_EXT2"/>
+        <viewAttribute id="FLD_EXT3"/>
+        <viewAttribute id="MUSTCTFG"/>
+        <viewAttribute id="MAKTX"/>
+        <viewAttribute id="SYNC_DATE"/>
+        <viewAttribute id="SYNC_TIME"/>
+        <viewAttribute id="QTYORDER"/>
+        <viewAttribute id="MRP_PROCESSED"/>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="Z_STOCKOUT_DETERMINE"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="Projection_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CREA_DAY" source="CREA_DAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CREA_DATE" source="CREA_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PDA_USER" source="PDA_USER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROUTENAME" source="ROUTENAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CART_LI_PLATE" source="CART_LI_PLATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALT_UOM" source="ALT_UOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAX_QTY" source="MAX_QTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="QTY_COUNTED" source="QTY_COUNTED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROP" source="ROP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTRA_QTY_CALC" source="EXTRA_QTY_CALC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTRA_QTY_ORDER" source="EXTRA_QTY_ORDER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REASON" source="REASON"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REASON_DESC" source="REASON_DESC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEMSCNFG" source="ITEMSCNFG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CARTSCNFG" source="CARTSCNFG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DTLASTSCAN" source="DTLASTSCAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TMSTARTSCAN" source="TMSTARTSCAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TMLASTSCAN" source="TMLASTSCAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROP_QUES_FLAG" source="ROP_QUES_FLAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="QTYSAVEFLAG" source="QTYSAVEFLAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MRP_ENTRY" source="MRP_ENTRY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FLD_EXT1" source="FLD_EXT1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FLD_EXT2" source="FLD_EXT2"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FLD_EXT3" source="FLD_EXT3"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MUSTCTFG" source="MUSTCTFG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTX" source="MAKTX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYNC_DATE" source="SYNC_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYNC_TIME" source="SYNC_TIME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="QTYORDER" source="QTYORDER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MRP_PROCESSED" source="MRP_PROCESSED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_STOCKOUT_DETERMINE" source="Z_STOCKOUT_DETERMINE"/>
+      </input>
+      <input node="Projection_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCALENDAR_YEAR" source="ZCALENDAR_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CREA_DATE" source="SAP_DATE"/>
+      </input>
+    <joinAttribute name="CREA_DATE"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="CART_LI_PLATE"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="CART_TYPE"/>
+        <viewAttribute id="STATUS"/>
+        <viewAttribute id="STATUS_DATE"/>
+        <viewAttribute id="STATUS_HIST"/>
+        <viewAttribute id="DEPT"/>
+        <viewAttribute id="ROOM_NUM"/>
+        <viewAttribute id="FLOOR_NUM"/>
+        <viewAttribute id="BLD_NUM"/>
+        <viewAttribute id="STR_NO"/>
+        <viewAttribute id="STREET_NAME"/>
+        <viewAttribute id="CITY"/>
+        <viewAttribute id="POSTAL_CODE"/>
+        <viewAttribute id="ACC_CAT"/>
+        <viewAttribute id="COST_CEN"/>
+        <viewAttribute id="MARCODE"/>
+        <viewAttribute id="INT_ORD"/>
+        <viewAttribute id="SORTCODE"/>
+        <viewAttribute id="CART_SCAN_DATE"/>
+        <viewAttribute id="USER_ID"/>
+        <viewAttribute id="ADD_CHG_DATE"/>
+        <viewAttribute id="CHANGE_BY_USER"/>
+        <viewAttribute id="ADD_CHG_DEL_DT"/>
+        <viewAttribute id="OFFSITE_IND"/>
+        <viewAttribute id="OFFSITE_ADDR"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="CA_DIM_CART_MASTER"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2" joinType="leftOuter">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="CREA_DAY"/>
+        <viewAttribute id="CREA_DATE"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="PDA_USER"/>
+        <viewAttribute id="ROUTENAME"/>
+        <viewAttribute id="CART_LI_PLATE"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="ALT_UOM"/>
+        <viewAttribute id="MAX_QTY"/>
+        <viewAttribute id="QTY_COUNTED"/>
+        <viewAttribute id="ROP"/>
+        <viewAttribute id="EXTRA_QTY_CALC"/>
+        <viewAttribute id="EXTRA_QTY_ORDER"/>
+        <viewAttribute id="REASON"/>
+        <viewAttribute id="REASON_DESC"/>
+        <viewAttribute id="ITEMSCNFG"/>
+        <viewAttribute id="CARTSCNFG"/>
+        <viewAttribute id="DTLASTSCAN"/>
+        <viewAttribute id="TMSTARTSCAN"/>
+        <viewAttribute id="TMLASTSCAN"/>
+        <viewAttribute id="ROP_QUES_FLAG"/>
+        <viewAttribute id="QTYSAVEFLAG"/>
+        <viewAttribute id="MRP_ENTRY"/>
+        <viewAttribute id="FLD_EXT1"/>
+        <viewAttribute id="FLD_EXT2"/>
+        <viewAttribute id="FLD_EXT3"/>
+        <viewAttribute id="MUSTCTFG"/>
+        <viewAttribute id="MAKTX"/>
+        <viewAttribute id="SYNC_DATE"/>
+        <viewAttribute id="SYNC_TIME"/>
+        <viewAttribute id="QTYORDER"/>
+        <viewAttribute id="MRP_PROCESSED"/>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="CART_TYPE"/>
+        <viewAttribute id="STATUS"/>
+        <viewAttribute id="STATUS_DATE"/>
+        <viewAttribute id="STATUS_HIST"/>
+        <viewAttribute id="DEPT"/>
+        <viewAttribute id="ROOM_NUM"/>
+        <viewAttribute id="FLOOR_NUM"/>
+        <viewAttribute id="BLD_NUM"/>
+        <viewAttribute id="STR_NO"/>
+        <viewAttribute id="STREET_NAME"/>
+        <viewAttribute id="CITY"/>
+        <viewAttribute id="POSTAL_CODE"/>
+        <viewAttribute id="ACC_CAT"/>
+        <viewAttribute id="COST_CEN"/>
+        <viewAttribute id="MARCODE"/>
+        <viewAttribute id="INT_ORD"/>
+        <viewAttribute id="SORTCODE"/>
+        <viewAttribute id="CART_SCAN_DATE"/>
+        <viewAttribute id="USER_ID"/>
+        <viewAttribute id="ADD_CHG_DATE"/>
+        <viewAttribute id="CHANGE_BY_USER"/>
+        <viewAttribute id="Z_STOCKOUT_DETERMINE"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="VARCHAR" id="Z_MATNR" length="18" expressionLanguage="COLUMN_ENGINE">
+          <formula>TRIM(&quot;MATNR&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="Join_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CREA_DAY" source="CREA_DAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CREA_DATE" source="CREA_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PDA_USER" source="PDA_USER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROUTENAME" source="ROUTENAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CART_LI_PLATE" source="CART_LI_PLATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALT_UOM" source="ALT_UOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAX_QTY" source="MAX_QTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="QTY_COUNTED" source="QTY_COUNTED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROP" source="ROP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTRA_QTY_CALC" source="EXTRA_QTY_CALC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTRA_QTY_ORDER" source="EXTRA_QTY_ORDER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REASON" source="REASON"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REASON_DESC" source="REASON_DESC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEMSCNFG" source="ITEMSCNFG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CARTSCNFG" source="CARTSCNFG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DTLASTSCAN" source="DTLASTSCAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TMSTARTSCAN" source="TMSTARTSCAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TMLASTSCAN" source="TMLASTSCAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROP_QUES_FLAG" source="ROP_QUES_FLAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="QTYSAVEFLAG" source="QTYSAVEFLAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MRP_ENTRY" source="MRP_ENTRY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FLD_EXT1" source="FLD_EXT1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FLD_EXT2" source="FLD_EXT2"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FLD_EXT3" source="FLD_EXT3"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MUSTCTFG" source="MUSTCTFG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTX" source="MAKTX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYNC_DATE" source="SYNC_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYNC_TIME" source="SYNC_TIME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="QTYORDER" source="QTYORDER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MRP_PROCESSED" source="MRP_PROCESSED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCALENDAR_YEAR" source="ZCALENDAR_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_STOCKOUT_DETERMINE" source="Z_STOCKOUT_DETERMINE"/>
+      </input>
+      <input node="Projection_3">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CART_TYPE" source="CART_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS" source="STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS_DATE" source="STATUS_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS_HIST" source="STATUS_HIST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEPT" source="DEPT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROOM_NUM" source="ROOM_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FLOOR_NUM" source="FLOOR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLD_NUM" source="BLD_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STR_NO" source="STR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STREET_NAME" source="STREET_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CITY" source="CITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POSTAL_CODE" source="POSTAL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACC_CAT" source="ACC_CAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_CEN" source="COST_CEN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MARCODE" source="MARCODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INT_ORD" source="INT_ORD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SORTCODE" source="SORTCODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CART_SCAN_DATE" source="CART_SCAN_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="USER_ID" source="USER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADD_CHG_DATE" source="ADD_CHG_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHANGE_BY_USER" source="CHANGE_BY_USER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CART_LI_PLATE" source="CART_LI_PLATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+      </input>
+    <joinAttribute name="WERKS"/>
+    <joinAttribute name="CART_LI_PLATE"/>
+    <joinAttribute name="BUKRS"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_4">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="CART_LI_PLATE"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="PROF_MAXQTY"/>
+        <viewAttribute id="PROF_UOM"/>
+        <viewAttribute id="MAX_QTY"/>
+        <viewAttribute id="MFRPN"/>
+        <viewAttribute id="MAT_PRICE"/>
+        <viewAttribute id="ROP"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="VARCHAR" id="Z_MATNR" length="18" expressionLanguage="COLUMN_ENGINE">
+          <formula>LTRIM(&quot;MATNR&quot;, '0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="CA_DIM_CART_PROFILE"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_3" joinType="leftOuter">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="PROF_MAXQTY"/>
+        <viewAttribute id="PROF_UOM"/>
+        <viewAttribute id="CREA_DAY"/>
+        <viewAttribute id="CREA_DATE"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="PDA_USER"/>
+        <viewAttribute id="ROUTENAME"/>
+        <viewAttribute id="CART_LI_PLATE"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="ALT_UOM"/>
+        <viewAttribute id="MAX_QTY"/>
+        <viewAttribute id="QTY_COUNTED"/>
+        <viewAttribute id="ROP"/>
+        <viewAttribute id="EXTRA_QTY_CALC"/>
+        <viewAttribute id="EXTRA_QTY_ORDER"/>
+        <viewAttribute id="REASON"/>
+        <viewAttribute id="REASON_DESC"/>
+        <viewAttribute id="ITEMSCNFG"/>
+        <viewAttribute id="CARTSCNFG"/>
+        <viewAttribute id="DTLASTSCAN"/>
+        <viewAttribute id="TMSTARTSCAN"/>
+        <viewAttribute id="TMLASTSCAN"/>
+        <viewAttribute id="ROP_QUES_FLAG"/>
+        <viewAttribute id="QTYSAVEFLAG"/>
+        <viewAttribute id="MRP_ENTRY"/>
+        <viewAttribute id="FLD_EXT1"/>
+        <viewAttribute id="FLD_EXT2"/>
+        <viewAttribute id="FLD_EXT3"/>
+        <viewAttribute id="MUSTCTFG"/>
+        <viewAttribute id="MAKTX"/>
+        <viewAttribute id="SYNC_DATE"/>
+        <viewAttribute id="SYNC_TIME"/>
+        <viewAttribute id="QTYORDER"/>
+        <viewAttribute id="MRP_PROCESSED"/>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="CART_TYPE"/>
+        <viewAttribute id="STATUS"/>
+        <viewAttribute id="STATUS_DATE"/>
+        <viewAttribute id="STATUS_HIST"/>
+        <viewAttribute id="DEPT"/>
+        <viewAttribute id="ROOM_NUM"/>
+        <viewAttribute id="FLOOR_NUM"/>
+        <viewAttribute id="BLD_NUM"/>
+        <viewAttribute id="STR_NO"/>
+        <viewAttribute id="STREET_NAME"/>
+        <viewAttribute id="CITY"/>
+        <viewAttribute id="POSTAL_CODE"/>
+        <viewAttribute id="ACC_CAT"/>
+        <viewAttribute id="COST_CEN"/>
+        <viewAttribute id="MARCODE"/>
+        <viewAttribute id="INT_ORD"/>
+        <viewAttribute id="SORTCODE"/>
+        <viewAttribute id="CART_SCAN_DATE"/>
+        <viewAttribute id="USER_ID"/>
+        <viewAttribute id="ADD_CHG_DATE"/>
+        <viewAttribute id="CHANGE_BY_USER"/>
+        <viewAttribute id="Z_STOCKOUT_DETERMINE"/>
+        <viewAttribute id="MFRPN"/>
+        <viewAttribute id="MAT_PRICE"/>
+      <viewAttribute hidden="true" id="JOIN$Z_MATNR$Z_MATNR"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="Join_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CREA_DAY" source="CREA_DAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CREA_DATE" source="CREA_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PDA_USER" source="PDA_USER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROUTENAME" source="ROUTENAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CART_LI_PLATE" source="CART_LI_PLATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALT_UOM" source="ALT_UOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAX_QTY" source="MAX_QTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="QTY_COUNTED" source="QTY_COUNTED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROP" source="ROP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTRA_QTY_CALC" source="EXTRA_QTY_CALC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTRA_QTY_ORDER" source="EXTRA_QTY_ORDER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REASON" source="REASON"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REASON_DESC" source="REASON_DESC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEMSCNFG" source="ITEMSCNFG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CARTSCNFG" source="CARTSCNFG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DTLASTSCAN" source="DTLASTSCAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TMSTARTSCAN" source="TMSTARTSCAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TMLASTSCAN" source="TMLASTSCAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROP_QUES_FLAG" source="ROP_QUES_FLAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="QTYSAVEFLAG" source="QTYSAVEFLAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MRP_ENTRY" source="MRP_ENTRY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FLD_EXT1" source="FLD_EXT1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FLD_EXT2" source="FLD_EXT2"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FLD_EXT3" source="FLD_EXT3"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MUSTCTFG" source="MUSTCTFG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTX" source="MAKTX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYNC_DATE" source="SYNC_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYNC_TIME" source="SYNC_TIME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="QTYORDER" source="QTYORDER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MRP_PROCESSED" source="MRP_PROCESSED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCALENDAR_YEAR" source="ZCALENDAR_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CART_TYPE" source="CART_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS" source="STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS_DATE" source="STATUS_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS_HIST" source="STATUS_HIST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEPT" source="DEPT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROOM_NUM" source="ROOM_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FLOOR_NUM" source="FLOOR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLD_NUM" source="BLD_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STR_NO" source="STR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STREET_NAME" source="STREET_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CITY" source="CITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POSTAL_CODE" source="POSTAL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACC_CAT" source="ACC_CAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_CEN" source="COST_CEN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MARCODE" source="MARCODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INT_ORD" source="INT_ORD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SORTCODE" source="SORTCODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CART_SCAN_DATE" source="CART_SCAN_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="USER_ID" source="USER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADD_CHG_DATE" source="ADD_CHG_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHANGE_BY_USER" source="CHANGE_BY_USER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_STOCKOUT_DETERMINE" source="Z_STOCKOUT_DETERMINE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$Z_MATNR$Z_MATNR" source="Z_MATNR"/>
+      </input>
+      <input node="Projection_4">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROF_MAXQTY" source="PROF_MAXQTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROF_UOM" source="PROF_UOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRPN" source="MFRPN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAT_PRICE" source="MAT_PRICE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$Z_MATNR$Z_MATNR" source="Z_MATNR"/>
+      </input>
+    <joinAttribute name="WERKS"/>
+    <joinAttribute name="LGORT"/>
+    <joinAttribute name="JOIN$Z_MATNR$Z_MATNR"/>
+  </calculationView>
+</calculationViews>
+  <logicalModel id="Join_3">
+    <descriptions/>
+    <attributes>
+      <attribute id="PROF_MAXQTY" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROF_MAXQTY"/>
+        <keyMapping columnObjectName="Join_3" columnName="PROF_MAXQTY"/>
+      </attribute>
+      <attribute id="PROF_UOM" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROF_UOM"/>
+        <keyMapping columnObjectName="Join_3" columnName="PROF_UOM"/>
+      </attribute>
+      <attribute id="CREA_DAY" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Day of the week"/>
+        <keyMapping columnObjectName="Join_3" columnName="CREA_DAY"/>
+      </attribute>
+      <attribute id="CREA_DATE" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Creation / Assignment Date"/>
+        <keyMapping columnObjectName="Join_3" columnName="CREA_DATE"/>
+      </attribute>
+      <attribute id="BUKRS" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Company Code"/>
+        <keyMapping columnObjectName="Join_3" columnName="BUKRS"/>
+      </attribute>
+      <attribute id="WERKS" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Plant"/>
+        <keyMapping columnObjectName="Join_3" columnName="WERKS"/>
+      </attribute>
+      <attribute id="LGORT" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Storage Location"/>
+        <keyMapping columnObjectName="Join_3" columnName="LGORT"/>
+      </attribute>
+      <attribute id="MATNR" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Number"/>
+        <keyMapping columnObjectName="Join_3" columnName="MATNR"/>
+      </attribute>
+      <attribute id="PDA_USER" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PDA User (Offline Mobile Device)"/>
+        <keyMapping columnObjectName="Join_3" columnName="PDA_USER"/>
+      </attribute>
+      <attribute id="ROUTENAME" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Route Name for Mobile Routing Data"/>
+        <keyMapping columnObjectName="Join_3" columnName="ROUTENAME"/>
+      </attribute>
+      <attribute id="CART_LI_PLATE" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cart License Plate"/>
+        <keyMapping columnObjectName="Join_3" columnName="CART_LI_PLATE"/>
+      </attribute>
+      <attribute id="MEINS" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Base Unit of Measure"/>
+        <keyMapping columnObjectName="Join_3" columnName="MEINS"/>
+      </attribute>
+      <attribute id="ALT_UOM" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Alternative Unit of Measure"/>
+        <keyMapping columnObjectName="Join_3" columnName="ALT_UOM"/>
+      </attribute>
+      <attribute id="MAX_QTY" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Maximum Quantity"/>
+        <keyMapping columnObjectName="Join_3" columnName="MAX_QTY"/>
+      </attribute>
+      <attribute id="QTY_COUNTED" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Quantity Counted from Cart"/>
+        <keyMapping columnObjectName="Join_3" columnName="QTY_COUNTED"/>
+      </attribute>
+      <attribute id="ROP" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ROP - Re-Ordering Point"/>
+        <keyMapping columnObjectName="Join_3" columnName="ROP"/>
+      </attribute>
+      <attribute id="EXTRA_QTY_CALC" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Extra Quantity Allowed - Calculated value"/>
+        <keyMapping columnObjectName="Join_3" columnName="EXTRA_QTY_CALC"/>
+      </attribute>
+      <attribute id="EXTRA_QTY_ORDER" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Extra Quantity To Be Ordered"/>
+        <keyMapping columnObjectName="Join_3" columnName="EXTRA_QTY_ORDER"/>
+      </attribute>
+      <attribute id="REASON" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Reason for Ordering"/>
+        <keyMapping columnObjectName="Join_3" columnName="REASON"/>
+      </attribute>
+      <attribute id="REASON_DESC" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Description"/>
+        <keyMapping columnObjectName="Join_3" columnName="REASON_DESC"/>
+      </attribute>
+      <attribute id="ITEMSCNFG" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Item Scanned Flag"/>
+        <keyMapping columnObjectName="Join_3" columnName="ITEMSCNFG"/>
+      </attribute>
+      <attribute id="CARTSCNFG" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cart Scanned Flag"/>
+        <keyMapping columnObjectName="Join_3" columnName="CARTSCNFG"/>
+      </attribute>
+      <attribute id="DTLASTSCAN" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Date Last Scan"/>
+        <keyMapping columnObjectName="Join_3" columnName="DTLASTSCAN"/>
+      </attribute>
+      <attribute id="TMSTARTSCAN" order="26" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Time First Scan - Start Time"/>
+        <keyMapping columnObjectName="Join_3" columnName="TMSTARTSCAN"/>
+      </attribute>
+      <attribute id="TMLASTSCAN" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Time Last Scan - Finishing Time"/>
+        <keyMapping columnObjectName="Join_3" columnName="TMLASTSCAN"/>
+      </attribute>
+      <attribute id="ROP_QUES_FLAG" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ROP Question Flag"/>
+        <keyMapping columnObjectName="Join_3" columnName="ROP_QUES_FLAG"/>
+      </attribute>
+      <attribute id="QTYSAVEFLAG" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Quantity Saved Flag"/>
+        <keyMapping columnObjectName="Join_3" columnName="QTYSAVEFLAG"/>
+      </attribute>
+      <attribute id="MRP_ENTRY" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MRP Entry Created Flag"/>
+        <keyMapping columnObjectName="Join_3" columnName="MRP_ENTRY"/>
+      </attribute>
+      <attribute id="FLD_EXT1" order="31" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Field Extension"/>
+        <keyMapping columnObjectName="Join_3" columnName="FLD_EXT1"/>
+      </attribute>
+      <attribute id="FLD_EXT2" order="32" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Field Extension"/>
+        <keyMapping columnObjectName="Join_3" columnName="FLD_EXT2"/>
+      </attribute>
+      <attribute id="FLD_EXT3" order="33" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Field Extension"/>
+        <keyMapping columnObjectName="Join_3" columnName="FLD_EXT3"/>
+      </attribute>
+      <attribute id="MUSTCTFG" order="34" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Must Count Flag"/>
+        <keyMapping columnObjectName="Join_3" columnName="MUSTCTFG"/>
+      </attribute>
+      <attribute id="MAKTX" order="35" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Description (Short Text)"/>
+        <keyMapping columnObjectName="Join_3" columnName="MAKTX"/>
+      </attribute>
+      <attribute id="SYNC_DATE" order="36" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Creation / Assignment Date"/>
+        <keyMapping columnObjectName="Join_3" columnName="SYNC_DATE"/>
+      </attribute>
+      <attribute id="SYNC_TIME" order="37" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Time Last Scan - Finishing Time"/>
+        <keyMapping columnObjectName="Join_3" columnName="SYNC_TIME"/>
+      </attribute>
+      <attribute id="QTYORDER" order="38" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Quantity Counted from Cart"/>
+        <keyMapping columnObjectName="Join_3" columnName="QTYORDER"/>
+      </attribute>
+      <attribute id="MRP_PROCESSED" order="39" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Processed Flag"/>
+        <keyMapping columnObjectName="Join_3" columnName="MRP_PROCESSED"/>
+      </attribute>
+      <attribute id="ZCALENDAR_YEAR" order="40" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Calendar Yr"/>
+        <keyMapping columnObjectName="Join_3" columnName="ZCALENDAR_YEAR"/>
+      </attribute>
+      <attribute id="ZCAL_MONTH" order="41" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Calendar Month"/>
+        <keyMapping columnObjectName="Join_3" columnName="ZCAL_MONTH"/>
+      </attribute>
+      <attribute id="ZFISCAL_YEAR" order="42" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Yr"/>
+        <keyMapping columnObjectName="Join_3" columnName="ZFISCAL_YEAR"/>
+      </attribute>
+      <attribute id="ZFISCAL_PERIOD" order="43" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Period"/>
+        <keyMapping columnObjectName="Join_3" columnName="ZFISCAL_PERIOD"/>
+      </attribute>
+      <attribute id="ZFISCAL_QUARTER" order="44" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Qtr"/>
+        <keyMapping columnObjectName="Join_3" columnName="ZFISCAL_QUARTER"/>
+      </attribute>
+      <attribute id="CART_TYPE" order="45" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cart Type"/>
+        <keyMapping columnObjectName="Join_3" columnName="CART_TYPE"/>
+      </attribute>
+      <attribute id="STATUS" order="46" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cart Header - Status (Active/Inactive)"/>
+        <keyMapping columnObjectName="Join_3" columnName="STATUS"/>
+      </attribute>
+      <attribute id="STATUS_DATE" order="47" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Date of last status change"/>
+        <keyMapping columnObjectName="Join_3" columnName="STATUS_DATE"/>
+      </attribute>
+      <attribute id="STATUS_HIST" order="48" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cart Status Change History"/>
+        <keyMapping columnObjectName="Join_3" columnName="STATUS_HIST"/>
+      </attribute>
+      <attribute id="DEPT" order="49" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cart Header - Department"/>
+        <keyMapping columnObjectName="Join_3" columnName="DEPT"/>
+      </attribute>
+      <attribute id="ROOM_NUM" order="50" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Room or Appartment Number"/>
+        <keyMapping columnObjectName="Join_3" columnName="ROOM_NUM"/>
+      </attribute>
+      <attribute id="FLOOR_NUM" order="51" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Floor in building"/>
+        <keyMapping columnObjectName="Join_3" columnName="FLOOR_NUM"/>
+      </attribute>
+      <attribute id="BLD_NUM" order="52" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Building (Number or Code)"/>
+        <keyMapping columnObjectName="Join_3" columnName="BLD_NUM"/>
+      </attribute>
+      <attribute id="STR_NO" order="53" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Street Number"/>
+        <keyMapping columnObjectName="Join_3" columnName="STR_NO"/>
+      </attribute>
+      <attribute id="STREET_NAME" order="54" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Street"/>
+        <keyMapping columnObjectName="Join_3" columnName="STREET_NAME"/>
+      </attribute>
+      <attribute id="CITY" order="55" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="City"/>
+        <keyMapping columnObjectName="Join_3" columnName="CITY"/>
+      </attribute>
+      <attribute id="POSTAL_CODE" order="56" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="City postal code"/>
+        <keyMapping columnObjectName="Join_3" columnName="POSTAL_CODE"/>
+      </attribute>
+      <attribute id="ACC_CAT" order="57" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Account Assignment Category"/>
+        <keyMapping columnObjectName="Join_3" columnName="ACC_CAT"/>
+      </attribute>
+      <attribute id="COST_CEN" order="58" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cost Center"/>
+        <keyMapping columnObjectName="Join_3" columnName="COST_CEN"/>
+      </attribute>
+      <attribute id="MARCODE" order="59" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cart Marshalling code"/>
+        <keyMapping columnObjectName="Join_3" columnName="MARCODE"/>
+      </attribute>
+      <attribute id="INT_ORD" order="60" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Order Number"/>
+        <keyMapping columnObjectName="Join_3" columnName="INT_ORD"/>
+      </attribute>
+      <attribute id="SORTCODE" order="61" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cart Header - Sort Code"/>
+        <keyMapping columnObjectName="Join_3" columnName="SORTCODE"/>
+      </attribute>
+      <attribute id="CART_SCAN_DATE" order="62" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cart Scanned Date"/>
+        <keyMapping columnObjectName="Join_3" columnName="CART_SCAN_DATE"/>
+      </attribute>
+      <attribute id="USER_ID" order="63" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="USER_ID"/>
+        <keyMapping columnObjectName="Join_3" columnName="USER_ID"/>
+      </attribute>
+      <attribute id="ADD_CHG_DATE" order="64" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cart Add &amp; Change Date"/>
+        <keyMapping columnObjectName="Join_3" columnName="ADD_CHG_DATE"/>
+      </attribute>
+      <attribute id="CHANGE_BY_USER" order="65" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Change By User"/>
+        <keyMapping columnObjectName="Join_3" columnName="CHANGE_BY_USER"/>
+      </attribute>
+      <attribute id="MFRPN" order="67" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MFRPN"/>
+        <keyMapping columnObjectName="Join_3" columnName="MFRPN"/>
+      </attribute>
+      <attribute id="MAT_PRICE" order="68" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MAT_PRICE"/>
+        <keyMapping columnObjectName="Join_3" columnName="MAT_PRICE"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="Z_STOCKOUT_DETERMINE" order="66" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Z_STOCKOUT_DETERMINE"/>
+        <measureMapping columnObjectName="Join_3" columnName="Z_STOCKOUT_DETERMINE"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures>
+      <measure id="Z_NR_SCANS" hidden="false" order="1" aggregationType="sum" measureType="simple" aggregatable="true" calculatedMeasureType="counter" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+        <descriptions defaultDescription="Z_NR_SCANS"/>
+        <exceptionAggregation exceptionAggregationType="countDistinct">
+          <attribute attributeName="WERKS"/>
+          <attribute attributeName="LGORT"/>
+          <attribute attributeName="MATNR"/>
+          <attribute attributeName="CART_LI_PLATE"/>
+          <attribute attributeName="CREA_DATE"/>
+          <attribute attributeName="TMSTARTSCAN"/>
+        </exceptionAggregation>
+        <formula>1</formula>
+      </measure>
+      <measure id="Z_STOCKOUT_NO" hidden="false" order="2" aggregationType="sum" measureType="simple" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+        <descriptions defaultDescription="Z_STOCKOUT_NO"/>
+        <formula>&quot;Z_STOCKOUT_DETERMINE&quot;</formula>
+      </measure>
+    </calculatedMeasures>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+<layout>
+  <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="453"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="453"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="357"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="357"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    <shape modelObjectName="Join_1" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_3" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="Projection_4" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    
+    <shape modelObjectName="Join_2" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_4" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

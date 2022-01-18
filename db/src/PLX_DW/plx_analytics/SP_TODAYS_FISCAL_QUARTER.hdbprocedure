@@ -1,0 +1,15 @@
+PROCEDURE "plx_analytics::SP_TODAYS_FISCAL_QUARTER" ( out O_TODAYS_FISC_QUARTER VARCHAR(2) ) 
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+	READS SQL DATA AS
+ BEGIN
+/***************************** 
+	returns the current plexxus reporting
+	quarter based on today's date
+ *****************************/
+ 
+ SELECT TOP 1 ZFISCAL_QUARTER
+ FROM "plx_analytics::CA_DIM_FISC_CAL"
+ WHERE SAP_DATE = TO_DATS(CURRENT_DATE);
+ 
+END;

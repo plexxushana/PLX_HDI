@@ -1,0 +1,720 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="plx_analytics::CA_PLX_NET_VALUE" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+  <origin/>
+  <descriptions defaultDescription="CA_PLX_NET_VALUE"/>
+  <metadata changedAt="2018-02-12 11:53:18.151"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="56"/>
+  <dataSources>
+    <DataSource id="MANUAL_NET_VALUE_GENERATED">
+      <resourceUri>MANUAL_NET_VALUE_GENERATED</resourceUri>
+    </DataSource>
+    <DataSource id="CURR_HOSPITAL$$$$MANUAL_NET_VALUE_GENERATED$$">
+      <resourceUri>MANUAL_NET_VALUE_GENERATED</resourceUri>
+    </DataSource>
+    <DataSource id="SAVINGS$$$$MANUAL_NET_VALUE_GENERATED$$">
+      <resourceUri>MANUAL_NET_VALUE_GENERATED</resourceUri>
+    </DataSource>
+    <DataSource id="PREV_PLEXXUS$$$$MANUAL_NET_VALUE_GENERATED$$">
+      <resourceUri>MANUAL_NET_VALUE_GENERATED</resourceUri>
+    </DataSource>
+    <DataSource id="PREV_HOSPITAL$$$$MANUAL_NET_VALUE_GENERATED$$">
+      <resourceUri>MANUAL_NET_VALUE_GENERATED</resourceUri>
+    </DataSource>
+    <DataSource id="CA_DIM_FISC_CAL">
+      <resourceUri>plx_analytics::CA_DIM_FISC_CAL</resourceUri>
+    </DataSource>
+    <DataSource id="CA_DIM_NET_VALUE_TARGET">
+      <resourceUri>plx_analytics::CA_DIM_NET_VALUE_TARGET</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="CURR_PLEXXUS">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="VALUE_TYPE"/>
+        <viewAttribute id="VALUE_TYPE_DETAILED"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="PLEXXUS_FEES"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="INCR_AMT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="PREV_FISCAL_YEAR" length="4" expressionLanguage="COLUMN_ENGINE">
+          <formula>int(&quot;ZFISCAL_YEAR&quot;)-1</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="VARCHAR" id="PREV_FISCAL_QUARTER" length="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;ZFISCAL_QUARTER&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#MANUAL_NET_VALUE_GENERATED">
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_TYPE" source="VALUE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_TYPE_DETAILED" source="VALUE_TYPE_DETAILED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PLEXXUS_FEES" source="AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INCR_AMT" source="INCR_AMT"/>
+      </input>
+      <filter>(&quot;VALUE_TYPE&quot; ='Plexxus Fees')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="CURR_HOSPITAL">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="VALUE_TYPE"/>
+        <viewAttribute id="VALUE_TYPE_DETAILED"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="HOSPITAL_COSTS"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="INCR_AMT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="PREV_FISCAL_YEAR" length="4" expressionLanguage="COLUMN_ENGINE">
+          <formula>int(&quot;ZFISCAL_YEAR&quot;)-1</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="VARCHAR" id="PREV_FISCAL_QUARTER" length="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;ZFISCAL_QUARTER&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CURR_HOSPITAL$$$$MANUAL_NET_VALUE_GENERATED$$">
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_TYPE" source="VALUE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_TYPE_DETAILED" source="VALUE_TYPE_DETAILED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HOSPITAL_COSTS" source="AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INCR_AMT" source="INCR_AMT"/>
+      </input>
+      <filter>(&quot;VALUE_TYPE&quot; ='Hospital Costs')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="SAVINGS">
+      <descriptions defaultDescription="Actual Savings"/>
+      <viewAttributes>
+        <viewAttribute id="VALUE_TYPE"/>
+        <viewAttribute id="VALUE_TYPE_DETAILED"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="SAVINGS"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="INCR_AMT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="PREV_FISCAL_YEAR" length="4" expressionLanguage="COLUMN_ENGINE">
+          <formula>int(&quot;ZFISCAL_YEAR&quot;)-1</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="HOSPITAL_COSTS" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>0.0</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="PREV_HOSPITAL_COSTS" length="13" scale="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>0.0</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="PLEXXUS_FEES" length="13" scale="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>0.0</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="PREV_PLEXXUS_FEES" length="13" scale="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>0.0</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#SAVINGS$$$$MANUAL_NET_VALUE_GENERATED$$">
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_TYPE" source="VALUE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_TYPE_DETAILED" source="VALUE_TYPE_DETAILED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS" source="AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INCR_AMT" source="INCR_AMT"/>
+      </input>
+      <filter>(&quot;VALUE_TYPE&quot; ='Savings')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PREV_PLEXXUS">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="VALUE_TYPE"/>
+        <viewAttribute id="VALUE_TYPE_DETAILED"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="PREV_PLEXXUS_FEES"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="INCR_AMT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PREV_PLEXXUS$$$$MANUAL_NET_VALUE_GENERATED$$">
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_TYPE" source="VALUE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_TYPE_DETAILED" source="VALUE_TYPE_DETAILED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREV_PLEXXUS_FEES" source="AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INCR_AMT" source="INCR_AMT"/>
+      </input>
+      <filter>(&quot;VALUE_TYPE&quot; ='Plexxus Fees')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="PLEXXUS_FEES" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions defaultDescription="Actual Plexxus Fees">
+        <comment text="Note: Sign is removed for Plexxus_Fees"/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="VALUE_TYPE"/>
+        <viewAttribute id="VALUE_TYPE_DETAILED"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="PREV_FISCAL_YEAR"/>
+        <viewAttribute id="PLEXXUS_FEES1"/>
+        <viewAttribute id="PREV_PLEXXUS_FEES1"/>
+        <viewAttribute id="PREV_FISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_QUARTER_1"/>
+        <viewAttribute id="ZFISCAL_YEAR_1"/>
+        <viewAttribute id="INCR_AMT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DECIMAL" id="SAVINGS" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>0.0</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="HOSPITAL_COSTS" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>0.0</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="PREV_HOSPITAL_COSTS" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>0.0</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="PLEXXUS_FEES" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;PLEXXUS_FEES1&quot; *(-1)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="PREV_PLEXXUS_FEES" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;PREV_PLEXXUS_FEES1&quot; *(-1)</formula>
+          <comment text="need to drop the sign for this value"/>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CURR_PLEXXUS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_TYPE" source="VALUE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_TYPE_DETAILED" source="VALUE_TYPE_DETAILED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREV_FISCAL_YEAR" source="PREV_FISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PLEXXUS_FEES1" source="PLEXXUS_FEES"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREV_FISCAL_QUARTER" source="PREV_FISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INCR_AMT" source="INCR_AMT"/>
+      </input>
+      <input node="#PREV_PLEXXUS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREV_PLEXXUS_FEES1" source="PREV_PLEXXUS_FEES"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER_1" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR_1" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_TYPE" source="VALUE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_TYPE_DETAILED" source="VALUE_TYPE_DETAILED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREV_FISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREV_FISCAL_YEAR" source="ZFISCAL_YEAR"/>
+      </input>
+      <joinAttribute name="VALUE_TYPE"/>
+      <joinAttribute name="VALUE_TYPE_DETAILED"/>
+      <joinAttribute name="MEMBER"/>
+      <joinAttribute name="PREV_FISCAL_QUARTER"/>
+      <joinAttribute name="PREV_FISCAL_YEAR"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PREV_HOSPITAL">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="VALUE_TYPE"/>
+        <viewAttribute id="VALUE_TYPE_DETAILED"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="PREV_HOSPITAL_COSTS"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="INCR_AMT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PREV_HOSPITAL$$$$MANUAL_NET_VALUE_GENERATED$$">
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_TYPE" source="VALUE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_TYPE_DETAILED" source="VALUE_TYPE_DETAILED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREV_HOSPITAL_COSTS" source="AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INCR_AMT" source="INCR_AMT"/>
+      </input>
+      <filter>(&quot;VALUE_TYPE&quot; ='Hospital Costs')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="HOSPITAL_COSTS" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions defaultDescription="Actual Hospital Costs"/>
+      <viewAttributes>
+        <viewAttribute id="VALUE_TYPE"/>
+        <viewAttribute id="VALUE_TYPE_DETAILED"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="HOSPITAL_COSTS"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="PREV_HOSPITAL_COSTS"/>
+        <viewAttribute id="PREV_FISCAL_YEAR"/>
+        <viewAttribute id="PREV_FISCAL_QUARTER"/>
+        <viewAttribute id="INCR_AMT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DECIMAL" id="PLEXXUS_FEES" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>0.0</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="SAVINGS" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>0.0</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="PREV_PLEXXUS_FEES" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>0.0</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CURR_HOSPITAL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_TYPE" source="VALUE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_TYPE_DETAILED" source="VALUE_TYPE_DETAILED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HOSPITAL_COSTS" source="HOSPITAL_COSTS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREV_FISCAL_YEAR" source="PREV_FISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREV_FISCAL_QUARTER" source="PREV_FISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INCR_AMT" source="INCR_AMT"/>
+      </input>
+      <input node="#PREV_HOSPITAL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREV_HOSPITAL_COSTS" source="PREV_HOSPITAL_COSTS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_TYPE" source="VALUE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_TYPE_DETAILED" source="VALUE_TYPE_DETAILED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREV_FISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREV_FISCAL_YEAR" source="ZFISCAL_YEAR"/>
+      </input>
+      <joinAttribute name="VALUE_TYPE"/>
+      <joinAttribute name="VALUE_TYPE_DETAILED"/>
+      <joinAttribute name="MEMBER"/>
+      <joinAttribute name="PREV_FISCAL_QUARTER"/>
+      <joinAttribute name="PREV_FISCAL_YEAR"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:UnionView" id="Union_1">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="VALUE_TYPE"/>
+        <viewAttribute id="VALUE_TYPE_DETAILED"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="PREV_FISCAL_YEAR"/>
+        <viewAttribute id="SAVINGS"/>
+        <viewAttribute id="HOSPITAL_COSTS"/>
+        <viewAttribute id="PREV_HOSPITAL_COSTS"/>
+        <viewAttribute id="PLEXXUS_FEES"/>
+        <viewAttribute id="PREV_PLEXXUS_FEES"/>
+        <viewAttribute id="INCR_AMT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input emptyUnionBehavior="NO_ROW" node="#PLEXXUS_FEES">
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_TYPE" source="VALUE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_TYPE_DETAILED" source="VALUE_TYPE_DETAILED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREV_FISCAL_YEAR" source="PREV_FISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS" source="SAVINGS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HOSPITAL_COSTS" source="HOSPITAL_COSTS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREV_HOSPITAL_COSTS" source="PREV_HOSPITAL_COSTS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PLEXXUS_FEES" source="PLEXXUS_FEES"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREV_PLEXXUS_FEES" source="PREV_PLEXXUS_FEES"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INCR_AMT" source="INCR_AMT"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#HOSPITAL_COSTS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_TYPE" source="VALUE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_TYPE_DETAILED" source="VALUE_TYPE_DETAILED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREV_FISCAL_YEAR" source="PREV_FISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS" source="SAVINGS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HOSPITAL_COSTS" source="HOSPITAL_COSTS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREV_HOSPITAL_COSTS" source="PREV_HOSPITAL_COSTS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PLEXXUS_FEES" source="PLEXXUS_FEES"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREV_PLEXXUS_FEES" source="PREV_PLEXXUS_FEES"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INCR_AMT" source="INCR_AMT"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#SAVINGS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_TYPE" source="VALUE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_TYPE_DETAILED" source="VALUE_TYPE_DETAILED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREV_FISCAL_YEAR" source="PREV_FISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS" source="SAVINGS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HOSPITAL_COSTS" source="HOSPITAL_COSTS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREV_HOSPITAL_COSTS" source="PREV_HOSPITAL_COSTS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PLEXXUS_FEES" source="PLEXXUS_FEES"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREV_PLEXXUS_FEES" source="PREV_PLEXXUS_FEES"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INCR_AMT" source="INCR_AMT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="FISC_CAL">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ZFISCAL_YEAR_QUARTER"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_DIM_FISC_CAL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR_QUARTER" source="ZFISCAL_YEAR_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="ACTUALS" joinOrder="OUTSIDE_IN" joinType="rightOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="VALUE_TYPE"/>
+        <viewAttribute id="VALUE_TYPE_DETAILED"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="PREV_FISCAL_YEAR"/>
+        <viewAttribute id="SAVINGS"/>
+        <viewAttribute id="HOSPITAL_COSTS"/>
+        <viewAttribute id="PREV_HOSPITAL_COSTS"/>
+        <viewAttribute id="ZFISCAL_YEAR_QUARTER"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="PLEXXUS_FEES"/>
+        <viewAttribute id="PREV_PLEXXUS_FEES"/>
+        <viewAttribute id="INCR_AMT"/>
+        <viewAttribute hidden="true" id="JOIN$ZFISCAL_YEAR$ZFISCAL_YEAR"/>
+        <viewAttribute hidden="true" id="JOIN$ZFISCAL_QUARTER$ZFISCAL_QUARTER"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="VARCHAR" id="LABEL" length="15" expressionLanguage="COLUMN_ENGINE">
+          <formula>'Actual'</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#Union_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_TYPE" source="VALUE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_TYPE_DETAILED" source="VALUE_TYPE_DETAILED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREV_FISCAL_YEAR" source="PREV_FISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS" source="SAVINGS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HOSPITAL_COSTS" source="HOSPITAL_COSTS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREV_HOSPITAL_COSTS" source="PREV_HOSPITAL_COSTS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PLEXXUS_FEES" source="PLEXXUS_FEES"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREV_PLEXXUS_FEES" source="PREV_PLEXXUS_FEES"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INCR_AMT" source="INCR_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ZFISCAL_QUARTER$ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ZFISCAL_YEAR$ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+      </input>
+      <input node="#FISC_CAL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR_QUARTER" source="ZFISCAL_YEAR_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ZFISCAL_QUARTER$ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ZFISCAL_YEAR$ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+      </input>
+      <joinAttribute name="JOIN$ZFISCAL_QUARTER$ZFISCAL_QUARTER"/>
+      <joinAttribute name="JOIN$ZFISCAL_YEAR$ZFISCAL_YEAR"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="TARGET">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SAVINGS_ACCUMULATIVE"/>
+        <viewAttribute id="CAPITAL"/>
+        <viewAttribute id="FISCAL_YEAR"/>
+        <viewAttribute id="COSTS_ACCUMULATIVE"/>
+        <viewAttribute id="COSTS_PLEXXUS"/>
+        <viewAttribute id="COSTS_HOSPITAL"/>
+        <viewAttribute id="SAVINGS_ACCUMULATIVE_0"/>
+        <viewAttribute id="TOTAL_SAVINGS_ACCUMULATIVE"/>
+        <viewAttribute id="NET_SAVINGS_ACCUMULATIVE"/>
+        <viewAttribute id="TOTAL_SAVINGS_YEARLY"/>
+        <viewAttribute id="CAPITAL_ONE_TIME"/>
+        <viewAttribute id="NET_SAVING_YEARLY"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="VARCHAR" id="LABEL" length="15" expressionLanguage="COLUMN_ENGINE">
+          <formula>'Target'</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CA_DIM_NET_VALUE_TARGET">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS_ACCUMULATIVE" source="SAVINGS_ACCUMULATIVE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAPITAL" source="CAPITAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COSTS_ACCUMULATIVE" source="COSTS_ACCUMULATIVE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COSTS_PLEXXUS" source="COSTS_PLEXXUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COSTS_HOSPITAL" source="COSTS_HOSPITAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS_ACCUMULATIVE_0" source="SAVINGS_ACCUMULATIVE_0"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_SAVINGS_ACCUMULATIVE" source="TOTAL_SAVINGS_ACCUMULATIVE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NET_SAVINGS_ACCUMULATIVE" source="NET_SAVINGS_ACCUMULATIVE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_SAVINGS_YEARLY" source="TOTAL_SAVINGS_YEARLY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAPITAL_ONE_TIME" source="CAPITAL_ONE_TIME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NET_SAVING_YEARLY" source="NET_SAVING_YEARLY"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:UnionView" id="Union_2">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SAVINGS_ACCUMULATIVE"/>
+        <viewAttribute id="CAPITAL"/>
+        <viewAttribute id="VALUE_TYPE"/>
+        <viewAttribute id="VALUE_TYPE_DETAILED"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="PREV_FISCAL_YEAR"/>
+        <viewAttribute id="SAVINGS"/>
+        <viewAttribute id="HOSPITAL_COSTS"/>
+        <viewAttribute id="PREV_HOSPITAL_COSTS"/>
+        <viewAttribute id="ZFISCAL_YEAR_QUARTER"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="LABEL"/>
+        <viewAttribute id="PLEXXUS_FEES"/>
+        <viewAttribute id="PREV_PLEXXUS_FEES"/>
+        <viewAttribute id="COSTS_ACCUMULATIVE"/>
+        <viewAttribute id="COSTS_PLEXXUS"/>
+        <viewAttribute id="COSTS_HOSPITAL"/>
+        <viewAttribute id="SAVINGS_ACCUMULATIVE_0"/>
+        <viewAttribute id="NET_SAVINGS_ACCUMULATIVE"/>
+        <viewAttribute id="TOTAL_SAVINGS_ACCUMULATIVE"/>
+        <viewAttribute id="TOTAL_SAVINGS_YEARLY"/>
+        <viewAttribute id="CAPITAL_ONE_TIME"/>
+        <viewAttribute id="NET_SAVING_YEARLY"/>
+        <viewAttribute id="INCR_AMT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input emptyUnionBehavior="NO_ROW" node="#TARGET">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS_ACCUMULATIVE" source="SAVINGS_ACCUMULATIVE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAPITAL" source="CAPITAL"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="VALUE_TYPE" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="VALUE_TYPE_DETAILED" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="MEMBER" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PREV_FISCAL_YEAR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="SAVINGS" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="HOSPITAL_COSTS" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PREV_HOSPITAL_COSTS" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ZFISCAL_YEAR_QUARTER" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ZFISCAL_QUARTER" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="FISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LABEL" source="LABEL"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PLEXXUS_FEES" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PREV_PLEXXUS_FEES" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COSTS_ACCUMULATIVE" source="COSTS_ACCUMULATIVE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COSTS_PLEXXUS" source="COSTS_PLEXXUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COSTS_HOSPITAL" source="COSTS_HOSPITAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS_ACCUMULATIVE_0" source="SAVINGS_ACCUMULATIVE_0"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NET_SAVINGS_ACCUMULATIVE" source="NET_SAVINGS_ACCUMULATIVE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_SAVINGS_ACCUMULATIVE" source="TOTAL_SAVINGS_ACCUMULATIVE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_SAVINGS_YEARLY" source="TOTAL_SAVINGS_YEARLY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAPITAL_ONE_TIME" source="CAPITAL_ONE_TIME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NET_SAVING_YEARLY" source="NET_SAVING_YEARLY"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="INCR_AMT" null="true" value=""/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#ACTUALS">
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="SAVINGS_ACCUMULATIVE" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CAPITAL" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_TYPE" source="VALUE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_TYPE_DETAILED" source="VALUE_TYPE_DETAILED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREV_FISCAL_YEAR" source="PREV_FISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS" source="SAVINGS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HOSPITAL_COSTS" source="HOSPITAL_COSTS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREV_HOSPITAL_COSTS" source="PREV_HOSPITAL_COSTS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR_QUARTER" source="ZFISCAL_YEAR_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LABEL" source="LABEL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PLEXXUS_FEES" source="PLEXXUS_FEES"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREV_PLEXXUS_FEES" source="PREV_PLEXXUS_FEES"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="COSTS_ACCUMULATIVE" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="COSTS_PLEXXUS" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="COSTS_HOSPITAL" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="SAVINGS_ACCUMULATIVE_0" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="NET_SAVINGS_ACCUMULATIVE" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="TOTAL_SAVINGS_ACCUMULATIVE" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="TOTAL_SAVINGS_YEARLY" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CAPITAL_ONE_TIME" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="NET_SAVING_YEARLY" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INCR_AMT" source="INCR_AMT"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="Union_2">
+    <descriptions/>
+    <attributes>
+      <attribute id="VALUE_TYPE" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Value Type"/>
+        <keyMapping columnObjectName="Union_2" columnName="VALUE_TYPE"/>
+      </attribute>
+      <attribute id="VALUE_TYPE_DETAILED" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Value Type Detail"/>
+        <keyMapping columnObjectName="Union_2" columnName="VALUE_TYPE_DETAILED"/>
+      </attribute>
+      <attribute id="MEMBER" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Member"/>
+        <keyMapping columnObjectName="Union_2" columnName="MEMBER"/>
+      </attribute>
+      <attribute id="PREV_FISCAL_YEAR" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Previous Year"/>
+        <keyMapping columnObjectName="Union_2" columnName="PREV_FISCAL_YEAR"/>
+      </attribute>
+      <attribute id="ZFISCAL_YEAR_QUARTER" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Year / Qtr"/>
+        <keyMapping columnObjectName="Union_2" columnName="ZFISCAL_YEAR_QUARTER"/>
+      </attribute>
+      <attribute id="ZFISCAL_QUARTER" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Quarter"/>
+        <keyMapping columnObjectName="Union_2" columnName="ZFISCAL_QUARTER"/>
+      </attribute>
+      <attribute id="ZFISCAL_YEAR" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Year"/>
+        <keyMapping columnObjectName="Union_2" columnName="ZFISCAL_YEAR"/>
+      </attribute>
+      <attribute id="LABEL" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Label"/>
+        <keyMapping columnObjectName="Union_2" columnName="LABEL"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="SAVINGS_ACCUMULATIVE" order="2" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Target Accum. Savings"/>
+        <measureMapping columnObjectName="Union_2" columnName="SAVINGS_ACCUMULATIVE"/>
+      </measure>
+      <measure id="CAPITAL" order="3" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Target Accum. Capital (One-time)"/>
+        <measureMapping columnObjectName="Union_2" columnName="CAPITAL"/>
+      </measure>
+      <measure id="SAVINGS" order="8" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Actual Savings"/>
+        <measureMapping columnObjectName="Union_2" columnName="SAVINGS"/>
+      </measure>
+      <measure id="HOSPITAL_COSTS" order="9" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Actual Hospital Costs"/>
+        <measureMapping columnObjectName="Union_2" columnName="HOSPITAL_COSTS"/>
+      </measure>
+      <measure id="PREV_HOSPITAL_COSTS" order="10" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Actual Hospital Costs (Prev Yr)"/>
+        <measureMapping columnObjectName="Union_2" columnName="PREV_HOSPITAL_COSTS"/>
+      </measure>
+      <measure id="PLEXXUS_FEES" order="15" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Actual Plexxus Fees"/>
+        <measureMapping columnObjectName="Union_2" columnName="PLEXXUS_FEES"/>
+      </measure>
+      <measure id="PREV_PLEXXUS_FEES" order="16" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Actual Plexxus Fees (Prev Yr)"/>
+        <measureMapping columnObjectName="Union_2" columnName="PREV_PLEXXUS_FEES"/>
+      </measure>
+      <measure id="COSTS_ACCUMULATIVE" order="17" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Target Accum. Costs"/>
+        <measureMapping columnObjectName="Union_2" columnName="COSTS_ACCUMULATIVE"/>
+      </measure>
+      <measure id="COSTS_PLEXXUS" order="18" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Target Costs-Plexxus"/>
+        <measureMapping columnObjectName="Union_2" columnName="COSTS_PLEXXUS"/>
+      </measure>
+      <measure id="COSTS_HOSPITAL" order="19" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Target Costs-Hospital"/>
+        <measureMapping columnObjectName="Union_2" columnName="COSTS_HOSPITAL"/>
+      </measure>
+      <measure id="SAVINGS_ACCUMULATIVE_0" order="20" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Target Annual Savings"/>
+        <measureMapping columnObjectName="Union_2" columnName="SAVINGS_ACCUMULATIVE_0"/>
+      </measure>
+      <measure id="NET_SAVINGS_ACCUMULATIVE" order="21" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Target Net Savings Accumulative"/>
+        <measureMapping columnObjectName="Union_2" columnName="NET_SAVINGS_ACCUMULATIVE"/>
+      </measure>
+      <measure id="TOTAL_SAVINGS_ACCUMULATIVE" order="22" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Target Total Savings Accumulative"/>
+        <measureMapping columnObjectName="Union_2" columnName="TOTAL_SAVINGS_ACCUMULATIVE"/>
+      </measure>
+      <measure id="TOTAL_SAVINGS_YEARLY" order="23" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Target Total Savings Annually"/>
+        <measureMapping columnObjectName="Union_2" columnName="TOTAL_SAVINGS_YEARLY"/>
+      </measure>
+      <measure id="CAPITAL_ONE_TIME" order="24" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Target Capital Annually"/>
+        <measureMapping columnObjectName="Union_2" columnName="CAPITAL_ONE_TIME"/>
+      </measure>
+      <measure id="NET_SAVING_YEARLY" order="25" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Target Net Saving Annually"/>
+        <measureMapping columnObjectName="Union_2" columnName="NET_SAVING_YEARLY"/>
+      </measure>
+      <measure id="INCR_AMT" order="26" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Incremental Amt"/>
+        <measureMapping columnObjectName="Union_2" columnName="INCR_AMT"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures>
+      <measure id="ACTUAL" hidden="false" order="1" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="13" scale="2">
+        <descriptions defaultDescription="Actual Net Saving">
+          <comment text="--Savings - Diff in Plexxus (Cur. Yr -Prev. Yr) - Diff. in Hospital Fees (Cur. Yr -Prev. Yr)"/>
+        </descriptions>
+        <formula>&quot;SAVINGS&quot; - (&quot;PLEXXUS_FEES&quot; - &quot;PREV_PLEXXUS_FEES&quot;) - (&quot;HOSPITAL_COSTS&quot; - &quot;PREV_HOSPITAL_COSTS&quot;)</formula>
+      </measure>
+      <measure id="MSR_ZFISCAL_YEAR" hidden="false" order="27" aggregationType="max" engineAggregation="sum" measureType="simple" aggregatable="true" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+        <descriptions defaultDescription="Measure Fiscal Year"/>
+        <formula>int(&quot;ZFISCAL_YEAR&quot;)</formula>
+      </measure>
+    </calculatedMeasures>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="373" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="CURR_PLEXXUS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="607"/>
+        <rectangleSize height="81" width="211"/>
+      </shape>
+      <shape expanded="true" modelObjectName="CURR_HOSPITAL" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="472" y="607"/>
+        <rectangleSize height="81" width="211"/>
+      </shape>
+      <shape expanded="true" modelObjectName="SAVINGS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="755" y="511"/>
+        <rectangleSize height="81" width="211"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PREV_PLEXXUS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="247" y="607"/>
+        <rectangleSize height="81" width="211"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PLEXXUS_FEES" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="221" y="511"/>
+        <rectangleSize height="82" width="221"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PREV_HOSPITAL" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="697" y="607"/>
+        <rectangleSize height="81" width="211"/>
+      </shape>
+      <shape expanded="true" modelObjectName="HOSPITAL_COSTS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="456" y="511"/>
+        <rectangleSize height="66" width="285"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Union_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="528" y="377"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="FISC_CAL" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="374" y="377"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="ACTUALS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="450" y="281"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="TARGET" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="296" y="281"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Union_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="373" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

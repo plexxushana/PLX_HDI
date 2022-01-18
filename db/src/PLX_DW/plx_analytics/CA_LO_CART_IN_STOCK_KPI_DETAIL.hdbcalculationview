@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="plx_analytics::CA_LO_CART_IN_STOCK_KPI_DETAIL" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+  <origin/>
+  <descriptions defaultDescription="Cart In-Stock Detail KPI "/>
+  <metadata changedAt="2021-03-05 14:44:57.816"/>
+  <localVariables>
+    <variable id="P_BUKRS">
+      <descriptions defaultDescription="Company Code"/>
+      <variableProperties datatype="VARCHAR" mandatory="false">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_ORG_STRCTR</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>BUKRS</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="P_WERKS">
+      <descriptions defaultDescription="Plant"/>
+      <variableProperties datatype="VARCHAR" mandatory="false">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_ORG_STRCTR</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>WERKS</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="P_STORAGE_LOCATION">
+      <descriptions defaultDescription="Storage Location"/>
+      <variableProperties datatype="VARCHAR" mandatory="false">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_CART_PROFILE</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>LGORT</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="P_MONTH">
+      <descriptions defaultDescription="Month"/>
+      <variableProperties datatype="VARCHAR" mandatory="false">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_FISC_CAL</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>ZFISCAL_MONTH</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="P_CAL_YEAR">
+      <descriptions defaultDescription="Calendar Year"/>
+      <variableProperties datatype="VARCHAR" mandatory="false">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_FISC_CAL</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>ZCALENDAR_YEAR</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="52"/>
+  <dataSources>
+    <DataSource id="CA_LO_CART_LOG">
+      <resourceUri>plx_analytics::CA_LO_CART_LOG</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_MARA">
+      <resourceUri>ECC_MARA</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_T023T">
+      <resourceUri>ECC_T023T</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="Z_NR_SCANS"/>
+        <viewAttribute id="Z_STOCKOUT_NO"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="CART_LI_PLATE"/>
+        <viewAttribute id="MAKTX"/>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="CART_TYPE"/>
+        <viewAttribute id="STATUS"/>
+        <viewAttribute id="DEPT"/>
+        <viewAttribute id="MFRPN"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="MATNR_LPAD" length="18" expressionLanguage="COLUMN_ENGINE">
+          <formula>lpad(&quot;MATNR&quot;, 18, '0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CA_LO_CART_LOG">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_NR_SCANS" source="Z_NR_SCANS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_STOCKOUT_NO" source="Z_STOCKOUT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CART_LI_PLATE" source="CART_LI_PLATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTX" source="MAKTX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCALENDAR_YEAR" source="ZCALENDAR_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CART_TYPE" source="CART_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS" source="STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEPT" source="DEPT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRPN" source="MFRPN"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute id="MATNR"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="MATNR_LPAD" length="18" expressionLanguage="COLUMN_ENGINE">
+          <formula>LPAD(&quot;MATNR&quot;, 0)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#ECC_MARA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="Z_NR_SCANS"/>
+        <viewAttribute id="Z_STOCKOUT_NO"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="CART_LI_PLATE"/>
+        <viewAttribute id="MAKTX"/>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="CART_TYPE"/>
+        <viewAttribute id="STATUS"/>
+        <viewAttribute id="DEPT"/>
+        <viewAttribute id="MFRPN"/>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute hidden="true" id="JOIN$MATNR_LPAD$MATNR"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Projection_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_NR_SCANS" source="Z_NR_SCANS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_STOCKOUT_NO" source="Z_STOCKOUT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CART_LI_PLATE" source="CART_LI_PLATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTX" source="MAKTX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCALENDAR_YEAR" source="ZCALENDAR_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CART_TYPE" source="CART_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS" source="STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEPT" source="DEPT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRPN" source="MFRPN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MATNR_LPAD$MATNR" source="MATNR_LPAD"/>
+      </input>
+      <input node="#Projection_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MATNR_LPAD$MATNR" source="MATNR"/>
+      </input>
+      <joinAttribute name="JOIN$MATNR_LPAD$MATNR"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute id="WGBEZ"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#ECC_T023T">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WGBEZ" source="WGBEZ"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_2" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="CART_LI_PLATE"/>
+        <viewAttribute id="MAKTX"/>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="CART_TYPE"/>
+        <viewAttribute id="STATUS"/>
+        <viewAttribute id="DEPT"/>
+        <viewAttribute id="MFRPN"/>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute id="Z_NR_SCANS"/>
+        <viewAttribute id="Z_STOCKOUT_NO"/>
+        <viewAttribute id="WGBEZ"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Join_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CART_LI_PLATE" source="CART_LI_PLATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTX" source="MAKTX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCALENDAR_YEAR" source="ZCALENDAR_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CART_TYPE" source="CART_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS" source="STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEPT" source="DEPT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRPN" source="MFRPN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_NR_SCANS" source="Z_NR_SCANS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_STOCKOUT_NO" source="Z_STOCKOUT_NO"/>
+      </input>
+      <input node="#Projection_3">
+        <mapping xsi:type="Calculation:AttributeMapping" target="WGBEZ" source="WGBEZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+      </input>
+      <joinAttribute name="MATKL"/>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="Join_2">
+    <descriptions/>
+    <attributes>
+      <attribute id="BUKRS" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Company Code"/>
+        <localVariable>#P_BUKRS</localVariable>
+        <keyMapping columnObjectName="Join_2" columnName="BUKRS"/>
+      </attribute>
+      <attribute id="WERKS" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Plant"/>
+        <localVariable>#P_WERKS</localVariable>
+        <keyMapping columnObjectName="Join_2" columnName="WERKS"/>
+      </attribute>
+      <attribute id="LGORT" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Storage Location"/>
+        <localVariable>#P_STORAGE_LOCATION</localVariable>
+        <keyMapping columnObjectName="Join_2" columnName="LGORT"/>
+      </attribute>
+      <attribute id="MATNR" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Number"/>
+        <keyMapping columnObjectName="Join_2" columnName="MATNR"/>
+      </attribute>
+      <attribute id="CART_LI_PLATE" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cart License Plate"/>
+        <keyMapping columnObjectName="Join_2" columnName="CART_LI_PLATE"/>
+      </attribute>
+      <attribute id="MAKTX" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Description (Short Text)"/>
+        <keyMapping columnObjectName="Join_2" columnName="MAKTX"/>
+      </attribute>
+      <attribute id="ZCALENDAR_YEAR" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Calendar Yr"/>
+        <localVariable>#P_CAL_YEAR</localVariable>
+        <keyMapping columnObjectName="Join_2" columnName="ZCALENDAR_YEAR"/>
+      </attribute>
+      <attribute id="ZCAL_MONTH" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Calendar Month"/>
+        <localVariable>#P_MONTH</localVariable>
+        <keyMapping columnObjectName="Join_2" columnName="ZCAL_MONTH"/>
+      </attribute>
+      <attribute id="CART_TYPE" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cart Type"/>
+        <keyMapping columnObjectName="Join_2" columnName="CART_TYPE"/>
+      </attribute>
+      <attribute id="STATUS" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cart Header - Status (Active/Inactive)"/>
+        <keyMapping columnObjectName="Join_2" columnName="STATUS"/>
+      </attribute>
+      <attribute id="DEPT" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cart Header - Department"/>
+        <keyMapping columnObjectName="Join_2" columnName="DEPT"/>
+      </attribute>
+      <attribute id="MFRPN" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MFRPN"/>
+        <keyMapping columnObjectName="Join_2" columnName="MFRPN"/>
+      </attribute>
+      <attribute id="MATKL" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Group"/>
+        <keyMapping columnObjectName="Join_2" columnName="MATKL"/>
+      </attribute>
+      <attribute id="WGBEZ" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Group Description"/>
+        <keyMapping columnObjectName="Join_2" columnName="WGBEZ"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="Z_NR_SCANS" order="14" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Z_NR_SCANS"/>
+        <measureMapping columnObjectName="Join_2" columnName="Z_NR_SCANS"/>
+      </measure>
+      <measure id="Z_STOCKOUT_NO" order="15" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Z_STOCKOUT_NO"/>
+        <measureMapping columnObjectName="Join_2" columnName="Z_STOCKOUT_NO"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="359"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="359"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="263"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="310" y="220"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

@@ -1,0 +1,815 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="plx_analytics::CA_MD_VENDORS" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+  <descriptions defaultDescription="Data Quality - Vendors"/>
+  <metadata changedAt="2019-01-22 11:40:05.454"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="50"/>
+  <dataSources>
+    <DataSource id="CA_DIM_VENDORS">
+      <resourceUri>plx_analytics::CA_DIM_VENDORS</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_LFB1">
+      <resourceUri>ECC_LFB1</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_LFA1_MATCH">
+      <resourceUri>ECC_LFA1_MATCH</resourceUri>
+    </DataSource>
+    <DataSource id="CA_DIM_ORG_STRCTR">
+      <resourceUri>plx_analytics::CA_DIM_ORG_STRCTR</resourceUri>
+    </DataSource>
+    <DataSource id="OUTPUT_TYPES">
+      <resourceUri>OUTPUT_TYPES</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_NACH">
+      <resourceUri>ECC_NACH</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="complete">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="LIFNR_Formated"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="VENDOR_NAME"/>
+        <viewAttribute id="KTOKK"/>
+        <viewAttribute id="TXT30"/>
+        <viewAttribute id="TELF1"/>
+        <viewAttribute id="STRAS"/>
+        <viewAttribute id="REGIO"/>
+        <viewAttribute id="PSTLZ"/>
+        <viewAttribute id="ORT01"/>
+        <viewAttribute id="NAME3"/>
+        <viewAttribute id="NAME2"/>
+        <viewAttribute id="MCOD2"/>
+        <viewAttribute id="MCOD1"/>
+        <viewAttribute id="LAND1"/>
+        <viewAttribute id="KUNNR"/>
+        <viewAttribute id="KRAUS"/>
+        <viewAttribute id="ERNAM"/>
+        <viewAttribute id="ERDAT"/>
+        <viewAttribute id="BRSCH"/>
+        <viewAttribute id="SPERR"/>
+        <viewAttribute id="SPERM"/>
+        <viewAttribute id="LOEVM"/>
+        <viewAttribute id="SORTL"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="TINYINT" id="IS_TELF1_INCOMPLETE" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;TELF1&quot; = '', 1, 0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="TINYINT" id="IS_STRAS_INCOMPLETE" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;STRAS&quot; = '', 1, 0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="TINYINT" id="IS_PSTLZ_INCOMPLETE" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;PSTLZ&quot; = '', 1, 0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="TINYINT" id="IS_ORT01_INCOMPLETE" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;ORT01&quot; = '', 1, 0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="TINYINT" id="IS_REGIO_INCOMPLETE" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;REGIO&quot; = '', 1, 0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="TINYINT" id="IS_LAND1_INCOMPLETE" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;LAND1&quot; = '', 1, 0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="TINYINT" id="IS_KRAUS_INCOMPLETE" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;KRAUS&quot; = '', 1, 0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="TINYINT" id="IS_VENDOR_INCOMPLETE" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(
+(&quot;IS_TELF1_INCOMPLETE&quot;+
+&quot;IS_STRAS_INCOMPLETE&quot;+
+&quot;IS_PSTLZ_INCOMPLETE&quot;+
+&quot;IS_ORT01_INCOMPLETE&quot;+
+&quot;IS_REGIO_INCOMPLETE&quot;+
+&quot;IS_LAND1_INCOMPLETE&quot;+
+&quot;IS_KRAUS_INCOMPLETE&quot;) > 0, 1, 0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="TINYINT" id="IS_VENDOR_COMPLETE" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;IS_VENDOR_INCOMPLETE&quot; = 1, 0, 1)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="INTEGER" id="COUNT_VENDORS_FROM_DIM" expressionLanguage="COLUMN_ENGINE">
+          <formula>1</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CA_DIM_VENDORS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR_Formated" source="LIFNR_Formated"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VENDOR_NAME" source="VENDOR_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KTOKK" source="KTOKK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TXT30" source="TXT30"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TELF1" source="TELF1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STRAS" source="STRAS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REGIO" source="REGIO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PSTLZ" source="PSTLZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORT01" source="ORT01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NAME3" source="NAME3"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NAME2" source="NAME2"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MCOD2" source="MCOD2"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MCOD1" source="MCOD1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LAND1" source="LAND1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR" source="KUNNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KRAUS" source="KRAUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERNAM" source="ERNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERDAT" source="ERDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRSCH" source="BRSCH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPERR" source="SPERR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPERM" source="SPERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOEVM" source="LOEVM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SORTL" source="SORTL"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="companyCode">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="PERNR"/>
+        <viewAttribute id="ERDAT"/>
+        <viewAttribute id="ERNAM"/>
+        <viewAttribute id="LFB1_SPERR"/>
+        <viewAttribute id="LFB1_LOEVM"/>
+        <viewAttribute id="ZUAWA"/>
+        <viewAttribute id="AKONT"/>
+        <viewAttribute id="BEGRU"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#ECC_LFB1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERNR" source="PERNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERDAT" source="ERDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERNAM" source="ERNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LFB1_SPERR" source="SPERR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LFB1_LOEVM" source="LOEVM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZUAWA" source="ZUAWA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AKONT" source="AKONT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEGRU" source="BEGRU"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="duplicates" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="GROUP_ID"/>
+        <viewAttribute id="REVIEW_GROUP"/>
+        <viewAttribute id="CONFLICT_GROUP"/>
+        <viewAttribute id="LOEVM"/>
+        <viewAttribute id="SPERM"/>
+        <viewAttribute id="SPERR"/>
+        <viewAttribute id="KTOKK"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#ECC_LFA1_MATCH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GROUP_ID" source="GROUP_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVIEW_GROUP" source="REVIEW_GROUP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONFLICT_GROUP" source="CONFLICT_GROUP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOEVM" source="LOEVM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPERM" source="SPERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPERR" source="SPERR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KTOKK" source="KTOKK"/>
+      </input>
+      <filter>(not isNull(&quot;GROUP_ID&quot;)) AND (&quot;LOEVM&quot; =' ') AND (&quot;SPERM&quot; =' ') AND (&quot;SPERR&quot; =' ') AND (&quot;KTOKK&quot; ='Z001')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="complete_dupli" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="LIFNR_Formated"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="VENDOR_NAME"/>
+        <viewAttribute id="TXT30"/>
+        <viewAttribute id="IS_TELF1_INCOMPLETE"/>
+        <viewAttribute id="IS_STRAS_INCOMPLETE"/>
+        <viewAttribute id="IS_PSTLZ_INCOMPLETE"/>
+        <viewAttribute id="IS_ORT01_INCOMPLETE"/>
+        <viewAttribute id="IS_REGIO_INCOMPLETE"/>
+        <viewAttribute id="IS_LAND1_INCOMPLETE"/>
+        <viewAttribute id="IS_KRAUS_INCOMPLETE"/>
+        <viewAttribute id="IS_VENDOR_INCOMPLETE"/>
+        <viewAttribute id="IS_VENDOR_COMPLETE"/>
+        <viewAttribute id="COUNT_VENDORS_FROM_DIM"/>
+        <viewAttribute id="GROUP_ID"/>
+        <viewAttribute id="REVIEW_GROUP"/>
+        <viewAttribute id="CONFLICT_GROUP"/>
+        <viewAttribute id="BRSCH"/>
+        <viewAttribute id="ERDAT"/>
+        <viewAttribute id="ERNAM"/>
+        <viewAttribute id="KRAUS"/>
+        <viewAttribute id="LAND1"/>
+        <viewAttribute id="MCOD1"/>
+        <viewAttribute id="MCOD2"/>
+        <viewAttribute id="NAME2"/>
+        <viewAttribute id="NAME3"/>
+        <viewAttribute id="KUNNR"/>
+        <viewAttribute id="ORT01"/>
+        <viewAttribute id="PSTLZ"/>
+        <viewAttribute id="REGIO"/>
+        <viewAttribute id="STRAS"/>
+        <viewAttribute id="TELF1"/>
+        <viewAttribute id="SPERR"/>
+        <viewAttribute id="SPERM"/>
+        <viewAttribute id="LOEVM"/>
+        <viewAttribute id="KTOKK"/>
+        <viewAttribute id="SORTL"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="TINYINT" id="IS_UNIQUE" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(ISNULL(&quot;GROUP_ID&quot;), 1, 0)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#complete">
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR_Formated" source="LIFNR_Formated"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VENDOR_NAME" source="VENDOR_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TXT30" source="TXT30"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_TELF1_INCOMPLETE" source="IS_TELF1_INCOMPLETE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_STRAS_INCOMPLETE" source="IS_STRAS_INCOMPLETE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_PSTLZ_INCOMPLETE" source="IS_PSTLZ_INCOMPLETE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_ORT01_INCOMPLETE" source="IS_ORT01_INCOMPLETE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_REGIO_INCOMPLETE" source="IS_REGIO_INCOMPLETE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_LAND1_INCOMPLETE" source="IS_LAND1_INCOMPLETE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_KRAUS_INCOMPLETE" source="IS_KRAUS_INCOMPLETE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_VENDOR_INCOMPLETE" source="IS_VENDOR_INCOMPLETE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_VENDOR_COMPLETE" source="IS_VENDOR_COMPLETE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COUNT_VENDORS_FROM_DIM" source="COUNT_VENDORS_FROM_DIM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRSCH" source="BRSCH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERDAT" source="ERDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERNAM" source="ERNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KRAUS" source="KRAUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LAND1" source="LAND1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MCOD1" source="MCOD1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MCOD2" source="MCOD2"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NAME2" source="NAME2"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NAME3" source="NAME3"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR" source="KUNNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORT01" source="ORT01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PSTLZ" source="PSTLZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REGIO" source="REGIO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STRAS" source="STRAS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TELF1" source="TELF1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPERR" source="SPERR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPERM" source="SPERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOEVM" source="LOEVM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KTOKK" source="KTOKK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SORTL" source="SORTL"/>
+      </input>
+      <input node="#duplicates">
+        <mapping xsi:type="Calculation:AttributeMapping" target="GROUP_ID" source="GROUP_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVIEW_GROUP" source="REVIEW_GROUP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONFLICT_GROUP" source="CONFLICT_GROUP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+      </input>
+      <joinAttribute name="LIFNR"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="org_structure1">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="BUTXT"/>
+        <viewAttribute id="BUKRS"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_DIM_ORG_STRCTR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUTXT" source="BUTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="ccode_org_struct" joinOrder="OUTSIDE_IN" joinType="inner">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="BUTXT"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="LFB1_SPERR"/>
+        <viewAttribute id="LFB1_LOEVM"/>
+        <viewAttribute id="AKONT"/>
+        <viewAttribute id="ZUAWA"/>
+        <viewAttribute id="BEGRU"/>
+        <viewAttribute id="PERNR"/>
+        <viewAttribute id="ERDAT"/>
+        <viewAttribute id="ERNAM"/>
+        <viewAttribute hidden="true" id="JOIN$BUKRS$BUKRS"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#companyCode">
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LFB1_SPERR" source="LFB1_SPERR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LFB1_LOEVM" source="LFB1_LOEVM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AKONT" source="AKONT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZUAWA" source="ZUAWA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEGRU" source="BEGRU"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERNR" source="PERNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERDAT" source="ERDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERNAM" source="ERNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$BUKRS$BUKRS" source="BUKRS"/>
+      </input>
+      <input node="#org_structure1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUTXT" source="BUTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$BUKRS$BUKRS" source="BUKRS"/>
+      </input>
+      <joinAttribute name="JOIN$BUKRS$BUKRS"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="NACHA"/>
+        <viewAttribute id="NATXT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#OUTPUT_TYPES">
+        <mapping xsi:type="Calculation:AttributeMapping" target="NACHA" source="NACHA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NATXT" source="NATXT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="NACHA"/>
+        <viewAttribute id="VAKEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="VARCHAR" id="CC_BUKRS" length="4" expressionLanguage="COLUMN_ENGINE">
+          <formula>midstr(&quot;VAKEY&quot;,5,4)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="VARCHAR" id="CC_VENDOR" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>MIDSTR(&quot;VAKEY&quot;,9,10)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#ECC_NACH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="NACHA" source="NACHA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VAKEY" source="VAKEY"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_2" joinOrder="OUTSIDE_IN" joinType="inner">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CC_BUKRS"/>
+        <viewAttribute id="CC_VENDOR"/>
+        <viewAttribute id="NATXT"/>
+        <viewAttribute hidden="true" id="JOIN$NACHA$NACHA"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Projection_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="NATXT" source="NATXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$NACHA$NACHA" source="NACHA"/>
+      </input>
+      <input node="#Projection_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BUKRS" source="CC_BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VENDOR" source="CC_VENDOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$NACHA$NACHA" source="NACHA"/>
+      </input>
+      <joinAttribute name="JOIN$NACHA$NACHA"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_3" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="BUTXT"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="LFB1_SPERR"/>
+        <viewAttribute id="LFB1_LOEVM"/>
+        <viewAttribute id="AKONT"/>
+        <viewAttribute id="ZUAWA"/>
+        <viewAttribute id="BEGRU"/>
+        <viewAttribute id="PERNR"/>
+        <viewAttribute id="ERDAT"/>
+        <viewAttribute id="ERNAM"/>
+        <viewAttribute id="NATXT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#ccode_org_struct">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUTXT" source="BUTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LFB1_SPERR" source="LFB1_SPERR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LFB1_LOEVM" source="LFB1_LOEVM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AKONT" source="AKONT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZUAWA" source="ZUAWA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEGRU" source="BEGRU"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERNR" source="PERNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERDAT" source="ERDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERNAM" source="ERNAM"/>
+      </input>
+      <input node="#Join_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="NATXT" source="NATXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="CC_BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="CC_VENDOR"/>
+      </input>
+      <joinAttribute name="BUKRS"/>
+      <joinAttribute name="LIFNR"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="LIFNR_Formated"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="VENDOR_NAME"/>
+        <viewAttribute id="TXT30"/>
+        <viewAttribute id="IS_TELF1_INCOMPLETE"/>
+        <viewAttribute id="IS_STRAS_INCOMPLETE"/>
+        <viewAttribute id="IS_PSTLZ_INCOMPLETE"/>
+        <viewAttribute id="IS_ORT01_INCOMPLETE"/>
+        <viewAttribute id="IS_REGIO_INCOMPLETE"/>
+        <viewAttribute id="IS_LAND1_INCOMPLETE"/>
+        <viewAttribute id="IS_KRAUS_INCOMPLETE"/>
+        <viewAttribute id="IS_VENDOR_INCOMPLETE"/>
+        <viewAttribute id="IS_VENDOR_COMPLETE"/>
+        <viewAttribute id="COUNT_VENDORS_FROM_DIM"/>
+        <viewAttribute id="GROUP_ID"/>
+        <viewAttribute id="REVIEW_GROUP"/>
+        <viewAttribute id="CONFLICT_GROUP"/>
+        <viewAttribute id="LFA1_SPERR"/>
+        <viewAttribute id="LFA1_SPERM"/>
+        <viewAttribute id="LFA1_LOEVM"/>
+        <viewAttribute id="KTOKK"/>
+        <viewAttribute id="BRSCH"/>
+        <viewAttribute id="LFA1_ERDAT"/>
+        <viewAttribute id="LFA1_ERNAM"/>
+        <viewAttribute id="KRAUS"/>
+        <viewAttribute id="LAND1"/>
+        <viewAttribute id="MCOD1"/>
+        <viewAttribute id="MCOD2"/>
+        <viewAttribute id="NAME2"/>
+        <viewAttribute id="NAME3"/>
+        <viewAttribute id="KUNNR"/>
+        <viewAttribute id="ORT01"/>
+        <viewAttribute id="PSTLZ"/>
+        <viewAttribute id="REGIO"/>
+        <viewAttribute id="STRAS"/>
+        <viewAttribute id="TELF1"/>
+        <viewAttribute id="IS_UNIQUE"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="BUTXT"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="LFB1_SPERR"/>
+        <viewAttribute id="LFB1_LOEVM"/>
+        <viewAttribute id="AKONT"/>
+        <viewAttribute id="ZUAWA"/>
+        <viewAttribute id="BEGRU"/>
+        <viewAttribute id="PERNR"/>
+        <viewAttribute id="ERDAT"/>
+        <viewAttribute id="ERNAM"/>
+        <viewAttribute id="NATXT"/>
+        <viewAttribute id="SORTL"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#complete_dupli">
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR_Formated" source="LIFNR_Formated"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VENDOR_NAME" source="VENDOR_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TXT30" source="TXT30"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_TELF1_INCOMPLETE" source="IS_TELF1_INCOMPLETE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_STRAS_INCOMPLETE" source="IS_STRAS_INCOMPLETE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_PSTLZ_INCOMPLETE" source="IS_PSTLZ_INCOMPLETE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_ORT01_INCOMPLETE" source="IS_ORT01_INCOMPLETE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_REGIO_INCOMPLETE" source="IS_REGIO_INCOMPLETE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_LAND1_INCOMPLETE" source="IS_LAND1_INCOMPLETE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_KRAUS_INCOMPLETE" source="IS_KRAUS_INCOMPLETE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_VENDOR_INCOMPLETE" source="IS_VENDOR_INCOMPLETE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_VENDOR_COMPLETE" source="IS_VENDOR_COMPLETE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COUNT_VENDORS_FROM_DIM" source="COUNT_VENDORS_FROM_DIM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GROUP_ID" source="GROUP_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVIEW_GROUP" source="REVIEW_GROUP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONFLICT_GROUP" source="CONFLICT_GROUP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LFA1_SPERR" source="SPERR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LFA1_SPERM" source="SPERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LFA1_LOEVM" source="LOEVM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KTOKK" source="KTOKK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRSCH" source="BRSCH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LFA1_ERDAT" source="ERDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LFA1_ERNAM" source="ERNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KRAUS" source="KRAUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LAND1" source="LAND1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MCOD1" source="MCOD1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MCOD2" source="MCOD2"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NAME2" source="NAME2"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NAME3" source="NAME3"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR" source="KUNNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORT01" source="ORT01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PSTLZ" source="PSTLZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REGIO" source="REGIO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STRAS" source="STRAS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TELF1" source="TELF1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_UNIQUE" source="IS_UNIQUE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SORTL" source="SORTL"/>
+      </input>
+      <input node="#Join_3">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUTXT" source="BUTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LFB1_SPERR" source="LFB1_SPERR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LFB1_LOEVM" source="LFB1_LOEVM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AKONT" source="AKONT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZUAWA" source="ZUAWA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEGRU" source="BEGRU"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERNR" source="PERNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERDAT" source="ERDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERNAM" source="ERNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NATXT" source="NATXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+      </input>
+      <joinAttribute name="LIFNR"/>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="Join_1">
+    <descriptions/>
+    <attributes>
+      <attribute id="LIFNR_Formated" key="true" order="1" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Vendor_Formated"/>
+        <keyMapping columnObjectName="Join_1" columnName="LIFNR_Formated"/>
+      </attribute>
+      <attribute id="LIFNR" key="true" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Vendor ID"/>
+        <keyMapping columnObjectName="Join_1" columnName="LIFNR"/>
+      </attribute>
+      <attribute id="VENDOR_NAME" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Vendor Name"/>
+        <keyMapping columnObjectName="Join_1" columnName="VENDOR_NAME"/>
+      </attribute>
+      <attribute id="TXT30" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Account Group Name"/>
+        <keyMapping columnObjectName="Join_1" columnName="TXT30"/>
+      </attribute>
+      <attribute id="GROUP_ID" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Group ID"/>
+        <keyMapping columnObjectName="Join_1" columnName="GROUP_ID"/>
+      </attribute>
+      <attribute id="REVIEW_GROUP" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Review Group"/>
+        <keyMapping columnObjectName="Join_1" columnName="REVIEW_GROUP"/>
+      </attribute>
+      <attribute id="CONFLICT_GROUP" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Conflict Group"/>
+        <keyMapping columnObjectName="Join_1" columnName="CONFLICT_GROUP"/>
+      </attribute>
+      <attribute id="KTOKK" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Vendor account group"/>
+        <keyMapping columnObjectName="Join_1" columnName="KTOKK"/>
+      </attribute>
+      <attribute id="BRSCH" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Industry key"/>
+        <keyMapping columnObjectName="Join_1" columnName="BRSCH"/>
+      </attribute>
+      <attribute id="KRAUS" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Credit information number"/>
+        <keyMapping columnObjectName="Join_1" columnName="KRAUS"/>
+      </attribute>
+      <attribute id="LAND1" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Country Key"/>
+        <keyMapping columnObjectName="Join_1" columnName="LAND1"/>
+      </attribute>
+      <attribute id="MCOD1" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Search term for matchcode search"/>
+        <keyMapping columnObjectName="Join_1" columnName="MCOD1"/>
+      </attribute>
+      <attribute id="MCOD2" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Search term for matchcode search"/>
+        <keyMapping columnObjectName="Join_1" columnName="MCOD2"/>
+      </attribute>
+      <attribute id="NAME2" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Name 2"/>
+        <keyMapping columnObjectName="Join_1" columnName="NAME2"/>
+      </attribute>
+      <attribute id="NAME3" order="26" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Name 3"/>
+        <keyMapping columnObjectName="Join_1" columnName="NAME3"/>
+      </attribute>
+      <attribute id="KUNNR" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Customer Number"/>
+        <keyMapping columnObjectName="Join_1" columnName="KUNNR"/>
+      </attribute>
+      <attribute id="ORT01" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="City"/>
+        <keyMapping columnObjectName="Join_1" columnName="ORT01"/>
+      </attribute>
+      <attribute id="PSTLZ" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Postal Code"/>
+        <keyMapping columnObjectName="Join_1" columnName="PSTLZ"/>
+      </attribute>
+      <attribute id="REGIO" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Region (State, Province, County)"/>
+        <keyMapping columnObjectName="Join_1" columnName="REGIO"/>
+      </attribute>
+      <attribute id="STRAS" order="31" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="House number and street"/>
+        <keyMapping columnObjectName="Join_1" columnName="STRAS"/>
+      </attribute>
+      <attribute id="TELF1" order="32" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Telephone"/>
+        <keyMapping columnObjectName="Join_1" columnName="TELF1"/>
+      </attribute>
+      <attribute id="LFA1_ERDAT" order="35" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Date on which the Record Was Created"/>
+        <keyMapping columnObjectName="Join_1" columnName="LFA1_ERDAT"/>
+      </attribute>
+      <attribute id="LFA1_ERNAM" order="36" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Name of Person who Created the Object"/>
+        <keyMapping columnObjectName="Join_1" columnName="LFA1_ERNAM"/>
+      </attribute>
+      <attribute id="LFA1_LOEVM" order="37" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Central Deletion Flag for master record"/>
+        <keyMapping columnObjectName="Join_1" columnName="LFA1_LOEVM"/>
+      </attribute>
+      <attribute id="LFA1_SPERR" order="38" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Central Posting Block"/>
+        <keyMapping columnObjectName="Join_1" columnName="LFA1_SPERR"/>
+      </attribute>
+      <attribute id="LFA1_SPERM" order="39" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Centrally imposed Purchasing Block"/>
+        <keyMapping columnObjectName="Join_1" columnName="LFA1_SPERM"/>
+      </attribute>
+      <attribute id="BUKRS" order="42" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Company Code"/>
+        <keyMapping columnObjectName="Join_1" columnName="BUKRS"/>
+      </attribute>
+      <attribute id="BUTXT" order="43" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Name of Company Code or Company"/>
+        <keyMapping columnObjectName="Join_1" columnName="BUTXT"/>
+      </attribute>
+      <attribute id="MEMBER" order="44" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Member ID"/>
+        <keyMapping columnObjectName="Join_1" columnName="MEMBER"/>
+      </attribute>
+      <attribute id="SPERR" order="45" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Posting block for company code"/>
+        <keyMapping columnObjectName="Join_1" columnName="LFB1_SPERR"/>
+      </attribute>
+      <attribute id="LOEVM" order="46" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Deletion Flag for Master Record (Company Code Level)"/>
+        <keyMapping columnObjectName="Join_1" columnName="LFB1_LOEVM"/>
+      </attribute>
+      <attribute id="AKONT" order="47" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Reconciliation Account in General Ledger"/>
+        <keyMapping columnObjectName="Join_1" columnName="AKONT"/>
+      </attribute>
+      <attribute id="ZUAWA" order="48" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Key for sorting according to assignment numbers"/>
+        <keyMapping columnObjectName="Join_1" columnName="ZUAWA"/>
+      </attribute>
+      <attribute id="BEGRU" order="49" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Authorization Group"/>
+        <keyMapping columnObjectName="Join_1" columnName="BEGRU"/>
+      </attribute>
+      <attribute id="PERNR" order="50" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Personnel Number"/>
+        <keyMapping columnObjectName="Join_1" columnName="PERNR"/>
+      </attribute>
+      <attribute id="ERDAT" order="51" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Date on which the Record Was Created"/>
+        <keyMapping columnObjectName="Join_1" columnName="ERDAT"/>
+      </attribute>
+      <attribute id="ERNAM" order="52" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Name of Person who Created the Object"/>
+        <keyMapping columnObjectName="Join_1" columnName="ERNAM"/>
+      </attribute>
+      <attribute id="NATXT" order="53" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Transm Mdm Desc"/>
+        <keyMapping columnObjectName="Join_1" columnName="NATXT"/>
+      </attribute>
+      <attribute id="SORTL" order="54" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Sort field"/>
+        <keyMapping columnObjectName="Join_1" columnName="SORTL"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="IS_TELF1_INCOMPLETE" order="5" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Incomplete-Telephone"/>
+        <measureMapping columnObjectName="Join_1" columnName="IS_TELF1_INCOMPLETE"/>
+      </measure>
+      <measure id="IS_STRAS_INCOMPLETE" order="6" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Incomplete-Street"/>
+        <measureMapping columnObjectName="Join_1" columnName="IS_STRAS_INCOMPLETE"/>
+      </measure>
+      <measure id="IS_PSTLZ_INCOMPLETE" order="7" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Incomplete-Postal Code"/>
+        <measureMapping columnObjectName="Join_1" columnName="IS_PSTLZ_INCOMPLETE"/>
+      </measure>
+      <measure id="IS_ORT01_INCOMPLETE" order="8" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Incomplete-City"/>
+        <measureMapping columnObjectName="Join_1" columnName="IS_ORT01_INCOMPLETE"/>
+      </measure>
+      <measure id="IS_REGIO_INCOMPLETE" order="9" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Incomplete-Region"/>
+        <measureMapping columnObjectName="Join_1" columnName="IS_REGIO_INCOMPLETE"/>
+      </measure>
+      <measure id="IS_LAND1_INCOMPLETE" order="10" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Incomplete-Country"/>
+        <measureMapping columnObjectName="Join_1" columnName="IS_LAND1_INCOMPLETE"/>
+      </measure>
+      <measure id="IS_KRAUS_INCOMPLETE" order="11" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Incomplete-DUNS Number"/>
+        <measureMapping columnObjectName="Join_1" columnName="IS_KRAUS_INCOMPLETE"/>
+      </measure>
+      <measure id="IS_VENDOR_INCOMPLETE" order="12" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Is Vendor Incomplete"/>
+        <measureMapping columnObjectName="Join_1" columnName="IS_VENDOR_INCOMPLETE"/>
+      </measure>
+      <measure id="IS_VENDOR_COMPLETE" order="13" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Is Vendor Complete"/>
+        <measureMapping columnObjectName="Join_1" columnName="IS_VENDOR_COMPLETE"/>
+      </measure>
+      <measure id="COUNT_VENDORS_FROM_DIM" order="14" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Count of vendors from dimension"/>
+        <measureMapping columnObjectName="Join_1" columnName="COUNT_VENDORS_FROM_DIM"/>
+      </measure>
+      <measure id="IS_UNIQUE" order="40" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Vendor is unique"/>
+        <measureMapping columnObjectName="Join_1" columnName="IS_UNIQUE"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures>
+      <measure id="COUNT_DISTINCT_LIFNR" hidden="false" order="15" aggregationType="sum" measureType="simple" aggregatable="true" calculatedMeasureType="counter" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+        <descriptions defaultDescription="Count of Distinct Vendor Numbers"/>
+        <exceptionAggregation exceptionAggregationType="countDistinct">
+          <attribute attributeName="LIFNR"/>
+        </exceptionAggregation>
+        <formula>1</formula>
+      </measure>
+      <measure id="PERCENT_UNIQUE_VENDORS" hidden="false" order="33" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="12" scale="10">
+        <descriptions defaultDescription="% Unique Vendors"/>
+        <formula>&quot;IS_UNIQUE&quot;/&quot;COUNT_VENDORS_FROM_DIM&quot;</formula>
+      </measure>
+      <measure id="PERCENT_COMPLETE_VENDORS" hidden="false" order="34" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="12" scale="10">
+        <descriptions defaultDescription="% Complete Vendors"/>
+        <formula>&quot;IS_VENDOR_COMPLETE&quot;/&quot;COUNT_VENDORS_FROM_DIM&quot;</formula>
+      </measure>
+      <measure id="COUNT_DISTINCT_GROUPID" hidden="false" order="41" aggregationType="sum" measureType="simple" aggregatable="true" calculatedMeasureType="counter" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+        <descriptions defaultDescription="Count of distinct Group IDs"/>
+        <exceptionAggregation exceptionAggregationType="countDistinct">
+          <attribute attributeName="GROUP_ID"/>
+        </exceptionAggregation>
+        <formula>1</formula>
+      </measure>
+    </calculatedMeasures>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="253" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="complete" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="357"/>
+        <rectangleSize height="30" width="140"/>
+      </shape>
+      <shape expanded="true" modelObjectName="companyCode" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="453"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="duplicates" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="357"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="complete_dupli" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="261"/>
+        <rectangleSize height="30" width="140"/>
+      </shape>
+      <shape expanded="true" modelObjectName="org_structure1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="330" y="453"/>
+        <rectangleSize height="30" width="140"/>
+      </shape>
+      <shape expanded="true" modelObjectName="ccode_org_struct" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="330" y="357"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="484" y="453"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="638" y="453"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="484" y="357"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="330" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="165"/>
+        <rectangleSize height="30" width="140"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

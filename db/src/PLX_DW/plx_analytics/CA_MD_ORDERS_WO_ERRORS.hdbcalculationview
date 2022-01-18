@@ -1,0 +1,541 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="plx_analytics::CA_MD_ORDERS_WO_ERRORS" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+  <descriptions defaultDescription="% of Orders Processed without errors"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="54"/>
+  <dataSources>
+    <DataSource id="CA_DIM_FISC_CAL">
+      <resourceUri>plx_analytics::CA_DIM_FISC_CAL</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_EBAN">
+      <resourceUri>ECC_EBAN</resourceUri>
+    </DataSource>
+    <DataSource id="MEMBER_NAMES">
+      <resourceUri>MEMBER_NAMES</resourceUri>
+    </DataSource>
+    <DataSource id="REMEDY_GLOBAL_INCIDENTS">
+      <resourceUri>REMEDY_GLOBAL_INCIDENTS</resourceUri>
+    </DataSource>
+    <DataSource id="fisc_cal$$$$CA_DIM_FISC_CAL$$">
+      <resourceUri>plx_analytics::CA_DIM_FISC_CAL</resourceUri>
+    </DataSource>
+    <DataSource id="CA_DIM_ORG_STRCTR">
+      <resourceUri>plx_analytics::CA_DIM_ORG_STRCTR</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="fiscal_calendar">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SAP_DATE"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_DIM_FISC_CAL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAP_DATE" source="SAP_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="eban">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="LOEKZ"/>
+        <viewAttribute id="BANFN"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="ERDAT"/>
+        <viewAttribute id="ERNAM"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="TXZ01"/>
+        <viewAttribute id="BNFPO"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="INTEGER" id="EBAN_LINES" expressionLanguage="COLUMN_ENGINE">
+          <formula>1</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#ECC_EBAN">
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOEKZ" source="LOEKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BANFN" source="BANFN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART" source="BSART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERDAT" source="ERDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERNAM" source="ERNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TXZ01" source="TXZ01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BNFPO" source="BNFPO"/>
+      </input>
+      <filter>(&quot;LOEKZ&quot; !='X') AND (&quot;BSART&quot; ='EC  ')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="member_orgnames">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="Customer_Organization"/>
+        <viewAttribute id="MEMBER"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#MEMBER_NAMES">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Customer_Organization" source="Customer Organization"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="remedy">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="Incident_Number"/>
+        <viewAttribute id="Customer_Organization"/>
+        <viewAttribute id="Product_Name"/>
+        <viewAttribute id="Status"/>
+        <viewAttribute id="Submit_Date"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="INTEGER" id="REMEDY_GLOBAL_INCIDENT_LINES" expressionLanguage="COLUMN_ENGINE">
+          <formula>1</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#REMEDY_GLOBAL_INCIDENTS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Incident_Number" source="Incident Number"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Customer_Organization" source="Customer Organization"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Product_Name" source="Product Name"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Status" source="Status"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Submit_Date" source="Submit Date"/>
+      </input>
+      <filter>(&quot;Product_Name&quot; ='SAP SRM Suppliers Relationship Management')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="SRM" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="Customer_Organization"/>
+        <viewAttribute id="Incident_Number"/>
+        <viewAttribute id="Product_Name"/>
+        <viewAttribute id="Status"/>
+        <viewAttribute id="Submit_Date"/>
+        <viewAttribute id="REMEDY_GLOBAL_INCIDENT_LINES"/>
+        <viewAttribute hidden="true" id="JOIN$Customer_Organization$Customer_Organization"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#remedy">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Incident_Number" source="Incident_Number"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Product_Name" source="Product_Name"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Status" source="Status"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Submit_Date" source="Submit_Date"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REMEDY_GLOBAL_INCIDENT_LINES" source="REMEDY_GLOBAL_INCIDENT_LINES"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$Customer_Organization$Customer_Organization" source="Customer_Organization"/>
+      </input>
+      <input node="#member_orgnames">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Customer_Organization" source="Customer_Organization"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$Customer_Organization$Customer_Organization" source="Customer_Organization"/>
+      </input>
+      <joinAttribute name="JOIN$Customer_Organization$Customer_Organization"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="tickets_by_time" cardinality="C1_N" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="Customer_Organization"/>
+        <viewAttribute id="Incident_Number"/>
+        <viewAttribute id="Product_Name"/>
+        <viewAttribute id="Status"/>
+        <viewAttribute id="Submit_Date"/>
+        <viewAttribute id="REMEDY_GLOBAL_INCIDENT_LINES"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#SRM">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Customer_Organization" source="Customer_Organization"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Incident_Number" source="Incident_Number"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Product_Name" source="Product_Name"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Status" source="Status"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Submit_Date" source="Submit_Date"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REMEDY_GLOBAL_INCIDENT_LINES" source="REMEDY_GLOBAL_INCIDENT_LINES"/>
+      </input>
+      <input node="#fiscal_calendar">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Submit_Date" source="SAP_DATE"/>
+      </input>
+      <joinAttribute name="Submit_Date"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="fisc_cal">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SAP_DATE"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#fisc_cal$$$$CA_DIM_FISC_CAL$$">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAP_DATE" source="SAP_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="BUTXT"/>
+        <viewAttribute id="PLANT_NAME"/>
+        <viewAttribute id="WERKS"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_DIM_ORG_STRCTR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUTXT" source="BUTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PLANT_NAME" source="PLANT_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_1" cardinality="C1_N" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="LOEKZ"/>
+        <viewAttribute id="BANFN"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="ERDAT"/>
+        <viewAttribute id="ERNAM"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="TXZ01"/>
+        <viewAttribute id="BNFPO"/>
+        <viewAttribute id="EBAN_LINES"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="BUTXT"/>
+        <viewAttribute id="PLANT_NAME"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#eban">
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOEKZ" source="LOEKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BANFN" source="BANFN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART" source="BSART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERDAT" source="ERDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERNAM" source="ERNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TXZ01" source="TXZ01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BNFPO" source="BNFPO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBAN_LINES" source="EBAN_LINES"/>
+      </input>
+      <input node="#Projection_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUTXT" source="BUTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PLANT_NAME" source="PLANT_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+      </input>
+      <joinAttribute name="WERKS"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="preqs_by_time" cardinality="C1_N" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="LOEKZ"/>
+        <viewAttribute id="BANFN"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="ERNAM"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="TXZ01"/>
+        <viewAttribute id="BNFPO"/>
+        <viewAttribute id="EBAN_LINES"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="BUTXT"/>
+        <viewAttribute id="PLANT_NAME"/>
+        <viewAttribute id="ERDAT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Join_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOEKZ" source="LOEKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BANFN" source="BANFN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART" source="BSART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERNAM" source="ERNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TXZ01" source="TXZ01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BNFPO" source="BNFPO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBAN_LINES" source="EBAN_LINES"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUTXT" source="BUTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PLANT_NAME" source="PLANT_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERDAT" source="ERDAT"/>
+      </input>
+      <input node="#fisc_cal">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERDAT" source="SAP_DATE"/>
+      </input>
+      <joinAttribute name="ERDAT"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:UnionView" id="Union_1">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="LOEKZ"/>
+        <viewAttribute id="BANFN"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="ERNAM"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="TXZ01"/>
+        <viewAttribute id="BNFPO"/>
+        <viewAttribute id="EBAN_LINES"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="BUTXT"/>
+        <viewAttribute id="PLANT_NAME"/>
+        <viewAttribute id="Customer_Organization" transparentFilter="false"/>
+        <viewAttribute id="Incident_Number" transparentFilter="false"/>
+        <viewAttribute id="Product_Name" transparentFilter="false"/>
+        <viewAttribute id="Status" transparentFilter="false"/>
+        <viewAttribute id="Submit_Date" transparentFilter="false"/>
+        <viewAttribute id="REMEDY_GLOBAL_INCIDENT_LINES" transparentFilter="false"/>
+        <viewAttribute id="ERDAT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input emptyUnionBehavior="NO_ROW" node="#preqs_by_time">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOEKZ" source="LOEKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BANFN" source="BANFN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART" source="BSART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERNAM" source="ERNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TXZ01" source="TXZ01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BNFPO" source="BNFPO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBAN_LINES" source="EBAN_LINES"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUTXT" source="BUTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PLANT_NAME" source="PLANT_NAME"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Customer_Organization" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Incident_Number" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Product_Name" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Status" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Submit_Date" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="REMEDY_GLOBAL_INCIDENT_LINES" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERDAT" source="ERDAT"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#tickets_by_time">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="LOEKZ" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BANFN" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BSART" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ERNAM" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WERKS" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="MATNR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="TXZ01" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BNFPO" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="EBAN_LINES" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BUKRS" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BUTXT" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PLANT_NAME" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Customer_Organization" source="Customer_Organization"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Incident_Number" source="Incident_Number"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Product_Name" source="Product_Name"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Status" source="Status"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Submit_Date" source="Submit_Date"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REMEDY_GLOBAL_INCIDENT_LINES" source="REMEDY_GLOBAL_INCIDENT_LINES"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ERDAT" null="true" value=""/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="Union_1">
+    <descriptions/>
+    <attributes>
+      <attribute id="ZFISCAL_QUARTER" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Quarter"/>
+        <keyMapping columnObjectName="Union_1" columnName="ZFISCAL_QUARTER"/>
+      </attribute>
+      <attribute id="ZFISCAL_YEAR" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Year"/>
+        <keyMapping columnObjectName="Union_1" columnName="ZFISCAL_YEAR"/>
+      </attribute>
+      <attribute id="ZFISCAL_PERIOD" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Period"/>
+        <keyMapping columnObjectName="Union_1" columnName="ZFISCAL_PERIOD"/>
+      </attribute>
+      <attribute id="LOEKZ" order="6" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="LOEKZ"/>
+        <keyMapping columnObjectName="Union_1" columnName="LOEKZ"/>
+      </attribute>
+      <attribute id="BANFN" order="7" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BANFN"/>
+        <keyMapping columnObjectName="Union_1" columnName="BANFN"/>
+      </attribute>
+      <attribute id="BSART" order="8" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BSART"/>
+        <keyMapping columnObjectName="Union_1" columnName="BSART"/>
+      </attribute>
+      <attribute id="ERNAM" order="9" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERNAM"/>
+        <keyMapping columnObjectName="Union_1" columnName="ERNAM"/>
+      </attribute>
+      <attribute id="WERKS" order="10" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="WERKS"/>
+        <keyMapping columnObjectName="Union_1" columnName="WERKS"/>
+      </attribute>
+      <attribute id="MATNR" order="11" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MATNR"/>
+        <keyMapping columnObjectName="Union_1" columnName="MATNR"/>
+      </attribute>
+      <attribute id="TXZ01" order="12" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TXZ01"/>
+        <keyMapping columnObjectName="Union_1" columnName="TXZ01"/>
+      </attribute>
+      <attribute id="BNFPO" order="13" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BNFPO"/>
+        <keyMapping columnObjectName="Union_1" columnName="BNFPO"/>
+      </attribute>
+      <attribute id="MEMBER" order="15" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Org ID"/>
+        <keyMapping columnObjectName="Union_1" columnName="MEMBER"/>
+      </attribute>
+      <attribute id="BUKRS" order="16" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Company Code"/>
+        <keyMapping columnObjectName="Union_1" columnName="BUKRS"/>
+      </attribute>
+      <attribute id="BUTXT" order="17" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Company Code Name"/>
+        <keyMapping columnObjectName="Union_1" columnName="BUTXT"/>
+      </attribute>
+      <attribute id="PLANT_NAME" order="18" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Name"/>
+        <keyMapping columnObjectName="Union_1" columnName="PLANT_NAME"/>
+      </attribute>
+      <attribute id="Customer_Organization" order="20" attributeHierarchyActive="false" displayAttribute="false" transparentFilter="false">
+        <descriptions defaultDescription="Customer_Organization"/>
+        <keyMapping columnObjectName="Union_1" columnName="Customer_Organization"/>
+      </attribute>
+      <attribute id="Incident_Number" order="21" attributeHierarchyActive="false" displayAttribute="false" transparentFilter="false">
+        <descriptions defaultDescription="Incident_Number"/>
+        <keyMapping columnObjectName="Union_1" columnName="Incident_Number"/>
+      </attribute>
+      <attribute id="Product_Name" order="22" attributeHierarchyActive="false" displayAttribute="false" transparentFilter="false">
+        <descriptions defaultDescription="Product_Name"/>
+        <keyMapping columnObjectName="Union_1" columnName="Product_Name"/>
+      </attribute>
+      <attribute id="Status" order="23" attributeHierarchyActive="false" displayAttribute="false" transparentFilter="false">
+        <descriptions defaultDescription="Status"/>
+        <keyMapping columnObjectName="Union_1" columnName="Status"/>
+      </attribute>
+      <attribute id="Submit_Date" order="24" attributeHierarchyActive="false" displayAttribute="false" transparentFilter="false">
+        <descriptions defaultDescription="Submit_Date"/>
+        <keyMapping columnObjectName="Union_1" columnName="Submit_Date"/>
+      </attribute>
+      <attribute id="ERDAT" order="25" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERDAT"/>
+        <keyMapping columnObjectName="Union_1" columnName="ERDAT"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="EBAN_LINES" order="14" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="EBAN_LINES"/>
+        <measureMapping columnObjectName="Union_1" columnName="EBAN_LINES"/>
+      </measure>
+      <measure id="REMEDY_GLOBAL_INCIDENT_LINES" order="19" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="REMEDY_GLOBAL_INCIDENT_LINES"/>
+        <measureMapping columnObjectName="Union_1" columnName="REMEDY_GLOBAL_INCIDENT_LINES"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures>
+      <measure id="PERCENT_ORDER_ERRORS" hidden="false" order="1" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="12" scale="10">
+        <descriptions defaultDescription="% of Orders Processed with errors"/>
+        <formula>&quot;REMEDY_GLOBAL_INCIDENT_LINES&quot;/&quot;EBAN_LINES&quot;</formula>
+      </measure>
+      <measure id="PERCENT_ORDERS_NO_ERRORS" hidden="false" order="2" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="12" scale="10">
+        <descriptions defaultDescription="% of Orders Processed without errors"/>
+        <formula>1 - &quot;PERCENT_ORDER_ERRORS&quot;</formula>
+      </measure>
+    </calculatedMeasures>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="391" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="fiscal_calendar" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="614" y="377"/>
+        <rectangleSize height="64" width="147"/>
+      </shape>
+      <shape expanded="true" modelObjectName="eban" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="473"/>
+        <rectangleSize height="64" width="143"/>
+      </shape>
+      <shape expanded="true" modelObjectName="member_orgnames" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="545" y="473"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="remedy" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="391" y="473"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="SRM" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="460" y="377"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="tickets_by_time" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="465" y="281"/>
+        <rectangleSize height="82" width="244"/>
+      </shape>
+      <shape expanded="true" modelObjectName="fisc_cal" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="306" y="377"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="237" y="473"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="152" y="377"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="preqs_by_time" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="219" y="281"/>
+        <rectangleSize height="82" width="232"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Union_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="391" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

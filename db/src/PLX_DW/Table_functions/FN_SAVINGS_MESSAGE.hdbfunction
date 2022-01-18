@@ -1,0 +1,51 @@
+FUNCTION "plx_analytics::FN_SAVINGS_MESSAGE" ( 
+  IN_BUKRS NVARCHAR(4)
+, IN_VENDOR_ID NVARCHAR(10)
+, IN_VENDOR_PART_NUMBER NVARCHAR(35)
+, IN_PRICE_START DATE
+, IN_PRICE_END   DATE
+, IN_PREVIOUS_PRICE decimal(18,8)
+ ) 
+	RETURNS out_message nvarchar(60)
+	
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER AS
+BEGIN
+/***************************** 
+	this is responsible for checking the manual savings
+	price table and returning error for some common conditions.
+
+	take ccode, vendor, vendor part number, price
+	start and end date and return a message if the 
+	prices overlap, or are zero.
+ *****************************/
+ 
+	 declare message_zero_price nvarchar(60) = 'Previous price is 0';
+	 declare message_price_overlap nvarchar(60) = 'Multiple prices found.';
+	 declare record_count integer; 
+  
+	 select count(*)
+	 into record_count	 
+	 from "MANUAL_SAVINGS_PREVIOUS_PRICE"
+	 where bukrs 	 		= :in_bukrs
+	 and vendor_id 			= :in_vendor_id
+	 and vendor_part_number	= :in_vendor_part_number
+	 and
+	 ( price_effective_start_date < :in_price_end
+	 or
+	 price_effective_end_date > :in_price_start 
+	 )
+;
+ 	
+ 	out_message = '';
+ 
+-- RULE: message if if there are > 1 prices for a time period
+	 if :RECORD_COUNT > 1 then
+	 	out_message = :message_price_overlap;
+	 end if;
+
+-- RULE: message if the price is 0
+	 if :IN_PREVIOUS_PRICE = 0 then
+	 	out_message = :message_zero_price;
+	 end if;
+END;

@@ -1,0 +1,663 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="3.0" id="plx_analytics::CA_CO_HOSPITAL_ANALYTICS_CC_IO_REQ_TO_PAY" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED">
+  <descriptions defaultDescription="Hospital Analytics"/>
+  <metadata changedAt="2021-03-15 13:25:55.439"/>
+  <localVariables>
+    <variable id="P_CONTROLLING_AREA" parameter="true">
+      <descriptions defaultDescription="Controlling Area "/>
+      <variableProperties datatype="NVARCHAR" defaultValue="1100" length="4" mandatory="true" scale="0">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_CONTROLLING_AREAS</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>KOKRS</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="P_CHART_OF_ACCOUNTS" parameter="true">
+      <descriptions defaultDescription="Chart of Accounts"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="HOSP" length="4" mandatory="true">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="P_COST_CENTER_GROUP" parameter="true">
+      <descriptions defaultDescription="Cost Center Group Node"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="UHN" length="40" mandatory="false" scale="0">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_CC_VALUE_HELP</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>NODE</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="COST_CENTER">
+      <descriptions defaultDescription="COST_CENTER"/>
+      <variableProperties datatype="VARCHAR" mandatory="false">
+        <valueDomain type="AttributeValue">
+          <attribute name="KOSTL"/>
+        </valueDomain>
+        <selection multiLine="true" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="P_INTERNAL_ORDER_GROUP" parameter="true">
+      <descriptions defaultDescription="Internal Order Group Node"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="undefined" length="24" mandatory="true" scale="0">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_IO_VALUE_HELP</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>Z_SETNAME</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="INTERNAL_ORDER">
+      <descriptions defaultDescription="INTERNAL_ORDER"/>
+      <variableProperties datatype="VARCHAR" mandatory="false">
+        <valueDomain type="AttributeValue">
+          <attribute name="AUFNR"/>
+        </valueDomain>
+        <selection multiLine="true" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="COST_ELEMENT">
+      <descriptions defaultDescription="COST_ELEMENT"/>
+      <variableProperties datatype="VARCHAR" mandatory="false">
+        <valueDomain type="AttributeValue">
+          <attribute name="KSTAR"/>
+        </valueDomain>
+        <selection multiLine="true" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" forStarJoin="true">
+      <targetVariable name="P_CONTROLLING_AREA" resourceUri="plx_analytics::CA_DIM_CC_IO_HIERARCHY"/>
+      <localVariable>P_CONTROLLING_AREA</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" forStarJoin="true">
+      <targetVariable name="P_INTERNAL_ORDER_GROUP" resourceUri="plx_analytics::CA_DIM_CC_IO_HIERARCHY"/>
+      <localVariable>P_INTERNAL_ORDER_GROUP</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" forStarJoin="true">
+      <targetVariable name="CHART_OF_ACCOUNTS" resourceUri="plx_analytics::CA_DIM_CC_IO_HIERARCHY"/>
+      <localVariable>P_CHART_OF_ACCOUNTS</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" forStarJoin="true">
+      <targetVariable name="P_CC_GROUP_NODE" resourceUri="plx_analytics::CA_DIM_CC_IO_HIERARCHY"/>
+      <localVariable>P_COST_CENTER_GROUP</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="50"/>
+  <dataSources>
+    <DataSource id="CA_PLX_PUR_PO_GRIR">
+      <resourceUri>plx_analytics::CA_PLX_PUR_PO_GRIR</resourceUri>
+    </DataSource>
+  </dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Actual" filterExpressionLanguage="COLUMN_ENGINE">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="BLDAT"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="AUFNR"/>
+        <viewAttribute id="AUGBL"/>
+        <viewAttribute id="DMBTR"/>
+        <viewAttribute id="BANFN"/>
+        <viewAttribute id="BEDNR"/>
+        <viewAttribute id="BNFPO"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="MAKTG"/>
+        <viewAttribute id="MAKTX"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="MENGE"/>
+        <viewAttribute id="EMPFG"/>
+        <viewAttribute id="CHECT_PAYR"/>
+        <viewAttribute id="LAUFI"/>
+        <viewAttribute id="AUGDT"/>
+        <viewAttribute id="UMSKZ"/>
+        <viewAttribute id="LAUFD"/>
+        <viewAttribute id="LIFNR_REGUP"/>
+        <viewAttribute id="CHECF_PAYR"/>
+        <viewAttribute id="DMBTR_REGUP"/>
+        <viewAttribute id="RWBTR_PAYR"/>
+        <viewAttribute id="SAKNR"/>
+        <viewAttribute id="LIFNR_BSAK"/>
+        <viewAttribute id="UMSKS"/>
+        <viewAttribute id="VBLNR"/>
+        <viewAttribute id="XVORL"/>
+        <viewAttribute id="KUNNR"/>
+        <viewAttribute id="MONAT"/>
+        <viewAttribute id="ZBUKR"/>
+        <viewAttribute id="RZAWE"/>
+        <viewAttribute id="ZUONR"/>
+        <viewAttribute id="AUGDT_CLEAR"/>
+        <viewAttribute id="AUGBL_CLEAR"/>
+        <viewAttribute id="DMBTR_CLEAR"/>
+        <viewAttribute id="EKGRP"/>
+        <viewAttribute id="TXZ01"/>
+        <viewAttribute id="ZALDT"/>
+        <viewAttribute id="ZWELS"/>
+        <viewAttribute id="KOKRS_1"/>
+        <viewAttribute id="KOKRS_2"/>
+        <viewAttribute id="KOKRS_3"/>
+        <viewAttribute id="BELNR_GR"/>
+        <viewAttribute id="BUZEI_GR"/>
+        <viewAttribute id="GJAHR_GR"/>
+        <viewAttribute id="BELNR_IR"/>
+        <viewAttribute id="BUZEI_IR"/>
+        <viewAttribute id="GJAHR_IR"/>
+        <viewAttribute id="BELNR_CNCL"/>
+        <viewAttribute id="BUZEI_CNCL"/>
+        <viewAttribute id="GJAHR_CNCL"/>
+        <viewAttribute id="AWKEY_IR"/>
+        <viewAttribute id="AFNAM"/>
+        <viewAttribute id="EKNAM"/>
+        <viewAttribute id="XBLNR"/>
+        <viewAttribute id="BELNR_FI"/>
+        <viewAttribute id="NAME1_LIFNR"/>
+        <viewAttribute id="RWBTR_REGUH"/>
+        <viewAttribute id="NAME1_LIFNR_BSAK"/>
+        <viewAttribute id="NETWR"/>
+        <viewAttribute id="BUDAT_GR"/>
+        <viewAttribute id="CPUDT_GR"/>
+        <viewAttribute id="BUDAT_IR"/>
+        <viewAttribute id="CPUDT_IR"/>
+        <viewAttribute id="SHKZG_BSEG"/>
+        <viewAttribute id="WRBTR_BSEG"/>
+        <viewAttribute id="DMBTR_BSEG"/>
+        <viewAttribute id="BEDAT"/>
+        <viewAttribute id="WRBTR_CALC"/>
+        <viewAttribute id="DMBTR_CALC"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="HKONT"/>
+        <viewAttribute id="GL_Description"/>
+        <viewAttribute id="GJAHR_FI"/>
+        <viewAttribute id="KTOKK"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ZZAUFNR" length="24" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(trim(&quot;AUFNR&quot;)) OR (&quot;AUFNR&quot; = '            '),'1',&quot;AUFNR&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ZZKOSTL" length="24" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;KOSTL&quot;) OR &quot;KOSTL&quot;='          ','1',&quot;KOSTL&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="CA_PLX_PUR_PO_GRIR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS_1" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS_2" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS_3" source="KOKRS"/></input>
+    <filter>&quot;KOKRS&quot; = '$$P_CONTROLLING_AREA$$' or isNull(&quot;KOKRS&quot;)</filter>
+  </calculationView>
+</calculationViews>
+  <logicalModel id="Actual">
+    <descriptions/>
+    <attributes>
+      <attribute id="GJAHR" hidden="true" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Year"/>
+        <keyMapping columnObjectName="Actual" columnName="GJAHR"/>
+      </attribute>
+      <attribute id="BUKRS" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Company Code"/>
+        <keyMapping columnObjectName="Actual" columnName="BUKRS"/>
+      </attribute>
+      <attribute id="EBELN" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchase Order"/>
+        <keyMapping columnObjectName="Actual" columnName="EBELN"/>
+      </attribute>
+      <attribute id="EBELP" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PO Item"/>
+        <keyMapping columnObjectName="Actual" columnName="EBELP"/>
+      </attribute>
+      <attribute id="BLDAT" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Accounting Document Date"/>
+        <keyMapping columnObjectName="Actual" columnName="BLDAT"/>
+      </attribute>
+      <attribute id="BUDAT" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Posting Date in the Document"/>
+        <keyMapping columnObjectName="Actual" columnName="BUDAT"/>
+      </attribute>
+      <attribute id="AUGBL" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Payment Number"/>
+        <keyMapping columnObjectName="Actual" columnName="AUGBL"/>
+      </attribute>
+      <attribute id="BANFN" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchase Requisition Number"/>
+        <keyMapping columnObjectName="Actual" columnName="BANFN"/>
+      </attribute>
+      <attribute id="BEDNR" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Requirement Tracking Number"/>
+        <keyMapping columnObjectName="Actual" columnName="BEDNR"/>
+      </attribute>
+      <attribute id="BNFPO" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Item Number of Purchase Requisition"/>
+        <keyMapping columnObjectName="Actual" columnName="BNFPO"/>
+      </attribute>
+      <attribute id="MAKTG" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material description in upper case for matchcodes"/>
+        <keyMapping columnObjectName="Actual" columnName="MAKTG"/>
+      </attribute>
+      <attribute id="LIFNR" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Vendor"/>
+        <keyMapping columnObjectName="Actual" columnName="LIFNR"/>
+      </attribute>
+      <attribute id="MAKTX" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Group"/>
+        <keyMapping columnObjectName="Actual" columnName="MAKTX"/>
+      </attribute>
+      <attribute id="MATNR" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Number"/>
+        <keyMapping columnObjectName="Actual" columnName="MATNR"/>
+      </attribute>
+      <attribute id="EMPFG" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Payee code"/>
+        <keyMapping columnObjectName="Actual" columnName="EMPFG"/>
+      </attribute>
+      <attribute id="CHECT_PAYR" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Check Number"/>
+        <keyMapping columnObjectName="Actual" columnName="CHECT_PAYR"/>
+      </attribute>
+      <attribute id="LAUFI" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Additional Identification"/>
+        <keyMapping columnObjectName="Actual" columnName="LAUFI"/>
+      </attribute>
+      <attribute id="AUGDT" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Clearing Date"/>
+        <keyMapping columnObjectName="Actual" columnName="AUGDT"/>
+      </attribute>
+      <attribute id="UMSKZ" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Special G/L Indicator"/>
+        <keyMapping columnObjectName="Actual" columnName="UMSKZ"/>
+      </attribute>
+      <attribute id="LAUFD" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Date on Which the Program Is to Be Run"/>
+        <keyMapping columnObjectName="Actual" columnName="LAUFD"/>
+      </attribute>
+      <attribute id="LIFNR_REGUP" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REGUP Vendor"/>
+        <keyMapping columnObjectName="Actual" columnName="LIFNR_REGUP"/>
+      </attribute>
+      <attribute id="CHECF_PAYR" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Check Number From"/>
+        <keyMapping columnObjectName="Actual" columnName="CHECF_PAYR"/>
+      </attribute>
+      <attribute id="SAKNR" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="G/L Account"/>
+        <keyMapping columnObjectName="Actual" columnName="SAKNR"/>
+      </attribute>
+      <attribute id="LIFNR_BSAK" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Invoicing Party"/>
+        <keyMapping columnObjectName="Actual" columnName="LIFNR_BSAK"/>
+      </attribute>
+      <attribute id="UMSKS" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Special G/L Transaction Type"/>
+        <keyMapping columnObjectName="Actual" columnName="UMSKS"/>
+      </attribute>
+      <attribute id="VBLNR" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Document Number of the Payment Document"/>
+        <keyMapping columnObjectName="Actual" columnName="VBLNR"/>
+      </attribute>
+      <attribute id="XVORL" order="31" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Indicator: Only Proposal Run?"/>
+        <keyMapping columnObjectName="Actual" columnName="XVORL"/>
+      </attribute>
+      <attribute id="KUNNR" order="32" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Customer"/>
+        <keyMapping columnObjectName="Actual" columnName="KUNNR"/>
+      </attribute>
+      <attribute id="MONAT" order="33" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Period"/>
+        <keyMapping columnObjectName="Actual" columnName="MONAT"/>
+      </attribute>
+      <attribute id="ZBUKR" order="34" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Paying company code"/>
+        <keyMapping columnObjectName="Actual" columnName="ZBUKR"/>
+      </attribute>
+      <attribute id="RZAWE" order="35" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Payment Method for This Payment"/>
+        <keyMapping columnObjectName="Actual" columnName="RZAWE"/>
+      </attribute>
+      <attribute id="ZUONR" order="36" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Assignment Number"/>
+        <keyMapping columnObjectName="Actual" columnName="ZUONR"/>
+      </attribute>
+      <attribute id="AUGDT_CLEAR" order="37" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Clearing Date"/>
+        <keyMapping columnObjectName="Actual" columnName="AUGDT_CLEAR"/>
+      </attribute>
+      <attribute id="AUGBL_CLEAR" order="38" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Payment Clearing Number"/>
+        <keyMapping columnObjectName="Actual" columnName="AUGBL_CLEAR"/>
+      </attribute>
+      <attribute id="EKGRP" order="40" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchasing Group"/>
+        <keyMapping columnObjectName="Actual" columnName="EKGRP"/>
+      </attribute>
+      <attribute id="TXZ01" order="41" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Short Text"/>
+        <keyMapping columnObjectName="Actual" columnName="TXZ01"/>
+      </attribute>
+      <attribute id="ZALDT" order="42" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Posting date of the payment document"/>
+        <keyMapping columnObjectName="Actual" columnName="ZALDT"/>
+      </attribute>
+      <attribute id="ZWELS" order="43" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Payment methods"/>
+        <keyMapping columnObjectName="Actual" columnName="ZWELS"/>
+      </attribute>
+      <attribute id="KOKRS_1" hidden="true" order="44" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="KOKRS_1"/>
+        <keyMapping columnObjectName="Actual" columnName="KOKRS_1"/>
+      </attribute>
+      <attribute id="BELNR_GR" order="45" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GR Accounting Document Number"/>
+        <keyMapping columnObjectName="Actual" columnName="BELNR_GR"/>
+      </attribute>
+      <attribute id="BUZEI_GR" order="46" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GR Accounting Document Line Item Number"/>
+        <keyMapping columnObjectName="Actual" columnName="BUZEI_GR"/>
+      </attribute>
+      <attribute id="GJAHR_GR" order="47" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GR Fiscal Year"/>
+        <keyMapping columnObjectName="Actual" columnName="GJAHR_GR"/>
+      </attribute>
+      <attribute id="BELNR_IR" order="48" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IR Accounting Document Number"/>
+        <keyMapping columnObjectName="Actual" columnName="BELNR_IR"/>
+      </attribute>
+      <attribute id="BUZEI_IR" order="49" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IR Accounting Document Line Item Number"/>
+        <keyMapping columnObjectName="Actual" columnName="BUZEI_IR"/>
+      </attribute>
+      <attribute id="GJAHR_IR" order="50" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IR Fiscal Year"/>
+        <keyMapping columnObjectName="Actual" columnName="GJAHR_IR"/>
+      </attribute>
+      <attribute id="BELNR_CNCL" order="51" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CNCL Accounting Document Number"/>
+        <keyMapping columnObjectName="Actual" columnName="BELNR_CNCL"/>
+      </attribute>
+      <attribute id="BUZEI_CNCL" order="52" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CNCL Accounting Document Line Item Number"/>
+        <keyMapping columnObjectName="Actual" columnName="BUZEI_CNCL"/>
+      </attribute>
+      <attribute id="GJAHR_CNCL" order="53" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CNCL Fiscal Year"/>
+        <keyMapping columnObjectName="Actual" columnName="GJAHR_CNCL"/>
+      </attribute>
+      <attribute id="ZZAUFNR" hidden="true" order="54" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZZAUFNR"/>
+        <keyMapping columnObjectName="Actual" columnName="ZZAUFNR"/>
+      </attribute>
+      <attribute id="ZZKOSTL" hidden="true" order="55" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZZKOSTL"/>
+        <keyMapping columnObjectName="Actual" columnName="ZZKOSTL"/>
+      </attribute>
+      <attribute id="AFNAM" order="56" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Requisitioner Name"/>
+        <keyMapping columnObjectName="Actual" columnName="AFNAM"/>
+      </attribute>
+      <attribute id="EKNAM" order="57" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Buyer Name"/>
+        <keyMapping columnObjectName="Actual" columnName="EKNAM"/>
+      </attribute>
+      <attribute id="XBLNR" order="58" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Invoice Reference"/>
+        <keyMapping columnObjectName="Actual" columnName="XBLNR"/>
+      </attribute>
+      <attribute id="BELNR_FI" order="59" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FI Accounting Document Number"/>
+        <keyMapping columnObjectName="Actual" columnName="BELNR_FI"/>
+      </attribute>
+      <attribute id="NAME1_LIFNR" order="60" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Vendor Name"/>
+        <keyMapping columnObjectName="Actual" columnName="NAME1_LIFNR"/>
+      </attribute>
+      <attribute id="KSTAR" order="62" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cost Element"/>
+        <localVariable>COST_ELEMENT</localVariable>
+        <keyMapping columnObjectName="Actual" columnName="KSTAR"/>
+      </attribute>
+      <attribute id="KOKRS" order="63" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Controlling Area"/>
+        <keyMapping columnObjectName="Actual" columnName="KOKRS"/>
+      </attribute>
+      <attribute id="AUFNR" order="64" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Internal Order"/>
+        <localVariable>INTERNAL_ORDER</localVariable>
+        <keyMapping columnObjectName="Actual" columnName="AUFNR"/>
+      </attribute>
+      <attribute id="KOSTL" order="65" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cost Center"/>
+        <localVariable>COST_CENTER</localVariable>
+        <keyMapping columnObjectName="Actual" columnName="KOSTL"/>
+      </attribute>
+      <attribute id="NAME1_LIFNR_BSAK" order="66" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BSAK Vendor Name"/>
+        <keyMapping columnObjectName="Actual" columnName="NAME1_LIFNR_BSAK"/>
+      </attribute>
+      <attribute id="NETWR" order="67" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Net Order Value in PO Currency"/>
+        <keyMapping columnObjectName="Actual" columnName="NETWR"/>
+      </attribute>
+      <attribute id="BUDAT_GR" order="68" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GR Posting Date"/>
+        <keyMapping columnObjectName="Actual" columnName="BUDAT_GR"/>
+      </attribute>
+      <attribute id="CPUDT_GR" order="69" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GR Creation Date"/>
+        <keyMapping columnObjectName="Actual" columnName="CPUDT_GR"/>
+      </attribute>
+      <attribute id="BUDAT_IR" order="70" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Invoice Posting Date"/>
+        <keyMapping columnObjectName="Actual" columnName="BUDAT_IR"/>
+      </attribute>
+      <attribute id="CPUDT_IR" order="71" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Invoice Creation Date"/>
+        <keyMapping columnObjectName="Actual" columnName="CPUDT_IR"/>
+      </attribute>
+      <attribute id="SHKZG_BSEG" order="72" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BSEG Debit/Credit Indicator"/>
+        <keyMapping columnObjectName="Actual" columnName="SHKZG_BSEG"/>
+      </attribute>
+      <attribute id="BUZEI" order="77" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Accounting Document Line Item Number"/>
+        <keyMapping columnObjectName="Actual" columnName="BUZEI"/>
+      </attribute>
+      <attribute id="HKONT" order="78" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="General Ledger Account"/>
+        <keyMapping columnObjectName="Actual" columnName="HKONT"/>
+      </attribute>
+      <attribute id="GL_Description" order="79" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="G/L Account Long Text"/>
+        <keyMapping columnObjectName="Actual" columnName="GL_Description"/>
+      </attribute>
+      <attribute id="GJAHR_FI" order="80" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FI Fiscal Year"/>
+        <keyMapping columnObjectName="Actual" columnName="GJAHR_FI"/>
+      </attribute>
+      <attribute id="BEDAT" order="81" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchasing Document Date"/>
+        <keyMapping columnObjectName="Actual" columnName="BEDAT"/>
+      </attribute>
+      <attribute id="KTOKK" order="83" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Vendor account group"/>
+        <keyMapping columnObjectName="Actual" columnName="KTOKK"/>
+      </attribute>
+      <attribute id="ZZAUFNR$local">
+        <descriptions defaultDescription="ZZAUFNR"/>
+        <keyMapping columnObjectName="Actual" columnName="ZZAUFNR"/>
+      </attribute>
+      <attribute id="ZZKOSTL$local">
+        <descriptions defaultDescription="ZZKOSTL"/>
+        <keyMapping columnObjectName="Actual" columnName="ZZKOSTL"/>
+      </attribute>
+      <attribute id="KOKRS$local">
+        <descriptions defaultDescription="Controlling Area"/>
+        <keyMapping columnObjectName="Actual" columnName="KOKRS"/>
+      </attribute>
+      <attribute id="KOSTL$local">
+        <descriptions defaultDescription="Cost Center"/>
+        <keyMapping columnObjectName="Actual" columnName="KOSTL"/>
+      </attribute>
+      <attribute id="KSTAR$local">
+        <descriptions defaultDescription="Cost Element"/>
+        <keyMapping columnObjectName="Actual" columnName="KSTAR"/>
+      </attribute>
+      <attribute id="AUFNR$local">
+        <descriptions defaultDescription="Internal Order"/>
+        <keyMapping columnObjectName="Actual" columnName="AUFNR"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes>
+      <calculatedAttribute id="BUDAT_SQL" hidden="false" order="82" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BUDAT_SQL"/>
+        <keyCalculation datatype="DATE" expressionLanguage="COLUMN_ENGINE">
+          <formula>daydate(&quot;BUDAT_IR&quot;)</formula>
+        </keyCalculation>
+      </calculatedAttribute>
+    </calculatedAttributes>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="DMBTR" order="8" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Local Currency Amount"/>
+        <measureMapping columnObjectName="Actual" columnName="DMBTR"/>
+      </measure>
+      <measure id="MENGE" order="12" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Quantity"/>
+        <measureMapping columnObjectName="Actual" columnName="MENGE"/>
+      </measure>
+      <measure id="DMBTR_REGUP" order="25" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Payment Amount (Local Currency)"/>
+        <measureMapping columnObjectName="Actual" columnName="DMBTR_REGUP"/>
+      </measure>
+      <measure id="RWBTR_PAYR" order="26" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Cheque Amount"/>
+        <measureMapping columnObjectName="Actual" columnName="RWBTR_PAYR"/>
+      </measure>
+      <measure id="DMBTR_CLEAR" order="39" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Clearing Amount (Local Currency)"/>
+        <measureMapping columnObjectName="Actual" columnName="DMBTR_CLEAR"/>
+      </measure>
+      <measure id="RWBTR_REGUH" order="61" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Payment Amount (Transaction Currency)"/>
+        <measureMapping columnObjectName="Actual" columnName="RWBTR_REGUH"/>
+      </measure>
+      <measure id="WRBTR_BSEG" order="73" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="BSEG Amount in Document Currency"/>
+        <measureMapping columnObjectName="Actual" columnName="WRBTR_BSEG"/>
+      </measure>
+      <measure id="DMBTR_BSEG" order="74" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="BSEG Amount in Local Currency"/>
+        <measureMapping columnObjectName="Actual" columnName="DMBTR_BSEG"/>
+      </measure>
+      <measure id="WRBTR_CALC" order="75" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="CALC Amount in Document Currency"/>
+        <measureMapping columnObjectName="Actual" columnName="WRBTR_CALC"/>
+      </measure>
+      <measure id="DMBTR_CALC" order="76" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="CALC Amount in Local Currency"/>
+        <measureMapping columnObjectName="Actual" columnName="DMBTR_CALC"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+    <sharedDimensions>
+      <logicalJoin associatedObjectUri="plx_analytics::CA_DIM_CC_IO_HIERARCHY">
+        <attributes>
+          <attributeRef>ZZAUFNR$local</attributeRef>
+          <attributeRef>ZZKOSTL$local</attributeRef>
+        </attributes>
+        <associatedAttributeNames>
+          <attributeName>ZINTERNAL_ORDER</attributeName>
+          <attributeName>ZCOST_CENTER</attributeName>
+        </associatedAttributeNames>
+        <properties cardinality="C1_1" joinType="fullOuter" joinOperator="Equal"/>
+        <associatedAttributeFeatures/>
+      </logicalJoin>
+      <logicalJoin associatedObjectUri="plx_analytics::CA_DIM_CSKT">
+        <attributes>
+          <attributeRef>KOKRS$local</attributeRef>
+          <attributeRef>KOSTL$local</attributeRef>
+        </attributes>
+        <associatedAttributeNames>
+          <attributeName>KOKRS_KOSTL</attributeName>
+          <attributeName>KOSTL_KOSTL</attributeName>
+        </associatedAttributeNames>
+        <properties joinType="leftOuter" joinOperator="Equal"/>
+        <associatedAttributeFeatures>
+          <attributeReference attributeName="KOSTL_KOSTL" hidden="true"/>
+        </associatedAttributeFeatures>
+      </logicalJoin>
+      <logicalJoin associatedObjectUri="plx_analytics::CA_DIM_CSKU">
+        <attributes>
+          <attributeRef>KSTAR$local</attributeRef>
+        </attributes>
+        <associatedAttributeNames>
+          <attributeName>KSTAR_KSTAR</attributeName>
+        </associatedAttributeNames>
+        <properties joinType="leftOuter" joinOperator="Equal"/>
+        <associatedAttributeFeatures>
+          <attributeReference attributeName="KSTAR_KSTAR" hidden="true"/>
+        </associatedAttributeFeatures>
+      </logicalJoin>
+      <logicalJoin associatedObjectUri="plx_analytics::CA_DIM_AUFK">
+        <attributes>
+          <attributeRef>AUFNR$local</attributeRef>
+          <attributeRef>KOKRS$local</attributeRef>
+        </attributes>
+        <associatedAttributeNames>
+          <attributeName>AUFNR_AUFNR</attributeName>
+          <attributeName>AUFNR_KOKRS</attributeName>
+        </associatedAttributeNames>
+        <properties joinType="leftOuter" joinOperator="Equal"/>
+        <associatedAttributeFeatures>
+          <attributeReference attributeName="AUFNR_AUFNR" hidden="true"/>
+          <attributeReference attributeName="AUFNR_KOKRS" hidden="true"/>
+        </associatedAttributeFeatures>
+      </logicalJoin>
+    </sharedDimensions>
+  </logicalModel>
+<layout>
+  <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="22" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Actual" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="257"/>
+        <rectangleSize height="94" width="140"/>
+      </shape>
+      <shape modelObjectName="Actual" modelObjectNameSpace="StarJoinViewNodeInput" modelObjectType="repository">
+        <upperLeftCorner x="69" y="51"/>
+      </shape>
+      <shape modelObjectName="plx_analytics::CA_DIM_CC_IO_HIERARCHY" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
+        <upperLeftCorner x="780" y="27"/>
+      </shape>
+      <shape modelObjectName="plx_analytics::CA_DIM_CSKT" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
+        <upperLeftCorner x="1226" y="30"/>
+      </shape>
+      <shape modelObjectName="plx_analytics::CA_DIM_CSKU" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
+        <upperLeftCorner x="1614" y="30"/>
+      </shape>
+      <shape modelObjectName="plx_analytics::CA_DIM_AUFK" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
+        <upperLeftCorner x="2004" y="30"/>
+      </shape>
+    </shapes>
+</layout>
+</Calculation:scenario>

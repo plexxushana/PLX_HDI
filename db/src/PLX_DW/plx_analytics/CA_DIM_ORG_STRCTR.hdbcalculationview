@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="3.0" id="plx_analytics::CA_DIM_ORG_STRCTR" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+  <descriptions defaultDescription="Master Data Org Structure"/>
+  <metadata changedAt="2017-11-29 14:43:29.982"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="31"/>
+  <dataSources>
+    <DataSource id="ECC_T001">
+      <resourceUri>ECC_T001</resourceUri>
+    </DataSource>
+    <DataSource id="CCODE_MEMBER">
+      <resourceUri>CCODE_MEMBER</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_TKA02">
+      <resourceUri>ECC_TKA02</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_T001K">
+      <resourceUri>ECC_T001K</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_TKA01">
+      <resourceUri>ECC_TKA01</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_T001W">
+      <resourceUri>ECC_T001W</resourceUri>
+    </DataSource>
+  </dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:JoinView" id="ccode_member" joinType="inner">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="BUTXT"/>
+        <viewAttribute id="PERIV"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="ECC_T001">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUTXT" source="BUTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERIV" source="PERIV"/>
+      </input>
+      <input node="CCODE_MEMBER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+      </input>
+    <joinAttribute name="BUKRS"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="ccode_controlArea" joinType="inner">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="BUTXT"/>
+        <viewAttribute id="PERIV"/>
+        <viewAttribute id="BUKRS"/>
+      <viewAttribute hidden="true" id="JOIN$BUKRS$BUKRS"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="ECC_TKA02">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$BUKRS$BUKRS" source="BUKRS"/>
+      </input>
+      <input node="ccode_member">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUTXT" source="BUTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERIV" source="PERIV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$BUKRS$BUKRS" source="BUKRS"/>
+      </input>
+    <joinAttribute name="JOIN$BUKRS$BUKRS"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="ccode_plant" joinType="leftOuter">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="BWKEY"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="BUTXT"/>
+        <viewAttribute id="PERIV"/>
+        <viewAttribute id="BUKRS"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="ccode_controlArea">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUTXT" source="BUTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERIV" source="PERIV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+      </input>
+      <input node="ECC_T001K">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BWKEY" source="BWKEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+      </input>
+    <joinAttribute name="BUKRS"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="controlAreaDetail" joinType="inner">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="BEZEI"/>
+        <viewAttribute id="KHINR"/>
+        <viewAttribute id="KOKFI"/>
+        <viewAttribute id="KTOPL"/>
+        <viewAttribute id="LMONA"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="BWKEY"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="PERIV"/>
+        <viewAttribute id="BUTXT"/>
+        <viewAttribute id="BUKRS"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="ccode_plant">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BWKEY" source="BWKEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERIV" source="PERIV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUTXT" source="BUTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+      </input>
+      <input node="ECC_TKA01">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEZEI" source="BEZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KHINR" source="KHINR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKFI" source="KOKFI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KTOPL" source="KTOPL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LMONA" source="LMONA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+      </input>
+    <joinAttribute name="KOKRS"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="plant_detail" joinType="leftOuter">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="BEZEI"/>
+        <viewAttribute id="KHINR"/>
+        <viewAttribute id="KOKFI"/>
+        <viewAttribute id="KTOPL"/>
+        <viewAttribute id="LMONA"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="BEDPL"/>
+        <viewAttribute id="EKORG"/>
+        <viewAttribute id="FABKL"/>
+        <viewAttribute id="NAME1"/>
+        <viewAttribute id="SPART"/>
+        <viewAttribute id="VKORG"/>
+        <viewAttribute id="VSTEL"/>
+        <viewAttribute id="VTWEG"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="PERIV"/>
+        <viewAttribute id="BUTXT"/>
+        <viewAttribute id="BUKRS"/>
+      <viewAttribute hidden="true" id="JOIN$BWKEY$BWKEY"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="controlAreaDetail">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEZEI" source="BEZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KHINR" source="KHINR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKFI" source="KOKFI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KTOPL" source="KTOPL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LMONA" source="LMONA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERIV" source="PERIV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUTXT" source="BUTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$BWKEY$BWKEY" source="BWKEY"/>
+      </input>
+      <input node="ECC_T001W">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEDPL" source="BEDPL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKORG" source="EKORG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FABKL" source="FABKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NAME1" source="NAME1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPART" source="SPART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VKORG" source="VKORG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VSTEL" source="VSTEL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VTWEG" source="VTWEG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$BWKEY$BWKEY" source="BWKEY"/>
+      </input>
+    <joinAttribute name="JOIN$BWKEY$BWKEY"/>
+  </calculationView>
+</calculationViews>
+  <logicalModel id="plant_detail">
+    <descriptions/>
+    <attributes>
+      <attribute id="MEMBER" order="1" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Org ID"/>
+        <keyMapping columnObjectName="plant_detail" columnName="MEMBER"/>
+      </attribute>
+      <attribute id="KOKRS" order="2" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Controlling Area"/>
+        <keyMapping columnObjectName="plant_detail" columnName="KOKRS"/>
+      </attribute>
+      <attribute id="BUKRS" key="true" order="3" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Company Code"/>
+        <keyMapping columnObjectName="plant_detail" columnName="BUKRS"/>
+      </attribute>
+      <attribute id="BUTXT" order="4" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Company Code Name"/>
+        <keyMapping columnObjectName="plant_detail" columnName="BUTXT"/>
+      </attribute>
+      <attribute id="WERKS" order="5" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Plant"/>
+        <keyMapping columnObjectName="plant_detail" columnName="WERKS"/>
+      </attribute>
+      <attribute id="PLANT_NAME" order="6" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Name"/>
+        <keyMapping columnObjectName="plant_detail" columnName="NAME1"/>
+      </attribute>
+      <attribute id="PERIV" order="7" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Year Variant"/>
+        <keyMapping columnObjectName="plant_detail" columnName="PERIV"/>
+      </attribute>
+      <attribute id="BEZEI" order="8" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Name of the controlling area"/>
+        <keyMapping columnObjectName="plant_detail" columnName="BEZEI"/>
+      </attribute>
+      <attribute id="KHINR" order="9" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Standard Hierarchy for Cost Centers"/>
+        <keyMapping columnObjectName="plant_detail" columnName="KHINR"/>
+      </attribute>
+      <attribute id="KOKFI" order="10" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Allocation Indicator"/>
+        <keyMapping columnObjectName="plant_detail" columnName="KOKFI"/>
+      </attribute>
+      <attribute id="KTOPL" order="11" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Chart of Accounts"/>
+        <keyMapping columnObjectName="plant_detail" columnName="KTOPL"/>
+      </attribute>
+      <attribute id="LMONA" order="12" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Year Variant"/>
+        <keyMapping columnObjectName="plant_detail" columnName="LMONA"/>
+      </attribute>
+      <attribute id="WAERS" order="13" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Currency Key"/>
+        <keyMapping columnObjectName="plant_detail" columnName="WAERS"/>
+      </attribute>
+      <attribute id="BEDPL" order="14" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Activating requirements planning"/>
+        <keyMapping columnObjectName="plant_detail" columnName="BEDPL"/>
+      </attribute>
+      <attribute id="EKORG" order="15" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchasing Organization"/>
+        <keyMapping columnObjectName="plant_detail" columnName="EKORG"/>
+      </attribute>
+      <attribute id="FABKL" order="16" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Factory calendar key"/>
+        <keyMapping columnObjectName="plant_detail" columnName="FABKL"/>
+      </attribute>
+      <attribute id="SPART" order="17" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Division for intercompany billing"/>
+        <keyMapping columnObjectName="plant_detail" columnName="SPART"/>
+      </attribute>
+      <attribute id="VKORG" order="18" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Sales organization for intercompany billing"/>
+        <keyMapping columnObjectName="plant_detail" columnName="VKORG"/>
+      </attribute>
+      <attribute id="VSTEL" order="19" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Shipping Point/Receiving Point"/>
+        <keyMapping columnObjectName="plant_detail" columnName="VSTEL"/>
+      </attribute>
+      <attribute id="VTWEG" order="20" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Distribution channel for intercompany billing"/>
+        <keyMapping columnObjectName="plant_detail" columnName="VTWEG"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+<layout>
+  <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="22" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="ccode_member" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="549"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    <shape modelObjectName="ECC_T001" modelObjectNameSpace="ccode_member" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="CCODE_MEMBER" modelObjectNameSpace="ccode_member" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="ccode_controlArea" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="453"/>
+        <rectangleSize height="30" width="140"/>
+      </shape>
+    <shape modelObjectName="ECC_TKA02" modelObjectNameSpace="ccode_controlArea" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="ccode_member" modelObjectNameSpace="ccode_controlArea" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="ccode_plant" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="357"/>
+        <rectangleSize height="30" width="140"/>
+      </shape>
+    <shape modelObjectName="ccode_controlArea" modelObjectNameSpace="ccode_plant" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="ECC_T001K" modelObjectNameSpace="ccode_plant" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="controlAreaDetail" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="261"/>
+        <rectangleSize height="30" width="140"/>
+      </shape>
+    <shape modelObjectName="ccode_plant" modelObjectNameSpace="controlAreaDetail" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="ECC_TKA01" modelObjectNameSpace="controlAreaDetail" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="plant_detail" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="165"/>
+        <rectangleSize height="30" width="140"/>
+      </shape>
+    
+    <shape modelObjectName="controlAreaDetail" modelObjectNameSpace="plant_detail" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="ECC_T001W" modelObjectNameSpace="plant_detail" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

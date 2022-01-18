@@ -1,0 +1,71 @@
+FUNCTION "plx_analytics::FN_CONTRACT_TRIM" ( ) 
+	RETURNS "TT_CONTRACT"
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER AS
+BEGIN
+/***************************** 
+	Write your function logic
+ *****************************/
+ declare ekpo_ebeln							nvarchar(10) array;
+ declare v_row_count, i,v_previous			integer :=1;
+ declare arr_contract_trim					nvarchar(10) array;
+ declare ebeln								nvarchar(10) array;
+ declare lv_contract						nvarchar(10) := '' ;
+ declare   lv_contract_disp	, lv_contract1				nvarchar(18) := '' ;
+ declare lv_char1							nvarchar(1) := '';
+ 
+ --get the total number of records from ECC_EKKO so we can loop through	   
+ 	 
+
+ 	   
+ 	   SELECT COUNT( DISTINCT A."EBELN")  INTO v_row_count
+					FROM   "ECC_EKKO"  as A 
+					WHERE A."BSTYP"= 'K' 
+       	         	  ;
+       	         	    
+--bind the select statement to the table variable LT_DATA	   
+ 	   LT_DATA = SELECT DISTINCT A."EBELN" 
+					FROM   "ECC_EKKO"  as A 
+					WHERE A."BSTYP"= 'K' and LEFT("EBELN",1) <> '4' 
+       	         	    Order by A."EBELN";
+ 	   
+--Fill arrays that will store the data . Fill them with values from the table variable above	   
+ekpo_ebeln := ARRAY_AGG(:LT_DATA.EBELN ORDER BY EBELN);
+
+-- now loop through the arrays so that we can build the string for contract trimming.	        
+ 	   FOR v_row_count IN 1..CARDINALITY(:ekpo_ebeln) DO 
+ 	      	ebeln[:v_row_count]  					:= :ekpo_ebeln[v_row_count];	
+ 	      	
+ 	      	for i in 1 .. 10 do 
+ 	      	
+ 	      	lv_char1 := SUBSTR(:ebeln[:v_row_count],i, 1);
+ 	      	 if lv_char1 =  '0'  or lv_char1 =  '1'  or   lv_char1 =  '2'  or  lv_char1 =  '3'  or  lv_char1 =  '4'  or  lv_char1 =  '5'  or lv_char1 =  '6'  or
+ 	      	   lv_char1 =  '7'  or  lv_char1 =  '8'  or lv_char1 =  '9'  THEN 
+ 	      	   	    lv_contract := concat(:lv_contract,  :lv_char1);
+ 	      	     
+ 	      	 END IF ;
+ 	      	end for;
+ 	      	 lv_contract_disp := :ekpo_ebeln[:v_row_count] ; 
+ 	      	 
+ 	      	if locate(lv_contract_disp, 'X') > 0 THEN 
+ 	      	       lv_contract1 := concat('CWX', :lv_contract);
+ 	      	 ELSEIF locate(lv_contract_disp, 'P') > 0 THEN 
+ 	      	       lv_contract1 := concat('CWP', :lv_contract);
+ 	      	  ELSE 
+ 	      	    	lv_contract1 := concat('CW', :lv_contract);
+ 	      	 END IF;
+ 	      	 
+      		arr_contract_trim[:v_row_count] 		:= :lv_contract1;
+      		lv_contract := '';
+      		 lv_contract_disp :='';
+      		 lv_contract1 := '';
+ 	    END FOR ;	
+      
+--this statement is to pass the data from the array to the table for output   
+       t = unnest(:ebeln, :arr_contract_trim) as (EBELN, CONTRACT_TRIM);     
+  
+     RETURN  (select EBELN, CONTRACT_TRIM from :t )  ; 
+     
+     
+
+END;

@@ -1,0 +1,198 @@
+FUNCTION "plx_analytics::FN_FINANCIAL_STAT_VERSION" ( 
+  		GROUP_ID  NVARCHAR(35),
+		COMP_CD NVARCHAR(4) , 
+		CHART NVARCHAR(4)
+) 
+ 	RETURNS table(
+		  PARENT_ID nvarchar(50), 
+ 	  CHILD_ID NVARCHAR(50), 
+ 	  COMP_CODE NVARCHAR(4),   
+ 	  LEV_H  INTEGER, 
+ 	  GROUP_HS	NVARCHAR(34),
+ 	  SORT_ORD NVARCHAR(3), 
+ 	  TXT45 	NVARCHAR(45)
+	)
+
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER AS
+BEGIN
+	DECLARE ARR_ERGSL		NVARCHAR(10)  ARRAY;
+	DECLARE ARR_SAKNR , ARR_PARENT      NVARCHAR(10) ARRAY;
+	DECLARE ARR_VONKT    	NVARCHAR(10) ARRAY;
+	DECLARE ARR_BISKT    	NVARCHAR(10) ARRAY;
+	DECLARE	ARR_GL			NVARCHAR(10) ARRAY;
+	DECLARE	ARR_GL_txt20	NVARCHAR(50) ARRAY;
+	declare lv_row, lv_counter, LV_ROW_GL, LV_GL_COUNTER  integer ;
+	declare lv_parent_iD 	NVARCHAR(10);
+	declare lv_max_stufe 	nvarchar(2);
+	
+-- this whole program will build the hiearachy for FS version. IT can be described in two main parts.
+-- PArt  1 is finding the relationship PArent-Child among the nodes of the FS hierarchy and 
+-- this is achieved by searching and looping through the table ECC_FAGL_011PC 
+-- PArt 2 
+
+IF :GROUP_ID = 'CUSTOM_BS_GROUPING' THEN 
+
+LT_VAR1 = SELECT '' AS PARENT_ID, 'TOP_1800' AS CHILD_ID, '1800' AS COMP_CODE, 1 AS LEV_H,  
+'CUSTOM_BS_GROUPING' AS GROUP_HS, 1 AS SORT_ORD, 'Top Node' as TXT45 FROM DUMMY ;
+
+LT_VAR2 = SELECT DISTINCT 'TOP_1800' AS PARENT_ID,  ACCOUNT_GROUP AS CHILD_ID,
+ '1800' AS COMP_CODE, 2 AS LEV_H,  
+'CUSTOM_BS_GROUPING' AS GROUP_HS, 2 AS SORT_ORD,ACCOUNT_GROUP as TXT45
+ FROM "MANUAL_BALANCE_SHEET_GROUPING"
+WHERE GROUP_ID = 'CUSTOM_BS_GROUPING' GROUP BY ACCOUNT_GROUP;
+
+LT_VAR3 = SELECT DISTINCT ACCOUNT_GROUP AS PARENT_ID, IE_GROUPING AS CHILD_ID , 
+          '1800' AS COMP_CODE, 3 AS LEV_H,  'CUSTOM_BS_GROUPING' AS GROUP_HS, 
+          3 AS SORT_ORD, IE_GROUPING as TXT45
+ FROM MANUAL_BALANCE_SHEET_GROUPING 
+ WHERE GROUP_ID = 'CUSTOM_BS_GROUPING' GROUP BY ACCOUNT_GROUP, IE_GROUPING;
+
+LT_VAR4 = SELECT DISTINCT IE_GROUPING AS PARENT_ID, CATEGORY1 AS CHILD_ID , 
+          '1800' AS COMP_CODE, 4 AS LEV_H,  'CUSTOM_BS_GROUPING' AS GROUP_HS, 
+          4 AS SORT_ORD, CATEGORY1 as TXT45
+ FROM "MANUAL_BALANCE_SHEET_GROUPING" 
+ WHERE GROUP_ID = 'CUSTOM_BS_GROUPING' and ie_grouping <> category1
+ GROUP BY  ACCOUNT_GROUP, IE_GROUPING,IE_GROUPING, CATEGORY1;
+ 
+ LT_VAR5 = SELECT DISTINCT CATEGORY1 AS PARENT_ID, CATEGORY2 AS CHILD_ID , 
+          '1800' AS COMP_CODE, 5 AS LEV_H,  'CUSTOM_BS_GROUPING' AS GROUP_HS, 
+          5 AS SORT_ORD, CATEGORY2 as TXT45
+ FROM "MANUAL_BALANCE_SHEET_GROUPING" 
+ WHERE GROUP_ID = 'CUSTOM_BS_GROUPING' and ie_grouping <> category1 and category1<>category2
+ GROUP BY  ACCOUNT_GROUP, IE_GROUPING,CATEGORY1, CATEGORY2;
+ 
+ LT_VAR6 = SELECT DISTINCT CATEGORY2 AS PARENT_ID, GL_ACCOUNT AS CHILD_ID , 
+          '1800' AS COMP_CODE, 6 AS LEV_H,  'CUSTOM_BS_GROUPING' AS GROUP_HS, 
+          6 AS SORT_ORD, ACCOUNT_DESC as TXT45
+ FROM "MANUAL_BALANCE_SHEET_GROUPING" 
+ WHERE GROUP_ID = 'CUSTOM_BS_GROUPING' GROUP BY ACCOUNT_GROUP, IE_GROUPING, CATEGORY2, GL_ACCOUNT, ACCOUNT_dESC;
+ 
+ 
+VAR_OUT = SELECT * FROM :LT_VAR1
+                   UNION 
+          SELECT * FROM :LT_VAR2
+              UNION 
+          SELECT * FROM :LT_VAR3
+              UNION
+          SELECT * FROM :LT_VAR4
+              UNION 
+          SELECT * FROM :LT_VAR5
+           UNION 
+          SELECT * FROM :LT_VAR6;
+
+ELSE 
+
+  select max(stufe) into lv_max_stufe from ECC_FAGL_011PC as a where  a.versn = :GROUP_ID;
+    LT_TEMP_PARENT= select top 1 parent as PARENT_ID, ERGSL AS CHILD_ID, :COMP_CD as comp_code, 1 as lev_h, :GROUP_ID as group_hs, '' as sort_ord, '' as versn
+   from "ECC_FAGL_011PC" as a where  a.versn = :GROUP_ID and a.stufe = '01' ;
+   --PART 1 
+   -- this while loop will perform for each level (STUFE from 01 to Max_stufe) a reading of parent <-> child and 
+   -- will generate the two fields Parent_id, Child_Id in a hierarchical format. 
+   -- for ex: the lines for versn = '1700'
+   --   ID;PARENT;CHILD;STUFE
+	--000001;000000;000002;01
+	--000002;000001;000003;02
+	--003402;000001;000000;02 
+	--will become:  Top Node (parent)= 1700 - Child = 1000 , 1
+	-- parent_id, child_id
+	--				1700
+	--1700			1000 (ID=000002-Statement of Financial Position)
+	--1700			1 ( ID=003402 accounts not assigned) and so on. 
+	
+  while lv_max_stufe >='01' do 
+  LT_TEMP_PARENT1=   select a.ergsl as PARENT_ID , b.ergsl as CHILD_ID ,:COMP_CD AS COMP_CODE, 
+                    a.STUFE AS LEV_H,  :GROUP_ID AS GROUP_HS, a.ID AS SORT_ORD, a.VERSN 
+                    from "ECC_FAGL_011PC" as a inner join "ECC_FAGL_011PC" as b
+                    on a.id = b.parent and a.versn = b.versn
+                     where  a.versn = :GROUP_ID  and a.STUFE = :LV_MAX_sTUFE
+                   	order by a.parent;
+				
+   LT_TEMP_PARENT= select * from :LT_TEMP_PARENT
+								union 
+						select PARENT_ID, CHILD_ID, COMP_CODE, LEV_H, GROUP_HS, SORT_ORD, VERSN
+								 from :LT_TEMP_PARENT1 ;
+				
+				lv_max_Stufe := CONCAT('0' , TO_NVARCHAR(TO_INT(:LV_MAX_STUFE)-1)) ;
+				
+				end while;
+	-- END of PART1 
+	-- GET the text description (field TXT45) for all the nodes for ex Node 1000 - Statement of Financial Position
+	LT_TEMP_PARENT_FINAL = SELECT PARENT_ID, CHILD_ID, COMP_CODE, LEV_H, GROUP_HS, SORT_ORD, A.VERSN, QT.TXT45
+	              FROM :LT_TEMP_PARENT as A inner join 	"ECC_FAGL_011QT"  as QT
+	              ON A.VERSN = QT.VERSN   AND A.child_ID = QT.ERGSL
+	              where QT.spras = 'E' AND QT.TXTYP='K' AND A.VERSN=:GROUP_ID;
+	 
+	
+	-- PART 2 
+	-- NOW we need to find those entries in FAGL_011PC where the parent has no children anymore and this 
+	-- means that these entries have the accounts listing in the other table FAGL_011ZC, and that is why 
+	-- table lt_temp_parent4 is used to create the lt_temp_parent2. 			
+	lt_temp_parent4 = 	select a.ergsl as PARENT_ID , ( select b.ergsl from "ECC_FAGL_011PC" as b where 
+                                    a.child = b.id and b.versn = :GROUP_ID) as CHILD_ID ,
+                    a.STUFE AS LEV_H, a.ID AS SORT_ORD, a.VERSN 
+                    from "ECC_FAGL_011PC" as a  where  a.versn = :GROUP_ID
+				     order by a.parent;
+					
+    -- the table lt_temp_parent2 with the clause child_id is null will be used to search for GL accounts in 
+    -- the table FAGL_011ZC .       	 
+   lt_temp_parent2 = 
+                   SELECT PARENT_ID, 
+                   VONKT AS CHILD_ID, LEV_H,  SORT_ORD , VONKT , BISKT
+                   FROM :lt_temp_parent4  AS B INNER JOIN "ECC_FAGL_011ZC" AS C 
+                   ON  B.VERSN = C.VERSN AND B.PARENT_ID = C.ERGSL  AND C.VERSN = :GROUP_ID AND C.KTOPL = :CHART
+                  WHERE B.CHILD_ID IS NULL;  
+                   
+    -- for the code to find out which accounts is between THE RANGE in FAGL_011ZC we need to have
+    -- first a listing of all accounts for that company. that is why we are creating LT_TEMP_GL. 
+    -- as it is much faster to loop through each GL with an array rather than with a cursor in a table, i 
+    -- passing all the values of the table lt_Temp_gl in the arrays below and then is easy to do the For loop
+    LT_TEMP_GL = 	SELECT  		"SAKNR" , TXT20
+					FROM "plx_analytics::CA_DIM_GENERAL_LEDGER"  AS A 
+ 					WHERE A.BUKRS = :COMP_CD and A.ktopl = :CHART; 
+ 					
+       
+   	ARR_ERGSL 	:= ARRAY_AGG(:lt_temp_parent2.parent_id order by parent_id);
+	ARR_VONKT 	:= ARRAY_AGG(:lt_temp_parent2.vonkt order by parent_id);
+	ARR_BISKT 	:= ARRAY_AGG(:lt_temp_parent2.biskt order by parent_id);
+	ARR_GL		:= ARRAY_AGG(:lt_temp_gl.saknr  order by saknr);
+	ARR_GL_TXT20		:= ARRAY_AGG(:lt_temp_gl.txt20  order by saknr);
+	lv_counter 	:=	CARDINALITY(:ARR_ERGSL);
+	LV_GL_COUNTER	:=CARDINALITY(:ARR_GL);
+
+lv_row 		:=1;
+lv_row_GL 	:=1;
+
+FOR LV_ROW_GL IN 1..LV_GL_COUNTER DO
+lv_row 		:=1;
+			FOR lv_row  IN 1..lv_counter  do
+			--compare the GL with the VONKT , BISKT to find out which interval and the correspodning Parent ( or the ERGSL) 
+			 if :ARR_GL[LV_ROW_GL] >= :ARR_VONKT[LV_ROW] AND :ARR_GL[LV_ROW_GL] <= :ARR_BISKT[LV_ROW]  THEN
+			    ARR_PARENT[lv_row_GL]  := :ARR_ERGSL[lv_row]; 
+			 END IF;
+			 lv_row := lv_row + 1 ; 
+			END FOR;
+	 lv_row_gl := lv_row_gl + 1 ; 	
+	 
+end for ;
+   
+   --Arrays are transfered to columns of a table     
+ lt_temp_child = UNNEST(:ARR_PARENT,:ARR_GL,:ARR_GL_txt20) AS ("PARENT_ID", "CHILD_ID","TXT45");
+ lt_temp_child1 = select "PARENT_ID", "CHILD_ID", :COMP_CD AS COMP_CODE, 
+           9 AS LEV_H, :GROUP_ID  AS GROUP_HS, '' AS SORT_ORD,  TXT45 from :lt_temp_child;
+ --END of PART2
+
+ --this is the final step, just doing a union to gather both sets of results.   
+      VAR_OUT = SELECT PARENT_ID, CHILD_ID,COMP_CODE, LEV_H, GROUP_HS , SORT_ORD,  TXT45  FROM :LT_TEMP_PARENT_FINAL
+      						WHERE CHILD_ID IS NOT NULL
+ 	   			UNION 
+ 	         	SELECT * FROM :lt_temp_child1  where parent_id is not null;
+    END IF;
+           
+           
+    RETURN       
+       SELECT * FROM :VAR_OUT ;    
+           
+
+END;
+

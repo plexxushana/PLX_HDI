@@ -1,0 +1,1218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Dimension="http://www.sap.com/ndb/BiModelDimension.ecore" schemaVersion="2.3" id="plx_analytics::CA_PLX_GL_TRIALBALANCE_TOTAL_TEST" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+  <origin/>
+  <descriptions defaultDescription="CA_PLX_GL_TRIALBALANCE_TOTAL"/>
+  <metadata changedAt="2021-03-05 09:31:07.838"/>
+  <localVariables>
+    <variable id="Chart_of_Account">
+      <descriptions defaultDescription="Chart_of_Account"/>
+      <variableProperties datatype="NVARCHAR" length="4" mandatory="true">
+        <valueDomain type="AttributeValue">
+          <attribute name="KTOPL"/>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="Ledger">
+      <descriptions defaultDescription="Ledger"/>
+      <variableProperties datatype="NVARCHAR" length="2" mandatory="true">
+        <valueDomain type="AttributeValue">
+          <attribute name="RLDNR"/>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="Company_Code">
+      <descriptions defaultDescription="Company_Code"/>
+      <variableProperties datatype="NVARCHAR" length="4" mandatory="true">
+        <valueDomain type="AttributeValue">
+          <attribute name="RBUKRS"/>
+        </valueDomain>
+        <selection multiLine="true" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="Fiscal_Year">
+      <descriptions defaultDescription="Fiscal_Year"/>
+      <variableProperties datatype="VARCHAR" length="4" mandatory="true">
+        <valueDomain type="AttributeValue">
+          <attribute name="RYEAR"/>
+        </valueDomain>
+        <selection multiLine="false" type="Interval"/>
+      </variableProperties>
+    </variable>
+    <variable id="IP_1" parameter="true">
+      <descriptions defaultDescription="From Period:"/>
+      <variableProperties datatype="VARCHAR" length="2" mandatory="false" scale="0">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_FISC_CAL</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>ZFISCAL_PERIOD</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+        <defaultRange/>
+      </variableProperties>
+    </variable>
+    <variable id="IP_2" parameter="true">
+      <descriptions defaultDescription="To Period:"/>
+      <variableProperties datatype="VARCHAR" length="2" mandatory="false" scale="0">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_FISC_CAL</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>ZFISCAL_PERIOD</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+        <defaultRange/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="47"/>
+  <dataSources>
+    <DataSource id="ECC_FMGLFLEXT">
+      <resourceUri>ECC_FMGLFLEXT</resourceUri>
+    </DataSource>
+    <DataSource id="CA_DIM_GENERAL_LEDGER">
+      <resourceUri>plx_analytics::CA_DIM_GENERAL_LEDGER</resourceUri>
+    </DataSource>
+    <DataSource id="Projection_9$$$$ECC_FMGLFLEXT$$">
+      <resourceUri>ECC_FMGLFLEXT</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_5" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="RYEAR"/>
+        <viewAttribute id="DRCRK"/>
+        <viewAttribute id="RPMAX"/>
+        <viewAttribute id="RLDNR"/>
+        <viewAttribute id="RBUKRS"/>
+        <viewAttribute id="RACCT"/>
+        <viewAttribute id="HSLVT"/>
+        <viewAttribute id="HSL01"/>
+        <viewAttribute id="HSL02"/>
+        <viewAttribute id="HSL03"/>
+        <viewAttribute id="HSL04"/>
+        <viewAttribute id="HSL05"/>
+        <viewAttribute id="HSL06"/>
+        <viewAttribute id="HSL07"/>
+        <viewAttribute id="HSL08"/>
+        <viewAttribute id="HSL09"/>
+        <viewAttribute id="HSL10"/>
+        <viewAttribute id="HSL11"/>
+        <viewAttribute id="HSL12"/>
+        <viewAttribute id="HSL13"/>
+        <viewAttribute id="HSL14"/>
+        <viewAttribute id="HSL15"/>
+        <viewAttribute id="HSL16"/>
+        <viewAttribute id="ACTIV"/>
+        <viewAttribute id="AWTYP"/>
+        <viewAttribute id="RVERS"/>
+        <viewAttribute id="COST_ELEM"/>
+        <viewAttribute id="RBUSA"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="FIKRS"/>
+        <viewAttribute id="ZZKOSTL"/>
+        <viewAttribute id="SFAREA"/>
+        <viewAttribute id="SBUSA"/>
+        <viewAttribute id="RASSC"/>
+        <viewAttribute id="SFUND"/>
+        <viewAttribute id="SGRANT_NBR"/>
+        <viewAttribute id="RFUND"/>
+        <viewAttribute id="RGRANT_NBR"/>
+        <viewAttribute id="RFAREA"/>
+        <viewAttribute id="RTCUR"/>
+        <viewAttribute id="RRCTY"/>
+        <viewAttribute id="TSLVT"/>
+        <viewAttribute id="TSL01"/>
+        <viewAttribute id="TSL02"/>
+        <viewAttribute id="TSL03"/>
+        <viewAttribute id="TSL04"/>
+        <viewAttribute id="TSL05"/>
+        <viewAttribute id="TSL06"/>
+        <viewAttribute id="TSL07"/>
+        <viewAttribute id="TSL08"/>
+        <viewAttribute id="TSL09"/>
+        <viewAttribute id="TSL10"/>
+        <viewAttribute id="TSL11"/>
+        <viewAttribute id="TSL12"/>
+        <viewAttribute id="TSL13"/>
+        <viewAttribute id="TSL14"/>
+        <viewAttribute id="TSL15"/>
+        <viewAttribute id="TSL16"/>
+        <viewAttribute id="RMVCT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#ECC_FMGLFLEXT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="RYEAR" source="RYEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DRCRK" source="DRCRK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RPMAX" source="RPMAX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RLDNR" source="RLDNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RBUKRS" source="RBUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RACCT" source="RACCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSLVT" source="HSLVT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSL01" source="HSL01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSL02" source="HSL02"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSL03" source="HSL03"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSL04" source="HSL04"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSL05" source="HSL05"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSL06" source="HSL06"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSL07" source="HSL07"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSL08" source="HSL08"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSL09" source="HSL09"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSL10" source="HSL10"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSL11" source="HSL11"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSL12" source="HSL12"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSL13" source="HSL13"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSL14" source="HSL14"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSL15" source="HSL15"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSL16" source="HSL16"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTIV" source="ACTIV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWTYP" source="AWTYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RVERS" source="RVERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_ELEM" source="COST_ELEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RBUSA" source="RBUSA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIKRS" source="FIKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZKOSTL" source="ZZKOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SFAREA" source="SFAREA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SBUSA" source="SBUSA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RASSC" source="RASSC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SFUND" source="SFUND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SGRANT_NBR" source="SGRANT_NBR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RFUND" source="RFUND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RGRANT_NBR" source="RGRANT_NBR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RFAREA" source="RFAREA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RTCUR" source="RTCUR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RRCTY" source="RRCTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSLVT" source="TSLVT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL01" source="TSL01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL02" source="TSL02"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL03" source="TSL03"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL04" source="TSL04"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL05" source="TSL05"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL06" source="TSL06"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL07" source="TSL07"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL08" source="TSL08"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL09" source="TSL09"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL10" source="TSL10"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL11" source="TSL11"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL12" source="TSL12"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL13" source="TSL13"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL14" source="TSL14"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL15" source="TSL15"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL16" source="TSL16"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RMVCT" source="RMVCT"/>
+      </input>
+      <filter>&quot;DRCRK&quot;='S' AND &quot;RRCTY&quot; = 0</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_8" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="SAKNR"/>
+        <viewAttribute id="KTOPL"/>
+        <viewAttribute id="XLOEV"/>
+        <viewAttribute id="TXT20"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_DIM_GENERAL_LEDGER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAKNR" source="SAKNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KTOPL" source="KTOPL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XLOEV" source="XLOEV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TXT20" source="TXT20"/>
+      </input>
+      <filter>(&quot;BUKRS&quot; >='1000' AND &quot;BUKRS&quot;&lt;='3000') AND (in (&quot;KTOPL&quot;,'FOUN','HOSP','PLEX'))</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="RYEAR"/>
+        <viewAttribute id="RPMAX"/>
+        <viewAttribute id="RLDNR"/>
+        <viewAttribute id="RBUKRS"/>
+        <viewAttribute id="RACCT"/>
+        <viewAttribute id="COST_ELEM"/>
+        <viewAttribute id="RBUSA"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="ZZKOSTL"/>
+        <viewAttribute id="RTCUR"/>
+        <viewAttribute aggregationType="sum" id="TSLVT"/>
+        <viewAttribute aggregationType="sum" id="TSL01"/>
+        <viewAttribute aggregationType="sum" id="TSL02"/>
+        <viewAttribute aggregationType="sum" id="TSL03"/>
+        <viewAttribute aggregationType="sum" id="TSL04"/>
+        <viewAttribute aggregationType="sum" id="TSL05"/>
+        <viewAttribute aggregationType="sum" id="TSL06"/>
+        <viewAttribute aggregationType="sum" id="TSL07"/>
+        <viewAttribute aggregationType="sum" id="TSL08"/>
+        <viewAttribute aggregationType="sum" id="TSL09"/>
+        <viewAttribute aggregationType="sum" id="TSL10"/>
+        <viewAttribute aggregationType="sum" id="TSL11"/>
+        <viewAttribute aggregationType="sum" id="TSL12"/>
+        <viewAttribute aggregationType="sum" id="TSL13"/>
+        <viewAttribute aggregationType="sum" id="TSL14"/>
+        <viewAttribute aggregationType="sum" id="TSL15"/>
+        <viewAttribute aggregationType="sum" id="TSL16"/>
+        <viewAttribute aggregationType="sum" id="HSLVT"/>
+        <viewAttribute id="RMVCT"/>
+        <viewAttribute id="RFAREA"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Projection_5">
+        <mapping xsi:type="Calculation:AttributeMapping" target="RYEAR" source="RYEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RPMAX" source="RPMAX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RLDNR" source="RLDNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RBUKRS" source="RBUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RACCT" source="RACCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_ELEM" source="COST_ELEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RBUSA" source="RBUSA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZKOSTL" source="ZZKOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RTCUR" source="RTCUR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSLVT" source="TSLVT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL01" source="TSL01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL02" source="TSL02"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL03" source="TSL03"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL04" source="TSL04"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL05" source="TSL05"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL06" source="TSL06"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL07" source="TSL07"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL08" source="TSL08"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL09" source="TSL09"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL10" source="TSL10"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL11" source="TSL11"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL12" source="TSL12"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL13" source="TSL13"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL14" source="TSL14"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL15" source="TSL15"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL16" source="TSL16"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSLVT" source="HSLVT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RMVCT" source="RMVCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RFAREA" source="RFAREA"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_9" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="RYEAR"/>
+        <viewAttribute id="RPMAX"/>
+        <viewAttribute id="RLDNR"/>
+        <viewAttribute id="RBUKRS"/>
+        <viewAttribute id="RACCT"/>
+        <viewAttribute id="COST_ELEM"/>
+        <viewAttribute id="RBUSA"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="ZZKOSTL"/>
+        <viewAttribute id="RTCUR"/>
+        <viewAttribute id="TSLVT"/>
+        <viewAttribute id="TSL01"/>
+        <viewAttribute id="TSL02"/>
+        <viewAttribute id="TSL03"/>
+        <viewAttribute id="TSL04"/>
+        <viewAttribute id="TSL05"/>
+        <viewAttribute id="TSL06"/>
+        <viewAttribute id="TSL07"/>
+        <viewAttribute id="TSL08"/>
+        <viewAttribute id="TSL09"/>
+        <viewAttribute id="TSL10"/>
+        <viewAttribute id="TSL11"/>
+        <viewAttribute id="TSL12"/>
+        <viewAttribute id="TSL13"/>
+        <viewAttribute id="TSL14"/>
+        <viewAttribute id="TSL15"/>
+        <viewAttribute id="TSL16"/>
+        <viewAttribute id="HSLVT"/>
+        <viewAttribute id="DRCRK"/>
+        <viewAttribute id="HSL01"/>
+        <viewAttribute id="HSL02"/>
+        <viewAttribute id="HSL03"/>
+        <viewAttribute id="HSL04"/>
+        <viewAttribute id="HSL05"/>
+        <viewAttribute id="HSL06"/>
+        <viewAttribute id="HSL07"/>
+        <viewAttribute id="HSL08"/>
+        <viewAttribute id="HSL09"/>
+        <viewAttribute id="HSL10"/>
+        <viewAttribute id="HSL11"/>
+        <viewAttribute id="HSL12"/>
+        <viewAttribute id="HSL13"/>
+        <viewAttribute id="HSL14"/>
+        <viewAttribute id="HSL15"/>
+        <viewAttribute id="HSL16"/>
+        <viewAttribute id="ACTIV"/>
+        <viewAttribute id="AWTYP"/>
+        <viewAttribute id="RVERS"/>
+        <viewAttribute id="FIKRS"/>
+        <viewAttribute id="SFAREA"/>
+        <viewAttribute id="SBUSA"/>
+        <viewAttribute id="RASSC"/>
+        <viewAttribute id="SFUND"/>
+        <viewAttribute id="SGRANT_NBR"/>
+        <viewAttribute id="RFUND"/>
+        <viewAttribute id="RGRANT_NBR"/>
+        <viewAttribute id="RFAREA"/>
+        <viewAttribute id="RRCTY"/>
+        <viewAttribute id="RMVCT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Projection_9$$$$ECC_FMGLFLEXT$$">
+        <mapping xsi:type="Calculation:AttributeMapping" target="RYEAR" source="RYEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RPMAX" source="RPMAX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RLDNR" source="RLDNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RBUKRS" source="RBUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RACCT" source="RACCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_ELEM" source="COST_ELEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RBUSA" source="RBUSA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZKOSTL" source="ZZKOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RTCUR" source="RTCUR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSLVT" source="TSLVT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL01" source="TSL01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL02" source="TSL02"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL03" source="TSL03"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL04" source="TSL04"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL05" source="TSL05"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL06" source="TSL06"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL07" source="TSL07"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL08" source="TSL08"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL09" source="TSL09"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL10" source="TSL10"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL11" source="TSL11"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL12" source="TSL12"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL13" source="TSL13"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL14" source="TSL14"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL15" source="TSL15"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL16" source="TSL16"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSLVT" source="HSLVT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DRCRK" source="DRCRK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSL01" source="HSL01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSL02" source="HSL02"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSL03" source="HSL03"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSL04" source="HSL04"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSL05" source="HSL05"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSL06" source="HSL06"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSL07" source="HSL07"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSL08" source="HSL08"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSL09" source="HSL09"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSL10" source="HSL10"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSL11" source="HSL11"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSL12" source="HSL12"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSL13" source="HSL13"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSL14" source="HSL14"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSL15" source="HSL15"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSL16" source="HSL16"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTIV" source="ACTIV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWTYP" source="AWTYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RVERS" source="RVERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIKRS" source="FIKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SFAREA" source="SFAREA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SBUSA" source="SBUSA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RASSC" source="RASSC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SFUND" source="SFUND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SGRANT_NBR" source="SGRANT_NBR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RFUND" source="RFUND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RGRANT_NBR" source="RGRANT_NBR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RFAREA" source="RFAREA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RRCTY" source="RRCTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RMVCT" source="RMVCT"/>
+      </input>
+      <filter>&quot;DRCRK&quot; = 'H'   AND &quot;RRCTY&quot; = 0</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_2">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute aggregationType="sum" id="TSLVT"/>
+        <viewAttribute aggregationType="sum" id="TSL01"/>
+        <viewAttribute aggregationType="sum" id="TSL02"/>
+        <viewAttribute aggregationType="sum" id="TSL03"/>
+        <viewAttribute aggregationType="sum" id="TSL04"/>
+        <viewAttribute aggregationType="sum" id="TSL05"/>
+        <viewAttribute aggregationType="sum" id="TSL06"/>
+        <viewAttribute aggregationType="sum" id="TSL07"/>
+        <viewAttribute aggregationType="sum" id="TSL08"/>
+        <viewAttribute aggregationType="sum" id="TSL09"/>
+        <viewAttribute aggregationType="sum" id="TSL10"/>
+        <viewAttribute aggregationType="sum" id="TSL11"/>
+        <viewAttribute aggregationType="sum" id="TSL12"/>
+        <viewAttribute aggregationType="sum" id="TSL13"/>
+        <viewAttribute aggregationType="sum" id="TSL14"/>
+        <viewAttribute aggregationType="sum" id="TSL15"/>
+        <viewAttribute aggregationType="sum" id="TSL16"/>
+        <viewAttribute aggregationType="sum" id="HSLVT"/>
+        <viewAttribute id="RYEAR"/>
+        <viewAttribute id="RLDNR"/>
+        <viewAttribute id="RBUKRS"/>
+        <viewAttribute id="RACCT"/>
+        <viewAttribute id="RPMAX"/>
+        <viewAttribute id="COST_ELEM"/>
+        <viewAttribute id="RBUSA"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="ZZKOSTL"/>
+        <viewAttribute id="RTCUR"/>
+        <viewAttribute id="RMVCT"/>
+        <viewAttribute id="RRCTY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Projection_9">
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSLVT" source="TSLVT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL01" source="TSL01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL02" source="TSL02"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL03" source="TSL03"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL04" source="TSL04"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL05" source="TSL05"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL06" source="TSL06"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL07" source="TSL07"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL08" source="TSL08"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL09" source="TSL09"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL10" source="TSL10"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL11" source="TSL11"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL12" source="TSL12"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL13" source="TSL13"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL14" source="TSL14"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL15" source="TSL15"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL16" source="TSL16"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSLVT" source="HSLVT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RYEAR" source="RYEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RLDNR" source="RLDNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RBUKRS" source="RBUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RACCT" source="RACCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RPMAX" source="RPMAX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_ELEM" source="COST_ELEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RBUSA" source="RBUSA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZKOSTL" source="ZZKOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RTCUR" source="RTCUR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RMVCT" source="RMVCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RRCTY" source="RRCTY"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_5" cardinality="CN_N" joinOrder="OUTSIDE_IN" joinType="fullOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="RYEAR"/>
+        <viewAttribute id="RPMAX"/>
+        <viewAttribute id="RLDNR"/>
+        <viewAttribute id="COST_ELEM"/>
+        <viewAttribute id="RBUSA"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="ZZKOSTL"/>
+        <viewAttribute id="RTCUR"/>
+        <viewAttribute id="TSLVT"/>
+        <viewAttribute id="TSL01"/>
+        <viewAttribute id="TSL02"/>
+        <viewAttribute id="TSL03"/>
+        <viewAttribute id="TSL04"/>
+        <viewAttribute id="TSL05"/>
+        <viewAttribute id="TSL06"/>
+        <viewAttribute id="TSL07"/>
+        <viewAttribute id="TSL08"/>
+        <viewAttribute id="TSL09"/>
+        <viewAttribute id="TSL10"/>
+        <viewAttribute id="TSL11"/>
+        <viewAttribute id="TSL12"/>
+        <viewAttribute id="TSL13"/>
+        <viewAttribute id="TSL14"/>
+        <viewAttribute id="TSL15"/>
+        <viewAttribute id="TSL16"/>
+        <viewAttribute id="TSLVT_1"/>
+        <viewAttribute id="TSL01_1"/>
+        <viewAttribute id="TSL02_1"/>
+        <viewAttribute id="TSL03_1"/>
+        <viewAttribute id="TSL04_1"/>
+        <viewAttribute id="TSL05_1"/>
+        <viewAttribute id="TSL06_1"/>
+        <viewAttribute id="TSL07_1"/>
+        <viewAttribute id="TSL08_1"/>
+        <viewAttribute id="TSL09_1"/>
+        <viewAttribute id="TSL10_1"/>
+        <viewAttribute id="TSL11_1"/>
+        <viewAttribute id="TSL12_1"/>
+        <viewAttribute id="TSL13_1"/>
+        <viewAttribute id="TSL14_1"/>
+        <viewAttribute id="TSL15_1"/>
+        <viewAttribute id="TSL16_1"/>
+        <viewAttribute id="RBUKRS"/>
+        <viewAttribute id="RACCT"/>
+        <viewAttribute id="HSLVT"/>
+        <viewAttribute id="HSLVT_1"/>
+        <viewAttribute id="RFAREA"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Aggregation_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="RYEAR" source="RYEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RPMAX" source="RPMAX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RLDNR" source="RLDNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_ELEM" source="COST_ELEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RBUSA" source="RBUSA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZKOSTL" source="ZZKOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RTCUR" source="RTCUR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSLVT" source="TSLVT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL01" source="TSL01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL02" source="TSL02"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL03" source="TSL03"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL04" source="TSL04"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL05" source="TSL05"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL06" source="TSL06"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL07" source="TSL07"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL08" source="TSL08"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL09" source="TSL09"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL10" source="TSL10"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL11" source="TSL11"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL12" source="TSL12"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL13" source="TSL13"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL14" source="TSL14"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL15" source="TSL15"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL16" source="TSL16"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RBUKRS" source="RBUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RACCT" source="RACCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSLVT" source="HSLVT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RFAREA" source="RFAREA"/>
+      </input>
+      <input node="#Aggregation_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSLVT_1" source="TSLVT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL01_1" source="TSL01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL02_1" source="TSL02"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL03_1" source="TSL03"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL04_1" source="TSL04"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL05_1" source="TSL05"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL06_1" source="TSL06"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL07_1" source="TSL07"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL08_1" source="TSL08"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL09_1" source="TSL09"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL10_1" source="TSL10"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL11_1" source="TSL11"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL12_1" source="TSL12"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL13_1" source="TSL13"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL14_1" source="TSL14"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL15_1" source="TSL15"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL16_1" source="TSL16"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSLVT_1" source="HSLVT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RYEAR" source="RYEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RLDNR" source="RLDNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RBUKRS" source="RBUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RACCT" source="RACCT"/>
+      </input>
+      <joinAttribute name="RYEAR"/>
+      <joinAttribute name="RLDNR"/>
+      <joinAttribute name="RBUKRS"/>
+      <joinAttribute name="RACCT"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_4" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="RYEAR"/>
+        <viewAttribute id="RPMAX"/>
+        <viewAttribute id="RLDNR"/>
+        <viewAttribute id="COST_ELEM"/>
+        <viewAttribute id="RBUSA"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="ZZKOSTL"/>
+        <viewAttribute id="RTCUR"/>
+        <viewAttribute id="TSLVT"/>
+        <viewAttribute id="TSL01"/>
+        <viewAttribute id="TSL02"/>
+        <viewAttribute id="TSL03"/>
+        <viewAttribute id="TSL04"/>
+        <viewAttribute id="TSL05"/>
+        <viewAttribute id="TSL06"/>
+        <viewAttribute id="TSL07"/>
+        <viewAttribute id="TSL08"/>
+        <viewAttribute id="TSL09"/>
+        <viewAttribute id="TSL10"/>
+        <viewAttribute id="TSL11"/>
+        <viewAttribute id="TSL12"/>
+        <viewAttribute id="TSL13"/>
+        <viewAttribute id="TSL14"/>
+        <viewAttribute id="TSL15"/>
+        <viewAttribute id="TSL16"/>
+        <viewAttribute id="TSLVT_1"/>
+        <viewAttribute id="TSL01_1"/>
+        <viewAttribute id="TSL02_1"/>
+        <viewAttribute id="TSL03_1"/>
+        <viewAttribute id="TSL04_1"/>
+        <viewAttribute id="TSL05_1"/>
+        <viewAttribute id="TSL06_1"/>
+        <viewAttribute id="TSL07_1"/>
+        <viewAttribute id="TSL08_1"/>
+        <viewAttribute id="TSL09_1"/>
+        <viewAttribute id="TSL10_1"/>
+        <viewAttribute id="TSL11_1"/>
+        <viewAttribute id="TSL12_1"/>
+        <viewAttribute id="TSL13_1"/>
+        <viewAttribute id="TSL14_1"/>
+        <viewAttribute id="TSL15_1"/>
+        <viewAttribute id="TSL16_1"/>
+        <viewAttribute id="KTOPL"/>
+        <viewAttribute id="XLOEV"/>
+        <viewAttribute id="TXT20"/>
+        <viewAttribute id="RBUKRS"/>
+        <viewAttribute id="RACCT"/>
+        <viewAttribute id="HSLVT"/>
+        <viewAttribute id="HSLVT_1"/>
+        <viewAttribute id="RFAREA"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Join_5">
+        <mapping xsi:type="Calculation:AttributeMapping" target="RYEAR" source="RYEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RPMAX" source="RPMAX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RLDNR" source="RLDNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_ELEM" source="COST_ELEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RBUSA" source="RBUSA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZKOSTL" source="ZZKOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RTCUR" source="RTCUR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSLVT" source="TSLVT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL01" source="TSL01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL02" source="TSL02"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL03" source="TSL03"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL04" source="TSL04"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL05" source="TSL05"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL06" source="TSL06"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL07" source="TSL07"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL08" source="TSL08"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL09" source="TSL09"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL10" source="TSL10"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL11" source="TSL11"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL12" source="TSL12"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL13" source="TSL13"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL14" source="TSL14"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL15" source="TSL15"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL16" source="TSL16"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSLVT_1" source="TSLVT_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL01_1" source="TSL01_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL02_1" source="TSL02_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL03_1" source="TSL03_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL04_1" source="TSL04_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL05_1" source="TSL05_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL06_1" source="TSL06_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL07_1" source="TSL07_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL08_1" source="TSL08_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL09_1" source="TSL09_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL10_1" source="TSL10_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL11_1" source="TSL11_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL12_1" source="TSL12_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL13_1" source="TSL13_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL14_1" source="TSL14_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL15_1" source="TSL15_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL16_1" source="TSL16_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RBUKRS" source="RBUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RACCT" source="RACCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSLVT" source="HSLVT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSLVT_1" source="HSLVT_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RFAREA" source="RFAREA"/>
+      </input>
+      <input node="#Projection_8">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KTOPL" source="KTOPL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XLOEV" source="XLOEV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TXT20" source="TXT20"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RBUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RACCT" source="SAKNR"/>
+      </input>
+      <joinAttribute name="RBUKRS"/>
+      <joinAttribute name="RACCT"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_7">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="RYEAR"/>
+        <viewAttribute id="RPMAX"/>
+        <viewAttribute id="RLDNR"/>
+        <viewAttribute id="COST_ELEM"/>
+        <viewAttribute id="RBUSA"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="ZZKOSTL"/>
+        <viewAttribute id="RTCUR"/>
+        <viewAttribute id="TSLVT"/>
+        <viewAttribute id="TSL01"/>
+        <viewAttribute id="TSL02"/>
+        <viewAttribute id="TSL03"/>
+        <viewAttribute id="TSL04"/>
+        <viewAttribute id="TSL05"/>
+        <viewAttribute id="TSL06"/>
+        <viewAttribute id="TSL07"/>
+        <viewAttribute id="TSL08"/>
+        <viewAttribute id="TSL09"/>
+        <viewAttribute id="TSL10"/>
+        <viewAttribute id="TSL11"/>
+        <viewAttribute id="TSL12"/>
+        <viewAttribute id="TSL13"/>
+        <viewAttribute id="TSL14"/>
+        <viewAttribute id="TSL15"/>
+        <viewAttribute id="TSL16"/>
+        <viewAttribute id="TSLVT_1"/>
+        <viewAttribute id="TSL01_1"/>
+        <viewAttribute id="TSL02_1"/>
+        <viewAttribute id="TSL03_1"/>
+        <viewAttribute id="TSL04_1"/>
+        <viewAttribute id="TSL05_1"/>
+        <viewAttribute id="TSL06_1"/>
+        <viewAttribute id="TSL07_1"/>
+        <viewAttribute id="TSL08_1"/>
+        <viewAttribute id="TSL09_1"/>
+        <viewAttribute id="TSL10_1"/>
+        <viewAttribute id="TSL11_1"/>
+        <viewAttribute id="TSL12_1"/>
+        <viewAttribute id="TSL13_1"/>
+        <viewAttribute id="TSL14_1"/>
+        <viewAttribute id="TSL15_1"/>
+        <viewAttribute id="TSL16_1"/>
+        <viewAttribute id="KTOPL"/>
+        <viewAttribute id="XLOEV"/>
+        <viewAttribute id="TXT20"/>
+        <viewAttribute id="RBUKRS"/>
+        <viewAttribute id="RACCT"/>
+        <viewAttribute id="HSLVT"/>
+        <viewAttribute id="HSLVT_1"/>
+        <viewAttribute id="RFAREA"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Join_4">
+        <mapping xsi:type="Calculation:AttributeMapping" target="RYEAR" source="RYEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RPMAX" source="RPMAX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RLDNR" source="RLDNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_ELEM" source="COST_ELEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RBUSA" source="RBUSA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZKOSTL" source="ZZKOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RTCUR" source="RTCUR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSLVT" source="TSLVT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL01" source="TSL01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL02" source="TSL02"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL03" source="TSL03"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL04" source="TSL04"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL05" source="TSL05"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL06" source="TSL06"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL07" source="TSL07"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL08" source="TSL08"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL09" source="TSL09"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL10" source="TSL10"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL11" source="TSL11"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL12" source="TSL12"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL13" source="TSL13"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL14" source="TSL14"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL15" source="TSL15"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL16" source="TSL16"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSLVT_1" source="TSLVT_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL01_1" source="TSL01_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL02_1" source="TSL02_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL03_1" source="TSL03_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL04_1" source="TSL04_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL05_1" source="TSL05_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL06_1" source="TSL06_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL07_1" source="TSL07_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL08_1" source="TSL08_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL09_1" source="TSL09_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL10_1" source="TSL10_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL11_1" source="TSL11_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL12_1" source="TSL12_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL13_1" source="TSL13_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL14_1" source="TSL14_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL15_1" source="TSL15_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TSL16_1" source="TSL16_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KTOPL" source="KTOPL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XLOEV" source="XLOEV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TXT20" source="TXT20"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RBUKRS" source="RBUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RACCT" source="RACCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSLVT" source="HSLVT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSLVT_1" source="HSLVT_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RFAREA" source="RFAREA"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="Projection_7">
+    <descriptions/>
+    <attributes>
+      <attribute id="RYEAR" order="7" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Year"/>
+        <localVariable>#Fiscal_Year</localVariable>
+        <keyMapping columnObjectName="Projection_7" columnName="RYEAR"/>
+      </attribute>
+      <attribute id="RPMAX" order="8" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Period"/>
+        <keyMapping columnObjectName="Projection_7" columnName="RPMAX"/>
+      </attribute>
+      <attribute id="RLDNR" order="9" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Ledger in General Ledger Accounting"/>
+        <localVariable>#Ledger</localVariable>
+        <keyMapping columnObjectName="Projection_7" columnName="RLDNR"/>
+      </attribute>
+      <attribute id="COST_ELEM" order="10" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cost Element"/>
+        <keyMapping columnObjectName="Projection_7" columnName="COST_ELEM"/>
+      </attribute>
+      <attribute id="RBUSA" order="11" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Business Area"/>
+        <keyMapping columnObjectName="Projection_7" columnName="RBUSA"/>
+      </attribute>
+      <attribute id="KOKRS" order="12" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Controlling Area"/>
+        <keyMapping columnObjectName="Projection_7" columnName="KOKRS"/>
+      </attribute>
+      <attribute id="ZZKOSTL" order="13" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cost Center"/>
+        <keyMapping columnObjectName="Projection_7" columnName="ZZKOSTL"/>
+      </attribute>
+      <attribute id="RTCUR" order="14" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Currency Key"/>
+        <keyMapping columnObjectName="Projection_7" columnName="RTCUR"/>
+      </attribute>
+      <attribute id="KTOPL" order="49" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Chart of Accounts"/>
+        <localVariable>#Chart_of_Account</localVariable>
+        <keyMapping columnObjectName="Projection_7" columnName="KTOPL"/>
+      </attribute>
+      <attribute id="XLOEV" order="50" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Indicator: Account marked for deletion?"/>
+        <keyMapping columnObjectName="Projection_7" columnName="XLOEV"/>
+      </attribute>
+      <attribute id="TXT20" order="51" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="G/L account short text"/>
+        <keyMapping columnObjectName="Projection_7" columnName="TXT20"/>
+      </attribute>
+      <attribute id="RBUKRS" order="53" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Company Code"/>
+        <localVariable>#Company_Code</localVariable>
+        <keyMapping columnObjectName="Projection_7" columnName="RBUKRS"/>
+      </attribute>
+      <attribute id="RACCT" order="54" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Account Number"/>
+        <keyMapping columnObjectName="Projection_7" columnName="RACCT"/>
+      </attribute>
+      <attribute id="RFAREA" order="60" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Functional Area"/>
+        <keyMapping columnObjectName="Projection_7" columnName="RFAREA"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="TSLVT" hidden="true" order="15" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Balance carried forward in transaction currency"/>
+        <measureMapping columnObjectName="Projection_7" columnName="TSLVT"/>
+      </measure>
+      <measure id="TSL01" hidden="true" order="16" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total of transactions of the period in transaction currency"/>
+        <measureMapping columnObjectName="Projection_7" columnName="TSL01"/>
+      </measure>
+      <measure id="TSL02" hidden="true" order="17" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total of transactions of the period in transaction currency"/>
+        <measureMapping columnObjectName="Projection_7" columnName="TSL02"/>
+      </measure>
+      <measure id="TSL03" hidden="true" order="18" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total of transactions of the period in transaction currency"/>
+        <measureMapping columnObjectName="Projection_7" columnName="TSL03"/>
+      </measure>
+      <measure id="TSL04" hidden="true" order="19" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total of transactions of the period in transaction currency"/>
+        <measureMapping columnObjectName="Projection_7" columnName="TSL04"/>
+      </measure>
+      <measure id="TSL05" hidden="true" order="20" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total of transactions of the period in transaction currency"/>
+        <measureMapping columnObjectName="Projection_7" columnName="TSL05"/>
+      </measure>
+      <measure id="TSL06" hidden="true" order="21" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total of transactions of the period in transaction currency"/>
+        <measureMapping columnObjectName="Projection_7" columnName="TSL06"/>
+      </measure>
+      <measure id="TSL07" hidden="true" order="22" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total of transactions of the period in transaction currency"/>
+        <measureMapping columnObjectName="Projection_7" columnName="TSL07"/>
+      </measure>
+      <measure id="TSL08" hidden="true" order="23" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total of transactions of the period in transaction currency"/>
+        <measureMapping columnObjectName="Projection_7" columnName="TSL08"/>
+      </measure>
+      <measure id="TSL09" hidden="true" order="24" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total of transactions of the period in transaction currency"/>
+        <measureMapping columnObjectName="Projection_7" columnName="TSL09"/>
+      </measure>
+      <measure id="TSL10" hidden="true" order="25" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total of transactions of the period in transaction currency"/>
+        <measureMapping columnObjectName="Projection_7" columnName="TSL10"/>
+      </measure>
+      <measure id="TSL11" hidden="true" order="26" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total of transactions of the period in transaction currency"/>
+        <measureMapping columnObjectName="Projection_7" columnName="TSL11"/>
+      </measure>
+      <measure id="TSL12" hidden="true" order="27" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total of transactions of the period in transaction currency"/>
+        <measureMapping columnObjectName="Projection_7" columnName="TSL12"/>
+      </measure>
+      <measure id="TSL13" hidden="true" order="28" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total of transactions of the period in transaction currency"/>
+        <measureMapping columnObjectName="Projection_7" columnName="TSL13"/>
+      </measure>
+      <measure id="TSL14" hidden="true" order="29" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total of transactions of the period in transaction currency"/>
+        <measureMapping columnObjectName="Projection_7" columnName="TSL14"/>
+      </measure>
+      <measure id="TSL15" hidden="true" order="30" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total of transactions of the period in transaction currency"/>
+        <measureMapping columnObjectName="Projection_7" columnName="TSL15"/>
+      </measure>
+      <measure id="TSL16" hidden="true" order="31" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total of transactions of the period in transaction currency"/>
+        <measureMapping columnObjectName="Projection_7" columnName="TSL16"/>
+      </measure>
+      <measure id="TSLVT_1" hidden="true" order="32" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Balance carried forward in transaction currency"/>
+        <measureMapping columnObjectName="Projection_7" columnName="TSLVT_1"/>
+      </measure>
+      <measure id="TSL01_1" hidden="true" order="33" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total of transactions of the period in transaction currency"/>
+        <measureMapping columnObjectName="Projection_7" columnName="TSL01_1"/>
+      </measure>
+      <measure id="TSL02_1" hidden="true" order="34" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total of transactions of the period in transaction currency"/>
+        <measureMapping columnObjectName="Projection_7" columnName="TSL02_1"/>
+      </measure>
+      <measure id="TSL03_1" hidden="true" order="35" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total of transactions of the period in transaction currency"/>
+        <measureMapping columnObjectName="Projection_7" columnName="TSL03_1"/>
+      </measure>
+      <measure id="TSL04_1" hidden="true" order="36" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total of transactions of the period in transaction currency"/>
+        <measureMapping columnObjectName="Projection_7" columnName="TSL04_1"/>
+      </measure>
+      <measure id="TSL05_1" hidden="true" order="37" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total of transactions of the period in transaction currency"/>
+        <measureMapping columnObjectName="Projection_7" columnName="TSL05_1"/>
+      </measure>
+      <measure id="TSL06_1" hidden="true" order="38" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total of transactions of the period in transaction currency"/>
+        <measureMapping columnObjectName="Projection_7" columnName="TSL06_1"/>
+      </measure>
+      <measure id="TSL07_1" hidden="true" order="39" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total of transactions of the period in transaction currency"/>
+        <measureMapping columnObjectName="Projection_7" columnName="TSL07_1"/>
+      </measure>
+      <measure id="TSL08_1" hidden="true" order="40" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total of transactions of the period in transaction currency"/>
+        <measureMapping columnObjectName="Projection_7" columnName="TSL08_1"/>
+      </measure>
+      <measure id="TSL09_1" hidden="true" order="41" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total of transactions of the period in transaction currency"/>
+        <measureMapping columnObjectName="Projection_7" columnName="TSL09_1"/>
+      </measure>
+      <measure id="TSL10_1" hidden="true" order="42" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total of transactions of the period in transaction currency"/>
+        <measureMapping columnObjectName="Projection_7" columnName="TSL10_1"/>
+      </measure>
+      <measure id="TSL11_1" hidden="true" order="43" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total of transactions of the period in transaction currency"/>
+        <measureMapping columnObjectName="Projection_7" columnName="TSL11_1"/>
+      </measure>
+      <measure id="TSL12_1" hidden="true" order="44" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total of transactions of the period in transaction currency"/>
+        <measureMapping columnObjectName="Projection_7" columnName="TSL12_1"/>
+      </measure>
+      <measure id="TSL13_1" hidden="true" order="45" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total of transactions of the period in transaction currency"/>
+        <measureMapping columnObjectName="Projection_7" columnName="TSL13_1"/>
+      </measure>
+      <measure id="TSL14_1" hidden="true" order="46" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total of transactions of the period in transaction currency"/>
+        <measureMapping columnObjectName="Projection_7" columnName="TSL14_1"/>
+      </measure>
+      <measure id="TSL15_1" hidden="true" order="47" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total of transactions of the period in transaction currency"/>
+        <measureMapping columnObjectName="Projection_7" columnName="TSL15_1"/>
+      </measure>
+      <measure id="TSL16_1" hidden="true" order="48" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total of transactions of the period in transaction currency"/>
+        <measureMapping columnObjectName="Projection_7" columnName="TSL16_1"/>
+      </measure>
+      <measure id="HSLVT" hidden="true" order="55" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Balance carried forward in local currency"/>
+        <measureMapping columnObjectName="Projection_7" columnName="HSLVT"/>
+      </measure>
+      <measure id="HSLVT_1" hidden="true" order="56" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Balance carried forward in local currency"/>
+        <measureMapping columnObjectName="Projection_7" columnName="HSLVT_1"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures>
+      <measure id="TOT_AMT" hidden="false" order="1" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="23" scale="3">
+        <descriptions defaultDescription="TOT_AMT"/>
+        <formula>&quot;TSL01&quot;+&quot;TSL02&quot;+&quot;TSL03&quot;+&quot;TSL04&quot;+&quot;TSL05&quot;+&quot;TSL06&quot;+&quot;TSL07&quot;+&quot;TSL08&quot;+&quot;TSL09&quot;+&quot;TSL10&quot;+&quot;TSL11&quot;+&quot;TSL12&quot;+&quot;TSL13&quot;+&quot;TSL14&quot;+&quot;TSL15&quot;+&quot;TSL16&quot;</formula>
+      </measure>
+      <measure id="DEBIT_CUM" hidden="false" order="2" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="20" scale="3">
+        <descriptions defaultDescription="Debit Total"/>
+        <formula> &quot;DYNAMIC_DEB_AMT_TO&quot; </formula>
+      </measure>
+      <measure id="CREDIT_CUM" hidden="false" order="3" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="20" scale="3">
+        <descriptions defaultDescription="Credit Total"/>
+        <formula>&quot;DYNAMIC_CRED_AMT&quot;</formula>
+      </measure>
+      <measure id="DEBIT_BAL_CUM" hidden="false" order="4" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="20" scale="3">
+        <descriptions defaultDescription="Cumulated Debit Balance"/>
+        <formula>IF(&quot;OPENING_BALANCE&quot;+&quot;DYNAMIC_DEB_AMT_TO&quot;+&quot;DYNAMIC_CRED_AMT_TO&quot;> 0, &quot;OPENING_BALANCE&quot;+&quot;DYNAMIC_DEB_AMT_TO&quot;+&quot;DYNAMIC_CRED_AMT_TO&quot;, 0)</formula>
+      </measure>
+      <measure id="CREDIT_BAL_CUM" hidden="false" order="5" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="20" scale="3">
+        <descriptions defaultDescription="Cumulative Credit Balance"/>
+        <formula>IF(&quot;OPENING_BALANCE&quot;+&quot;DYNAMIC_DEB_AMT_TO&quot;+&quot;DYNAMIC_CRED_AMT_TO&quot;&lt;= 0, &quot;OPENING_BALANCE&quot;+&quot;DYNAMIC_DEB_AMT_TO&quot;+&quot;DYNAMIC_CRED_AMT_TO&quot;, 0)</formula>
+      </measure>
+      <measure id="CUM_BALANCE" hidden="false" order="6" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="20" scale="3">
+        <descriptions defaultDescription="Cumulatied Balance"/>
+        <formula>&quot;DEBIT_BAL_CUM&quot;+&quot;CREDIT_BAL_CUM&quot;</formula>
+      </measure>
+      <measure id="TOT_AMT_H" hidden="false" order="52" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="23" scale="3">
+        <descriptions defaultDescription="TOT_AMT_H"/>
+        <formula>&quot;TSL01_1&quot;+&quot;TSL02_1&quot;+&quot;TSL03_1&quot;+&quot;TSL04_1&quot;+&quot;TSL05_1&quot;+&quot;TSL06_1&quot;+&quot;TSL07_1&quot;+&quot;TSL08_1&quot;+&quot;TSL09_1&quot;+&quot;TSL10_1&quot;+&quot;TSL11_1&quot;+&quot;TSL12_1&quot;+&quot;TSL13_1&quot;+&quot;TSL14_1&quot;+&quot;TSL15_1&quot;+&quot;TSL16_1&quot;</formula>
+      </measure>
+      <measure id="OPENING_BALANCE" hidden="false" order="57" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="23" scale="3">
+        <descriptions defaultDescription="Opening Balance"/>
+        <formula>&quot;TSLVT&quot;+&quot;TSLVT_1&quot;</formula>
+      </measure>
+      <measure id="DYNAMIC_DEB_AMT_TO" hidden="true" order="58" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="23" scale="3">
+        <descriptions defaultDescription="Dynamic Debit Amt TO"/>
+        <formula>case(trim('$$IP_2$$'),'01',&quot;TSL01&quot;,
+'02',&quot;TSL01&quot; +&quot;TSL02&quot;,
+'03',&quot;TSL01&quot; +&quot;TSL02&quot;+&quot;TSL03&quot;,
+'04',&quot;TSL01&quot; +&quot;TSL02&quot;+&quot;TSL03&quot;+&quot;TSL04&quot;,
+'05',&quot;TSL01&quot; +&quot;TSL02&quot;+&quot;TSL03&quot;+&quot;TSL04&quot;+&quot;TSL05&quot;,
+'06',&quot;TSL01&quot; +&quot;TSL02&quot;+&quot;TSL03&quot;+&quot;TSL04&quot;+&quot;TSL05&quot;+&quot;TSL06&quot;,
+'07',&quot;TSL01&quot; +&quot;TSL02&quot;+&quot;TSL03&quot;+&quot;TSL04&quot;+&quot;TSL05&quot;+&quot;TSL06&quot;+&quot;TSL07&quot;,
+'08',&quot;TSL01&quot; +&quot;TSL02&quot;+&quot;TSL03&quot;+&quot;TSL04&quot;+&quot;TSL05&quot;+&quot;TSL06&quot;+&quot;TSL07&quot;+&quot;TSL08&quot;,
+'09',&quot;TSL01&quot; +&quot;TSL02&quot;+&quot;TSL03&quot;+&quot;TSL04&quot;+&quot;TSL05&quot;+&quot;TSL06&quot;+&quot;TSL07&quot;+&quot;TSL09&quot;+&quot;TSL08&quot;,
+'10',&quot;TSL01&quot; +&quot;TSL02&quot;+&quot;TSL03&quot;+&quot;TSL04&quot;+&quot;TSL05&quot;+&quot;TSL06&quot;+&quot;TSL07&quot;+&quot;TSL10&quot;+&quot;TSL09&quot;+&quot;TSL08&quot;,
+'11',&quot;TSL01&quot; +&quot;TSL02&quot;+&quot;TSL03&quot;+&quot;TSL04&quot;+&quot;TSL05&quot;+&quot;TSL06&quot;+&quot;TSL07&quot;+&quot;TSL11&quot;+&quot;TSL10&quot;+&quot;TSL09&quot;+&quot;TSL08&quot;,
+'12',&quot;TSL01&quot; +&quot;TSL02&quot;+&quot;TSL03&quot;+&quot;TSL04&quot;+&quot;TSL05&quot;+&quot;TSL06&quot;+&quot;TSL07&quot;+&quot;TSL16&quot;+&quot;TSL15&quot;+&quot;TSL14&quot;+&quot;TSL13&quot;+&quot;TSL12&quot;+&quot;TSL11&quot;+&quot;TSL10&quot;+&quot;TSL09&quot;+&quot;TSL08&quot;
+, 6)</formula>
+      </measure>
+      <measure id="DYNAMIC_CRED_AMT" hidden="false" order="59" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="23" scale="3">
+        <descriptions defaultDescription="Dynamic Credit Amt"/>
+        <formula>&quot;DYNAMIC_CRED_AMT_TO&quot;-&quot;DYNAMIC_CRED_AMT_FROM&quot;</formula>
+      </measure>
+      <measure id="DYNAMIC_DEB_AMT_FROM" hidden="true" order="61" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="23" scale="3">
+        <descriptions defaultDescription="Dynamic Debit Amt From"/>
+        <formula>case(trim('$$IP_1$$'),'01',0,
+'02',&quot;TSL01&quot; ,
+'03',&quot;TSL01&quot; +&quot;TSL02&quot;,
+'04',&quot;TSL01&quot; +&quot;TSL02&quot;+&quot;TSL03&quot;,
+'05',&quot;TSL01&quot; +&quot;TSL02&quot;+&quot;TSL03&quot;+&quot;TSL04&quot;,
+'06',&quot;TSL01&quot; +&quot;TSL02&quot;+&quot;TSL03&quot;+&quot;TSL04&quot;+&quot;TSL05&quot;,
+'07',&quot;TSL01&quot; +&quot;TSL02&quot;+&quot;TSL03&quot;+&quot;TSL04&quot;+&quot;TSL05&quot;+&quot;TSL06&quot;,
+'08',&quot;TSL01&quot; +&quot;TSL02&quot;+&quot;TSL03&quot;+&quot;TSL04&quot;+&quot;TSL05&quot;+&quot;TSL06&quot;+&quot;TSL07&quot;,
+'09',&quot;TSL01&quot; +&quot;TSL02&quot;+&quot;TSL03&quot;+&quot;TSL04&quot;+&quot;TSL05&quot;+&quot;TSL06&quot;+&quot;TSL07&quot;+&quot;TSL09&quot;,
+'10',&quot;TSL01&quot; +&quot;TSL02&quot;+&quot;TSL03&quot;+&quot;TSL04&quot;+&quot;TSL05&quot;+&quot;TSL06&quot;+&quot;TSL07&quot;+&quot;TSL09&quot;+&quot;TSL08&quot;,
+'11',&quot;TSL01&quot; +&quot;TSL02&quot;+&quot;TSL03&quot;+&quot;TSL04&quot;+&quot;TSL05&quot;+&quot;TSL06&quot;+&quot;TSL07&quot;+&quot;TSL10&quot;+&quot;TSL09&quot;+&quot;TSL08&quot;,
+'12',&quot;TSL01&quot; +&quot;TSL02&quot;+&quot;TSL03&quot;+&quot;TSL04&quot;+&quot;TSL05&quot;+&quot;TSL06&quot;+&quot;TSL07&quot;+&quot;TSL11&quot;+&quot;TSL10&quot;+&quot;TSL09&quot;+&quot;TSL08&quot;
+, 0)</formula>
+      </measure>
+      <measure id="DYNAMIC_DEBIT_AMT" hidden="false" order="62" aggregationType="sum" engineAggregation="sum" measureType="simple" aggregatable="true" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="23" scale="3">
+        <descriptions defaultDescription="Dynamic Debit Amt"/>
+        <formula>&quot;DYNAMIC_DEB_AMT_TO&quot;-&quot;DYNAMIC_DEB_AMT_FROM&quot;</formula>
+      </measure>
+      <measure id="BALANCE_PREV_DEBIT" hidden="true" order="63" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="23" scale="3">
+        <descriptions defaultDescription="Dynamic Debit Amt From"/>
+        <formula>&quot;DYNAMIC_DEB_AMT_FROM&quot;</formula>
+      </measure>
+      <measure id="DYNAMIC_CRED_AMT_FROM" hidden="true" order="64" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="23" scale="3">
+        <descriptions defaultDescription="Dynamic Credit Amt"/>
+        <formula>case(trim('$$IP_1$$'),'01',0,
+'02',&quot;TSL01_1&quot; ,
+'03',&quot;TSL01_1&quot; +&quot;TSL02_1&quot;,
+'04',&quot;TSL01_1&quot; +&quot;TSL02_1&quot;+&quot;TSL03_1&quot;,
+'05',&quot;TSL01_1&quot; +&quot;TSL02_1&quot;+&quot;TSL03_1&quot;+&quot;TSL04_1&quot;,
+'06',&quot;TSL01_1&quot; +&quot;TSL02_1&quot;+&quot;TSL03_1&quot;+&quot;TSL04_1&quot;+&quot;TSL05_1&quot;,
+'07',&quot;TSL01_1&quot; +&quot;TSL02_1&quot;+&quot;TSL03_1&quot;+&quot;TSL04_1&quot;+&quot;TSL05_1&quot;+&quot;TSL06_1&quot;,
+'08',&quot;TSL01_1&quot; +&quot;TSL02_1&quot;+&quot;TSL03_1&quot;+&quot;TSL04_1&quot;+&quot;TSL05_1&quot;+&quot;TSL06_1&quot;+&quot;TSL07_1&quot;,
+'09',&quot;TSL01_1&quot; +&quot;TSL02_1&quot;+&quot;TSL03_1&quot;+&quot;TSL04_1&quot;+&quot;TSL05_1&quot;+&quot;TSL06_1&quot;+&quot;TSL07_1&quot;+&quot;TSL08_1&quot;,
+'10',&quot;TSL01_1&quot; +&quot;TSL02_1&quot;+&quot;TSL03_1&quot;+&quot;TSL04_1&quot;+&quot;TSL05_1&quot;+&quot;TSL06_1&quot;+&quot;TSL07_1&quot;+&quot;TSL09_1&quot;+&quot;TSL08_1&quot;,
+'11',&quot;TSL01_1&quot; +&quot;TSL02_1&quot;+&quot;TSL03_1&quot;+&quot;TSL04_1&quot;+&quot;TSL05_1&quot;+&quot;TSL06_1&quot;+&quot;TSL07_1&quot;+&quot;TSL10_1&quot;+&quot;TSL09_1&quot;+&quot;TSL08_1&quot;,
+'12',&quot;TSL01_1&quot; +&quot;TSL02_1&quot;+&quot;TSL03_1&quot;+&quot;TSL04_1&quot;+&quot;TSL05_1&quot;+&quot;TSL06_1&quot;+&quot;TSL07_1&quot;+&quot;TSL11_1&quot;+&quot;TSL10_1&quot;+&quot;TSL09_1&quot;+&quot;TSL08_1&quot;
+, 0)</formula>
+      </measure>
+      <measure id="DYNAMIC_CRED_AMT_TO" hidden="true" order="65" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="23" scale="3">
+        <descriptions defaultDescription="Dynamic Credit Amt"/>
+        <formula>case(trim('$$IP_2$$'),'01',&quot;TSL01_1&quot;,
+'02',&quot;TSL01_1&quot; +&quot;TSL02_1&quot;,
+'03',&quot;TSL01_1&quot; +&quot;TSL02_1&quot;+&quot;TSL03_1&quot;,
+'04',&quot;TSL01_1&quot; +&quot;TSL02_1&quot;+&quot;TSL03_1&quot;+&quot;TSL04_1&quot;,
+'05',&quot;TSL01_1&quot; +&quot;TSL02_1&quot;+&quot;TSL03_1&quot;+&quot;TSL04_1&quot;+&quot;TSL05_1&quot;,
+'06',&quot;TSL01_1&quot; +&quot;TSL02_1&quot;+&quot;TSL03_1&quot;+&quot;TSL04_1&quot;+&quot;TSL05_1&quot;+&quot;TSL06_1&quot;,
+'07',&quot;TSL01_1&quot; +&quot;TSL02_1&quot;+&quot;TSL03_1&quot;+&quot;TSL04_1&quot;+&quot;TSL05_1&quot;+&quot;TSL06_1&quot;+&quot;TSL07_1&quot;,
+'08',&quot;TSL01_1&quot; +&quot;TSL02_1&quot;+&quot;TSL03_1&quot;+&quot;TSL04_1&quot;+&quot;TSL05_1&quot;+&quot;TSL06_1&quot;+&quot;TSL07_1&quot;+&quot;TSL08_1&quot;,
+'09',&quot;TSL01_1&quot; +&quot;TSL02_1&quot;+&quot;TSL03_1&quot;+&quot;TSL04_1&quot;+&quot;TSL05_1&quot;+&quot;TSL06_1&quot;+&quot;TSL07_1&quot;+&quot;TSL09_1&quot;+&quot;TSL08_1&quot;,
+'10',&quot;TSL01_1&quot; +&quot;TSL02_1&quot;+&quot;TSL03_1&quot;+&quot;TSL04_1&quot;+&quot;TSL05_1&quot;+&quot;TSL06_1&quot;+&quot;TSL07_1&quot;+&quot;TSL10_1&quot;+&quot;TSL09_1&quot;+&quot;TSL08_1&quot;,
+'11',&quot;TSL01_1&quot; +&quot;TSL02_1&quot;+&quot;TSL03_1&quot;+&quot;TSL04_1&quot;+&quot;TSL05_1&quot;+&quot;TSL06_1&quot;+&quot;TSL07_1&quot;+&quot;TSL11_1&quot;+&quot;TSL10_1&quot;+&quot;TSL09_1&quot;+&quot;TSL08_1&quot;,
+'12',&quot;TSL01_1&quot; +&quot;TSL02_1&quot;+&quot;TSL03_1&quot;+&quot;TSL04_1&quot;+&quot;TSL05_1&quot;+&quot;TSL06_1&quot;+&quot;TSL07_1&quot;+&quot;TSL16_1&quot;+&quot;TSL15_1&quot;+&quot;TSL14_1&quot;+&quot;TSL13_1&quot;+&quot;TSL12_1&quot;+&quot;TSL11_1&quot;+&quot;TSL10_1&quot;+&quot;TSL09_1&quot;+&quot;TSL08_1&quot;
+, 0)</formula>
+      </measure>
+      <measure id="BALANCE_PREV_CREDIT" hidden="true" order="66" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="23" scale="3">
+        <descriptions defaultDescription="Dynamic Debit Amt From"/>
+        <formula>&quot;DYNAMIC_CRED_AMT_FROM&quot;</formula>
+      </measure>
+      <measure id="BALANCE_PREV_PERIOD" hidden="false" order="67" aggregationType="sum" engineAggregation="sum" measureType="simple" aggregatable="true" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="23" scale="3">
+        <descriptions defaultDescription="Balance Previous Period"/>
+        <formula>&quot;BALANCE_PREV_DEBIT&quot;+&quot;BALANCE_PREV_CREDIT&quot;</formula>
+      </measure>
+      <measure id="CUMUL_BALANCE_PREV_PERIOD" hidden="false" order="68" aggregationType="sum" engineAggregation="sum" measureType="simple" aggregatable="true" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="23" scale="3">
+        <descriptions defaultDescription="Cumulative Balance Previous Period"/>
+        <formula>&quot;OPENING_BALANCE&quot;+&quot;BALANCE_PREV_PERIOD&quot;</formula>
+      </measure>
+    </calculatedMeasures>
+    <restrictedMeasures/>
+    <localDimensions>
+      <localDimension id="Hierarchy">
+        <hierarchies>
+          <hierarchy xsi:type="Dimension:LeveledHierarchy" id="Hierarchy" aggregateAllNodes="true" rootNodeVisibility="ADD_ROOT_NODE" withRootNode="true" nodeStyle="NAME_PATH_ENFORCED">
+            <descriptions defaultDescription="Hierarchy"/>
+            <levels/>
+          </hierarchy>
+        </hierarchies>
+      </localDimension>
+    </localDimensions>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="275" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_5" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="513"/>
+        <rectangleSize height="64" width="241"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_8" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="327" y="339"/>
+        <rectangleSize height="64" width="241"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="97" y="435"/>
+        <rectangleSize height="30" width="140"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_9" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="277" y="513"/>
+        <rectangleSize height="30" width="140"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Aggregation_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="251" y="435"/>
+        <rectangleSize height="30" width="140"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_5" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="173" y="339"/>
+        <rectangleSize height="30" width="140"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_4" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="275" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_7" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="275" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Dimension="http://www.sap.com/ndb/BiModelDimension.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="plx_analytics::CA_DIM_COST_ELEMENT_HIERARCHY" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection" xscCompatibilityMode="true">
+  <descriptions defaultDescription="CA_CO_ELEM_HIERARCHY"/>
+  <metadata changedAt="2018-11-26 17:21:39.939"/>
+  <localVariables>
+    <variable id="P_GROUP_NODE" parameter="true">
+      <descriptions defaultDescription="Group Node"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="undefined" length="24" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="P_CHART_OF_ACCOUNTS" parameter="true">
+      <descriptions defaultDescription="Chart of Accounts"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="HOSP" length="4" mandatory="true">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#FN_HIERARCHY_KSTAR">
+      <targetVariable name="CHART_OF_ACCOUNTS" resourceUri="plx_analytics::FN_HIERARCHY_KSTAR"/>
+      <localVariable>#P_CHART_OF_ACCOUNTS</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#FN_HIERARCHY_KSTAR">
+      <targetVariable name="Group_Root_Node" resourceUri="plx_analytics::FN_HIERARCHY_KSTAR"/>
+      <localVariable>#P_GROUP_NODE</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="38"/>
+  <dataSources>
+    <DataSource id="ECC_SETHEADERT">
+      <resourceUri>ECC_SETHEADERT</resourceUri>
+    </DataSource>
+    <DataSource id="FN_HIERARCHY_KSTAR" type="TABLE_FUNCTION">
+      <resourceUri>plx_analytics::FN_HIERARCHY_KSTAR</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_CSKU">
+      <resourceUri>ECC_CSKU</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="HEADER_T">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SETCLASS"/>
+        <viewAttribute id="SUBCLASS"/>
+        <viewAttribute id="SETNAME"/>
+        <viewAttribute id="DESCRIPT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="Z_SETNAME" length="24" expressionLanguage="COLUMN_ENGINE">
+          <formula>trim(&quot;SETNAME&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="Z_SUBCLASS" length="12" expressionLanguage="COLUMN_ENGINE">
+          <formula>trim(&quot;SUBCLASS&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#ECC_SETHEADERT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SETCLASS" source="SETCLASS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBCLASS" source="SUBCLASS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SETNAME" source="SETNAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DESCRIPT" source="DESCRIPT"/>
+      </input>
+      <filter>(&quot;SETCLASS&quot; ='0102')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PARENT"/>
+        <viewAttribute id="LEVEL"/>
+        <viewAttribute id="CHART_OF_ACCOUNTS"/>
+        <viewAttribute id="CHILD"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#FN_HIERARCHY_KSTAR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT" source="PARENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LEVEL" source="LEVEL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHART_OF_ACCOUNTS" source="CHART_OF_ACCOUNTS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHILD" source="CHILD"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="COST_ELEM_DESCR" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="NODE_TEXT"/>
+        <viewAttribute id="PARENT"/>
+        <viewAttribute id="LEVEL"/>
+        <viewAttribute id="CHART_OF_ACCOUNTS"/>
+        <viewAttribute id="CHILD"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Projection_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT" source="PARENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LEVEL" source="LEVEL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHART_OF_ACCOUNTS" source="CHART_OF_ACCOUNTS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHILD" source="CHILD"/>
+      </input>
+      <input node="#HEADER_T">
+        <mapping xsi:type="Calculation:AttributeMapping" target="NODE_TEXT" source="DESCRIPT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHART_OF_ACCOUNTS" source="Z_SUBCLASS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHILD" source="Z_SETNAME"/>
+      </input>
+      <joinAttribute name="CHART_OF_ACCOUNTS"/>
+      <joinAttribute name="CHILD"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="COST_ELEMENTS">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="KTOPL"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="KTEXT"/>
+        <viewAttribute id="LTEXT"/>
+        <viewAttribute id="MCTXT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="Z_KSTAR" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>TRIM(&quot;KSTAR&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#ECC_CSKU">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KTOPL" source="KTOPL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="KSTAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KTEXT" source="KTEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LTEXT" source="LTEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MCTXT" source="MCTXT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_2" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ELEMENT_TEXT"/>
+        <viewAttribute id="PARENT"/>
+        <viewAttribute id="LEVEL"/>
+        <viewAttribute id="CHART_OF_ACCOUNTS"/>
+        <viewAttribute id="CHILD"/>
+        <viewAttribute id="NODE_TEXT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="VARCHAR" id="GROUP_TEXT" length="40" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;NODE_TEXT&quot;), &quot;ELEMENT_TEXT&quot;, &quot;NODE_TEXT&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#COST_ELEM_DESCR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT" source="PARENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LEVEL" source="LEVEL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHART_OF_ACCOUNTS" source="CHART_OF_ACCOUNTS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHILD" source="CHILD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NODE_TEXT" source="NODE_TEXT"/>
+      </input>
+      <input node="#COST_ELEMENTS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ELEMENT_TEXT" source="LTEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHART_OF_ACCOUNTS" source="KTOPL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHILD" source="KSTAR"/>
+      </input>
+      <joinAttribute name="CHART_OF_ACCOUNTS"/>
+      <joinAttribute name="CHILD"/>
+    </calculationView>
+  </calculationViews>
+  <inlineHierarchy xsi:type="Dimension:ParentChildHierarchy" id="Cost_Element_Hierachy" aggregateAllNodes="true" cycleHandling="BREAKUP" multipleParents="true" orphanedNodesHandling="IGNORE" rootNodeVisibility="ADD_ROOT_NODE_IF_DEFINED">
+    <descriptions defaultDescription="Cost_Element_Hierachy"/>
+    <attributeParentPair attribute="#CHILD_CE" parentAttribute="#PARENT_CE">
+      <rootNode>
+        <localVariable>#P_GROUP_NODE</localVariable>
+      </rootNode>
+    </attributeParentPair>
+  </inlineHierarchy>
+  <logicalModel id="Join_2">
+    <descriptions/>
+    <attributes>
+      <attribute id="CHART_OF_ACCOUNTS_CE" key="true" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CHART_OF_ACCOUNTS_CE"/>
+        <keyMapping columnObjectName="Join_2" columnName="CHART_OF_ACCOUNTS"/>
+      </attribute>
+      <attribute id="LEVEL_CE" key="true" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="LEVEL_CE"/>
+        <keyMapping columnObjectName="Join_2" columnName="LEVEL"/>
+      </attribute>
+      <attribute id="PARENT_CE" key="true" order="3" attributeHierarchyActive="false" descriptionColumnName="GROUP_TEXT_CE" displayAttribute="false">
+        <descriptions defaultDescription="PARENT_CE"/>
+        <keyMapping columnObjectName="Join_2" columnName="PARENT"/>
+      </attribute>
+      <attribute id="CHILD_CE" order="4" semanticType="empty" attributeHierarchyActive="false" descriptionColumnName="GROUP_TEXT_CE" displayAttribute="false">
+        <descriptions defaultDescription="CHILD_CE"/>
+        <keyMapping columnObjectName="Join_2" columnName="CHILD"/>
+      </attribute>
+      <attribute id="GROUP_TEXT_CE" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GROUP_TEXT_CE"/>
+        <keyMapping columnObjectName="Join_2" columnName="GROUP_TEXT"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="176" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="HEADER_T" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="357"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="357"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="COST_ELEM_DESCR" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="COST_ELEMENTS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

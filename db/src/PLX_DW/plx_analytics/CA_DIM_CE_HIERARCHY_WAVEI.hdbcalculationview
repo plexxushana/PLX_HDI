@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Dimension="http://www.sap.com/ndb/BiModelDimension.ecore" schemaVersion="2.3" id="plx_analytics::CA_DIM_CE_HIERARCHY_WAVEI" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection" xscCompatibilityMode="true">
+  <origin/>
+  <descriptions defaultDescription="CA_DIM_CE_HIERARCHY"/>
+  <metadata changedAt="2021-02-22 10:03:15.24"/>
+  <localVariables>
+    <variable id="IP_CE_GROUP_NODE" parameter="true">
+      <descriptions defaultDescription="IP_CE_GROUP_NODE"/>
+      <variableProperties datatype="NVARCHAR" length="24" mandatory="false" scale="0">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_CE_VALUE_HELP_BROADER</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>Z_SETNAME</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+        <defaultRange/>
+      </variableProperties>
+    </variable>
+    <variable id="IP_KOKRS" parameter="true">
+      <descriptions defaultDescription="IP_KOKRS"/>
+      <variableProperties datatype="NVARCHAR" length="4" mandatory="false" scale="0">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_CONTROLLING_AREAS</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>KOKRS</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+        <defaultRange/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="28"/>
+  <dataSources>
+    <DataSource id="HANA_CE_HIERARCHY">
+      <resourceUri>HANA_CE_HIERARCHY</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CHART_OF_ACCOUNTS_CE"/>
+        <viewAttribute id="LEVEL_CE"/>
+        <viewAttribute id="PARENT_CE"/>
+        <viewAttribute id="CHILD_CE"/>
+        <viewAttribute id="GROUP_TEXT_CE"/>
+        <viewAttribute id="KOKRS"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#HANA_CE_HIERARCHY">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHART_OF_ACCOUNTS_CE" source="CHART_OF_ACCOUNTS_CE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LEVEL_CE" source="LEVEL_CE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_CE" source="PARENT_CE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHILD_CE" source="CHILD_CE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GROUP_TEXT_CE" source="GROUP_TEXT_CE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+      </input>
+      <filter>(&quot;KOKRS&quot; ='$$IP_KOKRS$$')</filter>
+    </calculationView>
+  </calculationViews>
+  <inlineHierarchy xsi:type="Dimension:ParentChildHierarchy" id="CE_HIERARCHY" aggregateAllNodes="true" cycleHandling="BREAKUP" rootNodeVisibility="ADD_ROOT_NODE_IF_DEFINED">
+    <descriptions defaultDescription="CE_HIERARCHY"/>
+    <attributeParentPair attribute="#CHILD_CE" parentAttribute="#PARENT_CE">
+      <rootNode>
+        <localVariable>#IP_CE_GROUP_NODE</localVariable>
+      </rootNode>
+    </attributeParentPair>
+  </inlineHierarchy>
+  <logicalModel id="Projection_1">
+    <descriptions/>
+    <attributes>
+      <attribute id="CHART_OF_ACCOUNTS_CE" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CHART_OF_ACCOUNTS_CE"/>
+        <keyMapping columnObjectName="Projection_1" columnName="CHART_OF_ACCOUNTS_CE"/>
+      </attribute>
+      <attribute id="LEVEL_CE" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="LEVEL_CE"/>
+        <keyMapping columnObjectName="Projection_1" columnName="LEVEL_CE"/>
+      </attribute>
+      <attribute id="PARENT_CE" order="3" attributeHierarchyActive="false" descriptionColumnName="GROUP_TEXT_CE" displayAttribute="false">
+        <descriptions defaultDescription="PARENT_CE"/>
+        <keyMapping columnObjectName="Projection_1" columnName="PARENT_CE"/>
+      </attribute>
+      <attribute id="CHILD_CE" order="4" attributeHierarchyActive="false" descriptionColumnName="GROUP_TEXT_CE" displayAttribute="false">
+        <descriptions defaultDescription="Cost Element Hierarchy"/>
+        <keyMapping columnObjectName="Projection_1" columnName="CHILD_CE"/>
+      </attribute>
+      <attribute id="GROUP_TEXT_CE" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cost Element Group"/>
+        <keyMapping columnObjectName="Projection_1" columnName="GROUP_TEXT_CE"/>
+      </attribute>
+      <attribute id="CONTROLL_AREA" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTROLL_AREA"/>
+        <keyMapping columnObjectName="Projection_1" columnName="KOKRS"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="22" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

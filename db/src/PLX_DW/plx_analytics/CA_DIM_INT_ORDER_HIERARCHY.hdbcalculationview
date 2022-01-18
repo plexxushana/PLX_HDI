@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="plx_analytics::CA_DIM_INT_ORDER_HIERARCHY" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection" xscCompatibilityMode="true">
+  <descriptions defaultDescription="CA_CO_ELEM_HIERARCHY"/>
+  <metadata changedAt="2019-01-08 13:02:01.367"/>
+  <localVariables>
+    <variable id="P_CONTROLLING_AREA" parameter="true">
+      <descriptions defaultDescription="Controlling Area"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="undefined" length="44" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="P_ORDER_GROUP_NODE" parameter="true">
+      <descriptions defaultDescription="Group Node"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="undefined" length="4" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="P_CHART_OF_ACCOUNTS" parameter="true">
+      <descriptions defaultDescription="CHART_OF_ACCOUNTS"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="HOSP" length="12" mandatory="true">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="P_CE_Group_Root_Node" parameter="true">
+      <descriptions defaultDescription="CE_Group_Root_Node"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="undefined" length="24" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#FN_HIERARCHY_AUFNR">
+      <targetVariable name="Order_Group_Root_Node" resourceUri="plx_analytics::FN_HIERARCHY_AUFNR"/>
+      <localVariable>#P_ORDER_GROUP_NODE</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#FN_HIERARCHY_AUFNR">
+      <targetVariable name="ControllingArea" resourceUri="plx_analytics::FN_HIERARCHY_AUFNR"/>
+      <localVariable>#P_CONTROLLING_AREA</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#FN_HIERARCHY_AUFNR">
+      <targetVariable name="CHART_OF_ACCOUNTS" resourceUri="plx_analytics::FN_HIERARCHY_AUFNR"/>
+      <localVariable>#P_CHART_OF_ACCOUNTS</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#FN_HIERARCHY_AUFNR">
+      <targetVariable name="CE_Group_Root_Node" resourceUri="plx_analytics::FN_HIERARCHY_AUFNR"/>
+      <localVariable>#P_CE_Group_Root_Node</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="45"/>
+  <dataSources>
+    <DataSource id="ECC_SETHEADERT">
+      <resourceUri>ECC_SETHEADERT</resourceUri>
+    </DataSource>
+    <DataSource id="FN_HIERARCHY_AUFNR" type="TABLE_FUNCTION">
+      <resourceUri>plx_analytics::FN_HIERARCHY_AUFNR</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_AUFK">
+      <resourceUri>ECC_AUFK</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="HEADER_T" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SETCLASS"/>
+        <viewAttribute id="SUBCLASS"/>
+        <viewAttribute id="SETNAME"/>
+        <viewAttribute id="DESCRIPT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="Z_SETNAME" length="24" expressionLanguage="COLUMN_ENGINE">
+          <formula>trim(&quot;SETNAME&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="Z_SUBCLASS" length="12" expressionLanguage="COLUMN_ENGINE">
+          <formula>trim(&quot;SUBCLASS&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#ECC_SETHEADERT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SETCLASS" source="SETCLASS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBCLASS" source="SUBCLASS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SETNAME" source="SETNAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DESCRIPT" source="DESCRIPT"/>
+      </input>
+      <filter>(&quot;SETCLASS&quot; ='0103')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PARENT"/>
+        <viewAttribute id="LEVEL"/>
+        <viewAttribute id="CHILD"/>
+        <viewAttribute id="CONTROLLING_AREA"/>
+        <viewAttribute id="LEN"/>
+        <viewAttribute id="CHILD_CONCAT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#FN_HIERARCHY_AUFNR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT" source="PARENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LEVEL" source="LEVEL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHILD" source="CHILD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTROLLING_AREA" source="CONTROLLING_AREA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LEN" source="LEN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHILD_CONCAT" source="CHILD_CONCAT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="ORDER_HIERARCHY" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="NODE_TEXT"/>
+        <viewAttribute id="PARENT"/>
+        <viewAttribute id="LEVEL"/>
+        <viewAttribute id="CHILD"/>
+        <viewAttribute id="CONTROLLING_AREA"/>
+        <viewAttribute id="LEN"/>
+        <viewAttribute id="CHILD_CONCAT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Projection_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT" source="PARENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LEVEL" source="LEVEL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHILD" source="CHILD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTROLLING_AREA" source="CONTROLLING_AREA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LEN" source="LEN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHILD_CONCAT" source="CHILD_CONCAT"/>
+      </input>
+      <input node="#HEADER_T">
+        <mapping xsi:type="Calculation:AttributeMapping" target="NODE_TEXT" source="DESCRIPT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHILD" source="Z_SETNAME"/>
+      </input>
+      <joinAttribute name="CHILD"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="AUFNR"/>
+        <viewAttribute id="LTEXT"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="KTEXT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#ECC_AUFK">
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUFNR" source="AUFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LTEXT" source="LTEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KTEXT" source="KTEXT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_2" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PARENT"/>
+        <viewAttribute id="LEVEL"/>
+        <viewAttribute id="CHILD"/>
+        <viewAttribute id="NODE_TEXT"/>
+        <viewAttribute id="CONTROLLING_AREA"/>
+        <viewAttribute id="LTEXT"/>
+        <viewAttribute id="LEN"/>
+        <viewAttribute id="ORDER_TEXT"/>
+        <viewAttribute id="CHILD_CONCAT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="VARCHAR" id="GROUP_TEXT" length="40" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;NODE_TEXT&quot;), &quot;ORDER_TEXT&quot;, &quot;NODE_TEXT&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#ORDER_HIERARCHY">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT" source="PARENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LEVEL" source="LEVEL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHILD" source="CHILD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NODE_TEXT" source="NODE_TEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTROLLING_AREA" source="CONTROLLING_AREA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LEN" source="LEN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHILD_CONCAT" source="CHILD_CONCAT"/>
+      </input>
+      <input node="#Projection_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="LTEXT" source="LTEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORDER_TEXT" source="KTEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHILD" source="AUFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTROLLING_AREA" source="KOKRS"/>
+      </input>
+      <joinAttribute name="CHILD"/>
+      <joinAttribute name="CONTROLLING_AREA"/>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="Join_2">
+    <descriptions/>
+    <attributes>
+      <attribute id="CONTROLLING_AREA" key="true" order="1" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTROLLING_AREA"/>
+        <keyMapping columnObjectName="Join_2" columnName="CONTROLLING_AREA"/>
+      </attribute>
+      <attribute id="LEVEL" key="true" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="LEVEL"/>
+        <keyMapping columnObjectName="Join_2" columnName="LEVEL"/>
+      </attribute>
+      <attribute id="PARENT" key="true" order="3" attributeHierarchyActive="false" descriptionColumnName="GROUP_TEXT" displayAttribute="false">
+        <descriptions defaultDescription="PARENT"/>
+        <keyMapping columnObjectName="Join_2" columnName="PARENT"/>
+      </attribute>
+      <attribute id="CHILD" order="4" semanticType="empty" attributeHierarchyActive="false" descriptionColumnName="GROUP_TEXT" displayAttribute="false">
+        <descriptions defaultDescription="CHILD"/>
+        <keyMapping columnObjectName="Join_2" columnName="CHILD"/>
+      </attribute>
+      <attribute id="GROUP_TEXT" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GROUP_TEXT"/>
+        <keyMapping columnObjectName="Join_2" columnName="GROUP_TEXT"/>
+      </attribute>
+      <attribute id="LEN" order="6" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="LEN"/>
+        <keyMapping columnObjectName="Join_2" columnName="LEN"/>
+      </attribute>
+      <attribute id="CHILD_CONCAT" order="7" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CHILD_CONCAT"/>
+        <keyMapping columnObjectName="Join_2" columnName="CHILD_CONCAT"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="176" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="HEADER_T" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="357"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="357"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="ORDER_HIERARCHY" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="280" y="276"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

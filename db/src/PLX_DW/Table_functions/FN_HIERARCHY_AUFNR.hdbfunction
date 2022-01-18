@@ -1,0 +1,1030 @@
+FUNCTION "plx_analytics::FN_HIERARCHY_AUFNR" (
+		ControllingArea NVARCHAR(12),
+		Order_Group_Root_Node NVARCHAR(24),
+		CHART_OF_ACCOUNTS NVARCHAR(12),
+		CE_Group_Root_Node NVARCHAR(24)
+	) 
+ 	RETURNS table(
+		 CONTROLLING_AREA NVARCHAR(4)
+		, LEVEL	INTEGER
+		,  PARENT nvarchar(24)
+		, CHILD NVARCHAR(24)
+		, CHILD_CONCAT NVARCHAR(24)
+		, LEN NVARCHAR(24)
+		--INTERNAL_ORDER NVARCHAR(24)
+		--, COST_ELEMENT NVARCHAR(24)
+	)
+
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER AS
+BEGIN
+
+/* Compute the Cost Element Standard Hierarchy */
+
+DECLARE NUM int := 0;
+DECLARE CE_NUM int := 0;
+DECLARE LV_CE_COUNT int:= 0;
+DECLARE LV_MAX int := 0;
+DECLARE LV_MIN int := 0;
+DECLARE LEV int := 1;
+DECLARE STCLS nvarchar(4) := '0103';
+DECLARE CE_STCLS nvarchar(4) := '0102';
+DECLARE CE_LEV int := 1;
+
+BEGIN
+
+	/*In case Order_Group_Root_Node is empty, retrieve only leaf(Cost Center) node from SETLEAF table*/
+
+	if :Order_Group_Root_Node = '' then
+
+	LT_IO_TMP = 
+	SELECT NULL AS PARENT, 
+		   NULL AS CHILD, 
+		   NULL AS CHILD_CONCAT,
+		   VALOPTION AS VALOPTION, 
+		   VALFROM as VALFROM, 
+		   VALTO as VALTO, 
+		   1 AS LEVEL, 
+		   :ControllingArea AS ControllingArea,
+		   NULL AS LEN
+	FROM "ECC_SETLEAF"
+	WHERE SETCLASS = :STCLS; 
+	--AND	  trim(SUBCLASS)  = :ControllingArea;
+
+	var_out = 
+	SELECT PARENT, 
+		   --CHILD, 
+		   --VALFROM AS COST_ELEMENT, 
+		   VALFROM as CHILD,
+		   VALFROM as CHILD_CONCAT,
+		   LEVEL, 
+		   ControllingArea,
+		   LEN
+	FROM :LT_IO_TMP;
+
+	LT_IO_TMP2 = 
+	SELECT NULL AS PARENT, 
+		   CE.CHILD AS CHILD, 
+		   CE.CHILD AS CHILD_CONCAT, 
+	--	   CSKT.KOSTL AS CHILD, 
+		   CE.LEVEL AS LEVEL, 
+		   :ControllingArea AS ControllingArea,
+		   LEN
+	FROM :LT_IO_TMP as CE; 
+	--inner join PLX_DW.ECC_CSKT as CSKT 
+	--ON (CSKT.KOSTL >= CE.VALFROM 
+	--and CSKT.KOSTL <= CE.VALTO)
+	--WHERE trim(cskt.KOKRS)  = :ControllingArea;
+
+	var_out = 
+	SELECT  PARENT, 
+			CHILD, 
+			CHILD_CONCAT,
+			--COST_ELEMENT, 
+			LEVEL, 
+			ControllingArea,
+			LEN
+	  from :var_out
+	UNION
+	SELECT  PARENT, 
+			CHILD, 
+			CHILD_CONCAT,
+			--COST_ELEMENT, 
+			LEVEL, 
+			ControllingArea,
+			LEN 
+	  from :LT_IO_TMP2;
+
+	/*If Order_Group_Root_Node is empty, empty cost element should also be considered*/
+
+	LT_IO_TMP_2 = 
+		SELECT DISTINCT NULL AS PARENT, 
+				    	--NULL AS CHILD, 
+				    	--'' AS COST_ELEMENT, 
+				    	'' as CHILD,
+				    	'' as CHILD_CONCAT,
+				    	1 AS LEVEL, 
+				    	:ControllingArea AS ControllingArea,
+				    	NULL AS LEN
+		FROM "ECC_SETLEAF"
+		WHERE SETCLASS = :STCLS;
+		--and   trim(SUBCLASS)  = :ControllingArea;
+
+	var_out = 
+		SELECT PARENT, 
+			   CHILD, 
+			   CHILD_CONCAT,
+			   --COST_ELEMENT, 
+			   LEVEL, 
+			   ControllingArea,
+			   NULL AS LEN 
+		 from :var_out
+	UNION
+		SELECT  PARENT, 
+		    	CHILD,
+		    	CHILD_CONCAT, 
+		    	--COST_ELEMENT, 
+		    	LEVEL, 
+		    	ControllingArea,
+		    	LEN
+		   from :LT_IO_TMP_2;
+
+	/*Retrieve all hierarchy groups and the cost center from both SETNODE and SETLEAF, incase Order_Group_Root_Node is not empty*/
+
+	else
+
+	LT_ROOT = 
+		SELECT DISTINCT NULL AS PARENT, 
+						trim(SETNAME) AS CHILD, 
+						trim(SETNAME) AS CHILD_CONCAT,
+						--NULL AS COST_ELEMENT, 
+						1 AS LEVEL, 
+						:ControllingArea AS ControllingArea
+		FROM "ECC_SETNODE"
+		WHERE SETCLASS = :STCLS
+		--and   trim(SUBCLASS)  = :ControllingArea 
+		and   trim(SETNAME)  = :Order_Group_Root_Node;
+
+	/*inacase for a group node, there is no subgroup, then it will not be in SETNODE, but only in SETLEAF*/
+
+	LT_ROOT2 = 
+		SELECT DISTINCT NULL AS PARENT, 
+						trim(SETNAME) AS CHILD, 
+						trim(SETNAME) AS CHILD_CONCAT, 
+						--NULL AS COST_ELEMENT, 
+						1 AS LEVEL, 
+						:ControllingArea AS ControllingArea
+		FROM "ECC_SETLEAF"
+		WHERE SETCLASS = :STCLS 
+		--and   trim(SUBCLASS)  = :ControllingArea 
+		and   trim(SETNAME)  = :Order_Group_Root_Node;
+
+	LT_HIERARCHY = 
+		SELECT PARENT, 
+			   CHILD,
+			   CHILD_CONCAT, 
+			  -- COST_ELEMENT, 
+			   LEVEL, 
+			   ControllingArea,
+			   NULL AS LEN
+			    from :LT_ROOT
+
+		UNION
+		
+		SELECT  PARENT, 
+				CHILD, 
+				CHILD_CONCAT,
+				--COST_ELEMENT, 
+				LEVEL, 
+				ControllingArea,
+				NULL AS LEN
+				 from :LT_ROOT2;
+
+	while 1 = 1 do
+
+		LT_HIERARCHY_TMP = 
+		    SELECT 
+			    part.SETNAME AS PARENT, 
+			    trim(part.SUBSETNAME) AS CHILD, 
+			    trim(part.SUBSETNAME) AS CHILD_CONCAT,
+			   -- NULL AS COST_ELEMENT, 
+			    :LEV + 1 AS LEVEL, 
+			    :ControllingArea AS ControllingArea,
+			    LEN
+		    FROM :LT_HIERARCHY as main 
+			    inner join "ECC_SETNODE" as part 
+			    ON (main.CHILD = part.SETNAME)
+		    WHERE part.SETCLASS = :STCLS
+			    --and   trim(part.SUBCLASS)  = :ControllingArea 
+			    and   main.LEVEL = :LEV;
+
+	    SELECT COUNT(*) INTO NUM FROM :LT_HIERARCHY_TMP;
+	
+	    if :NUM = 0 then
+	        break;
+	    end if;
+
+	    LT_HIERARCHY =
+		    SELECT PARENT,
+			    CHILD,
+			    CHILD_CONCAT,
+		--	    COST_ELEMENT,
+			    LEVEL,
+			    ControllingArea,
+			    LEN
+		    from :LT_HIERARCHY
+	        
+	        UNION
+		    
+		    SELECT PARENT,
+			    CHILD,
+			    CHILD_CONCAT,
+		--	    COST_ELEMENT,
+			    LEVEL,
+			    ControllingArea,
+			    LEN
+		    from :LT_HIERARCHY_TMP;
+	
+	    LEV := :LEV + 1;
+
+	end while;
+
+	LT_IO_TMP =
+	  	SELECT
+		  	CE.SETNAME AS PARENT,
+		  	NULL AS CHILD,
+		  	NULL AS CHILD_CONCAT,
+		  	CE.VALOPTION AS VALOPTION,
+		  	CE.VALFROM as VALFROM,
+		  	CE.VALTO as VALTO,
+		  	CC_gr.LEVEL + 1 AS LEVEL,
+		  	:ControllingArea AS ControllingArea,
+		  	LEN
+		FROM :LT_HIERARCHY as CC_gr
+	  	inner join "ECC_SETLEAF" as CE
+	  	ON (CC_gr.CHILD 	= CE.SETNAME)
+		WHERE CE.SETCLASS 		= :STCLS;
+	  	--and trim(CE.SUBCLASS) 		= :ControllingArea;
+
+
+	LT_IO =
+		  SELECT PARENT,
+		        -- CHILD,
+		        -- VALFROM AS COST_ELEMENT,
+		        valfrom as CHILD,
+		        valfrom as CHILD_CONCAT,
+		         LEVEL,
+		         ControllingArea,
+		         LEN
+			FROM :LT_IO_TMP;
+		  
+	LT_IO_TMP2 =
+	  SELECT
+		  CE.PARENT AS PARENT,
+		  --CE.CHILD AS CHILD,
+		 -- CSKT.KOSTL AS COST_ELEMENT,
+		 --CSKT.KOSTL as CHILD,
+		  trim(AUFNR) as CHILD,
+		  trim(AUFNR) as CHILD_CONCAT,
+		  CE.LEVEL AS LEVEL,
+		  :ControllingArea AS ControllingArea,
+		  LEN
+	  FROM
+		  :LT_IO_TMP as CE
+		  INNER JOIN "ECC_AUFK" as AUFK
+		  ON (trim(AUFK.AUFNR) >= CE.VALFROM
+	      and trim(AUFK.AUFNR) <= CE.VALTO)
+	      WHERE trim(AUFK.KOKRS)  = :ControllingArea; --AC ADD
+	  --WHERE trim(CSKT.KOKRS)  = :ControllingArea;
+/*AC - Bring in Cost Element Group*/ 
+LT_CE_ROOT = 
+		SELECT DISTINCT NULL AS PARENT, 
+						trim(SETNAME) AS CHILD, 
+						trim(SETNAME) AS CHILD_CONCAT, 
+						--NULL AS COST_ELEMENT, 
+						1 AS LEVEL, 
+						:Chart_Of_Accounts AS Chart_Of_Accounts,
+						:ControllingArea AS ControllingArea
+		FROM "ECC_SETNODE"
+		WHERE SETCLASS = :CE_STCLS
+		and   trim(SUBCLASS)  = :Chart_Of_Accounts 
+		and   trim(SETNAME)  = :CE_Group_Root_Node;
+		
+			/*inacase for a group node, there is no subgroup, then it will not be in SETNODE, but only in SETLEAF*/
+
+	LT_CE_ROOT2 = 
+		SELECT DISTINCT NULL AS PARENT, 
+						trim(SETNAME) AS CHILD, 
+						trim(SETNAME) AS CHILD_CONCAT,
+						--NULL AS COST_ELEMENT, 
+						1 AS LEVEL, 
+						:Chart_Of_Accounts AS Chart_Of_Accounts,
+						:ControllingArea AS ControllingArea
+		FROM "ECC_SETLEAF"
+		WHERE SETCLASS = :CE_STCLS 
+		and   trim(SUBCLASS)  = :Chart_Of_Accounts 
+		and   trim(SETNAME)  = :CE_Group_Root_Node;
+		
+		LT_CE_HIERARCHY = 
+		SELECT PARENT, 
+			   CHILD, 
+			   CHILD_CONCAT,
+			  -- COST_ELEMENT, 
+			   LEVEL, 
+			   Chart_Of_Accounts, 
+			   ControllingArea, 
+			   NULL AS LEN from :LT_CE_ROOT
+
+		UNION
+
+		SELECT  PARENT, 
+				CHILD, 
+				CHILD_CONCAT,
+				--COST_ELEMENT, 
+				LEVEL, 
+				Chart_Of_Accounts,
+				ControllingArea,
+				NULL AS LEN from :LT_CE_ROOT2;
+				
+		while 1 = 1 do
+
+		LT_CE_HIERARCHY_TMP = 
+		    SELECT 
+			    part.SETNAME AS PARENT, 
+			    trim(part.SUBSETNAME) AS CHILD, 
+			    trim(part.SUBSETNAME) AS CHILD_CONCAT,
+			   -- NULL AS COST_ELEMENT, 
+			    :CE_LEV + 1 AS LEVEL, 
+			    :Chart_Of_Accounts AS Chart_Of_Accounts,
+			    :ControllingArea AS ControllingArea,
+			    LEN
+		    FROM :LT_CE_HIERARCHY as main 
+			    inner join "ECC_SETNODE" as part 
+			    ON (main.CHILD = part.SETNAME)
+		
+		    WHERE part.SETCLASS = :CE_STCLS
+			    and   trim(part.SUBCLASS)  = :Chart_Of_Accounts 
+			    and   main.LEVEL = :CE_LEV;
+
+	    SELECT COUNT(*) INTO CE_NUM FROM :LT_CE_HIERARCHY_TMP;
+	
+	    if :CE_NUM = 0 then
+	        break;
+	    end if;
+
+	    LT_CE_HIERARCHY =
+		    SELECT PARENT,
+			    CHILD,
+			    CHILD_CONCAT,
+		--	    COST_ELEMENT,
+			    LEVEL,
+			    Chart_Of_Accounts,
+			    ControllingArea,
+			    LEN
+		    from :LT_CE_HIERARCHY
+	        
+	        UNION
+		    
+		    SELECT PARENT,
+			    CHILD,
+			    CHILD_CONCAT,
+		--	    COST_ELEMENT,
+			    LEVEL,
+			    Chart_Of_Accounts,
+			    ControllingArea,
+			    LEN
+		    from :LT_CE_HIERARCHY_TMP;
+	
+	    CE_LEV := :CE_LEV + 1;
+
+	end while;
+	
+	LT_CE_TMP =
+	  	SELECT
+		  	CE.SETNAME AS PARENT,
+		  	NULL AS CHILD,
+		  	NULL AS CHILD_CONCAT,
+		  	CE.VALOPTION AS VALOPTION,
+		  	CE.VALFROM as VALFROM,
+		  	CE.VALTO as VALTO,
+		  	CE_gr.LEVEL + 1 AS LEVEL,
+		  	:Chart_Of_Accounts AS Chart_Of_Accounts,
+		  	:ControllingArea AS ControllingArea,
+		  	LEN
+		FROM :LT_CE_HIERARCHY as CE_gr
+	  	inner join "ECC_SETLEAF" as CE
+	  	ON (CE_gr.CHILD 	= CE.SETNAME)
+		WHERE CE.SETCLASS 		= :CE_STCLS
+	  	and trim(CE.SUBCLASS) 		= :Chart_Of_Accounts;
+	  	
+  	LT_CE =
+		  SELECT PARENT,
+		        -- CHILD,
+		        -- VALFROM AS COST_ELEMENT,
+		         valfrom as CHILD,
+		         valfrom as CHILD_CONCAT,
+		         LEVEL,
+		         Chart_Of_Accounts,
+		         ControllingArea,
+		         LEN
+			FROM :LT_CE_TMP;
+
+	LT_CE_TMP2 =
+	  SELECT
+		  CE.PARENT AS PARENT,
+		 -- CE.CHILD AS CHILD,
+		 -- CSKU.KSTAR AS COST_ELEMENT,
+		  csku.kstar as CHILD,
+		  csku.kstar as CHILD_CONCAT,
+		  CE.LEVEL AS LEVEL,
+		  :Chart_Of_Accounts AS Chart_Of_Accounts,
+		  :ControllingArea AS ControllingArea,
+		  LEN
+	  FROM
+		  :LT_CE_TMP as CE
+		  inner join "ECC_CSKU" as CSKU
+		  ON (CSKU.KSTAR >= CE.VALFROM
+	      and CSKU.KSTAR <= CE.VALTO)
+	  WHERE trim(CSKU.KTOPL)  = :Chart_Of_Accounts;
+	
+	LT_CE =
+		SELECT
+			PARENT,
+			CHILD,
+			CHILD_CONCAT,
+		--	COST_ELEMENT,
+			LEVEL,
+			Chart_Of_Accounts,
+			ControllingArea,
+			LEN
+		from :LT_CE
+	
+		UNION
+	
+		SELECT
+			  PARENT,
+			  CHILD,
+			  CHILD_CONCAT,
+		--	  COST_ELEMENT,
+			  LEVEL,
+			  Chart_Of_Accounts,
+			  ControllingArea,
+			  LEN
+		from :LT_CE_TMP2;
+  	
+	/*AC*/ 
+/*AC - Bring in Cost Elements*/ 
+	LT_IO_TMP3 =
+		SELECT DISTINCT
+			INTORDER.CHILD AS PARENT,
+			COEP.KSTAR AS CHILD,
+			COEP.KSTAR AS CHILD_CONCAT,
+		--	COST_ELEMENT,
+			INTORDER.LEVEL + 1 AS LEVEL,
+			:ControllingArea AS ControllingArea,
+			:Chart_Of_Accounts AS Chart_Of_Accounts,
+			CE.PARENT AS CE_GR,
+			INTORDER.LEN AS LEN
+		FROM
+		  :LT_IO_TMP2 as INTORDER
+	      join "ECC_ONROR" as ONROR
+	      on trim(ONROR.AUFNR) = trim(INTORDER.CHILD)
+	      JOIN "ECC_COEP" AS COEP
+		  ON COEP."OBJNR" = ONROR."OBJNR"
+		  INNER JOIN "ECC_AUFK" as AUFK
+--ON T001."KTOPL" = CSKU."KTOPL"
+		  ON trim(ONROR.AUFNR) = trim(AUFK.AUFNR)
+		  JOIN :LT_CE_TMP2 AS CE
+		  ON CE.CHILD = COEP.KSTAR
+	  WHERE trim(COEP.KOKRS) = :ControllingArea;
+
+/*AC - Add in Cost Element Hierarchy*/ 
+	LT_CE_TMP4 =
+	  	SELECT DISTINCT
+		  	CE_HIER.PARENT AS PARENT,
+		  	CE_GR AS CHILD,
+		  	CE_GR AS CHILD_CONCAT,
+		  	CE_HIER.LEVEL + CE.LEVEL AS LEVEL,
+		  	:Chart_Of_Accounts AS Chart_Of_Accounts,
+		  	:ControllingArea AS ControllingArea,
+		  	CE.LEN
+		FROM :LT_CE_HIERARCHY as CE_HIER
+	  	join  :LT_IO_TMP3 as CE
+	  	ON (CE.CE_GR = CE_HIER.CHILD);
+	  	
+
+	SELECT MAX(LEVEL)
+	INTO LV_MAX
+	FROM :LT_CE_TMP4;
+	
+	SELECT MIN(LEVEL)
+	INTO LV_MIN
+	FROM :LT_CE_TMP4;
+	
+	WHILE 1 = 1 do --AND :LV_MAX > 0 do
+	LT_CE_HIERARCHY_TMP = 
+	    SELECT DISTINCT
+	    CE_HIER.PARENT AS PARENT, 
+	    CECHILD.PARENT AS CHILD, 
+	    CECHILD.PARENT AS CHILD_CONCAT,
+	    CECHILD.LEVEL - 1 AS LEVEL, 
+	    :Chart_Of_Accounts AS Chart_Of_Accounts,
+	    :ControllingArea AS ControllingArea,
+	    CECHILD.LEN
+    FROM :LT_CE_TMP4 as CECHILD
+	    join :LT_CE_HIERARCHY as CE_HIER
+	    ON (CECHILD.PARENT = CE_HIER.CHILD)
+	    WHERE CECHILD.LEVEL = :LV_MAX;
+	
+	LV_MAX := :LV_MAX - 1;
+	
+	SELECT COUNT(*) INTO CE_NUM FROM :LT_CE_HIERARCHY_TMP;
+	
+	    if (:LV_MAX IS null OR :CE_NUM = 0 and :LV_MAX <= 0)  then
+	        	break;
+	    elseif (:CE_NUM = 0 and :LV_MAX > 0)  then
+	        CONTINUE ;
+	    end if;
+	    
+		    LT_CE_TMP4 =
+		    SELECT PARENT,
+			    CHILD,
+			    CHILD_CONCAT,
+		--	    COST_ELEMENT,
+			    LEVEL,
+			    Chart_Of_Accounts,
+			    ControllingArea,
+			    LEN
+		    from :LT_CE_TMP4
+	        
+	        UNION
+		    
+		    SELECT PARENT,
+			    CHILD,
+			    CHILD_CONCAT,
+		--	    COST_ELEMENT,
+			    LEVEL,
+			    Chart_Of_Accounts,
+			    ControllingArea,
+			    LEN
+		    from :LT_CE_HIERARCHY_TMP;
+		        
+		 if :LV_MAX <= 0 then
+	       	BREAK ;
+	    end if;
+	END WHILE;
+	/*END OF AC*/
+	
+	LT_CE_TMP3 =
+		SELECT DISTINCT
+			  PARENT.PARENT,
+		      CONCAT(PARENT.PARENT, CHILD.CHILD) AS CHILD,
+		      CONCAT(PARENT.PARENT, CHILD.CHILD) AS CHILD_CONCAT,
+		  --CHILD.CHILD,
+		--	  COST_ELEMENT,
+			  PARENT.LEVEL,
+			  PARENT.ControllingArea,
+			  PARENT.Chart_Of_Accounts,
+			  NULL AS LEN
+		from :LT_CE_TMP4 AS CHILD
+		JOIN :LT_IO_TMP3 AS PARENT
+		ON (PARENT.ControllingArea = CHILD.ControllingArea
+		AND PARENT.Chart_Of_Accounts = CHILD.Chart_Of_Accounts)
+		where CHILD.PARENT IS NULL
+		AND CE_GR IS NOT null;
+		
+LT_CE_TMP5 =
+		  SELECT DISTINCT
+			--CONCAT(PARENT.PARENT, PARENT.CHILD) AS PARENT,
+		  PARENT.CHILD AS PARENT,
+		  --CHILD.CHILD AS CHILD,
+		  CONCAT (SUBSTR (PARENT.CHILD, 1, 12), CHILD.CHILD) AS CHILD,
+		  CONCAT (SUBSTR (PARENT.CHILD, 1, 12), CHILD.CHILD) AS CHILD_CONCAT,
+	--	  COST_ELEMENT,
+		  --:CE_LEV + 1 AS LEVEL,
+	--	  COST_ELEMENT,
+		  PARENT.LEVEL + 1 AS LEVEL,
+		  PARENT.ControllingArea AS ControllingArea,
+		  PARENT.CHART_OF_ACCOUNTS AS CHART_OF_ACCOUNTS,
+		  '12' AS LEN
+	from :LT_CE_TMP4 AS CHILD
+	JOIN :LT_CE_TMP3 AS PARENT
+	ON (TRIM(SUBSTR (PARENT.CHILD, 13, 10)) = CHILD.PARENT)
+	where CHILD.PARENT IS NOT NULL;
+LT_CE_TMP5B =
+		  SELECT DISTINCT
+			--CONCAT(PARENT.PARENT, PARENT.CHILD) AS PARENT,
+		  PARENT.CHILD AS PARENT,
+		  --CHILD.CHILD AS CHILD,
+		  CONCAT (SUBSTR (PARENT.CHILD, 1, 11), CHILD.CHILD) AS CHILD,
+		  CONCAT (SUBSTR (PARENT.CHILD, 1, 11), CHILD.CHILD) AS CHILD_CONCAT,
+	--	  COST_ELEMENT,
+		  --:CE_LEV + 1 AS LEVEL,
+	--	  COST_ELEMENT,
+		  PARENT.LEVEL + 1 AS LEVEL,
+		  PARENT.ControllingArea AS ControllingArea,
+		  PARENT.CHART_OF_ACCOUNTS AS CHART_OF_ACCOUNTS,
+		  '11' AS LEN
+	from :LT_CE_TMP4 AS CHILD
+	JOIN :LT_CE_TMP3 AS PARENT
+	ON (TRIM (SUBSTR (PARENT.CHILD, 12, 10)) = CHILD.PARENT)
+	where CHILD.PARENT IS NOT NULL;
+	
+		LT_CE_TMP5 =
+		    SELECT PARENT,
+			    CHILD,
+			    CHILD_CONCAT,
+		--	    COST_ELEMENT,
+			    LEVEL,
+			    ControllingArea,
+			    CHART_OF_ACCOUNTS,
+			    LEN
+		    from :LT_CE_TMP5
+	        
+	        UNION
+		    
+		    SELECT PARENT,
+			    CHILD,
+			    CHILD_CONCAT,
+		--	    COST_ELEMENT,
+			    LEVEL,
+			    ControllingArea,
+			    CHART_OF_ACCOUNTS,
+			    LEN
+		    from :LT_CE_TMP5B;
+		    
+SELECT MIN(LEVEL)
+	INTO LV_MIN
+	FROM :LT_CE_TMP5
+	;
+	
+	SELECT MAX(LEVEL)
+	INTO LV_MAX
+	FROM :LT_CE_TMP5
+	;
+	
+	--WHILE :LV_MIN <= :LV_MAX DO
+	WHILE 1 = 1 do
+		LT_CE_TMP6 = 
+		SELECT 
+		  PARENT.CHILD AS PARENT,
+		  --CONCAT (SUBSTR (PARENT.PARENT, 1, 10), PARENT.CHILD) AS PARENT,
+		  --CHILD.CHILD AS CHILD,
+		  CONCAT (SUBSTR (PARENT.CHILD, 1, 12), CHILD.CHILD) AS CHILD,
+		  CONCAT (SUBSTR (PARENT.CHILD, 1, 12), CHILD.CHILD) AS CHILD_CONCAT,
+	--	  COST_ELEMENT,
+		  PARENT.LEVEL + 1 AS LEVEL,
+		  PARENT.ControllingArea AS ControllingArea,
+		  PARENT.CHART_OF_ACCOUNTS AS CHART_OF_ACCOUNTS,
+		  '12' AS LEN
+	from :LT_CE_TMP4 AS CHILD
+	JOIN :LT_CE_TMP5 AS PARENT
+	ON (TRIM(SUBSTR (PARENT.CHILD, 13, 10)) = CHILD.PARENT)
+	where CHILD.PARENT IS NOT NULL
+	AND PARENT.LEVEL = :LV_MIN;
+	LT_CE_TMP6B = 
+		SELECT 
+		  PARENT.CHILD AS PARENT,
+		  --CONCAT (SUBSTR (PARENT.PARENT, 1, 10), PARENT.CHILD) AS PARENT,
+		  --CHILD.CHILD AS CHILD,
+		  CONCAT (SUBSTR (PARENT.CHILD, 1, 11), CHILD.CHILD) AS CHILD,
+		  CONCAT (SUBSTR (PARENT.CHILD, 1, 11), CHILD.CHILD) AS CHILD_CONCAT,
+	--	  COST_ELEMENT,
+		  PARENT.LEVEL + 1 AS LEVEL,
+		  PARENT.ControllingArea AS ControllingArea,
+		  PARENT.CHART_OF_ACCOUNTS AS CHART_OF_ACCOUNTS,
+		  '11' AS LEN
+	from :LT_CE_TMP4 AS CHILD
+	JOIN :LT_CE_TMP5 AS PARENT
+	ON (TRIM (SUBSTR (PARENT.CHILD, 12, 10)) = CHILD.PARENT)
+	where CHILD.PARENT IS NOT NULL
+	AND PARENT.LEVEL = :LV_MIN;
+	
+	LT_CE_TMP6 =
+		    SELECT PARENT,
+			    CHILD,
+			    CHILD_CONCAT,
+		--	    COST_ELEMENT,
+			    LEVEL,
+			    ControllingArea,
+			    CHART_OF_ACCOUNTS,
+			    LEN
+		    from :LT_CE_TMP6
+	        
+	        UNION
+		    
+		    SELECT PARENT,
+			    CHILD,
+			    CHILD_CONCAT,
+		--	    COST_ELEMENT,
+			    LEVEL,
+			    ControllingArea,
+			    CHART_OF_ACCOUNTS,
+			    LEN
+		    from :LT_CE_TMP6B;
+		    
+	LV_MIN := :LV_MIN + 1;
+	
+	SELECT COUNT(*) INTO CE_NUM FROM :LT_CE_TMP6;
+	
+	    if :CE_NUM = 0 then
+	        break;
+	    end if;
+	
+	LT_CE_TMP5 =
+		    SELECT PARENT,
+			    CHILD,
+			    CHILD_CONCAT,
+		--	    COST_ELEMENT,
+			    LEVEL,
+			    ControllingArea,
+			    CHART_OF_ACCOUNTS,
+			    LEN
+		    from :LT_CE_TMP5
+	        
+	        UNION
+		    
+		    SELECT PARENT,
+			    CHILD,
+			    CHILD_CONCAT,
+		--	    COST_ELEMENT,
+			    LEVEL,
+			    ControllingArea,
+			    CHART_OF_ACCOUNTS,
+			    LEN
+		    from :LT_CE_TMP6;
+	END WHILE;	
+/*
+	LT_CE_TMP7 =
+		  SELECT DISTINCT 
+			--CONCAT(PARENT.PARENT, PARENT.CHILD) AS PARENT,
+		  PARENT.CHILD AS PARENT,
+		  trim(CHILD.CHILD) AS CHILD,
+		  --CONCAT (SUBSTR (PARENT.CHILD, 1, 10), CHILD.CHILD) AS CHILD,
+	--	  COST_ELEMENT,
+		  --:CE_LEV + 1 AS LEVEL,
+	--	  COST_ELEMENT,
+		  PARENT.LEVEL + 1 AS LEVEL,
+		  PARENT.ControllingArea AS ControllingArea,
+		  PARENT.CHART_OF_ACCOUNTS AS CHART_OF_ACCOUNTS,
+		  PARENT.LEN
+	from :LT_CE_TMP2 AS CHILD
+	JOIN :LT_CE_TMP5 AS PARENT
+	ON (SUBSTR (PARENT.CHILD, 13, 10) = CHILD.PARENT
+	OR SUBSTR (PARENT.CHILD, 12, 10) = CHILD.PARENT)
+	where CHILD.PARENT IS NOT NULL;
+	*/
+	
+		LT_CE_TMP7 =
+		  SELECT DISTINCT 
+			--CONCAT(PARENT.PARENT, PARENT.CHILD) AS PARENT,
+		  PARENT.CHILD AS PARENT,
+		  trim(CHILD.CHILD) AS CHILD,
+		  CONCAT (SUBSTR (PARENT.CHILD, 1, 12), CHILD.CHILD) AS CHILD_CONCAT,
+		  --CONCAT (SUBSTR (PARENT.CHILD, 1, 10), CHILD.CHILD) AS CHILD,
+	--	  COST_ELEMENT,
+		  --:CE_LEV + 1 AS LEVEL,
+	--	  COST_ELEMENT,
+		  PARENT.LEVEL + 1 AS LEVEL,
+		  PARENT.ControllingArea AS ControllingArea,
+	--	  PARENT.CHART_OF_ACCOUNTS AS CHART_OF_ACCOUNTS,
+		  PARENT.LEN
+	from :LT_CE_TMP2 AS CHILD
+	JOIN :LT_CE_TMP5 AS PARENT
+	ON (SUBSTR (PARENT.CHILD, 13, 10) = CHILD.PARENT) 
+	--OR SUBSTR (PARENT.CHILD, 12, 10) = CHILD.PARENT)
+	where CHILD.PARENT IS NOT NULL;
+	
+		LT_CE_TMP7B =
+		  SELECT DISTINCT 
+			--CONCAT(PARENT.PARENT, PARENT.CHILD) AS PARENT,
+		  PARENT.CHILD AS PARENT,
+		  trim(CHILD.CHILD) AS CHILD,
+		  CONCAT (SUBSTR (PARENT.CHILD, 1, 10), CHILD.CHILD) AS CHILD_CONCAT,
+		  --CONCAT (SUBSTR (PARENT.CHILD, 1, 10), CHILD.CHILD) AS CHILD,
+	--	  COST_ELEMENT,
+		  --:CE_LEV + 1 AS LEVEL,
+	--	  COST_ELEMENT,
+		  PARENT.LEVEL + 1 AS LEVEL,
+		  PARENT.ControllingArea AS ControllingArea,
+		--  PARENT.CHART_OF_ACCOUNTS AS CHART_OF_ACCOUNTS,
+		  PARENT.LEN
+	from :LT_CE_TMP2 AS CHILD
+	JOIN :LT_CE_TMP5 AS PARENT
+	--ON (SUBSTR (PARENT.CHILD, 13, 10) = CHILD.PARENT
+	ON (SUBSTR (PARENT.CHILD, 12, 10) = CHILD.PARENT)
+	where CHILD.PARENT IS NOT NULL;
+	
+	LT_CE_TMP7 =
+		SELECT
+			PARENT,
+			CHILD,
+			CHILD_CONCAT,
+		--	COST_ELEMENT,
+			LEVEL,
+			ControllingArea,
+		--	CHART_OF_ACCOUNTS,
+			LEN
+		from :LT_CE_TMP7
+	
+		UNION
+	
+		SELECT
+			  PARENT,
+			  CHILD,
+			  CHILD_CONCAT,
+		--	  COST_ELEMENT,
+			  LEVEL,
+			  ControllingArea,
+		--	  CHART_OF_ACCOUNTS,
+			  LEN
+		from :LT_CE_TMP7B;
+	
+	/*AC*/
+	SELECT COUNT (*) INTO LV_CE_COUNT FROM :LT_CE_TMP7;
+	
+	IF	(:LV_CE_COUNT = 0) THEN
+	/*
+		LT_CE_TMP7 =
+			  SELECT DISTINCT 
+				--CONCAT(PARENT.PARENT, PARENT.CHILD) AS PARENT,
+			  PARENT.CHILD AS PARENT,
+			  trim(CHILD.CHILD) AS CHILD,
+			  --CONCAT (SUBSTR (PARENT.CHILD, 1, 10), CHILD.CHILD) AS CHILD,
+		--	  COST_ELEMENT,
+			  --:CE_LEV + 1 AS LEVEL,
+		--	  COST_ELEMENT,
+			  PARENT.LEVEL + 1 AS LEVEL,
+			  PARENT.ControllingArea AS ControllingArea,
+			  PARENT.CHART_OF_ACCOUNTS AS CHART_OF_ACCOUNTS,
+			  PARENT.LEN
+		from :LT_CE_TMP2 AS CHILD
+		JOIN :LT_CE_TMP3 AS PARENT
+		ON (SUBSTR (PARENT.CHILD, 13, 10) = CHILD.PARENT
+		OR SUBSTR (PARENT.CHILD, 12, 10) = CHILD.PARENT)
+		where CHILD.PARENT IS NOT NULL; */
+		
+		LT_CE_TMP7 =
+			  SELECT DISTINCT 
+				--CONCAT(PARENT.PARENT, PARENT.CHILD) AS PARENT,
+			  PARENT.CHILD AS PARENT,
+			  trim(CHILD.CHILD) AS CHILD,
+			  CONCAT (SUBSTR (PARENT.CHILD, 1, 12), CHILD.CHILD) AS CHILD_CONCAT,
+			  --CONCAT (SUBSTR (PARENT.CHILD, 1, 10), CHILD.CHILD) AS CHILD,
+		--	  COST_ELEMENT,
+			  --:CE_LEV + 1 AS LEVEL,
+		--	  COST_ELEMENT,
+			  PARENT.LEVEL + 1 AS LEVEL,
+			  PARENT.ControllingArea AS ControllingArea,
+		--	  PARENT.CHART_OF_ACCOUNTS AS CHART_OF_ACCOUNTS,
+			  PARENT.LEN
+		from :LT_CE_TMP2 AS CHILD
+		JOIN :LT_CE_TMP3 AS PARENT
+		ON (SUBSTR (PARENT.CHILD, 13, 10) = CHILD.PARENT) 
+		-- OR SUBSTR (PARENT.CHILD, 12, 10) = CHILD.PARENT)
+		where CHILD.PARENT IS NOT NULL;
+		
+		LT_CE_TMP7B =
+			  SELECT DISTINCT 
+				--CONCAT(PARENT.PARENT, PARENT.CHILD) AS PARENT,
+			  PARENT.CHILD AS PARENT,
+			  trim(CHILD.CHILD) AS CHILD,
+			  CONCAT (SUBSTR (PARENT.CHILD, 1, 11), CHILD.CHILD) AS CHILD_CONCAT,
+			  --CONCAT (SUBSTR (PARENT.CHILD, 1, 10), CHILD.CHILD) AS CHILD,
+		--	  COST_ELEMENT,
+			  --:CE_LEV + 1 AS LEVEL,
+		--	  COST_ELEMENT,
+			  PARENT.LEVEL + 1 AS LEVEL,
+			  PARENT.ControllingArea AS ControllingArea,
+			--  PARENT.CHART_OF_ACCOUNTS AS CHART_OF_ACCOUNTS,
+			  PARENT.LEN
+		from :LT_CE_TMP2 AS CHILD
+		JOIN :LT_CE_TMP3 AS PARENT
+		--ON (SUBSTR (PARENT.CHILD, 13, 10) = CHILD.PARENT
+		ON(SUBSTR (PARENT.CHILD, 12, 10) = CHILD.PARENT)
+		where CHILD.PARENT IS NOT NULL;
+		
+		LT_CE_TMP7 =
+		SELECT
+			PARENT,
+			CHILD,
+			CHILD_CONCAT,
+		--	COST_ELEMENT,
+			LEVEL,
+			ControllingArea,
+		--	CHART_OF_ACCOUNTS,
+			LEN
+		from :LT_CE_TMP7
+	
+		UNION
+	
+		SELECT
+			  PARENT,
+			  CHILD,
+			  CHILD_CONCAT,
+		--	  COST_ELEMENT,
+			  LEVEL,
+			  ControllingArea,
+			--  CHART_OF_ACCOUNTS,
+			  LEN
+		from :LT_CE_TMP7B;
+		
+	END IF;
+	
+	
+	LT_IO =
+		SELECT
+			PARENT,
+			CHILD,
+			CHILD_CONCAT,
+		--	COST_ELEMENT,
+			LEVEL,
+			ControllingArea,
+			LEN
+		from :LT_IO
+	
+		UNION
+	
+		SELECT
+			  PARENT,
+			  CHILD,
+			  CHILD_CONCAT,
+		--	  COST_ELEMENT,
+			  LEVEL,
+			  ControllingArea,
+			  LEN
+		from :LT_IO_TMP2
+		
+		UNION
+	
+		SELECT
+			  PARENT,
+			  CHILD,
+			  CHILD_CONCAT,
+		--	  COST_ELEMENT,
+			  LEVEL,
+			  ControllingArea,
+			  LEN
+		from :LT_CE_TMP3
+		
+		UNION
+	
+		SELECT
+			  PARENT,
+			  CHILD,
+			  CHILD_CONCAT,
+		--	  COST_ELEMENT,
+			  LEVEL,
+			  ControllingArea,
+			  LEN
+		from :LT_CE_TMP5
+		
+		UNION
+	
+		SELECT
+			  PARENT,
+			  CHILD,
+			  CHILD_CONCAT,
+		--	  COST_ELEMENT,
+			  LEVEL,
+			  ControllingArea,
+			  LEN
+	--		  INTERNAL_ORDER
+		from :LT_CE_TMP7
+		;
+		/*AC*/
+		/*
+		UNION
+	
+		SELECT
+			  PARENT,
+			  CHILD,
+		--	  COST_ELEMENT,
+			  LEVEL,
+			  ControllingArea
+		from :LT_IO_TMP3;
+		*/
+		/*AC*/
+	
+		var_out =
+		  SELECT
+			  PARENT,
+			  CHILD,
+			  CHILD_CONCAT,
+		--	  COST_ELEMENT,
+			  LEVEL,
+			  ControllingArea,
+			  LEN
+		  from :LT_HIERARCHY
+	
+	    UNION
+	
+			SELECT
+			  PARENT,
+			  CHILD,
+			  CHILD_CONCAT,
+		--	  COST_ELEMENT,
+			  LEVEL,
+			  ControllingArea,
+			  LEN
+		  from :LT_IO;
+
+	end if;
+
+END;
+
+RETURN
+
+
+--SELECT * FROM :VAR_OUT;
+select 
+ 	trim(ControllingArea) as CONTROLLING_AREA
+, 	LEVEL	
+,	PARENT
+,	trim(CHILD) as CHILD
+,	trim(CHILD_CONCAT) as CHILD_CONCAT
+, LEN
+--,   trim(INTERNAL_ORDER) as INTERNAL_ORDER
+from :var_out;
+
+end;

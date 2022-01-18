@@ -1,0 +1,69 @@
+PROCEDURE "plx_etl::SP_BSEG_DELTA" (  out t_out "V_ECC_BSEG") 
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+	READS SQL DATA AS
+BEGIN
+/***************************** 
+	Write your procedure logic 
+ *****************************/
+ 
+	DECLARE lv_start_date VARCHAR(8) := '20180301';
+	DECLARE lv_end_date VARCHAR(8) := '20180301';
+	DECLARE lv_cpudt_start, lv_cpudt_end, lv_aedat_start, lv_aedat_end VARCHAR(8) := '29990101';
+	
+	
+	DECLARE lv_row_count INTEGER;
+	DECLARE i INTEGER;
+	declare lv_belnr nvarchar(10):='9999999999';
+	DECLARE lv_bukrs nvarchar(4) := '9999'; 
+	DECLARE lv_gjahr nvarchar(4) := '9999'; 
+ 	DECLARE arr_dates  VARCHAR(8) ARRAY;
+ 	
+	DECLARE ARR_BKPF_NR  NVARCHAR(10) ARRAY;
+	DECLARE ARR_BKPF_BUKRS  NVARCHAR(4) ARRAY;
+	DECLARE ARR_BKPF_GJAHR  VARCHAR(4) ARRAY;
+	--GET DATES FROM PLX_DW.HANA_CNTRL_BSEG_LOADS
+	
+	
+	select cpudt_start into  lv_cpudt_start from "HANA_CNTRL_BSEG_LOADS";
+	select cpudt_end   into  lv_cpudt_end from "HANA_CNTRL_BSEG_LOADS";
+	select aedat_start into  lv_aedat_start from "HANA_CNTRL_BSEG_LOADS";
+	select aedat_end   into  lv_aedat_end from "HANA_CNTRL_BSEG_LOADS";
+	
+					
+	
+	-- get list of docs in BKPF within this 
+	-- start & end time frame
+	lt_bkpf_doc_list = 
+	SELECT  BUKRS, BELNR, GJAHR
+	FROM    "ECC_BKPF"
+	WHERE   "CPUDT" BETWEEN lv_cpudt_start AND lv_cpudt_end 
+	--OR "AEDAT" BETWEEN lv_aedat_start AND lv_aedat_end 
+	and "BUKRS" = '1100'; 
+   
+	ARR_BKPF_NR  := ARRAY_AGG(:lt_bkpf_doc_list.BELNR ORDER BY BUKRS, BELNR, GJAHR);
+	ARR_BKPF_BUKRS := ARRAY_AGG(:lt_bkpf_doc_list.BUKRS ORDER BY BUKRS, BELNR, GJAHR);
+  	ARR_BKPF_GJAHR := ARRAY_AGG(:lt_bkpf_doc_list.GJAHR ORDER BY BUKRS, BELNR, GJAHR);
+	-- After each record set is returned, add it to our accumulated t_out table
+		
+    FOR lv_row_count IN 1..CARDINALITY(:arr_bkpf_nr) DO 
+    
+	    lv_belnr := :ARR_BKPF_NR[lv_row_count];
+	    lv_bukrs := :ARR_BKPF_BUKRS[lv_row_count];
+		lv_gjahr := :ARR_BKPF_GJAHR[lv_row_count];
+	   t_bseg =    select 	* 
+	  				 from     "V_ECC_BSEG"
+	   				where   BELNR = :lv_belnr AND BUKRS = :lv_bukrs and GJAHR = :lv_gjahr; 
+	   	
+	   				
+	   				t_out = select * from :t_bseg
+	   							union all 
+               				select *  from :t_out ; 
+       	 
+           
+	END FOR;
+
+ 
+ 
+ 
+END;

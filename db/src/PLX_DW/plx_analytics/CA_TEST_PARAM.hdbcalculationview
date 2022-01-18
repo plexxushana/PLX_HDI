@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="3.0" id="plx_analytics::CA_TEST_PARAM" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" xscCompatibilityMode="true">
+<origin/>
+  <descriptions defaultDescription="CA_TEST_PARAM"/>
+  <metadata changedAt="2019-12-04 14:27:23.437"/>
+  <localVariables>
+    <variable id="P_GROUP_NODE" parameter="true">
+      <descriptions defaultDescription="P_GROUP_NODE"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="" length="24" mandatory="true" scale="0">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_CE_VALUE_HELP</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>Z_SETNAME</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="ip_chart_accounts" parameter="true">
+      <descriptions defaultDescription="ip_chart_accounts"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="HOSP" length="4" mandatory="true">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" forStarJoin="true">
+      <targetVariable name="P_GROUP_NODE" resourceUri="plx_analytics::CA_DIM_COST_ELEMENT_HIERARCHY"/>
+      <localVariable>P_GROUP_NODE</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" forStarJoin="true">
+      <targetVariable name="P_CHART_OF_ACCOUNTS" resourceUri="plx_analytics::CA_DIM_COST_ELEMENT_HIERARCHY"/>
+      <localVariable>ip_chart_accounts</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="27"/>
+  <dataSources>
+    <DataSource id="ECC_COEP">
+      <resourceUri>ECC_COEP</resourceUri>
+    </DataSource>
+  </dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="PERIO"/>
+        <viewAttribute id="WTGBTR"/>
+        <viewAttribute id="KSTAR"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="ECC_COEP"/>
+    </calculationView>
+</calculationViews>
+  <logicalModel id="Projection_1">
+    <descriptions/>
+    <attributes>
+      <attribute id="KOKRS" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Controlling Area"/>
+        <keyMapping columnObjectName="Projection_1" columnName="KOKRS"/>
+      </attribute>
+      <attribute id="BELNR" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Document Number"/>
+        <keyMapping columnObjectName="Projection_1" columnName="BELNR"/>
+      </attribute>
+      <attribute id="BUZEI" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Posting row"/>
+        <keyMapping columnObjectName="Projection_1" columnName="BUZEI"/>
+      </attribute>
+      <attribute id="PERIO" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Period"/>
+        <keyMapping columnObjectName="Projection_1" columnName="PERIO"/>
+      </attribute>
+      <attribute id="KSTAR" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cost Element"/>
+        <keyMapping columnObjectName="Projection_1" columnName="KSTAR"/>
+      </attribute>
+      <attribute id="KSTAR$local">
+        <descriptions defaultDescription="Cost Element"/>
+        <keyMapping columnObjectName="Projection_1" columnName="KSTAR"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="WTGBTR" order="5" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total Value in Transaction Currency"/>
+        <measureMapping columnObjectName="Projection_1" columnName="WTGBTR"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+    <sharedDimensions>
+      <logicalJoin associatedObjectUri="plx_analytics::CA_DIM_COST_ELEMENT_HIERARCHY">
+        <attributes>
+          <attributeRef>KSTAR$local</attributeRef>
+        </attributes>
+        <associatedAttributeNames>
+          <attributeName>CHILD_CE</attributeName>
+        </associatedAttributeNames>
+        <properties cardinality="CN_N" joinType="rightOuter" joinOperator="Equal"/>
+        <associatedAttributeFeatures/>
+      </logicalJoin>
+    </sharedDimensions>
+  </logicalModel>
+<layout>
+  <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="40" y="85"/></shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="80" y="240"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    
+      <shape modelObjectName="Projection_1" modelObjectNameSpace="StarJoinViewNodeInput" modelObjectType="repository">
+        <upperLeftCorner x="250" y="250"/>
+      </shape>
+      <shape modelObjectName="plx_analytics::CA_DIM_COST_ELEMENT_HIERARCHY" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
+        <upperLeftCorner x="614" y="30"/>
+      </shape></shapes>
+</layout>
+</Calculation:scenario>

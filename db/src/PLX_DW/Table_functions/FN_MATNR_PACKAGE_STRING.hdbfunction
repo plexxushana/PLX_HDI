@@ -1,0 +1,105 @@
+FUNCTION "plx_analytics::FN_MATNR_PACKAGE_STRING" ( ) 
+	RETURNS "Z_MATNR_EXT"
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER AS
+BEGIN
+/***************************** 
+	Write your function logic
+ *****************************/
+declare marm_matnr							nvarchar(18) array;
+declare marm_meinh							nvarchar(3) array;
+declare marm_umrez							decimal array;
+declare mara_meins							nvarchar(3) array;
+declare v_matnr   							Nvarchar(18) := '';
+declare v_matnr1   							Nvarchar(18) :=  '';
+declare v_matnr2   							Nvarchar(18) :='' ;
+declare v_meinh								nvarchar(3)	:='';
+declare v_meins								nvarchar(3) :='';
+declare v_umrez								decimal(5,0) :=0;
+declare v_package_string1					nvarchar(110):='';
+declare v_package_string2					nvarchar(110):='';
+declare v_package_string3					nvarchar(110):='';
+declare v_package_string4					nvarchar(110):='';
+declare v_package_string5					nvarchar(110):='';
+declare v_package_string6					nvarchar(110):='';
+declare matnr								nvarchar(18) array;
+declare arr_package_string					nvarchar(110) array;
+declare v_first_row							integer :=1;
+declare v_arr_cnt							integer :=1;	
+declare v_row_count, i,v_previous			integer :=1;
+
+ 	   
+v_first_row	 := 1;
+v_arr_cnt := 1;	
+v_row_count := 1;	
+i := 1;	
+v_previous	:= 1;
+ 	   
+ 	   
+ 	   
+--get the total number of records from MARM so we can loop through	   
+ 	   select count ( distinct "MATNR") 
+ 	        INTO v_row_count
+ 	        from "ECC_MARM";
+ 	   
+--bind the select statement to the table variable LT_DATA	   
+ 	   LT_DATA = SELECT A."MATNR", A."MEINH",A."UMREZ", B."MEINS" 
+					FROM   "ECC_MARM"  as A inner join "ECC_MARA"  as B
+       	   			 ON		A."MATNR" = B."MATNR"
+       	    		--where   A."MEINH" <> B."MEINS"
+       	         	    Order by A."MATNR", A."MEINH";
+ 	   
+--Fill arrays that will store the data . Fill them with values from the table variable above	   
+marm_matnr := ARRAY_AGG(:LT_DATA.MATNR ORDER BY MATNR,MEINH);
+marm_meinh := ARRAY_AGG(:LT_DATA.MEINH ORDER BY MATNR,MEINH);
+marm_umrez := ARRAY_AGG(:LT_DATA.UMREZ ORDER BY MATNR,MEINH);
+mara_meins := ARRAY_AGG(:LT_DATA.MEINS ORDER BY MATNR,MEINH);
+ 	    
+ -- now loop through the arrays so that we can build the string Package String.	        
+ 	   FOR v_row_count IN 1..CARDINALITY(:marm_matnr) DO 
+ 	
+ 	    	if :marm_matnr[v_row_count] <>  v_matnr1  AND v_matnr1 <> ''  then  --v_matnr2<>'' to avoid the first row  
+      		--because now is a new material, we start moving the data to the array that will be the end result ----
+                matnr[:v_arr_cnt]  					:= v_matnr1;	
+      			arr_package_string[:v_arr_cnt] 		:= v_package_string6;
+      			v_arr_cnt:= :v_arr_cnt + 1;
+      			v_package_string6 := '';
+      			
+      					v_package_string1 := concat('1', :marm_meinh[:v_row_count] );
+      		  			v_package_string2 := concat(v_package_string1,'<>');
+      					v_package_string3 := concat(v_package_string2,to_nvarchar(:marm_umrez[:v_row_count]) ); 
+      					v_package_string4 := concat(v_package_string3 , :mara_meins[:v_row_count]);
+      					v_package_string5 := concat(v_package_string4,'|');
+      					if length(v_package_string6) <= 95 then 
+      							v_package_string6 := concat(v_package_string6, v_package_string5);
+      					end if ;
+      			
+      		else 
+      		  			v_package_string1 := concat('1', :marm_meinh[:v_row_count] );
+      		  			v_package_string2 := concat(v_package_string1,'<>');
+      					v_package_string3 := concat(v_package_string2,to_nvarchar(:marm_umrez[:v_row_count]) ); 
+      					v_package_string4 := concat(v_package_string3 , :mara_meins[:v_row_count]);
+      					v_package_string5 := concat(v_package_string4,'|');
+      					if length(v_package_string6) <= 95 then 
+      							v_package_string6 := concat(v_package_string6, v_package_string5);
+      					end if ;
+      				
+      		
+      		end if;  
+      		
+      		v_matnr1 := :marm_matnr[:v_row_count];
+      		v_previous := v_row_count;
+      		v_package_string1 := '';
+      		v_package_string2 := '';
+      		v_package_string3 := '';
+      		v_package_string4 := '';
+      		v_package_string5 := '';
+      		
+      END FOR ;	
+      
+--this statement is to pass the data from the array to the table for output   
+       t = unnest(:matnr, :arr_package_string) as (MATNR, PACKAGE_STRING);     
+  
+     RETURN  (select MATNR, PACKAGE_STRING from :t )  ;      
+     
+END;

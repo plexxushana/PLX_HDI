@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="plx_analytics::CA_SOURCING_RFP" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+  <descriptions defaultDescription="CA_SOURCING_RFP"/>
+  <metadata changedAt="2020-03-23 13:49:56.42"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="23"/>
+  <dataSources>
+    <DataSource id="HANA_RFP_SPENDCOMP">
+      <resourceUri>HANA_RFP_SPENDCOMP</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="Initiative"/>
+        <viewAttribute id="Supplier_Vendor"/>
+        <viewAttribute id="Hospital_Material"/>
+        <viewAttribute id="Supplier_Material"/>
+        <viewAttribute id="Category"/>
+        <viewAttribute id="Hospital_Name"/>
+        <viewAttribute id="Weighted_Avg_Each_price"/>
+        <viewAttribute id="Current_Volume"/>
+        <viewAttribute id="Current_price_EA"/>
+        <viewAttribute id="BASE_UNIT_OF_MEASURE_GTIN_IF_APPLICABLE"/>
+        <viewAttribute id="AUOM1_IF_APPLICABLE"/>
+        <viewAttribute id="AUOM1_QTY_IF_APPLICABLE"/>
+        <viewAttribute id="SUPPLIER_PRICE"/>
+        <viewAttribute id="PURCHASE_ORDER_PRICE_UNIT_OF_MEASURE"/>
+        <viewAttribute id="Vendor_Response_Price_Per_EA"/>
+        <viewAttribute id="Markup"/>
+        <viewAttribute id="Rebate"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#HANA_RFP_SPENDCOMP">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Initiative" source="Initiative"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Supplier_Vendor" source="Supplier_Vendor"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Hospital_Material" source="Hospital_Material"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Supplier_Material" source="Supplier_Material"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Category" source="Category"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Hospital_Name" source="Hospital_Name"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Weighted_Avg_Each_price" source="Weighted_Avg_Each_price"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Current_Volume" source="Current_Volume"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Current_price_EA" source="Current_price_EA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BASE_UNIT_OF_MEASURE_GTIN_IF_APPLICABLE" source="BASE_UNIT_OF_MEASURE_GTIN_IF_APPLICABLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUOM1_IF_APPLICABLE" source="AUOM1_IF_APPLICABLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUOM1_QTY_IF_APPLICABLE" source="AUOM1_QTY_IF_APPLICABLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUPPLIER_PRICE" source="SUPPLIER_PRICE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PURCHASE_ORDER_PRICE_UNIT_OF_MEASURE" source="PURCHASE_ORDER_PRICE_UNIT_OF_MEASURE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Vendor_Response_Price_Per_EA" source="Vendor_Response_Price_Per_EA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Markup" source="Markup"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Rebate" source="Rebate"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="Initiative"/>
+        <viewAttribute id="Supplier_Vendor"/>
+        <viewAttribute id="Hospital_Material"/>
+        <viewAttribute id="Supplier_Material"/>
+        <viewAttribute id="Category"/>
+        <viewAttribute id="Hospital_Name"/>
+        <viewAttribute id="Weighted_Avg_Each_price"/>
+        <viewAttribute id="Current_Volume"/>
+        <viewAttribute id="Current_price_EA"/>
+        <viewAttribute id="BASE_UNIT_OF_MEASURE_GTIN_IF_APPLICABLE"/>
+        <viewAttribute id="AUOM1_IF_APPLICABLE"/>
+        <viewAttribute id="AUOM1_QTY_IF_APPLICABLE"/>
+        <viewAttribute id="SUPPLIER_PRICE"/>
+        <viewAttribute id="PURCHASE_ORDER_PRICE_UNIT_OF_MEASURE"/>
+        <viewAttribute id="Vendor_Response_Price_Per_EA"/>
+        <viewAttribute id="Markup"/>
+        <viewAttribute id="Rebate"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DECIMAL" id="CurrentSpend" length="15" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;Current_Volume&quot;*&quot;Current_price_EA&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="NewSpend" length="15" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;Current_Volume&quot;*(1+&quot;Markup&quot;)*&quot;Vendor_Response_Price_Per_EA&quot;*(1-&quot;Rebate&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#Projection_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Initiative" source="Initiative"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Supplier_Vendor" source="Supplier_Vendor"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Hospital_Material" source="Hospital_Material"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Supplier_Material" source="Supplier_Material"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Category" source="Category"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Hospital_Name" source="Hospital_Name"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Weighted_Avg_Each_price" source="Weighted_Avg_Each_price"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Current_Volume" source="Current_Volume"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Current_price_EA" source="Current_price_EA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BASE_UNIT_OF_MEASURE_GTIN_IF_APPLICABLE" source="BASE_UNIT_OF_MEASURE_GTIN_IF_APPLICABLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUOM1_IF_APPLICABLE" source="AUOM1_IF_APPLICABLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUOM1_QTY_IF_APPLICABLE" source="AUOM1_QTY_IF_APPLICABLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUPPLIER_PRICE" source="SUPPLIER_PRICE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PURCHASE_ORDER_PRICE_UNIT_OF_MEASURE" source="PURCHASE_ORDER_PRICE_UNIT_OF_MEASURE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Vendor_Response_Price_Per_EA" source="Vendor_Response_Price_Per_EA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Markup" source="Markup"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Rebate" source="Rebate"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="Initiative"/>
+        <viewAttribute id="Supplier_Vendor"/>
+        <viewAttribute id="Hospital_Material"/>
+        <viewAttribute id="Supplier_Material"/>
+        <viewAttribute id="Category"/>
+        <viewAttribute id="Hospital_Name"/>
+        <viewAttribute id="Weighted_Avg_Each_price"/>
+        <viewAttribute id="Current_Volume"/>
+        <viewAttribute id="Current_price_EA"/>
+        <viewAttribute id="BASE_UNIT_OF_MEASURE_GTIN_IF_APPLICABLE"/>
+        <viewAttribute id="AUOM1_IF_APPLICABLE"/>
+        <viewAttribute id="AUOM1_QTY_IF_APPLICABLE"/>
+        <viewAttribute id="SUPPLIER_PRICE"/>
+        <viewAttribute id="PURCHASE_ORDER_PRICE_UNIT_OF_MEASURE"/>
+        <viewAttribute id="Vendor_Response_Price_Per_EA"/>
+        <viewAttribute id="Markup"/>
+        <viewAttribute id="Rebate"/>
+        <viewAttribute id="CurrentSpend"/>
+        <viewAttribute id="NewSpend"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Projection_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Initiative" source="Initiative"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Supplier_Vendor" source="Supplier_Vendor"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Hospital_Material" source="Hospital_Material"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Supplier_Material" source="Supplier_Material"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Category" source="Category"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Hospital_Name" source="Hospital_Name"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Weighted_Avg_Each_price" source="Weighted_Avg_Each_price"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Current_Volume" source="Current_Volume"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Current_price_EA" source="Current_price_EA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BASE_UNIT_OF_MEASURE_GTIN_IF_APPLICABLE" source="BASE_UNIT_OF_MEASURE_GTIN_IF_APPLICABLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUOM1_IF_APPLICABLE" source="AUOM1_IF_APPLICABLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUOM1_QTY_IF_APPLICABLE" source="AUOM1_QTY_IF_APPLICABLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUPPLIER_PRICE" source="SUPPLIER_PRICE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PURCHASE_ORDER_PRICE_UNIT_OF_MEASURE" source="PURCHASE_ORDER_PRICE_UNIT_OF_MEASURE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Vendor_Response_Price_Per_EA" source="Vendor_Response_Price_Per_EA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Markup" source="Markup"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Rebate" source="Rebate"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CurrentSpend" source="CurrentSpend"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NewSpend" source="NewSpend"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="Projection_3">
+    <descriptions/>
+    <attributes>
+      <attribute id="Initiative" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Initiative"/>
+        <keyMapping columnObjectName="Projection_3" columnName="Initiative"/>
+      </attribute>
+      <attribute id="Supplier_Vendor" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Supplier_Vendor"/>
+        <keyMapping columnObjectName="Projection_3" columnName="Supplier_Vendor"/>
+      </attribute>
+      <attribute id="Hospital_Material" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Hospital_Material"/>
+        <keyMapping columnObjectName="Projection_3" columnName="Hospital_Material"/>
+      </attribute>
+      <attribute id="Supplier_Material" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Supplier_Material"/>
+        <keyMapping columnObjectName="Projection_3" columnName="Supplier_Material"/>
+      </attribute>
+      <attribute id="Category" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Category"/>
+        <keyMapping columnObjectName="Projection_3" columnName="Category"/>
+      </attribute>
+      <attribute id="Hospital_Name" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Hospital_Name"/>
+        <keyMapping columnObjectName="Projection_3" columnName="Hospital_Name"/>
+      </attribute>
+      <attribute id="BASE_UNIT_OF_MEASURE_GTIN_IF_APPLICABLE" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Base Unit of Measure"/>
+        <keyMapping columnObjectName="Projection_3" columnName="BASE_UNIT_OF_MEASURE_GTIN_IF_APPLICABLE"/>
+      </attribute>
+      <attribute id="AUOM1_IF_APPLICABLE" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Supplier Unit of Measure"/>
+        <keyMapping columnObjectName="Projection_3" columnName="AUOM1_IF_APPLICABLE"/>
+      </attribute>
+      <attribute id="PURCHASE_ORDER_PRICE_UNIT_OF_MEASURE" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchase Order Price Unit of Measure"/>
+        <keyMapping columnObjectName="Projection_3" columnName="PURCHASE_ORDER_PRICE_UNIT_OF_MEASURE"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="Weighted_Avg_Each_price" order="7" aggregationType="max" measureType="simple">
+        <descriptions defaultDescription="Weighted_Avg_Each_price"/>
+        <measureMapping columnObjectName="Projection_3" columnName="Weighted_Avg_Each_price"/>
+      </measure>
+      <measure id="Current_Volume" order="8" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Current_Volume"/>
+        <measureMapping columnObjectName="Projection_3" columnName="Current_Volume"/>
+      </measure>
+      <measure id="Current_price_EA" order="9" aggregationType="max" measureType="simple">
+        <descriptions defaultDescription="Current_price_EA"/>
+        <measureMapping columnObjectName="Projection_3" columnName="Current_price_EA"/>
+      </measure>
+      <measure id="AUOM1_QTY_IF_APPLICABLE" order="12" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="AUOM Qty"/>
+        <measureMapping columnObjectName="Projection_3" columnName="AUOM1_QTY_IF_APPLICABLE"/>
+      </measure>
+      <measure id="SUPPLIER_PRICE" order="13" aggregationType="max" measureType="simple">
+        <descriptions defaultDescription="Supplier Price"/>
+        <measureMapping columnObjectName="Projection_3" columnName="SUPPLIER_PRICE"/>
+      </measure>
+      <measure id="Vendor_Response_Price_Per_EA" order="15" aggregationType="max" measureType="simple">
+        <descriptions defaultDescription="Vendor_Response_Price_Per_EA"/>
+        <measureMapping columnObjectName="Projection_3" columnName="Vendor_Response_Price_Per_EA"/>
+      </measure>
+      <measure id="Markup" order="16" aggregationType="max" measureType="simple">
+        <descriptions defaultDescription="Markup"/>
+        <measureMapping columnObjectName="Projection_3" columnName="Markup"/>
+      </measure>
+      <measure id="Rebate" order="17" aggregationType="max" measureType="simple">
+        <descriptions defaultDescription="Rebate"/>
+        <measureMapping columnObjectName="Projection_3" columnName="Rebate"/>
+      </measure>
+      <measure id="CurrentSpend" order="18" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Current Spend"/>
+        <measureMapping columnObjectName="Projection_3" columnName="CurrentSpend"/>
+      </measure>
+      <measure id="NewSpend" order="19" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="New Spend"/>
+        <measureMapping columnObjectName="Projection_3" columnName="NewSpend"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+    <sharedDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="22" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="341"/>
+        <rectangleSize height="30" width="140"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="263"/>
+        <rectangleSize height="30" width="140"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="185"/>
+        <rectangleSize height="30" width="140"/>
+      </shape>
+      <shape modelObjectName="Projection_3" modelObjectNameSpace="StarJoinViewNodeInput" modelObjectType="repository">
+        <upperLeftCorner x="0" y="30"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

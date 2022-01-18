@@ -1,0 +1,1575 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="plx_analytics::CA_PLX_SAVINGS_GENERATED" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+  <descriptions defaultDescription="Savings Generated "/>
+  <metadata changedAt="2019-10-15 11:03:16.917"/>
+  <localVariables>
+    <variable id="in_vnd__id">
+      <descriptions defaultDescription="in_vnd__id"/>
+      <variableProperties datatype="VARCHAR" mandatory="false">
+        <valueDomain type="AttributeValue">
+          <attribute name="Z_LIFNR"/>
+        </valueDomain>
+        <selection multiLine="true" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="38"/>
+  <dataSources>
+    <DataSource id="CA_DIM_ARIBA_CONTRACTS">
+      <resourceUri>plx_analytics::CA_DIM_ARIBA_CONTRACTS</resourceUri>
+    </DataSource>
+    <DataSource id="ariba_parent$$$$CA_DIM_ARIBA_CONTRACTS$$">
+      <resourceUri>plx_analytics::CA_DIM_ARIBA_CONTRACTS</resourceUri>
+    </DataSource>
+    <DataSource id="CA_PLX_SPEND_INVOICES">
+      <resourceUri>plx_analytics::CA_PLX_SPEND_INVOICES</resourceUri>
+    </DataSource>
+    <DataSource id="CA_DIM_CHART_OF_ACCOUNTS">
+      <resourceUri>plx_analytics::CA_DIM_CHART_OF_ACCOUNTS</resourceUri>
+    </DataSource>
+    <DataSource id="CA_DIM_VENDORS">
+      <resourceUri>plx_analytics::CA_DIM_VENDORS</resourceUri>
+    </DataSource>
+    <DataSource id="CA_DIM_MATERIALS">
+      <resourceUri>plx_analytics::CA_DIM_MATERIALS</resourceUri>
+    </DataSource>
+    <DataSource id="FN_SAVINGS_PREVIOUS_PRICE_DATES" type="TABLE_FUNCTION">
+      <resourceUri>plx_analytics::FN_SAVINGS_PREVIOUS_PRICE_DATES</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="ariba">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CONTRACT_ID"/>
+        <viewAttribute id="SUPPLIER"/>
+        <viewAttribute id="PARENT_AGREEMENT_PROJECT_ID"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="CATEGORY"/>
+        <viewAttribute id="INFLATION_FACTOR"/>
+        <viewAttribute id="CAPITAL_ONE_TIME_EXPENSE"/>
+        <viewAttribute id="REBATE"/>
+        <viewAttribute id="TOTAL_CONTRACT_SAVINGS_AMOUNT"/>
+        <viewAttribute id="TOTAL_CONTRACT_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <viewAttribute id="ONE_TIME_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <viewAttribute id="EXTENSION_ANNUAL_SAVINGS_VALUE_INCREMENTAL_AMOUNT"/>
+        <viewAttribute id="CAPITAL_ONE_TIME_SPEND_AMOUNT"/>
+        <viewAttribute id="ANNUAL_SAVINGS_AMOUNT"/>
+        <viewAttribute id="CAPITAL_ONE_TIME_SAVINGS_AMOUNT"/>
+        <viewAttribute id="PROPOSED_CONTRACT_AMOUNT"/>
+        <viewAttribute id="ANNUAL_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <viewAttribute id="CONTRACT_AMOUNT"/>
+        <viewAttribute id="SAVINGS_COMMENTS"/>
+        <viewAttribute id="INITIATIVE_TYPE"/>
+        <viewAttribute id="PROJECT_NAME"/>
+        <viewAttribute id="CONTRACT_STATUS"/>
+        <viewAttribute id="METHOD"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_DIM_ARIBA_CONTRACTS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_ID" source="CONTRACT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUPPLIER" source="SUPPLIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_AGREEMENT_PROJECT_ID" source="PARENT_AGREEMENT_PROJECT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CATEGORY" source="CATEGORY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INFLATION_FACTOR" source="INFLATION_FACTOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAPITAL_ONE_TIME_EXPENSE" source="CAPITAL_ONE_TIME_EXPENSE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REBATE" source="REBATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_CONTRACT_SAVINGS_AMOUNT" source="TOTAL_CONTRACT_SAVINGS_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_CONTRACT_COST_AVOIDANCE_VALUE_ADDS_AMOUNT" source="TOTAL_CONTRACT_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ONE_TIME_COST_AVOIDANCE_VALUE_ADDS_AMOUNT" source="ONE_TIME_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTENSION_ANNUAL_SAVINGS_VALUE_INCREMENTAL_AMOUNT" source="EXTENSION_ANNUAL_SAVINGS_VALUE_INCREMENTAL_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAPITAL_ONE_TIME_SPEND_AMOUNT" source="CAPITAL_ONE_TIME_SPEND_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANNUAL_SAVINGS_AMOUNT" source="ANNUAL_SAVINGS_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAPITAL_ONE_TIME_SAVINGS_AMOUNT" source="CAPITAL_ONE_TIME_SAVINGS_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROPOSED_CONTRACT_AMOUNT" source="PROPOSED_CONTRACT_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANNUAL_COST_AVOIDANCE_VALUE_ADDS_AMOUNT" source="ANNUAL_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_AMOUNT" source="CONTRACT_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS_COMMENTS" source="SAVINGS_COMMENTS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INITIATIVE_TYPE" source="INITIATIVE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROJECT_NAME" source="PROJECT_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_STATUS" source="CONTRACT_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="METHOD" source="METHOD"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="ariba_parent">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PARENT_CONTRACT_ID"/>
+        <viewAttribute id="PARENT_PROJECT_ID"/>
+        <viewAttribute id="PARENT_PROJECT_NAME"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#ariba_parent$$$$CA_DIM_ARIBA_CONTRACTS$$">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_CONTRACT_ID" source="CONTRACT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_PROJECT_ID" source="PROJECT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_PROJECT_NAME" source="PROJECT_NAME"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="ariba_contracts" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PARENT_CONTRACT_ID"/>
+        <viewAttribute id="PARENT_PROJECT_NAME"/>
+        <viewAttribute id="CONTRACT_ID"/>
+        <viewAttribute id="SUPPLIER"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="CATEGORY"/>
+        <viewAttribute id="INFLATION_FACTOR"/>
+        <viewAttribute id="CAPITAL_ONE_TIME_EXPENSE"/>
+        <viewAttribute id="REBATE"/>
+        <viewAttribute id="TOTAL_CONTRACT_SAVINGS_AMOUNT"/>
+        <viewAttribute id="TOTAL_CONTRACT_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <viewAttribute id="ONE_TIME_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <viewAttribute id="EXTENSION_ANNUAL_SAVINGS_VALUE_INCREMENTAL_AMOUNT"/>
+        <viewAttribute id="CAPITAL_ONE_TIME_SPEND_AMOUNT"/>
+        <viewAttribute id="ANNUAL_SAVINGS_AMOUNT"/>
+        <viewAttribute id="CAPITAL_ONE_TIME_SAVINGS_AMOUNT"/>
+        <viewAttribute id="PROPOSED_CONTRACT_AMOUNT"/>
+        <viewAttribute id="ANNUAL_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <viewAttribute id="CONTRACT_AMOUNT"/>
+        <viewAttribute id="SAVINGS_COMMENTS"/>
+        <viewAttribute id="INITIATIVE_TYPE"/>
+        <viewAttribute id="PROJECT_NAME"/>
+        <viewAttribute id="CONTRACT_STATUS"/>
+        <viewAttribute id="METHOD"/>
+        <viewAttribute hidden="true" id="JOIN$PARENT_AGREEMENT_PROJECT_ID$PARENT_PROJECT_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#ariba">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_ID" source="CONTRACT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUPPLIER" source="SUPPLIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CATEGORY" source="CATEGORY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INFLATION_FACTOR" source="INFLATION_FACTOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAPITAL_ONE_TIME_EXPENSE" source="CAPITAL_ONE_TIME_EXPENSE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REBATE" source="REBATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_CONTRACT_SAVINGS_AMOUNT" source="TOTAL_CONTRACT_SAVINGS_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_CONTRACT_COST_AVOIDANCE_VALUE_ADDS_AMOUNT" source="TOTAL_CONTRACT_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ONE_TIME_COST_AVOIDANCE_VALUE_ADDS_AMOUNT" source="ONE_TIME_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTENSION_ANNUAL_SAVINGS_VALUE_INCREMENTAL_AMOUNT" source="EXTENSION_ANNUAL_SAVINGS_VALUE_INCREMENTAL_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAPITAL_ONE_TIME_SPEND_AMOUNT" source="CAPITAL_ONE_TIME_SPEND_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANNUAL_SAVINGS_AMOUNT" source="ANNUAL_SAVINGS_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAPITAL_ONE_TIME_SAVINGS_AMOUNT" source="CAPITAL_ONE_TIME_SAVINGS_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROPOSED_CONTRACT_AMOUNT" source="PROPOSED_CONTRACT_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANNUAL_COST_AVOIDANCE_VALUE_ADDS_AMOUNT" source="ANNUAL_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_AMOUNT" source="CONTRACT_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS_COMMENTS" source="SAVINGS_COMMENTS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INITIATIVE_TYPE" source="INITIATIVE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROJECT_NAME" source="PROJECT_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_STATUS" source="CONTRACT_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="METHOD" source="METHOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PARENT_AGREEMENT_PROJECT_ID$PARENT_PROJECT_ID" source="PARENT_AGREEMENT_PROJECT_ID"/>
+      </input>
+      <input node="#ariba_parent">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_CONTRACT_ID" source="PARENT_CONTRACT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_PROJECT_NAME" source="PARENT_PROJECT_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PARENT_AGREEMENT_PROJECT_ID$PARENT_PROJECT_ID" source="PARENT_PROJECT_ID"/>
+      </input>
+      <joinAttribute name="JOIN$PARENT_AGREEMENT_PROJECT_ID$PARENT_PROJECT_ID"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="spend_invoice" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="BUTXT"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="Z_ORDER_TYPE"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="MFRNR"/>
+        <viewAttribute id="KONNR"/>
+        <viewAttribute id="KDATB"/>
+        <viewAttribute id="KDATE"/>
+        <viewAttribute id="ZTERM"/>
+        <viewAttribute id="IDNLF"/>
+        <viewAttribute id="TXZ01"/>
+        <viewAttribute id="Z_INV_LC"/>
+        <viewAttribute id="Z_INV_LAMT"/>
+        <viewAttribute id="MFRPN"/>
+        <viewAttribute id="GSBER"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="AUFNR"/>
+        <viewAttribute id="SAKNR"/>
+        <viewAttribute id="ANLN1"/>
+        <viewAttribute id="ANLN2"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="Z_INV_BQTY"/>
+        <viewAttribute id="Z_INV_BUOM"/>
+        <viewAttribute id="ZPR_PKGSTR"/>
+        <viewAttribute id="ZFISCAL_YEAR_QUARTER"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="INVOICE_DATE"/>
+        <viewAttribute id="Z_VENDOR_NAME"/>
+        <viewAttribute id="Z_LIFNR"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="Z_INVOICE_QTY"/>
+        <viewAttribute id="Z_INVOICE_OUOM"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="Z_MANIPULATED_CONTRACT"/>
+        <viewAttribute id="Z_COMMODITY"/>
+        <viewAttribute id="Z_SEGMENT_TITLE_EN"/>
+        <viewAttribute id="Z_FAMILE_TITLE_EN"/>
+        <viewAttribute id="Z_CLASS_TITLE_EN"/>
+        <viewAttribute id="EXTWG"/>
+        <viewAttribute id="TXT20"/>
+        <viewAttribute id="SGTXT"/>
+        <viewAttribute id="BEZNK"/>
+        <viewAttribute id="Z_COSTELEM"/>
+        <viewAttribute id="LTEXT"/>
+        <viewAttribute id="KTPNR"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="KOKRS"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="LTR_VPN" length="25" expressionLanguage="COLUMN_ENGINE">
+          <formula>LTRIM(&quot;IDNLF&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="RTR_VPN" length="25" expressionLanguage="COLUMN_ENGINE">
+          <formula>RTRIM(&quot;LTR_VPN&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="TRIM_VPN" length="25" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;RTR_VPN&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CA_PLX_SPEND_INVOICES">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUTXT" source="BUTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_ORDER_TYPE" source="Z_ORDER_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART" source="BSART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRNR" source="MFRNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KONNR" source="KONNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KDATB" source="KDATB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KDATE" source="KDATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZTERM" source="ZTERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IDNLF" source="IDNLF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TXZ01" source="TXZ01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_LC" source="Z_INV_LC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_LAMT" source="Z_INV_LAMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRPN" source="MFRPN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GSBER" source="GSBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUFNR" source="AUFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAKNR" source="SAKNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANLN1" source="ANLN1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANLN2" source="ANLN2"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_BQTY" source="Z_INV_BQTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_BUOM" source="Z_INV_BUOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZPR_PKGSTR" source="ZPR_PKGSTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR_QUARTER" source="ZFISCAL_YEAR_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVOICE_DATE" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_VENDOR_NAME" source="Z_VENDOR_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_LIFNR" source="Z_LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INVOICE_QTY" source="Z_INVOICE_QTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INVOICE_OUOM" source="Z_INVOICE_OUOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_MANIPULATED_CONTRACT" source="Z_MANIPULATED_CONTRACT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_COMMODITY" source="Z_COMMODITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_SEGMENT_TITLE_EN" source="Z_SEGMENT_TITLE_EN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_FAMILE_TITLE_EN" source="Z_FAMILE_TITLE_EN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_CLASS_TITLE_EN" source="Z_CLASS_TITLE_EN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTWG" source="EXTWG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TXT20" source="TXT20"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SGTXT" source="SGTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEZNK" source="BEZNK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_COSTELEM" source="Z_COSTELEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LTEXT" source="LTEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KTPNR" source="KTPNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+      </input>
+      <filter>(not isNull(&quot;IDNLF&quot;))</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="TXT50"/>
+        <viewAttribute id="SAKNR"/>
+        <viewAttribute id="BUKRS"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_DIM_CHART_OF_ACCOUNTS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="TXT50" source="TXT50"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAKNR" source="SAKNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="csr_gl_texts" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="BUTXT"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="Z_ORDER_TYPE"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="MFRNR"/>
+        <viewAttribute id="KONNR"/>
+        <viewAttribute id="KDATB"/>
+        <viewAttribute id="KDATE"/>
+        <viewAttribute id="ZTERM"/>
+        <viewAttribute id="IDNLF"/>
+        <viewAttribute id="TXZ01"/>
+        <viewAttribute id="Z_INV_LC"/>
+        <viewAttribute id="Z_INV_LAMT"/>
+        <viewAttribute id="MFRPN"/>
+        <viewAttribute id="GSBER"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="AUFNR"/>
+        <viewAttribute id="SAKNR"/>
+        <viewAttribute id="ANLN1"/>
+        <viewAttribute id="ANLN2"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="Z_INV_BQTY"/>
+        <viewAttribute id="Z_INV_BUOM"/>
+        <viewAttribute id="ZPR_PKGSTR"/>
+        <viewAttribute id="ZFISCAL_YEAR_QUARTER"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="INVOICE_DATE"/>
+        <viewAttribute id="Z_LIFNR"/>
+        <viewAttribute id="Z_VENDOR_NAME"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="Z_INVOICE_QTY"/>
+        <viewAttribute id="Z_INVOICE_OUOM"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="TXT50"/>
+        <viewAttribute id="Z_MANIPULATED_CONTRACT"/>
+        <viewAttribute id="Z_COMMODITY"/>
+        <viewAttribute id="Z_SEGMENT_TITLE_EN"/>
+        <viewAttribute id="Z_FAMILE_TITLE_EN"/>
+        <viewAttribute id="Z_CLASS_TITLE_EN"/>
+        <viewAttribute id="EXTWG"/>
+        <viewAttribute id="BEZNK"/>
+        <viewAttribute id="TXT20"/>
+        <viewAttribute id="Z_COSTELEM"/>
+        <viewAttribute id="LTEXT"/>
+        <viewAttribute id="KTPNR"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="TRIM_VPN"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#spend_invoice">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUTXT" source="BUTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_ORDER_TYPE" source="Z_ORDER_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART" source="BSART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRNR" source="MFRNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KONNR" source="KONNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KDATB" source="KDATB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KDATE" source="KDATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZTERM" source="ZTERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IDNLF" source="IDNLF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TXZ01" source="TXZ01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_LC" source="Z_INV_LC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_LAMT" source="Z_INV_LAMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRPN" source="MFRPN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GSBER" source="GSBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUFNR" source="AUFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAKNR" source="SAKNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANLN1" source="ANLN1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANLN2" source="ANLN2"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_BQTY" source="Z_INV_BQTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_BUOM" source="Z_INV_BUOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZPR_PKGSTR" source="ZPR_PKGSTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR_QUARTER" source="ZFISCAL_YEAR_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVOICE_DATE" source="INVOICE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_LIFNR" source="Z_LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_VENDOR_NAME" source="Z_VENDOR_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INVOICE_QTY" source="Z_INVOICE_QTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INVOICE_OUOM" source="Z_INVOICE_OUOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_MANIPULATED_CONTRACT" source="Z_MANIPULATED_CONTRACT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_COMMODITY" source="Z_COMMODITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_SEGMENT_TITLE_EN" source="Z_SEGMENT_TITLE_EN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_FAMILE_TITLE_EN" source="Z_FAMILE_TITLE_EN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_CLASS_TITLE_EN" source="Z_CLASS_TITLE_EN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTWG" source="EXTWG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEZNK" source="BEZNK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TXT20" source="TXT20"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_COSTELEM" source="Z_COSTELEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LTEXT" source="LTEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KTPNR" source="KTPNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRIM_VPN" source="TRIM_VPN"/>
+      </input>
+      <input node="#Projection_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="TXT50" source="TXT50"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAKNR" source="SAKNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+      </input>
+      <joinAttribute name="SAKNR"/>
+      <joinAttribute name="BUKRS"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="manufacturer">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MFRNR"/>
+        <viewAttribute id="MANUFACTURER_NAME"/>
+        <viewAttribute id="Z_MFRNR"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_DIM_VENDORS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MANUFACTURER_NAME" source="VENDOR_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_MFRNR" source="LIFNR_Formated"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="csr_manufacturer" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MANUFACTURER_NAME"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="BUTXT"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="Z_ORDER_TYPE"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="MFRNR"/>
+        <viewAttribute id="KONNR"/>
+        <viewAttribute id="KDATB"/>
+        <viewAttribute id="KDATE"/>
+        <viewAttribute id="ZTERM"/>
+        <viewAttribute id="IDNLF"/>
+        <viewAttribute id="TXZ01"/>
+        <viewAttribute id="Z_INV_LC"/>
+        <viewAttribute id="Z_INV_LAMT"/>
+        <viewAttribute id="MFRPN"/>
+        <viewAttribute id="GSBER"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="AUFNR"/>
+        <viewAttribute id="SAKNR"/>
+        <viewAttribute id="ANLN1"/>
+        <viewAttribute id="ANLN2"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="Z_INV_BQTY"/>
+        <viewAttribute id="Z_INV_BUOM"/>
+        <viewAttribute id="ZPR_PKGSTR"/>
+        <viewAttribute id="ZFISCAL_YEAR_QUARTER"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="INVOICE_DATE"/>
+        <viewAttribute id="Z_LIFNR"/>
+        <viewAttribute id="Z_VENDOR_NAME"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="Z_INVOICE_QTY"/>
+        <viewAttribute id="Z_INVOICE_OUOM"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="Z_MANIPULATED_CONTRACT"/>
+        <viewAttribute id="Z_COMMODITY"/>
+        <viewAttribute id="Z_SEGMENT_TITLE_EN"/>
+        <viewAttribute id="Z_FAMILE_TITLE_EN"/>
+        <viewAttribute id="Z_CLASS_TITLE_EN"/>
+        <viewAttribute id="EXTWG"/>
+        <viewAttribute id="BEZNK"/>
+        <viewAttribute id="TXT20"/>
+        <viewAttribute id="Z_COSTELEM"/>
+        <viewAttribute id="LTEXT"/>
+        <viewAttribute id="KTPNR"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="Z_MFRNR"/>
+        <viewAttribute id="TRIM_VPN"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#csr_gl_texts">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUTXT" source="BUTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_ORDER_TYPE" source="Z_ORDER_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART" source="BSART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRNR" source="MFRNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KONNR" source="KONNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KDATB" source="KDATB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KDATE" source="KDATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZTERM" source="ZTERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IDNLF" source="IDNLF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TXZ01" source="TXZ01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_LC" source="Z_INV_LC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_LAMT" source="Z_INV_LAMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRPN" source="MFRPN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GSBER" source="GSBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUFNR" source="AUFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAKNR" source="SAKNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANLN1" source="ANLN1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANLN2" source="ANLN2"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_BQTY" source="Z_INV_BQTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_BUOM" source="Z_INV_BUOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZPR_PKGSTR" source="ZPR_PKGSTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR_QUARTER" source="ZFISCAL_YEAR_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVOICE_DATE" source="INVOICE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_LIFNR" source="Z_LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_VENDOR_NAME" source="Z_VENDOR_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INVOICE_QTY" source="Z_INVOICE_QTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INVOICE_OUOM" source="Z_INVOICE_OUOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_MANIPULATED_CONTRACT" source="Z_MANIPULATED_CONTRACT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_COMMODITY" source="Z_COMMODITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_SEGMENT_TITLE_EN" source="Z_SEGMENT_TITLE_EN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_FAMILE_TITLE_EN" source="Z_FAMILE_TITLE_EN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_CLASS_TITLE_EN" source="Z_CLASS_TITLE_EN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTWG" source="EXTWG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEZNK" source="BEZNK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TXT20" source="TXT20"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_COSTELEM" source="Z_COSTELEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LTEXT" source="LTEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KTPNR" source="KTPNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRIM_VPN" source="TRIM_VPN"/>
+      </input>
+      <input node="#manufacturer">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MANUFACTURER_NAME" source="MANUFACTURER_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_MFRNR" source="Z_MFRNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRNR" source="MFRNR"/>
+      </input>
+      <joinAttribute name="MFRNR"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="material_master">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MAKTX"/>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="MATNR_FORMATED"/>
+        <viewAttribute id="WERKS"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_DIM_MATERIALS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTX" source="MAKTX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR_FORMATED" source="MATNR_FORMATED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="csr_mat_group" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MANUFACTURER_NAME"/>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="MAKTX"/>
+        <viewAttribute id="MATNR_FORMATED"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="BUTXT"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="Z_ORDER_TYPE"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="MFRNR"/>
+        <viewAttribute id="KONNR"/>
+        <viewAttribute id="KDATB"/>
+        <viewAttribute id="KDATE"/>
+        <viewAttribute id="ZTERM"/>
+        <viewAttribute id="IDNLF"/>
+        <viewAttribute id="TXZ01"/>
+        <viewAttribute id="Z_INV_LC"/>
+        <viewAttribute id="Z_INV_LAMT"/>
+        <viewAttribute id="MFRPN"/>
+        <viewAttribute id="GSBER"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="AUFNR"/>
+        <viewAttribute id="SAKNR"/>
+        <viewAttribute id="ANLN1"/>
+        <viewAttribute id="ANLN2"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="Z_INV_BQTY"/>
+        <viewAttribute id="Z_INV_BUOM"/>
+        <viewAttribute id="ZPR_PKGSTR"/>
+        <viewAttribute id="ZFISCAL_YEAR_QUARTER"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="INVOICE_DATE"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="Z_LIFNR"/>
+        <viewAttribute id="Z_VENDOR_NAME"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="Z_INVOICE_QTY"/>
+        <viewAttribute id="Z_INVOICE_OUOM"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="Z_MANIPULATED_CONTRACT"/>
+        <viewAttribute id="Z_COMMODITY"/>
+        <viewAttribute id="Z_SEGMENT_TITLE_EN"/>
+        <viewAttribute id="Z_FAMILE_TITLE_EN"/>
+        <viewAttribute id="Z_CLASS_TITLE_EN"/>
+        <viewAttribute id="EXTWG"/>
+        <viewAttribute id="BEZNK"/>
+        <viewAttribute id="TXT20"/>
+        <viewAttribute id="Z_COSTELEM"/>
+        <viewAttribute id="LTEXT"/>
+        <viewAttribute id="KTPNR"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="Z_MFRNR"/>
+        <viewAttribute id="TRIM_VPN"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#csr_manufacturer">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MANUFACTURER_NAME" source="MANUFACTURER_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUTXT" source="BUTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_ORDER_TYPE" source="Z_ORDER_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART" source="BSART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRNR" source="MFRNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KONNR" source="KONNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KDATB" source="KDATB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KDATE" source="KDATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZTERM" source="ZTERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IDNLF" source="IDNLF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TXZ01" source="TXZ01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_LC" source="Z_INV_LC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_LAMT" source="Z_INV_LAMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRPN" source="MFRPN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GSBER" source="GSBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUFNR" source="AUFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAKNR" source="SAKNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANLN1" source="ANLN1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANLN2" source="ANLN2"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_BQTY" source="Z_INV_BQTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_BUOM" source="Z_INV_BUOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZPR_PKGSTR" source="ZPR_PKGSTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR_QUARTER" source="ZFISCAL_YEAR_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVOICE_DATE" source="INVOICE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_LIFNR" source="Z_LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_VENDOR_NAME" source="Z_VENDOR_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INVOICE_QTY" source="Z_INVOICE_QTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INVOICE_OUOM" source="Z_INVOICE_OUOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_MANIPULATED_CONTRACT" source="Z_MANIPULATED_CONTRACT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_COMMODITY" source="Z_COMMODITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_SEGMENT_TITLE_EN" source="Z_SEGMENT_TITLE_EN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_FAMILE_TITLE_EN" source="Z_FAMILE_TITLE_EN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_CLASS_TITLE_EN" source="Z_CLASS_TITLE_EN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTWG" source="EXTWG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEZNK" source="BEZNK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TXT20" source="TXT20"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_COSTELEM" source="Z_COSTELEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LTEXT" source="LTEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KTPNR" source="KTPNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_MFRNR" source="Z_MFRNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRIM_VPN" source="TRIM_VPN"/>
+      </input>
+      <input node="#material_master">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTX" source="MAKTX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR_FORMATED" source="MATNR_FORMATED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+      </input>
+      <joinAttribute name="MATNR"/>
+      <joinAttribute name="WERKS"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="csr_ariba" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PARENT_CONTRACT_ID"/>
+        <viewAttribute id="PARENT_PROJECT_NAME"/>
+        <viewAttribute id="SUPPLIER"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="CATEGORY"/>
+        <viewAttribute id="INFLATION_FACTOR"/>
+        <viewAttribute id="MANUFACTURER_NAME"/>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="MAKTX"/>
+        <viewAttribute id="MATNR_FORMATED"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="BUTXT"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="Z_ORDER_TYPE"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="MFRNR"/>
+        <viewAttribute id="KONNR"/>
+        <viewAttribute id="KDATB"/>
+        <viewAttribute id="KDATE"/>
+        <viewAttribute id="ZTERM"/>
+        <viewAttribute id="IDNLF"/>
+        <viewAttribute id="TXZ01"/>
+        <viewAttribute id="Z_INV_LC"/>
+        <viewAttribute id="Z_INV_LAMT"/>
+        <viewAttribute id="MFRPN"/>
+        <viewAttribute id="GSBER"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="AUFNR"/>
+        <viewAttribute id="SAKNR"/>
+        <viewAttribute id="ANLN1"/>
+        <viewAttribute id="ANLN2"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="Z_INV_BQTY"/>
+        <viewAttribute id="Z_INV_BUOM"/>
+        <viewAttribute id="ZPR_PKGSTR"/>
+        <viewAttribute id="ZFISCAL_YEAR_QUARTER"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="INVOICE_DATE"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="Z_LIFNR"/>
+        <viewAttribute id="Z_VENDOR_NAME"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="Z_INVOICE_QTY"/>
+        <viewAttribute id="Z_INVOICE_OUOM"/>
+        <viewAttribute id="CAPITAL_ONE_TIME_EXPENSE"/>
+        <viewAttribute id="REBATE"/>
+        <viewAttribute id="TOTAL_CONTRACT_SAVINGS_AMOUNT"/>
+        <viewAttribute id="TOTAL_CONTRACT_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <viewAttribute id="ONE_TIME_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <viewAttribute id="EXTENSION_ANNUAL_SAVINGS_VALUE_INCREMENTAL_AMOUNT"/>
+        <viewAttribute id="CAPITAL_ONE_TIME_SPEND_AMOUNT"/>
+        <viewAttribute id="ANNUAL_SAVINGS_AMOUNT"/>
+        <viewAttribute id="CAPITAL_ONE_TIME_SAVINGS_AMOUNT"/>
+        <viewAttribute id="PROPOSED_CONTRACT_AMOUNT"/>
+        <viewAttribute id="ANNUAL_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <viewAttribute id="CONTRACT_AMOUNT"/>
+        <viewAttribute id="SAVINGS_COMMENTS"/>
+        <viewAttribute id="INITIATIVE_TYPE"/>
+        <viewAttribute id="PROJECT_NAME"/>
+        <viewAttribute id="CONTRACT_STATUS"/>
+        <viewAttribute id="METHOD"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="Z_MANIPULATED_CONTRACT"/>
+        <viewAttribute id="Z_COMMODITY"/>
+        <viewAttribute id="Z_SEGMENT_TITLE_EN"/>
+        <viewAttribute id="Z_FAMILE_TITLE_EN"/>
+        <viewAttribute id="Z_CLASS_TITLE_EN"/>
+        <viewAttribute id="EXTWG"/>
+        <viewAttribute id="BEZNK"/>
+        <viewAttribute id="TXT20"/>
+        <viewAttribute id="Z_COSTELEM"/>
+        <viewAttribute id="LTEXT"/>
+        <viewAttribute id="KTPNR"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="Z_MFRNR"/>
+        <viewAttribute id="TRIM_VPN"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#csr_mat_group">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MANUFACTURER_NAME" source="MANUFACTURER_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTX" source="MAKTX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR_FORMATED" source="MATNR_FORMATED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUTXT" source="BUTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_ORDER_TYPE" source="Z_ORDER_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART" source="BSART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRNR" source="MFRNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KONNR" source="KONNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KDATB" source="KDATB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KDATE" source="KDATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZTERM" source="ZTERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IDNLF" source="IDNLF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TXZ01" source="TXZ01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_LC" source="Z_INV_LC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_LAMT" source="Z_INV_LAMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRPN" source="MFRPN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GSBER" source="GSBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUFNR" source="AUFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAKNR" source="SAKNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANLN1" source="ANLN1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANLN2" source="ANLN2"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_BQTY" source="Z_INV_BQTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_BUOM" source="Z_INV_BUOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZPR_PKGSTR" source="ZPR_PKGSTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR_QUARTER" source="ZFISCAL_YEAR_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVOICE_DATE" source="INVOICE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_LIFNR" source="Z_LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_VENDOR_NAME" source="Z_VENDOR_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INVOICE_QTY" source="Z_INVOICE_QTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INVOICE_OUOM" source="Z_INVOICE_OUOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_MANIPULATED_CONTRACT" source="Z_MANIPULATED_CONTRACT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_COMMODITY" source="Z_COMMODITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_SEGMENT_TITLE_EN" source="Z_SEGMENT_TITLE_EN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_FAMILE_TITLE_EN" source="Z_FAMILE_TITLE_EN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_CLASS_TITLE_EN" source="Z_CLASS_TITLE_EN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTWG" source="EXTWG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEZNK" source="BEZNK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TXT20" source="TXT20"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_COSTELEM" source="Z_COSTELEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LTEXT" source="LTEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KTPNR" source="KTPNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_MFRNR" source="Z_MFRNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRIM_VPN" source="TRIM_VPN"/>
+      </input>
+      <input node="#ariba_contracts">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_CONTRACT_ID" source="PARENT_CONTRACT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_PROJECT_NAME" source="PARENT_PROJECT_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUPPLIER" source="SUPPLIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CATEGORY" source="CATEGORY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INFLATION_FACTOR" source="INFLATION_FACTOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAPITAL_ONE_TIME_EXPENSE" source="CAPITAL_ONE_TIME_EXPENSE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REBATE" source="REBATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_CONTRACT_SAVINGS_AMOUNT" source="TOTAL_CONTRACT_SAVINGS_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_CONTRACT_COST_AVOIDANCE_VALUE_ADDS_AMOUNT" source="TOTAL_CONTRACT_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ONE_TIME_COST_AVOIDANCE_VALUE_ADDS_AMOUNT" source="ONE_TIME_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTENSION_ANNUAL_SAVINGS_VALUE_INCREMENTAL_AMOUNT" source="EXTENSION_ANNUAL_SAVINGS_VALUE_INCREMENTAL_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAPITAL_ONE_TIME_SPEND_AMOUNT" source="CAPITAL_ONE_TIME_SPEND_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANNUAL_SAVINGS_AMOUNT" source="ANNUAL_SAVINGS_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAPITAL_ONE_TIME_SAVINGS_AMOUNT" source="CAPITAL_ONE_TIME_SAVINGS_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROPOSED_CONTRACT_AMOUNT" source="PROPOSED_CONTRACT_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANNUAL_COST_AVOIDANCE_VALUE_ADDS_AMOUNT" source="ANNUAL_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_AMOUNT" source="CONTRACT_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS_COMMENTS" source="SAVINGS_COMMENTS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INITIATIVE_TYPE" source="INITIATIVE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROJECT_NAME" source="PROJECT_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_STATUS" source="CONTRACT_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="METHOD" source="METHOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KONNR" source="CONTRACT_ID"/>
+      </input>
+      <joinAttribute name="KONNR"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="SAP_DATE"/>
+        <viewAttribute id="MESSAGE"/>
+        <viewAttribute id="PRICE_EFFECTIVE_START_DATE"/>
+        <viewAttribute id="PRICE_EFFECTIVE_END_DATE"/>
+        <viewAttribute id="VENDOR_ID"/>
+        <viewAttribute id="VENDOR_PART_NUMBER"/>
+        <viewAttribute id="PREVIOUS_PRICE_EA"/>
+        <viewAttribute id="NEW_CONTRACT_ID"/>
+        <viewAttribute id="CURRENT_ANNUAL_USAGE"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#FN_SAVINGS_PREVIOUS_PRICE_DATES">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAP_DATE" source="SAP_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MESSAGE" source="MESSAGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRICE_EFFECTIVE_START_DATE" source="PRICE_EFFECTIVE_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRICE_EFFECTIVE_END_DATE" source="PRICE_EFFECTIVE_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VENDOR_ID" source="VENDOR_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VENDOR_PART_NUMBER" source="VENDOR_PART_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREVIOUS_PRICE_EA" source="PREVIOUS_PRICE_EA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NEW_CONTRACT_ID" source="NEW_CONTRACT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRENT_ANNUAL_USAGE" source="CURRENT_ANNUAL_USAGE"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="csr_current_price" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PARENT_CONTRACT_ID"/>
+        <viewAttribute id="PARENT_PROJECT_NAME"/>
+        <viewAttribute id="SUPPLIER"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="CATEGORY"/>
+        <viewAttribute id="INFLATION_FACTOR"/>
+        <viewAttribute id="MANUFACTURER_NAME"/>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="MAKTX"/>
+        <viewAttribute id="MATNR_FORMATED"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="BUTXT"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="Z_ORDER_TYPE"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="MFRNR"/>
+        <viewAttribute id="KONNR"/>
+        <viewAttribute id="KDATB"/>
+        <viewAttribute id="KDATE"/>
+        <viewAttribute id="ZTERM"/>
+        <viewAttribute id="IDNLF"/>
+        <viewAttribute id="TXZ01"/>
+        <viewAttribute id="Z_INV_LC"/>
+        <viewAttribute id="Z_INV_LAMT"/>
+        <viewAttribute id="MFRPN"/>
+        <viewAttribute id="GSBER"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="AUFNR"/>
+        <viewAttribute id="SAKNR"/>
+        <viewAttribute id="ANLN1"/>
+        <viewAttribute id="ANLN2"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="Z_INV_BQTY"/>
+        <viewAttribute id="Z_INV_BUOM"/>
+        <viewAttribute id="ZPR_PKGSTR"/>
+        <viewAttribute id="ZFISCAL_YEAR_QUARTER"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="INVOICE_DATE"/>
+        <viewAttribute id="Z_LIFNR"/>
+        <viewAttribute id="Z_VENDOR_NAME"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="Z_INVOICE_QTY"/>
+        <viewAttribute id="Z_INVOICE_OUOM"/>
+        <viewAttribute id="CAPITAL_ONE_TIME_EXPENSE"/>
+        <viewAttribute id="REBATE"/>
+        <viewAttribute id="TOTAL_CONTRACT_SAVINGS_AMOUNT"/>
+        <viewAttribute id="TOTAL_CONTRACT_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <viewAttribute id="ONE_TIME_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <viewAttribute id="EXTENSION_ANNUAL_SAVINGS_VALUE_INCREMENTAL_AMOUNT"/>
+        <viewAttribute id="CAPITAL_ONE_TIME_SPEND_AMOUNT"/>
+        <viewAttribute id="ANNUAL_SAVINGS_AMOUNT"/>
+        <viewAttribute id="CAPITAL_ONE_TIME_SAVINGS_AMOUNT"/>
+        <viewAttribute id="PROPOSED_CONTRACT_AMOUNT"/>
+        <viewAttribute id="ANNUAL_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <viewAttribute id="CONTRACT_AMOUNT"/>
+        <viewAttribute id="SAVINGS_COMMENTS"/>
+        <viewAttribute id="INITIATIVE_TYPE"/>
+        <viewAttribute id="PROJECT_NAME"/>
+        <viewAttribute id="CONTRACT_STATUS"/>
+        <viewAttribute id="METHOD"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="Z_MANIPULATED_CONTRACT"/>
+        <viewAttribute id="Z_COMMODITY"/>
+        <viewAttribute id="Z_SEGMENT_TITLE_EN"/>
+        <viewAttribute id="Z_FAMILE_TITLE_EN"/>
+        <viewAttribute id="Z_CLASS_TITLE_EN"/>
+        <viewAttribute id="EXTWG"/>
+        <viewAttribute id="BEZNK"/>
+        <viewAttribute id="TXT20"/>
+        <viewAttribute id="Z_COSTELEM"/>
+        <viewAttribute id="LTEXT"/>
+        <viewAttribute id="KTPNR"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="Z_MFRNR"/>
+        <viewAttribute id="MESSAGE"/>
+        <viewAttribute id="PRICE_EFFECTIVE_START_DATE"/>
+        <viewAttribute id="PRICE_EFFECTIVE_END_DATE"/>
+        <viewAttribute id="PREVIOUS_PRICE_EA"/>
+        <viewAttribute id="NEW_CONTRACT_ID"/>
+        <viewAttribute id="CURRENT_ANNUAL_USAGE"/>
+        <viewAttribute id="TRIM_VPN"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#csr_ariba">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_CONTRACT_ID" source="PARENT_CONTRACT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_PROJECT_NAME" source="PARENT_PROJECT_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUPPLIER" source="SUPPLIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CATEGORY" source="CATEGORY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INFLATION_FACTOR" source="INFLATION_FACTOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MANUFACTURER_NAME" source="MANUFACTURER_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTX" source="MAKTX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR_FORMATED" source="MATNR_FORMATED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUTXT" source="BUTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_ORDER_TYPE" source="Z_ORDER_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART" source="BSART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRNR" source="MFRNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KONNR" source="KONNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KDATB" source="KDATB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KDATE" source="KDATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZTERM" source="ZTERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IDNLF" source="IDNLF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TXZ01" source="TXZ01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_LC" source="Z_INV_LC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_LAMT" source="Z_INV_LAMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRPN" source="MFRPN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GSBER" source="GSBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUFNR" source="AUFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAKNR" source="SAKNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANLN1" source="ANLN1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANLN2" source="ANLN2"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_BQTY" source="Z_INV_BQTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_BUOM" source="Z_INV_BUOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZPR_PKGSTR" source="ZPR_PKGSTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR_QUARTER" source="ZFISCAL_YEAR_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVOICE_DATE" source="INVOICE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_LIFNR" source="Z_LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_VENDOR_NAME" source="Z_VENDOR_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INVOICE_QTY" source="Z_INVOICE_QTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INVOICE_OUOM" source="Z_INVOICE_OUOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAPITAL_ONE_TIME_EXPENSE" source="CAPITAL_ONE_TIME_EXPENSE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REBATE" source="REBATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_CONTRACT_SAVINGS_AMOUNT" source="TOTAL_CONTRACT_SAVINGS_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_CONTRACT_COST_AVOIDANCE_VALUE_ADDS_AMOUNT" source="TOTAL_CONTRACT_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ONE_TIME_COST_AVOIDANCE_VALUE_ADDS_AMOUNT" source="ONE_TIME_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTENSION_ANNUAL_SAVINGS_VALUE_INCREMENTAL_AMOUNT" source="EXTENSION_ANNUAL_SAVINGS_VALUE_INCREMENTAL_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAPITAL_ONE_TIME_SPEND_AMOUNT" source="CAPITAL_ONE_TIME_SPEND_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANNUAL_SAVINGS_AMOUNT" source="ANNUAL_SAVINGS_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAPITAL_ONE_TIME_SAVINGS_AMOUNT" source="CAPITAL_ONE_TIME_SAVINGS_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROPOSED_CONTRACT_AMOUNT" source="PROPOSED_CONTRACT_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANNUAL_COST_AVOIDANCE_VALUE_ADDS_AMOUNT" source="ANNUAL_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_AMOUNT" source="CONTRACT_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS_COMMENTS" source="SAVINGS_COMMENTS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INITIATIVE_TYPE" source="INITIATIVE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROJECT_NAME" source="PROJECT_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_STATUS" source="CONTRACT_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="METHOD" source="METHOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_MANIPULATED_CONTRACT" source="Z_MANIPULATED_CONTRACT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_COMMODITY" source="Z_COMMODITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_SEGMENT_TITLE_EN" source="Z_SEGMENT_TITLE_EN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_FAMILE_TITLE_EN" source="Z_FAMILE_TITLE_EN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_CLASS_TITLE_EN" source="Z_CLASS_TITLE_EN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTWG" source="EXTWG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEZNK" source="BEZNK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TXT20" source="TXT20"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_COSTELEM" source="Z_COSTELEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LTEXT" source="LTEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KTPNR" source="KTPNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_MFRNR" source="Z_MFRNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRIM_VPN" source="TRIM_VPN"/>
+      </input>
+      <input node="#Projection_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MESSAGE" source="MESSAGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRICE_EFFECTIVE_START_DATE" source="PRICE_EFFECTIVE_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRICE_EFFECTIVE_END_DATE" source="PRICE_EFFECTIVE_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREVIOUS_PRICE_EA" source="PREVIOUS_PRICE_EA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NEW_CONTRACT_ID" source="NEW_CONTRACT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRENT_ANNUAL_USAGE" source="CURRENT_ANNUAL_USAGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVOICE_DATE" source="SAP_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_LIFNR" source="VENDOR_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRIM_VPN" source="VENDOR_PART_NUMBER"/>
+      </input>
+      <joinAttribute name="BUKRS"/>
+      <joinAttribute name="INVOICE_DATE"/>
+      <joinAttribute name="Z_LIFNR"/>
+      <joinAttribute name="TRIM_VPN"/>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="csr_current_price">
+    <descriptions/>
+    <attributes>
+      <attribute id="PARENT_CONTRACT_ID" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CW Master Contract"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="PARENT_CONTRACT_ID"/>
+      </attribute>
+      <attribute id="PARENT_PROJECT_NAME" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Parent Project Name"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="PARENT_PROJECT_NAME"/>
+      </attribute>
+      <attribute id="SUPPLIER" order="3" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Ariba Vendor Name"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="SUPPLIER"/>
+      </attribute>
+      <attribute id="EFFECTIVE_DATE" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Ariba Contract Effective Date"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="EFFECTIVE_DATE"/>
+      </attribute>
+      <attribute id="EXPIRATION_DATE" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Ariba Contract Expiry Date"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="EXPIRATION_DATE"/>
+      </attribute>
+      <attribute id="CATEGORY" order="6" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Sourcing Category"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="CATEGORY"/>
+      </attribute>
+      <attribute id="INFLATION_FACTOR" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Inflation Factor"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="INFLATION_FACTOR"/>
+      </attribute>
+      <attribute id="MFRNR" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Manufacturer ID"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="MFRNR"/>
+      </attribute>
+      <attribute id="MANUFACTURER_NAME" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Manufacturer Name"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="MANUFACTURER_NAME"/>
+      </attribute>
+      <attribute id="MATKL" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Group"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="MATKL"/>
+      </attribute>
+      <attribute id="MEINS" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Base Unit of Measure"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="MEINS"/>
+      </attribute>
+      <attribute id="MAKTX" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Description"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="MAKTX"/>
+      </attribute>
+      <attribute id="MATNR_FORMATED" order="13" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Number"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="MATNR_FORMATED"/>
+      </attribute>
+      <attribute id="MEMBER" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Org ID"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="MEMBER"/>
+      </attribute>
+      <attribute id="BUTXT" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Name of Company Code"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="BUTXT"/>
+      </attribute>
+      <attribute id="BUKRS" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Company Code"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="BUKRS"/>
+      </attribute>
+      <attribute id="Z_ORDER_TYPE" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Order Type"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="Z_ORDER_TYPE"/>
+      </attribute>
+      <attribute id="BSART" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PO-Order Type"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="BSART"/>
+      </attribute>
+      <attribute id="KONNR" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SAP Contract Reference"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="KONNR"/>
+      </attribute>
+      <attribute id="KDATB" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ECC Contract Effective Date"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="KDATB"/>
+      </attribute>
+      <attribute id="KDATE" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ECC Contract Expiry Date"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="KDATE"/>
+      </attribute>
+      <attribute id="ZTERM" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Terms of Payment Key"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="ZTERM"/>
+      </attribute>
+      <attribute id="IDNLF" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Manufacturer Part Number"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="IDNLF"/>
+      </attribute>
+      <attribute id="TXZ01" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Product/Service Description"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="TXZ01"/>
+      </attribute>
+      <attribute id="Z_INV_LC" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Local Currency "/>
+        <keyMapping columnObjectName="csr_current_price" columnName="Z_INV_LC"/>
+      </attribute>
+      <attribute id="MFRPN" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Vendor Part No"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="MFRPN"/>
+      </attribute>
+      <attribute id="GSBER" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Business Area"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="GSBER"/>
+      </attribute>
+      <attribute id="KOSTL" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cost Center"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="KOSTL"/>
+      </attribute>
+      <attribute id="AUFNR" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Order Number"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="AUFNR"/>
+      </attribute>
+      <attribute id="SAKNR" order="31" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="G/L Account Number"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="SAKNR"/>
+      </attribute>
+      <attribute id="ANLN1" order="32" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Main Asset Number"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="ANLN1"/>
+      </attribute>
+      <attribute id="ANLN2" order="33" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Asset Subnumber"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="ANLN2"/>
+      </attribute>
+      <attribute id="WERKS" order="34" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Plant"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="WERKS"/>
+      </attribute>
+      <attribute id="ZPR_PKGSTR" order="35" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Packaging String"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="ZPR_PKGSTR"/>
+      </attribute>
+      <attribute id="ZFISCAL_YEAR_QUARTER" order="36" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Year / Qtr"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="ZFISCAL_YEAR_QUARTER"/>
+      </attribute>
+      <attribute id="ZFISCAL_QUARTER" order="37" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Quarter"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="ZFISCAL_QUARTER"/>
+      </attribute>
+      <attribute id="ZFISCAL_PERIOD" order="38" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Period"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="ZFISCAL_PERIOD"/>
+      </attribute>
+      <attribute id="ZFISCAL_YEAR" order="39" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Year"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="ZFISCAL_YEAR"/>
+      </attribute>
+      <attribute id="INVOICE_DATE" order="40" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Posting Date"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="INVOICE_DATE"/>
+      </attribute>
+      <attribute id="Z_LIFNR" order="41" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SAP Vendor ID"/>
+        <localVariable>#in_vnd__id</localVariable>
+        <keyMapping columnObjectName="csr_current_price" columnName="Z_LIFNR"/>
+      </attribute>
+      <attribute id="Z_VENDOR_NAME" order="42" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SAP Vendor Name"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="Z_VENDOR_NAME"/>
+      </attribute>
+      <attribute id="EBELN" key="true" order="43" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchasing Document Number"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="EBELN"/>
+      </attribute>
+      <attribute id="EBELP" order="44" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Item Number of Purchasing Document"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="EBELP"/>
+      </attribute>
+      <attribute id="Z_INVOICE_OUOM" order="46" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Invoice Unit of Measure"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="Z_INVOICE_OUOM"/>
+      </attribute>
+      <attribute id="Z_INV_BUOM" order="48" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Invoice BUoM"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="Z_INV_BUOM"/>
+      </attribute>
+      <attribute id="CAPITAL_ONE_TIME_EXPENSE" order="51" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Capital One-time Expense"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="CAPITAL_ONE_TIME_EXPENSE"/>
+      </attribute>
+      <attribute id="REBATE" order="52" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Rebate"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="REBATE"/>
+      </attribute>
+      <attribute id="SAVINGS_COMMENTS" order="63" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Savings Comments"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="SAVINGS_COMMENTS"/>
+      </attribute>
+      <attribute id="INITIATIVE_TYPE" order="64" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Initiative Type"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="INITIATIVE_TYPE"/>
+      </attribute>
+      <attribute id="PROJECT_NAME" order="65" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Project Name"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="PROJECT_NAME"/>
+      </attribute>
+      <attribute id="CONTRACT_STATUS" order="66" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Contract Status"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="CONTRACT_STATUS"/>
+      </attribute>
+      <attribute id="METHOD" order="67" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Method"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="METHOD"/>
+      </attribute>
+      <attribute id="ZCAL_MONTH" order="68" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Calendar Month"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="ZCAL_MONTH"/>
+      </attribute>
+      <attribute id="Z_MANIPULATED_CONTRACT" order="69" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Estimated Contract"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="Z_MANIPULATED_CONTRACT"/>
+      </attribute>
+      <attribute id="Z_COMMODITY" order="70" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="UNSPSC Commodity Desc."/>
+        <keyMapping columnObjectName="csr_current_price" columnName="Z_COMMODITY"/>
+      </attribute>
+      <attribute id="Z_SEGMENT_TITLE_EN" order="71" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="UNSPSC Segment Desc."/>
+        <keyMapping columnObjectName="csr_current_price" columnName="Z_SEGMENT_TITLE_EN"/>
+      </attribute>
+      <attribute id="Z_FAMILE_TITLE_EN" order="72" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="UNSPSC Family Desc."/>
+        <keyMapping columnObjectName="csr_current_price" columnName="Z_FAMILE_TITLE_EN"/>
+      </attribute>
+      <attribute id="Z_CLASS_TITLE_EN" order="73" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="UNSPSC Class Desc."/>
+        <keyMapping columnObjectName="csr_current_price" columnName="Z_CLASS_TITLE_EN"/>
+      </attribute>
+      <attribute id="EXTWG" order="74" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Ext.  Material Group"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="EXTWG"/>
+      </attribute>
+      <attribute id="TXT20" order="76" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="G/L account short text"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="TXT20"/>
+      </attribute>
+      <attribute id="Z_COSTELEM" order="77" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cost Element"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="Z_COSTELEM"/>
+      </attribute>
+      <attribute id="LTEXT" order="78" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cost Center Desc."/>
+        <keyMapping columnObjectName="csr_current_price" columnName="LTEXT"/>
+      </attribute>
+      <attribute id="KTPNR" order="82" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Item Number of Contract Outline Agreement"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="KTPNR"/>
+      </attribute>
+      <attribute id="BLART" order="83" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FI Document Type"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="BLART"/>
+      </attribute>
+      <attribute id="KOKRS" order="84" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Controlling Area"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="KOKRS"/>
+      </attribute>
+      <attribute id="Z_MFRNR" order="85" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Manufacturer Number"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="Z_MFRNR"/>
+      </attribute>
+      <attribute id="PRICE_EFFECTIVE_START_DATE" order="86" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Price Effective Start Date"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="PRICE_EFFECTIVE_START_DATE"/>
+      </attribute>
+      <attribute id="PRICE_EFFECTIVE_END_DATE" order="87" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Price Effective End Date"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="PRICE_EFFECTIVE_END_DATE"/>
+      </attribute>
+      <attribute id="PREVIOUS_PRICE_EA" order="88" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Previous Price (Base Unit)"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="PREVIOUS_PRICE_EA"/>
+      </attribute>
+      <attribute id="NEW_CONTRACT_ID" order="89" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="New Contract ID"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="NEW_CONTRACT_ID"/>
+      </attribute>
+      <attribute id="MESSAGE" order="90" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Pricing Message"/>
+        <keyMapping columnObjectName="csr_current_price" columnName="MESSAGE"/>
+      </attribute>
+      <attribute id="TRIM_VPN" hidden="false" order="92" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="csr_current_price" columnName="TRIM_VPN"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes>
+      <calculatedAttribute id="Z_INV_PRICE" hidden="false" order="50" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Invoice Price">
+          <comment text="if( isnull(&quot;Z_INV_LAMT&quot;) or  isnull(&quot;Z_INVOICE_QTY&quot;) or  &quot;Z_INV_LAMT&quot; = 0 or  &quot;Z_INVOICE_QTY&quot; = 0, 0.0, &quot;Z_INV_LAMT&quot; / &quot;Z_INVOICE_QTY&quot; )"/>
+        </descriptions>
+        <keyCalculation datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="13" scale="3">
+          <formula>if( isnull(&quot;Z_INV_LAMT&quot;) or  isnull(&quot;Z_INVOICE_QTY&quot;) or  &quot;Z_INV_LAMT&quot; = 0 or  &quot;Z_INVOICE_QTY&quot; = 0, 0.0, &quot;Z_INV_LAMT&quot; / &quot;Z_INVOICE_QTY&quot; )</formula>
+        </keyCalculation>
+      </calculatedAttribute>
+    </calculatedAttributes>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="Z_INV_LAMT" order="26" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Invoice amount w/o tax in LC"/>
+        <measureMapping columnObjectName="csr_current_price" columnName="Z_INV_LAMT"/>
+      </measure>
+      <measure id="Z_INVOICE_QTY" order="45" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Invoice Qty"/>
+        <measureMapping columnObjectName="csr_current_price" columnName="Z_INVOICE_QTY"/>
+      </measure>
+      <measure id="Z_INV_BQTY" order="47" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Invoice BUoM QTY"/>
+        <measureMapping columnObjectName="csr_current_price" columnName="Z_INV_BQTY"/>
+      </measure>
+      <measure id="TOTAL_CONTRACT_SAVINGS_AMOUNT" order="53" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total Contract Savings Amount"/>
+        <measureMapping columnObjectName="csr_current_price" columnName="TOTAL_CONTRACT_SAVINGS_AMOUNT"/>
+      </measure>
+      <measure id="TOTAL_CONTRACT_COST_AVOIDANCE_VALUE_ADDS_AMOUNT" order="54" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total Contract Cost Avoiance &amp; Value Adds Amount"/>
+        <measureMapping columnObjectName="csr_current_price" columnName="TOTAL_CONTRACT_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+      </measure>
+      <measure id="ONE_TIME_COST_AVOIDANCE_VALUE_ADDS_AMOUNT" order="55" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="One-time Cost Avoidance &amp; Value Adds Amount"/>
+        <measureMapping columnObjectName="csr_current_price" columnName="ONE_TIME_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+      </measure>
+      <measure id="EXTENSION_ANNUAL_SAVINGS_VALUE_INCREMENTAL_AMOUNT" order="56" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Extension Annual Savings Value Amount"/>
+        <measureMapping columnObjectName="csr_current_price" columnName="EXTENSION_ANNUAL_SAVINGS_VALUE_INCREMENTAL_AMOUNT"/>
+      </measure>
+      <measure id="CAPITAL_ONE_TIME_SPEND_AMOUNT" order="57" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Capital/One-Time Spend Amount"/>
+        <measureMapping columnObjectName="csr_current_price" columnName="CAPITAL_ONE_TIME_SPEND_AMOUNT"/>
+      </measure>
+      <measure id="ANNUAL_SAVINGS_AMOUNT" order="58" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Annual Savings Amount"/>
+        <measureMapping columnObjectName="csr_current_price" columnName="ANNUAL_SAVINGS_AMOUNT"/>
+      </measure>
+      <measure id="CAPITAL_ONE_TIME_SAVINGS_AMOUNT" order="59" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Capital/One-time Savings Amount"/>
+        <measureMapping columnObjectName="csr_current_price" columnName="CAPITAL_ONE_TIME_SAVINGS_AMOUNT"/>
+      </measure>
+      <measure id="PROPOSED_CONTRACT_AMOUNT" order="60" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total Contract Value"/>
+        <measureMapping columnObjectName="csr_current_price" columnName="PROPOSED_CONTRACT_AMOUNT"/>
+      </measure>
+      <measure id="ANNUAL_COST_AVOIDANCE_VALUE_ADDS_AMOUNT" order="61" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Annual Cost Avoidance &amp; Value Adds Amount"/>
+        <measureMapping columnObjectName="csr_current_price" columnName="ANNUAL_COST_AVOIDANCE_VALUE_ADDS_AMOUNT"/>
+      </measure>
+      <measure id="CONTRACT_AMOUNT" order="62" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Annual Contract Value"/>
+        <measureMapping columnObjectName="csr_current_price" columnName="CONTRACT_AMOUNT"/>
+      </measure>
+      <measure id="BEZNK" order="75" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Unplanned delivery costs"/>
+        <measureMapping columnObjectName="csr_current_price" columnName="BEZNK"/>
+      </measure>
+      <measure id="CURRENT_ANNUAL_USAGE" order="91" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="CURRENT_ANNUAL_USAGE"/>
+        <measureMapping columnObjectName="csr_current_price" columnName="CURRENT_ANNUAL_USAGE"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures>
+      <measure id="Z_SPEND_IB" hidden="false" order="49" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="13" scale="3">
+        <descriptions defaultDescription="Spend (Invoice Based)">
+          <comment text="&quot;Z_INV_BUOM_PRICE&quot;* &quot;Z_INV_BQTY&quot;"/>
+        </descriptions>
+        <formula>&quot;Z_INV_BUOM_PRICE&quot;* &quot;Z_INV_BQTY&quot;</formula>
+      </measure>
+      <measure id="Z_SAV_IB" hidden="false" order="79" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="13" scale="3">
+        <descriptions defaultDescription="Savings (Invoice Based)">
+          <comment text="if(     isnull(&quot;PREVIOUS_PRICE_EA&quot;),     0.0,     (&quot;PREVIOUS_PRICE_EA&quot; -           (if( isnull(&quot;Z_INV_LAMT&quot;) or  isnull(&quot;Z_INV_BQTY&quot;) or &quot;Z_INV_LAMT&quot; = 0 or &quot;Z_INV_BQTY&quot; = 0, 0.0, &quot;Z_INV_LAMT&quot; / &quot;Z_INV_BQTY&quot; ))          ) * &quot;Z_INV_BQTY&quot;    )"/>
+        </descriptions>
+        <formula>if(     isnull(&quot;PREVIOUS_PRICE_EA&quot;),     0.0,     (&quot;PREVIOUS_PRICE_EA&quot; -           (if( isnull(&quot;Z_INV_LAMT&quot;) or  isnull(&quot;Z_INV_BQTY&quot;) or &quot;Z_INV_LAMT&quot; = 0 or &quot;Z_INV_BQTY&quot; = 0, 0.0, &quot;Z_INV_LAMT&quot; / &quot;Z_INV_BQTY&quot; ))          ) * &quot;Z_INV_BQTY&quot;    )</formula>
+      </measure>
+      <measure id="Z_INV_BUOM_PRICE" hidden="false" order="80" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="13" scale="3">
+        <descriptions defaultDescription="Invoice Base Unit of Measure Price">
+          <comment text="if( isnull(&quot;Z_INV_LAMT&quot;) or  isnull(&quot;Z_INV_BQTY&quot;) or &quot;Z_INV_LAMT&quot; = 0 or &quot;Z_INV_BQTY&quot; = 0, 0.0, &quot;Z_INV_LAMT&quot; / &quot;Z_INV_BQTY&quot; )"/>
+        </descriptions>
+        <formula>if( isnull(&quot;Z_INV_LAMT&quot;) or  isnull(&quot;Z_INV_BQTY&quot;) or &quot;Z_INV_LAMT&quot; = 0 or &quot;Z_INV_BQTY&quot; = 0, 0.0, &quot;Z_INV_LAMT&quot; / &quot;Z_INV_BQTY&quot; )</formula>
+      </measure>
+      <measure id="Z_SAV_IUOM" hidden="false" order="81" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="13" scale="3">
+        <descriptions defaultDescription="Invoice Unit of Measure Price">
+          <comment text="if(     isnull(&quot;PREVIOUS_PRICE_EA&quot;),     0.0,     (&quot;PREVIOUS_PRICE_EA&quot; - &quot;Z_INV_PRICE&quot;) * &quot;Z_INVOICE_QTY&quot;    )"/>
+        </descriptions>
+        <formula>if(     isnull(&quot;PREVIOUS_PRICE_EA&quot;),     0.0,     (&quot;PREVIOUS_PRICE_EA&quot; - &quot;Z_INV_PRICE&quot;) * &quot;Z_INVOICE_QTY&quot;    )</formula>
+      </measure>
+    </calculatedMeasures>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="175" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="ariba" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="330" y="453"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="ariba_parent" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="484" y="453"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="ariba_contracts" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="330" y="357"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="spend_invoice" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="23" y="645"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="177" y="645"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="csr_gl_texts" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="100" y="549"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="manufacturer" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="254" y="549"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="csr_manufacturer" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="453"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="material_master" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="453"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="csr_mat_group" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="357"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="csr_ariba" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="252" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="50" y="250"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="csr_current_price" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="175" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

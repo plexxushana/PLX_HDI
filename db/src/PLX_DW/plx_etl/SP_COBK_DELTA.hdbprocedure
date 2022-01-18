@@ -1,0 +1,121 @@
+PROCEDURE "plx_etl::SP_COBK_DELTA" (
+
+out t_out  "ECC_COBK"
+
+ ) 
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+	READS SQL DATA AS
+
+BEGIN
+   /*************************************
+       build where clause with timestamp for COEP.
+       
+       our where clause will fetch last timestamp to current timestamp
+       for each company code.
+       
+       COEP timestamp is 
+       seconds since 1.1.1990 0:00 Uhr Greenwich Meantime multiplied by 10000
+   *************************************/
+   declare where_clause     varchar(3000) := '';   
+   declare lv_KOKRS         varchar(4)    := '';
+   declare lv_start_time	decimal(16)	  := 0;
+   declare lv_end_time		decimal(16)	  := 0;
+   declare lv_row_count     integer;
+   declare i			    integer;
+   declare temp_cobk        "ECC_COBK";
+   
+   -- select company codes
+   -- why?  we use company codes as a partition criteria 
+   -- in the fetch statments
+	ccodes_list = 
+	select distinct KOKRS 
+	from "ECC_TKA01"
+	where KOKRS >= '1000'
+	and   KOKRS <= '9999';
+   
+   -- store dataset size in row_count variable
+	SELECT COUNT(KOKRS)
+	INTO lv_row_count
+	FROM :ccodes_list;
+	
+   -- select last timestamp from local coep
+  	SELECT max( timestmp ) 
+  	into lv_start_time
+  	FROM "ECC_COBK";
+
+	-- calculate our ending timestamp (now) as seconds from 1990/01/01 0:00 
+	--(to set upper boundry as coep type timestmp)
+	select 
+	nano100_between('1990-01-01', current_timestamp) / 1000
+	into lv_end_time
+	from "DUMMY";
+
+	FOR i IN 0 .. :lv_row_count-1 DO
+	
+	   -- walk through the company codes
+	   -- one at a time.  This is supplied in the where below.
+		SELECT "KOKRS"
+		INTO lv_KOKRS
+		FROM :ccodes_list
+		LIMIT 1 OFFSET :i; -- notice OFFSET indexes at 0, not 1
+
+    -- here we fetch the whole table one chunk at a time.
+	-- The time range and single company code 
+	-- are pushed down to ECC as part of the where clause.
+		temp_cobk =
+		select 
+			"KOKRS",
+			"BELNR",
+			"GJAHR",
+			"VERSN",
+			"VRGNG",
+			"TIMESTMP",
+			"PERAB",
+			"PERBI",
+			"BLDAT",
+			"BUDAT",
+			"CPUDT",
+			"USNAM",
+			"BLTXT",
+			"STFLG",
+			"STOKZ",
+			"REFBT",
+			"REFBN",
+			"REFBK",
+			"REFGJ",
+			"BLART",
+			"ORGVG",
+			"SUMBZ",
+			"DELBZ",
+			"WSDAT",
+			"KURST",
+			"VARNR",
+			"KWAER",
+			"CTYP1",
+			"CTYP2",
+			"CTYP3",
+			"CTYP4",
+			"AWTYP",
+			"AWORG",
+			"LOGSYSTEM",
+			"CPUTM",
+			"ALEBZ",
+			"ALEBN",
+			"AWSYS",
+			"AWREF_REV",
+			"AWORG_REV",
+			"VALDT"
+		 from "ECC_COBK"
+		where KOKRS     = :lv_KOKRS
+	      and timestmp >= :lv_start_time
+		  and timestmp <= :lv_end_time;
+		
+		-- append each fetched chunk to our 
+		-- output dataset 
+		t_out = 
+		select * from :temp_cobk
+		union all
+		select * from :t_out;
+	END FOR;
+END;

@@ -1,0 +1,781 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="3.0" id="plx_analytics::CA_PLX_EBUSINESS" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+<origin/>
+  <descriptions defaultDescription="CA_FI_CMP_EBUSINESS"/>
+  <metadata changedAt="2017-07-27 15:56:49.01"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="45"/>
+  <dataSources>
+    <DataSource id="CA_FI_INVOICES">
+      <resourceUri>plx_analytics::CA_FI_INVOICES</resourceUri>
+    </DataSource>
+    <DataSource id="CA_FI_PAYMENTS">
+      <resourceUri>plx_analytics::CA_FI_PAYMENTS</resourceUri>
+    </DataSource>
+    <DataSource id="CA_PUR_PO">
+      <resourceUri>plx_analytics::CA_PUR_PO</resourceUri>
+    </DataSource>
+    <DataSource id="CA_PUR_PO_BASED_PREQ">
+      <resourceUri>plx_analytics::CA_PUR_PO_BASED_PREQ</resourceUri>
+    </DataSource>
+    <DataSource id="CA_HBKR_EBUSINESS">
+      <resourceUri>plx_analytics::CA_HBKR_EBUSINESS</resourceUri>
+    </DataSource>
+    <DataSource id="CA_DIM_TARGET_THRESHOLD">
+      <resourceUri>plx_analytics::CA_DIM_TARGET_THRESHOLD</resourceUri>
+    </DataSource>
+  </dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="BUTXT"/>
+        <viewAttribute id="DocumentCount"/>
+        <viewAttribute id="MONAT"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR_QUARTER"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="ZFISCAL_MONTH"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="BIGINT" id="DocumentCount_ZB" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;BLART&quot;='ZB',&quot;DocumentCount&quot;,0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="BIGINT" id="DocumentCount_KR_RE_ZB_ZA" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(IN(&quot;BLART&quot;, 'KR','RE','ZB','ZA'), &quot;DocumentCount&quot;, 0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="INTEGER" id="DocumentCount_PLX" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(in(trim(&quot;BLART&quot;), 'KR','RE') AND &quot;LIFNR&quot; ='0001000005',&quot;DocumentCount&quot;,0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="INTEGER" id="DocumentCount_ZBPLX" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;DocumentCount_ZB&quot;+&quot;DocumentCount_PLX&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="CA_FI_INVOICES"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2" filterExpressionLanguage="COLUMN_ENGINE">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="BUTXT"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="ZLSCH"/>
+        <viewAttribute id="DocumentLineCount"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR_QUARTER"/>
+        <viewAttribute id="ZFISCAL_MONTH"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="INTEGER" id="ChequeLineCount" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;ZLSCH&quot; = 'C', &quot;DocumentLineCount&quot;, 0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="INTEGER" id="Non_ePayments_LineCount" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;ZLSCH&quot; = 'C' or &quot;ZLSCH&quot; = 'NULL', &quot;DocumentLineCount&quot;, 0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="INTEGER" id="PaymentsDocumentLines" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;PaymentsDocumentLinesPV&quot;-&quot;PaymentsDocumentLinesNull&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="INTEGER" id="PaymentsDocumentLinesPV" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(in(trim(&quot;BLART&quot;), 'ZP','ZV') , &quot;DocumentLineCount&quot;,0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="INTEGER" id="PaymentsDocumentLinesNull" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(in(trim(&quot;ZLSCH&quot;),'C','E','P','R','S','T','V','W'),0,&quot;DocumentLineCount&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="CA_FI_PAYMENTS"/>
+    <filter>&quot;BLART&quot; = 'ZV' or &quot;BLART&quot; = 'ZP'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_3">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="BUTXT"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="DocumentLineCount"/>
+        <viewAttribute id="ChequeLineCount"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR_QUARTER"/>
+        <viewAttribute id="ZFISCAL_MONTH"/>
+        <viewAttribute id="Non_ePayments_LineCount"/>
+        <viewAttribute id="PaymentsDocumentLines"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+      <input node="Projection_2"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3" filterExpressionLanguage="COLUMN_ENGINE">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="BUTXT"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="NACHA"/>
+        <viewAttribute id="NATXT"/>
+        <viewAttribute id="DocumentLineCount"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR_QUARTER"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="ZFISCAL_MONTH"/>
+        <viewAttribute id="PO_DOCUMENT_COUNT"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="INTEGER" id="CC_EDILinesCount" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;NACHA&quot;='6' or &quot;NACHA&quot;='5',&quot;DocumentLineCount&quot;,0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="DETERMINE_RVHS_2018" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if (&quot;BUKRS&quot; = '1200' and &quot;ZFISCAL_YEAR&quot; ='2018', 'Y','N')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="INTEGER" id="CC_ELECTRONIC_PO_HDR_CNTR" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;NACHA&quot;='6' or &quot;NACHA&quot;='5',&quot;PO_DOCUMENT_COUNT&quot;,0)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="CA_PUR_PO"/>
+    <filter>trim(&quot;BSART&quot;) != 'ZD' and 
+trim(&quot;BSART&quot;) != 'ZA' AND &quot;DETERMINE_RVHS_2018&quot; !='Y'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_4" filterExpressionLanguage="COLUMN_ENGINE">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="BUTXT"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR_QUARTER"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="ZFISCAL_MONTH"/>
+        <viewAttribute id="Req_LineCount_NoPLX"/>
+        <viewAttribute id="Req_LineCount_Total"/>
+        <viewAttribute id="eReq_LineCount"/>
+        <viewAttribute id="Req_HeaderCount_Total"/>
+        <viewAttribute id="LIFNR_Formated"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="VARCHAR" id="DETERMINE_RVHS_2018" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if (&quot;BUKRS&quot; = '1200' and &quot;ZFISCAL_YEAR&quot; ='2018', 'Y','N')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="BIGINT" id="Req_HeaderCount_NoPLX" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;MEMBER&quot;!='PLX',&quot;Req_HeaderCount_Total&quot;,NULL)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="INTEGER" id="eReq_HeaderCount" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(in(trim(&quot;BSART&quot;), 'EC','ZCBL','ZCON','ZINT','ZMRP','ZPS', 'ZSO'), &quot;Req_HeaderCount_Total&quot;,0)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="CA_PUR_PO_BASED_PREQ"/>
+    <filter>&quot;DETERMINE_RVHS_2018&quot; !='Y'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_5">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR_QUARTER"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="EREQ_COUNTER"/>
+        <viewAttribute id="EDI_PO_COUNTER"/>
+        <viewAttribute id="PAPER_REQ_COUNTER"/>
+        <viewAttribute id="EFT_COUNTER"/>
+        <viewAttribute id="CHEQUES_COUNTER"/>
+        <viewAttribute id="Payments_Counter"/>
+        <viewAttribute id="Req_Counter"/>
+        <viewAttribute id="ZFISCAL_MONTH"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="INTEGER" id="DocumentCount_PLX" expressionLanguage="COLUMN_ENGINE">
+          <formula>'0'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="BIGINT" id="DocumentCount_ZB" expressionLanguage="COLUMN_ENGINE">
+          <formula>'0'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="BIGINT" id="DocumentCount_KR_RE_ZB_ZA" expressionLanguage="COLUMN_ENGINE">
+          <formula>'0'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="BIGINT" id="PO_Total" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;Req_Counter&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="CA_HBKR_EBUSINESS"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:UnionView" id="Union_1">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="ChequeLineCount"/>
+        <viewAttribute id="PaymentsLineCount"/>
+        <viewAttribute id="DcoumentCount_ZB"/>
+        <viewAttribute id="DocumentCount_KR_RE_ZA_ZB"/>
+        <viewAttribute id="DocumentCount_PLX"/>
+        <viewAttribute id="DocumentLine_POs"/>
+        <viewAttribute id="EDILinesCount"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="BUTXT"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR_QUARTER"/>
+        <viewAttribute id="ZFISCAL_MONTH"/>
+        <viewAttribute id="Req_LineCount_NoPLX"/>
+        <viewAttribute id="Req_LineCount_Total"/>
+        <viewAttribute id="eReq_LineCount"/>
+        <viewAttribute id="Req_HeaderCount_Total"/>
+        <viewAttribute id="DocumentCount_ZBPLX"/>
+        <viewAttribute id="Non_ePayments_LineCount"/>
+        <viewAttribute id="eReq_HeaderCount"/>
+        <viewAttribute id="Req_HeaderCount_NoPLX"/>
+        <viewAttribute id="PO_DOCUMENT_COUNT"/>
+        <viewAttribute id="CC_ELECTRONIC_PO_HDR_CNTR"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input emptyUnionBehavior="NO_ROW" node="Aggregation_3">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ChequeLineCount" source="ChequeLineCount"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PaymentsLineCount" source="PaymentsDocumentLines"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="DcoumentCount_ZB" null="false" value="0"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="DocumentCount_KR_RE_ZA_ZB" null="false" value="0"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="DocumentCount_PLX" null="false" value="0"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="DocumentLine_POs" null="false" value="0"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="EDILinesCount" null="false" value="0"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUTXT" source="BUTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR_QUARTER" source="ZFISCAL_YEAR_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_MONTH" source="ZFISCAL_MONTH"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Req_LineCount_NoPLX" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Req_LineCount_Total" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="eReq_LineCount" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Req_HeaderCount_Total" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="DocumentCount_ZBPLX" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Non_ePayments_LineCount" source="Non_ePayments_LineCount"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="eReq_HeaderCount" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Req_HeaderCount_NoPLX" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PO_DOCUMENT_COUNT" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_ELECTRONIC_PO_HDR_CNTR" null="true" value=""/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="Projection_4">
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ChequeLineCount" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PaymentsLineCount" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="DcoumentCount_ZB" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="DocumentCount_KR_RE_ZA_ZB" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="DocumentCount_PLX" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="DocumentLine_POs" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="EDILinesCount" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUTXT" source="BUTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR_QUARTER" source="ZFISCAL_YEAR_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_MONTH" source="ZFISCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Req_LineCount_NoPLX" source="Req_LineCount_NoPLX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Req_LineCount_Total" source="Req_LineCount_Total"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="eReq_LineCount" source="eReq_LineCount"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Req_HeaderCount_Total" source="Req_HeaderCount_Total"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="DocumentCount_ZBPLX" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Non_ePayments_LineCount" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="eReq_HeaderCount" source="eReq_HeaderCount"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Req_HeaderCount_NoPLX" source="Req_HeaderCount_NoPLX"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PO_DOCUMENT_COUNT" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_ELECTRONIC_PO_HDR_CNTR" null="true" value=""/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="Projection_1">
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ChequeLineCount" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PaymentsLineCount" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DcoumentCount_ZB" source="DocumentCount_ZB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DocumentCount_KR_RE_ZA_ZB" source="DocumentCount_KR_RE_ZB_ZA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DocumentCount_PLX" source="DocumentCount_PLX"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="DocumentLine_POs" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="EDILinesCount" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUTXT" source="BUTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR_QUARTER" source="ZFISCAL_YEAR_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_MONTH" source="ZFISCAL_MONTH"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Req_LineCount_NoPLX" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Req_LineCount_Total" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="eReq_LineCount" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Req_HeaderCount_Total" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DocumentCount_ZBPLX" source="DocumentCount_ZBPLX"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Non_ePayments_LineCount" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="eReq_HeaderCount" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Req_HeaderCount_NoPLX" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PO_DOCUMENT_COUNT" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_ELECTRONIC_PO_HDR_CNTR" null="true" value=""/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="Projection_5">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ChequeLineCount" source="CHEQUES_COUNTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PaymentsLineCount" source="Payments_Counter"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DcoumentCount_ZB" source="DocumentCount_ZB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DocumentCount_KR_RE_ZA_ZB" source="DocumentCount_KR_RE_ZB_ZA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DocumentCount_PLX" source="DocumentCount_PLX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DocumentLine_POs" source="PO_Total"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EDILinesCount" source="EDI_PO_COUNTER"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BUKRS" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BUTXT" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR_QUARTER" source="ZFISCAL_YEAR_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_MONTH" source="ZFISCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Req_LineCount_NoPLX" source="Req_Counter"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Req_LineCount_Total" source="Req_Counter"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="eReq_LineCount" source="EREQ_COUNTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Req_HeaderCount_Total" source="Req_Counter"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="DocumentCount_ZBPLX" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Non_ePayments_LineCount" source="CHEQUES_COUNTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="eReq_HeaderCount" source="EREQ_COUNTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Req_HeaderCount_NoPLX" source="Req_Counter"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_DOCUMENT_COUNT" source="PO_Total"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ELECTRONIC_PO_HDR_CNTR" source="EDI_PO_COUNTER"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="Projection_3">
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ChequeLineCount" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PaymentsLineCount" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="DcoumentCount_ZB" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="DocumentCount_KR_RE_ZA_ZB" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="DocumentCount_PLX" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DocumentLine_POs" source="DocumentLineCount"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EDILinesCount" source="CC_EDILinesCount"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUTXT" source="BUTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR_QUARTER" source="ZFISCAL_YEAR_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_MONTH" source="ZFISCAL_MONTH"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Req_LineCount_NoPLX" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Req_LineCount_Total" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="eReq_LineCount" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Req_HeaderCount_Total" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="DocumentCount_ZBPLX" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Non_ePayments_LineCount" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="eReq_HeaderCount" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Req_HeaderCount_NoPLX" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_DOCUMENT_COUNT" source="PO_DOCUMENT_COUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ELECTRONIC_PO_HDR_CNTR" source="CC_ELECTRONIC_PO_HDR_CNTR"/>
+      </input>
+    </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_6" filterExpressionLanguage="COLUMN_ENGINE">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="METRIC_ID"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="TARGET"/>
+        <viewAttribute id="THRESHOLD"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="CA_DIM_TARGET_THRESHOLD"/>
+    <filter>(&quot;METRIC_ID&quot; ='EB')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinType="leftOuter">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="ChequeLineCount"/>
+        <viewAttribute id="PaymentsLineCount"/>
+        <viewAttribute id="DcoumentCount_ZB"/>
+        <viewAttribute id="DocumentCount_KR_RE_ZA_ZB"/>
+        <viewAttribute id="DocumentCount_PLX"/>
+        <viewAttribute id="DocumentLine_POs"/>
+        <viewAttribute id="EDILinesCount"/>
+        <viewAttribute id="TARGET"/>
+        <viewAttribute id="THRESHOLD"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="BUTXT"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR_QUARTER"/>
+        <viewAttribute id="ZFISCAL_MONTH"/>
+        <viewAttribute id="Req_LineCount_NoPLX"/>
+        <viewAttribute id="Req_LineCount_Total"/>
+        <viewAttribute id="eReq_LineCount"/>
+        <viewAttribute id="Req_HeaderCount_Total"/>
+        <viewAttribute id="DocumentCount_ZBPLX"/>
+        <viewAttribute id="Non_ePayments_LineCount"/>
+        <viewAttribute id="eReq_HeaderCount"/>
+        <viewAttribute id="Req_HeaderCount_NoPLX"/>
+        <viewAttribute id="PO_DOCUMENT_COUNT"/>
+        <viewAttribute id="CC_ELECTRONIC_PO_HDR_CNTR"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="Union_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ChequeLineCount" source="ChequeLineCount"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PaymentsLineCount" source="PaymentsLineCount"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DcoumentCount_ZB" source="DcoumentCount_ZB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DocumentCount_KR_RE_ZA_ZB" source="DocumentCount_KR_RE_ZA_ZB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DocumentCount_PLX" source="DocumentCount_PLX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DocumentLine_POs" source="DocumentLine_POs"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EDILinesCount" source="EDILinesCount"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUTXT" source="BUTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR_QUARTER" source="ZFISCAL_YEAR_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_MONTH" source="ZFISCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Req_LineCount_NoPLX" source="Req_LineCount_NoPLX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Req_LineCount_Total" source="Req_LineCount_Total"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="eReq_LineCount" source="eReq_LineCount"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Req_HeaderCount_Total" source="Req_HeaderCount_Total"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DocumentCount_ZBPLX" source="DocumentCount_ZBPLX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Non_ePayments_LineCount" source="Non_ePayments_LineCount"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="eReq_HeaderCount" source="eReq_HeaderCount"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Req_HeaderCount_NoPLX" source="Req_HeaderCount_NoPLX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_DOCUMENT_COUNT" source="PO_DOCUMENT_COUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ELECTRONIC_PO_HDR_CNTR" source="CC_ELECTRONIC_PO_HDR_CNTR"/>
+      </input>
+      <input node="Projection_6">
+        <mapping xsi:type="Calculation:AttributeMapping" target="TARGET" source="TARGET"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="THRESHOLD" source="THRESHOLD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+      </input>
+    <joinAttribute name="MEMBER"/>
+    <joinAttribute name="ZFISCAL_YEAR"/>
+    <joinAttribute name="ZFISCAL_PERIOD"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_7">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="ChequeLineCount"/>
+        <viewAttribute id="PaymentsLineCount"/>
+        <viewAttribute id="DcoumentCount_ZB"/>
+        <viewAttribute id="DocumentCount_KR_RE_ZA_ZB"/>
+        <viewAttribute id="DocumentCount_PLX"/>
+        <viewAttribute id="DocumentLine_POs"/>
+        <viewAttribute id="EDILinesCount"/>
+        <viewAttribute id="TARGET"/>
+        <viewAttribute id="THRESHOLD"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="BUTXT"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR_QUARTER"/>
+        <viewAttribute id="ZFISCAL_MONTH"/>
+        <viewAttribute id="Req_LineCount_NoPLX"/>
+        <viewAttribute id="Req_LineCount_Total"/>
+        <viewAttribute id="eReq_LineCount"/>
+        <viewAttribute id="Req_HeaderCount_Total"/>
+        <viewAttribute id="DocumentCount_ZBPLX"/>
+        <viewAttribute id="Non_ePayments_LineCount"/>
+        <viewAttribute id="eReq_HeaderCount"/>
+        <viewAttribute id="Req_HeaderCount_NoPLX"/>
+        <viewAttribute id="PO_DOCUMENT_COUNT"/>
+        <viewAttribute id="CC_ELECTRONIC_PO_HDR_CNTR"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="INTEGER" id="MULTIPLY_FACTOR" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;MEMBER&quot;= 'PLX', 0, 1)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="INTEGER" id="DENOMINATOR" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;MEMBER&quot;= 'PLX',3, 4)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="Join_1"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute aggregationType="sum" id="ChequeLineCount"/>
+        <viewAttribute aggregationType="sum" id="PaymentsLineCount"/>
+        <viewAttribute aggregationType="sum" id="DcoumentCount_ZB"/>
+        <viewAttribute aggregationType="sum" id="DocumentCount_KR_RE_ZA_ZB"/>
+        <viewAttribute aggregationType="sum" id="DocumentCount_PLX"/>
+        <viewAttribute aggregationType="sum" id="DocumentLine_POs"/>
+        <viewAttribute aggregationType="sum" id="EDILinesCount"/>
+        <viewAttribute aggregationType="max" id="TARGET"/>
+        <viewAttribute aggregationType="max" id="THRESHOLD"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="BUTXT"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR_QUARTER"/>
+        <viewAttribute id="ZFISCAL_MONTH"/>
+        <viewAttribute aggregationType="sum" id="Req_LineCount_NoPLX"/>
+        <viewAttribute aggregationType="sum" id="Req_LineCount_Total"/>
+        <viewAttribute aggregationType="sum" id="eReq_LineCount"/>
+        <viewAttribute aggregationType="sum" id="Req_HeaderCount_Total"/>
+        <viewAttribute aggregationType="sum" id="DocumentCount_ZBPLX"/>
+        <viewAttribute aggregationType="sum" id="Non_ePayments_LineCount"/>
+        <viewAttribute aggregationType="sum" id="eReq_HeaderCount"/>
+        <viewAttribute aggregationType="sum" id="Req_HeaderCount_NoPLX"/>
+        <viewAttribute aggregationType="max" id="MULTIPLY_FACTOR"/>
+        <viewAttribute aggregationType="max" id="DENOMINATOR"/>
+        <viewAttribute aggregationType="sum" id="PO_DOCUMENT_COUNT"/>
+        <viewAttribute aggregationType="sum" id="CC_ELECTRONIC_PO_HDR_CNTR"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DECIMAL" id="Percentage_eBusiness" length="13" scale="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>(&quot;Percentage_ePayments&quot;+&quot;Percentage_eInvoices&quot;+&quot;Percentage_ePO&quot;+&quot;Percentage_eReq&quot;*&quot;MULTIPLY_FACTOR&quot;)/&quot;DENOMINATOR&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="Percentage_ePayments" length="13" scale="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;PaymentsLineCount&quot; &gt; 0, (&quot;PaymentsLineCount&quot;-&quot;Non_ePayments_LineCount&quot;)/&quot;PaymentsLineCount&quot;, 0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="Percentage_eInvoices" length="13" scale="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>if ( &quot;DocumentCount_KR_RE_ZA_ZB&quot; &gt; 0, (&quot;DcoumentCount_ZB&quot;+&quot;DocumentCount_PLX&quot; )/ &quot;DocumentCount_KR_RE_ZA_ZB&quot;, 0 )</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="Percentage_ePO" length="13" scale="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;PO_DOCUMENT_COUNT&quot; &gt; 0 , &quot;CC_ELECTRONIC_PO_HDR_CNTR&quot;/&quot;PO_DOCUMENT_COUNT&quot;,0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="Percentage_eReq" length="13" scale="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;eReq_HeaderCount&quot;&gt; 0 , &quot;eReq_HeaderCount&quot;/&quot;Req_HeaderCount_NoPLX&quot;, Null)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+      <input node="Projection_7"/>
+    </calculationView>
+</calculationViews>
+  <logicalModel id="Aggregation_1">
+    <descriptions/>
+    <attributes>
+      <attribute id="MEMBER" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Member ID"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="MEMBER"/>
+      </attribute>
+      <attribute id="ZFISCAL_YEAR" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Year"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="ZFISCAL_YEAR"/>
+      </attribute>
+      <attribute id="ZFISCAL_PERIOD" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Period"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="ZFISCAL_PERIOD"/>
+      </attribute>
+      <attribute id="BUKRS" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Company Code"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="BUKRS"/>
+      </attribute>
+      <attribute id="BUTXT" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Company Code Description"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="BUTXT"/>
+      </attribute>
+      <attribute id="ZFISCAL_QUARTER" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Quarter"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="ZFISCAL_QUARTER"/>
+      </attribute>
+      <attribute id="ZFISCAL_YEAR_QUARTER" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Year / Quarter"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="ZFISCAL_YEAR_QUARTER"/>
+      </attribute>
+      <attribute id="ZFISCAL_MONTH" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Month"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="ZFISCAL_MONTH"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="ChequeLineCount" hidden="true" order="1" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="ChequeLineCount"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="ChequeLineCount"/>
+      </measure>
+      <measure id="PaymentsLineCount" order="2" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Payment Line Count"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="PaymentsLineCount"/>
+      </measure>
+      <measure id="DcoumentCount_ZB" order="3" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Invoice Dcoument Count ZB"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="DcoumentCount_ZB"/>
+      </measure>
+      <measure id="DocumentCount_KR_RE_ZA_ZB" order="4" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Invoice DocumentCount_KR_RE_ZA_ZB"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="DocumentCount_KR_RE_ZA_ZB"/>
+      </measure>
+      <measure id="DocumentCount_PLX" order="5" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Invoice Document Count PLX"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="DocumentCount_PLX"/>
+      </measure>
+      <measure id="DocumentLine_POs" order="6" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="PO Line Count"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="DocumentLine_POs"/>
+      </measure>
+      <measure id="EDILinesCount" order="7" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="EDI PO Line Count"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="EDILinesCount"/>
+      </measure>
+      <measure id="TARGET" order="8" aggregationType="max" measureType="simple">
+        <descriptions defaultDescription="TARGET"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="TARGET"/>
+      </measure>
+      <measure id="THRESHOLD" order="9" aggregationType="max" measureType="simple">
+        <descriptions defaultDescription="THRESHOLD"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="THRESHOLD"/>
+      </measure>
+      <measure id="Req_LineCount_NoPLX" order="18" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Req Line Count NoPLX"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="Req_LineCount_NoPLX"/>
+      </measure>
+      <measure id="Req_LineCount_Total" order="19" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Req Line Count Total"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="Req_LineCount_Total"/>
+      </measure>
+      <measure id="eReq_LineCount" order="20" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="eReq Line Count"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="eReq_LineCount"/>
+      </measure>
+      <measure id="Req_HeaderCount_Total" order="21" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Req Document Count Total"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="Req_HeaderCount_Total"/>
+      </measure>
+      <measure id="DocumentCount_ZBPLX" order="22" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Invoice Document Count ZBPLX"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="DocumentCount_ZBPLX"/>
+      </measure>
+      <measure id="Non_ePayments_LineCount" order="23" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Non ePayments  Line Count"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="Non_ePayments_LineCount"/>
+      </measure>
+      <measure id="eReq_HeaderCount" order="24" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="eReq Document Count"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="eReq_HeaderCount"/>
+      </measure>
+      <measure id="Req_HeaderCount_NoPLX" order="25" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Req Document Count NoPLX"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="Req_HeaderCount_NoPLX"/>
+      </measure>
+      <measure id="MULTIPLY_FACTOR" hidden="true" order="26" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="MULTIPLY_FACTOR"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="MULTIPLY_FACTOR"/>
+      </measure>
+      <measure id="DENOMINATOR" hidden="true" order="27" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="DENOMINATOR"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="DENOMINATOR"/>
+      </measure>
+      <measure id="Percentage_eBusiness" order="28" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Percentage_eBusiness"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="Percentage_eBusiness"/>
+      </measure>
+      <measure id="Percentage_ePayments" order="29" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Percentage_ePayments"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="Percentage_ePayments"/>
+      </measure>
+      <measure id="Percentage_eInvoices" order="30" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Percentage_eInvoices"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="Percentage_eInvoices"/>
+      </measure>
+      <measure id="Percentage_ePO" order="31" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Percentage_ePO"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="Percentage_ePO"/>
+      </measure>
+      <measure id="Percentage_eReq" order="32" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Percentage_eReq"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="Percentage_eReq"/>
+      </measure>
+      <measure id="PO_DOCUMENT_COUNT" order="34" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="PO Document Count"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="PO_DOCUMENT_COUNT"/>
+      </measure>
+      <measure id="CC_ELECTRONIC_PO_HDR_CNTR" order="35" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Electronic PO Document Count"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="CC_ELECTRONIC_PO_HDR_CNTR"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures>
+      <measure id="MEMBERS_COUNT" hidden="false" order="33" aggregationType="sum" measureType="simple" aggregatable="true" calculatedMeasureType="counter" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+        <descriptions defaultDescription="MEMBERS_COUNT"/>
+        <exceptionAggregation exceptionAggregationType="countDistinct">
+          <attribute attributeName="MEMBER"/>
+        </exceptionAggregation>
+        <formula>1</formula>
+      </measure>
+    </calculatedMeasures>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+<layout>
+  <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="268" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="345" y="587"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="191" y="665"/>
+        <rectangleSize height="30" width="140"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Aggregation_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="191" y="587"/>
+        <rectangleSize height="30" width="140"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="653" y="587"/>
+        <rectangleSize height="64" width="228"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_4" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="10" y="600"/>
+        <rectangleSize height="64" width="155"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_5" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="499" y="587"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Union_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="345" y="417"/>
+        <rectangleSize height="30" width="140"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_6" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="191" y="417"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="268" y="321"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    <shape modelObjectName="Union_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_6" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="Projection_7" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="259" y="243"/>
+        <rectangleSize height="64" width="158"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="268" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+</layout>
+</Calculation:scenario>

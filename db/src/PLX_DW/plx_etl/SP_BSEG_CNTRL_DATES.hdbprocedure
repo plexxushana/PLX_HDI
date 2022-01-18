@@ -1,0 +1,36 @@
+PROCEDURE "plx_etl::SP_BSEG_CNTRL_DATES" ( ) 
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+	--READS SQL DATA 
+	AS
+BEGIN
+/***************************** 
+	Write your procedure logic 
+ *****************************/
+ 
+DECLARE lv_cpudt_start, lv_cpudt_end, lv_aedat_start, lv_aedat_end  nvarchar(8):= '20180101'; 
+DECLARE lv_cpudt_start1, lv_cpudt_end1, lv_aedat_start1, lv_aedat_end1  datetime; 
+ 
+    select cpudt_start into  lv_cpudt_start 		from "HANA_CNTRL_BSEG_LOADS";
+	select cpudt_end   into  lv_cpudt_end 			from "HANA_CNTRL_BSEG_LOADS";
+	select aedat_start into  lv_aedat_start 		from "HANA_CNTRL_BSEG_LOADS";
+	select aedat_end   into  lv_aedat_end 			from "HANA_CNTRL_BSEG_LOADS";
+	
+ lv_cpudt_start1 	:= 	TO_DATE(lv_cpudt_start);
+ lv_cpudt_end1   	:=  TO_DATE(lv_cpudt_end);
+ lv_aedat_start1 	:= 	TO_DATE(lv_aedat_start);
+ lv_aedat_end1   	:=  TO_DATE(lv_aedat_end);
+ 
+ 
+ select to_nvarchar(ADD_DAYS(lv_cpudt_start1, 1), 'yyyymmdd') 		into lv_cpudt_start 	from "DUMMY";
+ select to_nvarchar(ADD_DAYS(lv_cpudt_end1, 1) 	, 'yyyymmdd')		into lv_cpudt_end 		from "DUMMY";
+ select to_nvarchar(ADD_DAYS(lv_aedat_start1, 1) , 'yyyymmdd')		into lv_aedat_start 	from "DUMMY";
+ select to_nvarchar(ADD_DAYS(lv_aedat_end1, 1) , 'yyyymmdd')		into lv_aedat_end 		from "DUMMY";
+ 
+ 
+ update  "HANA_CNTRL_BSEG_LOADS"
+ set CPUDT_START =:lv_cpudt_start, CPUDT_END =:lv_cpudt_end, AEDAT_START=:lv_aedat_start, AEDAT_END = :lv_aedat_end;
+ 
+ 
+ 
+END;

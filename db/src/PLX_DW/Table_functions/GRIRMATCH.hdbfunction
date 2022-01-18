@@ -1,0 +1,112 @@
+FUNCTION "plx_analytics::GRIRMATCH" ( "EBELN_IN" NVARCHAR(10) ) 
+	RETURNS TABLE ("EBELN" NVARCHAR(10), 
+	"EBELP" NVARCHAR(5), 
+	"BELNR_GR" NVARCHAR(10), 
+	"GJAHR_GR" NVARCHAR(4), 
+	"BUZEI_GR" NVARCHAR(5),  
+	/*
+	"BELNR_IR" NVARCHAR(10), 
+	"GJAHR_IR" NVARCHAR(4), 
+	"BUZEI_IR" NVARCHAR(5),  
+	*/
+	"WRBTR_GR" DECIMAL(13,2),
+	"SHKZG_GR" NVARCHAR(1),
+	"CPUDT_GR" DATE,
+	"CPUTM_GR" TIME,
+	/*
+	,
+	"WRBTR_IR" DECIMAL(13,2),
+	"SHKZG_IR" NVARCHAR(1),
+	"CPUDT_IR" DATE,
+	"CPUTM_IR" TIME,
+	
+	*/
+	"CANCEL" NVARCHAR(10)
+	
+	 )
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER AS
+	
+CURSOR c_gr FOR
+ SELECT "EBELN", 
+ "EBELP",
+ "BELNR" as "BELNR_GR",
+ "GJAHR" as "GJAHR_GR",
+ "BUZEI" as "BUZEI_GR",
+ "WRBTR" as "WRBTR_GR",
+ "SHKZG" as "SHKZG_GR",
+ "CPUDT" as "CPUDT_GR",
+ "CPUTM" as "CPUTM_GR",
+ '' as "CANCEL"
+ FROM "ECC_EKBE"
+ WHERE "EBELN" = "EBELN_IN"
+ AND "BEWTP" = 'E'
+ ORDER BY "CPUDT" ASC, "CPUTM" ASC;
+	
+BEGIN
+/***************************** 
+	Write your function logic
+ *****************************/
+ 
+ /* Select all GR and IR for given PO */
+ TBL_GR = 
+ SELECT "EBELN", 
+ "EBELP",
+ "BELNR" as "BELNR_GR",
+ "GJAHR" as "GJAHR_GR",
+ "BUZEI" as "BUZEI_GR",
+ "WRBTR" as "WRBTR_GR",
+ "SHKZG" as "SHKZG_GR",
+ "CPUDT" as "CPUDT_GR",
+ "CPUTM" as "CPUTM_GR",
+ '' as "CANCEL"
+ FROM "ECC_EKBE"
+ WHERE "EBELN" = "EBELN_IN"
+ AND "BEWTP" = 'E'
+ ORDER BY "CPUDT" ASC, "CPUTM" ASC;
+ 
+  /* First do loop to eliminate GR */
+ FOR c1 as c_gr DO
+ 
+ END FOR;
+ 
+ 
+  TBL_IR = 
+ SELECT "EBELN", 
+ "EBELP",
+ "BELNR" as "BELNR_IR",
+ "GJAHR" as "GJAHR_IR",
+ "BUZEI" as "BUZEI_IR",
+ "WRBTR" as "WRBTR_IR",
+ "SHKZG" as "SHKZG_IR",
+ "CPUDT" as "CPUDT_IR",
+ "CPUTM" as "CPUTM_IR"
+ FROM "ECC_EKBE"
+ WHERE "EBELN" = "EBELN_IN"
+ AND "BEWTP" = 'Q'
+ ORDER BY "CPUDT" ASC, "CPUTM" ASC;
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ RETURN 
+ select "EBELN",
+ 	"EBELP",
+	"BELNR_GR",
+	"GJAHR_GR",
+	"BUZEI_GR" ,
+	"WRBTR_GR",
+	"SHKZG_GR" ,
+	"CPUDT_GR",
+	"CPUTM_GR",
+    '' AS "CANCEL"
+ FROM
+ :TBL_GR;
+ 
+ 
+ 
+END;

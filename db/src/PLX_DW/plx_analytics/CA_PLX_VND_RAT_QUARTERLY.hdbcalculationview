@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="plx_analytics::CA_PLX_VND_RAT_QUARTERLY" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" determineTextFuzzySearchEnablement="true" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+  <origin/>
+  <descriptions defaultDescription="CA_PLX_VND_RAT_QUARTERLY"/>
+  <metadata changedAt="2018-10-09 15:17:46.995"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="26"/>
+  <dataSources>
+    <DataSource id="CA_PLX_SPEND_INVOICES">
+      <resourceUri>plx_analytics::CA_PLX_SPEND_INVOICES</resourceUri>
+    </DataSource>
+    <DataSource id="AGG_SPEND$$$$CA_PLX_SPEND_INVOICES$$">
+      <resourceUri>plx_analytics::CA_PLX_SPEND_INVOICES</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="Z_INV_LAMT"/>
+        <viewAttribute id="Z_LIFNR"/>
+        <viewAttribute id="Z_ORDER_TYPE"/>
+        <viewAttribute id="Z_COSTELEM"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="ZFISCAL_YEAR_QUARTER"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="INTEGER" id="ROLL" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;ZFISCAL_YEAR_QUARTER&quot; >=&quot;Z_FIRST_FISC_QTR&quot; AND &quot;ZFISCAL_YEAR_QUARTER&quot; &lt;=&quot;Z_LAST_FISC_QTR&quot; , 1,0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="Z_PREV_CAL_QTR" length="7" expressionLanguage="COLUMN_ENGINE">
+          <formula>CASE(RIGHTSTR(QUARTER(NOW()),1) , '1', &quot;Z_DETERMINE_PAST_YEAR&quot;+'-Q4',  '2', &quot;Z_LEFTSTR_CRT_CAL_QTR&quot;+'1',  '3', &quot;Z_LEFTSTR_CRT_CAL_QTR&quot;+'2',  '4', &quot;Z_LEFTSTR_CRT_CAL_QTR&quot;+'3')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="Z_LEFTSTR_CRT_CAL_QTR" length="6" expressionLanguage="COLUMN_ENGINE">
+          <formula>LEFTSTR(QUARTER(NOW()),6)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="Z_DETERMINE_CRT_YEAR" length="4" expressionLanguage="COLUMN_ENGINE">
+          <formula> LEFTSTR(&quot;Z_PREV_CAL_QTR&quot;,4)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="Z_DETERMINE_PAST_YEAR" length="4" expressionLanguage="COLUMN_ENGINE">
+          <formula>string(INT(LEFTSTR(QUARTER(NOW()),4))-1)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="Z_DETERMINE_NEXT_YEAR" length="4" expressionLanguage="COLUMN_ENGINE">
+          <formula>string(INT(LEFTSTR(&quot;Z_PREV_CAL_QTR&quot;,4))+1)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="Z_LAST_FISC_QTR" length="8" expressionLanguage="COLUMN_ENGINE">
+          <formula>case( rightstr(quarter(now()),1),  '1', RIGHTSTR(&quot;Z_DETERMINE_CRT_YEAR&quot;,2) +'Q'+'3', '2', RIGHTSTR(&quot;Z_DETERMINE_NEXT_YEAR&quot;,2) +'Q'+'4', '3', RIGHTSTR(&quot;Z_DETERMINE_NEXT_YEAR&quot;,2) +'Q'+'1', '4',  RIGHTSTR(&quot;Z_DETERMINE_NEXT_YEAR&quot;,2) +'Q'+'2') </formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="Z_FIRST_FISC_QTR" length="8" expressionLanguage="COLUMN_ENGINE">
+          <formula>case( rightstr(quarter(now()),1),  '1', RIGHTSTR(&quot;Z_DETERMINE_PAST_YEAR&quot;,2) +'Q'+'4', '2', RIGHTSTR(&quot;Z_DETERMINE_PAST_YEAR&quot;,2) +'Q'+'1', '3', RIGHTSTR(&quot;Z_DETERMINE_PAST_YEAR&quot;,2) +'Q'+'2', '4',  RIGHTSTR(&quot;Z_DETERMINE_CRT_YEAR&quot;,2) +'Q'+'3') </formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="Z_ROLL_LONG_FORM" length="40" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;Z_FIRST_FISC_QTR&quot; + ' --- ' + &quot;Z_LAST_FISC_QTR&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CA_PLX_SPEND_INVOICES">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_LAMT" source="Z_INV_LAMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_LIFNR" source="Z_LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_ORDER_TYPE" source="Z_ORDER_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_COSTELEM" source="Z_COSTELEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR_QUARTER" source="ZFISCAL_YEAR_QUARTER"/>
+      </input>
+      <filter>&quot;Z_ORDER_TYPE&quot; != 'Hospital Store'  AND  &quot;BUKRS&quot; !='1000' AND &quot;BUKRS&quot; !='1001' AND &quot;BUKRS&quot; != '1002'</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="AGG_SPEND" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="Z_INV_LAMT"/>
+        <viewAttribute id="Z_LIFNR"/>
+        <viewAttribute id="Z_ORDER_TYPE"/>
+        <viewAttribute id="Z_COSTELEM"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="ZFISCAL_YEAR_QUARTER"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="INTEGER" id="ROLL_QTR" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;ZFISCAL_YEAR_QUARTER&quot; >=&quot;Z_FIRST_FISC_QTR&quot; AND &quot;ZFISCAL_YEAR_QUARTER&quot; &lt;=&quot;Z_LAST_FISC_QTR&quot; , 1,0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="Z_DETERMINE_CRT_YEAR" length="4" expressionLanguage="COLUMN_ENGINE">
+          <formula> LEFTSTR(&quot;Z_PREV_CAL_QTR&quot;,4)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="Z_DETERMINE_PAST_YEAR" length="4" expressionLanguage="COLUMN_ENGINE">
+          <formula>string(INT(LEFTSTR(QUARTER(NOW()),4))-1)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="Z_LAST_FISC_QTR" length="8" expressionLanguage="COLUMN_ENGINE">
+          <formula>case( rightstr(quarter(now()),1),  '1', RIGHTSTR(&quot;Z_DETERMINE_CRT_YEAR&quot;,2) +'Q'+'3', '2', RIGHTSTR(&quot;Z_DETERMINE_NEXT_YEAR&quot;,2) +'Q'+'4', '3', RIGHTSTR(&quot;Z_DETERMINE_NEXT_YEAR&quot;,2) +'Q'+'1', '4',  RIGHTSTR(&quot;Z_DETERMINE_NEXT_YEAR&quot;,2) +'Q'+'2') </formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="Z_DETERMINE_NEXT_YEAR" length="4" expressionLanguage="COLUMN_ENGINE">
+          <formula>string(INT(LEFTSTR(&quot;Z_PREV_CAL_QTR&quot;,4))+1)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="Z_FIRST_FISC_QTR" length="4" expressionLanguage="COLUMN_ENGINE">
+          <formula>case( rightstr(quarter(now()),1),  '1', RIGHTSTR(&quot;Z_DETERMINE_PAST_YEAR&quot;,2) +'Q'+'4', '2', RIGHTSTR(&quot;Z_DETERMINE_PAST_YEAR&quot;,2) +'Q'+'1', '3', RIGHTSTR(&quot;Z_DETERMINE_PAST_YEAR&quot;,2) +'Q'+'2', '4',  RIGHTSTR(&quot;Z_DETERMINE_CRT_YEAR&quot;,2) +'Q'+'3') </formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="Z_ROLL_LONG_FORM" length="40" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;Z_FIRST_FISC_QTR&quot; + ' --- ' + &quot;Z_LAST_FISC_QTR&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="Z_LEFTSTR_CRT_CAL_QTR" length="6" expressionLanguage="COLUMN_ENGINE">
+          <formula>LEFTSTR(QUARTER(NOW()),6)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="Z_PREV_CAL_QTR" length="7" expressionLanguage="COLUMN_ENGINE">
+          <formula>CASE(RIGHTSTR(QUARTER(NOW()),1) , '1', &quot;Z_DETERMINE_PAST_YEAR&quot;+'-Q4',  '2', &quot;Z_LEFTSTR_CRT_CAL_QTR&quot;+'1',  '3', &quot;Z_LEFTSTR_CRT_CAL_QTR&quot;+'2',  '4', &quot;Z_LEFTSTR_CRT_CAL_QTR&quot;+'3')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#AGG_SPEND$$$$CA_PLX_SPEND_INVOICES$$">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_LAMT" source="Z_INV_LAMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_LIFNR" source="Z_LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_ORDER_TYPE" source="Z_ORDER_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_COSTELEM" source="Z_COSTELEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR_QUARTER" source="ZFISCAL_YEAR_QUARTER"/>
+      </input>
+      <filter>&quot;Z_ORDER_TYPE&quot; != 'Hospital Store'  AND  &quot;BUKRS&quot; !='1000' AND &quot;BUKRS&quot; !='1001' AND &quot;BUKRS&quot; != '1002'</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_3">
+      <descriptions>
+        <comment text="Purely grouping so we can get teh sum in the next node."/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="Z_INV_LAMT"/>
+        <viewAttribute id="Z_LIFNR"/>
+        <viewAttribute id="Z_ORDER_TYPE"/>
+        <viewAttribute id="ROLL_QTR"/>
+        <viewAttribute id="Z_ROLL_LONG_FORM"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#AGG_SPEND">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_LAMT" source="Z_INV_LAMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_LIFNR" source="Z_LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_ORDER_TYPE" source="Z_ORDER_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROLL_QTR" source="ROLL_QTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_ROLL_LONG_FORM" source="Z_ROLL_LONG_FORM"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_4">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="Z_INV_LAMT"/>
+        <viewAttribute id="Z_LIFNR"/>
+        <viewAttribute id="ROLL_QTR"/>
+        <viewAttribute id="Z_ROLL_LONG_FORM"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Aggregation_3">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_LAMT" source="Z_INV_LAMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_LIFNR" source="Z_LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROLL_QTR" source="ROLL_QTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_ROLL_LONG_FORM" source="Z_ROLL_LONG_FORM"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute aggregationType="sum" id="Z_INV_LAMT"/>
+        <viewAttribute id="Z_LIFNR"/>
+        <viewAttribute id="ROLL_QTR"/>
+        <viewAttribute id="Z_ROLL_LONG_FORM"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Aggregation_4">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_LAMT" source="Z_INV_LAMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_LIFNR" source="Z_LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROLL_QTR" source="ROLL_QTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_ROLL_LONG_FORM" source="Z_ROLL_LONG_FORM"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_2">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute aggregationType="count" id="Z_COUNT_LIFNR"/>
+        <viewAttribute id="ROLL_QTR"/>
+        <viewAttribute id="Z_ROLL_LONG_FORM"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DECIMAL" id="TOP5_PERCENT" length="34" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;Z_COUNT_LIFNR&quot;*0.05</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#Aggregation_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_COUNT_LIFNR" source="Z_LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROLL_QTR" source="ROLL_QTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_ROLL_LONG_FORM" source="Z_ROLL_LONG_FORM"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_5">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute aggregationType="sum" id="Z_INV_LAMT"/>
+        <viewAttribute id="Z_LIFNR"/>
+        <viewAttribute id="ROLL"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Projection_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_LAMT" source="Z_INV_LAMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_LIFNR" source="Z_LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROLL" source="ROLL"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_6">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="Z_INV_LAMT"/>
+        <viewAttribute id="Z_LIFNR"/>
+        <viewAttribute id="ROLL"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Aggregation_5">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_LAMT" source="Z_INV_LAMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_LIFNR" source="Z_LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROLL" source="ROLL"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:RankView" id="Rank_1">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="Z_INV_LAMT"/>
+        <viewAttribute id="Z_LIFNR"/>
+        <viewAttribute id="ROLL"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Aggregation_6">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_LAMT" source="Z_INV_LAMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_LIFNR" source="Z_LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROLL" source="ROLL"/>
+      </input>
+      <windowFunction dynamicPartitionAttributes="false">
+        <partitionViewAttributeName>ROLL</partitionViewAttributeName>
+        <order byViewAttributeName="Z_INV_LAMT" direction="DESC"/>
+        <rankThreshold>
+          <value>99999</value>
+        </rankThreshold>
+        <rankViewAttributeName>Rank_Column</rankViewAttributeName>
+      </windowFunction>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinOrder="OUTSIDE_IN" joinType="inner">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="TOP5_PERCENT"/>
+        <viewAttribute id="Z_COUNT_LIFNR"/>
+        <viewAttribute id="Z_LIFNR"/>
+        <viewAttribute id="Rank_Column"/>
+        <viewAttribute id="Z_INV_LAMT"/>
+        <viewAttribute id="ROLL"/>
+        <viewAttribute id="Z_ROLL_LONG_FORM"/>
+        <viewAttribute hidden="true" id="JOIN$ROLL_QTR$ROLL"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="VARCHAR" id="Grouping_Vendor" length="15" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;Rank_Column&quot;&lt;=&quot;TOP5_PERCENT&quot;, 'Top 5%','BOTTOM 95%')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="Z_SPEND_TOP5_PERC" length="34" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;Rank_Column&quot;&lt;=&quot;TOP5_PERCENT&quot;,&quot;Z_INV_LAMT&quot;,0)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#Aggregation_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOP5_PERCENT" source="TOP5_PERCENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_COUNT_LIFNR" source="Z_COUNT_LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_ROLL_LONG_FORM" source="Z_ROLL_LONG_FORM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ROLL_QTR$ROLL" source="ROLL_QTR"/>
+      </input>
+      <input node="#Rank_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_LIFNR" source="Z_LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Rank_Column" source="Rank_Column"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_LAMT" source="Z_INV_LAMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROLL" source="ROLL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ROLL_QTR$ROLL" source="ROLL"/>
+      </input>
+      <joinAttribute name="JOIN$ROLL_QTR$ROLL"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_7">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute aggregationType="max" id="Z_COUNT_LIFNR"/>
+        <viewAttribute id="Grouping_Vendor"/>
+        <viewAttribute id="Z_SPEND_TOP5_PERC"/>
+        <viewAttribute id="TOP5_PERCENT"/>
+        <viewAttribute id="Z_LIFNR"/>
+        <viewAttribute id="Rank_Column"/>
+        <viewAttribute id="Z_INV_LAMT"/>
+        <viewAttribute id="ROLL"/>
+        <viewAttribute id="Z_ROLL_LONG_FORM"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Join_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_COUNT_LIFNR" source="Z_COUNT_LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Grouping_Vendor" source="Grouping_Vendor"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_SPEND_TOP5_PERC" source="Z_SPEND_TOP5_PERC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOP5_PERCENT" source="TOP5_PERCENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_LIFNR" source="Z_LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Rank_Column" source="Rank_Column"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_LAMT" source="Z_INV_LAMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROLL" source="ROLL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_ROLL_LONG_FORM" source="Z_ROLL_LONG_FORM"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="Aggregation_7">
+    <descriptions/>
+    <attributes>
+      <attribute id="Grouping_Vendor" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Grouping_Vendor"/>
+        <keyMapping columnObjectName="Aggregation_7" columnName="Grouping_Vendor"/>
+      </attribute>
+      <attribute id="Z_LIFNR" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Vendor ID"/>
+        <keyMapping columnObjectName="Aggregation_7" columnName="Z_LIFNR"/>
+      </attribute>
+      <attribute id="ROLL" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ROLL"/>
+        <keyMapping columnObjectName="Aggregation_7" columnName="ROLL"/>
+      </attribute>
+      <attribute id="Z_ROLL_LONG_FORM" order="9" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="Aggregation_7" columnName="Z_ROLL_LONG_FORM"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="Z_COUNT_LIFNR" order="1" aggregationType="max" measureType="simple">
+        <descriptions defaultDescription="Count of Vendors"/>
+        <measureMapping columnObjectName="Aggregation_7" columnName="Z_COUNT_LIFNR"/>
+      </measure>
+      <measure id="Z_SPEND_TOP5_PERC" order="3" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Top 5% Spend"/>
+        <measureMapping columnObjectName="Aggregation_7" columnName="Z_SPEND_TOP5_PERC"/>
+      </measure>
+      <measure id="TOP5_PERCENT" order="4" aggregationType="max" measureType="simple">
+        <descriptions defaultDescription="Top 5%"/>
+        <measureMapping columnObjectName="Aggregation_7" columnName="TOP5_PERCENT"/>
+      </measure>
+      <measure id="Rank_Column" order="6" aggregationType="max" measureType="simple">
+        <descriptions defaultDescription="Vendor Ranking"/>
+        <measureMapping columnObjectName="Aggregation_7" columnName="Rank_Column"/>
+      </measure>
+      <measure id="Z_INV_LAMT" order="7" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Spend Amount"/>
+        <measureMapping columnObjectName="Aggregation_7" columnName="Z_INV_LAMT"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="10" y="690"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="AGG_SPEND" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="651"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Aggregation_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="573"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Aggregation_4" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="495"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="417"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Aggregation_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Aggregation_5" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="10" y="600"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Aggregation_6" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="10" y="510"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Rank_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="0" y="370"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Aggregation_7" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

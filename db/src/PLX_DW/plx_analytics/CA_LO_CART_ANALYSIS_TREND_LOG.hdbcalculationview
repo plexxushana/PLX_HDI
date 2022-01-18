@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="3.0" id="plx_analytics::CA_LO_CART_ANALYSIS_TREND_LOG" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+<origin/>
+  <descriptions defaultDescription="CA_LO_CART_ANALYSIS_TREND"/>
+  <metadata changedAt="2021-03-05 15:18:03.833"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="32"/>
+  <dataSources>
+    <DataSource id="CA_LO_CART_LOG">
+      <resourceUri>plx_analytics::CA_LO_CART_LOG</resourceUri>
+    </DataSource>
+  </dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="Z_NR_SCANS"/>
+        <viewAttribute id="Z_STOCKOUT_NO"/>
+        <viewAttribute id="PROF_MAXQTY"/>
+        <viewAttribute id="PROF_UOM"/>
+        <viewAttribute id="CREA_DAY"/>
+        <viewAttribute id="CREA_DATE"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="PDA_USER"/>
+        <viewAttribute id="ROUTENAME"/>
+        <viewAttribute id="CART_LI_PLATE"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="ALT_UOM"/>
+        <viewAttribute id="MAX_QTY"/>
+        <viewAttribute id="QTY_COUNTED"/>
+        <viewAttribute id="ROP"/>
+        <viewAttribute id="EXTRA_QTY_CALC"/>
+        <viewAttribute id="EXTRA_QTY_ORDER"/>
+        <viewAttribute id="REASON"/>
+        <viewAttribute id="REASON_DESC"/>
+        <viewAttribute id="ITEMSCNFG"/>
+        <viewAttribute id="CARTSCNFG"/>
+        <viewAttribute id="DTLASTSCAN"/>
+        <viewAttribute id="TMSTARTSCAN"/>
+        <viewAttribute id="TMLASTSCAN"/>
+        <viewAttribute id="ROP_QUES_FLAG"/>
+        <viewAttribute id="QTYSAVEFLAG"/>
+        <viewAttribute id="MRP_ENTRY"/>
+        <viewAttribute id="FLD_EXT1"/>
+        <viewAttribute id="FLD_EXT2"/>
+        <viewAttribute id="FLD_EXT3"/>
+        <viewAttribute id="MUSTCTFG"/>
+        <viewAttribute id="MAKTX"/>
+        <viewAttribute id="SYNC_DATE"/>
+        <viewAttribute id="SYNC_TIME"/>
+        <viewAttribute id="QTYORDER"/>
+        <viewAttribute id="MRP_PROCESSED"/>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="CART_TYPE"/>
+        <viewAttribute id="STATUS"/>
+        <viewAttribute id="STATUS_DATE"/>
+        <viewAttribute id="STATUS_HIST"/>
+        <viewAttribute id="DEPT"/>
+        <viewAttribute id="ROOM_NUM"/>
+        <viewAttribute id="FLOOR_NUM"/>
+        <viewAttribute id="BLD_NUM"/>
+        <viewAttribute id="STR_NO"/>
+        <viewAttribute id="STREET_NAME"/>
+        <viewAttribute id="CITY"/>
+        <viewAttribute id="POSTAL_CODE"/>
+        <viewAttribute id="ACC_CAT"/>
+        <viewAttribute id="COST_CEN"/>
+        <viewAttribute id="MARCODE"/>
+        <viewAttribute id="INT_ORD"/>
+        <viewAttribute id="SORTCODE"/>
+        <viewAttribute id="CART_SCAN_DATE"/>
+        <viewAttribute id="USER_ID"/>
+        <viewAttribute id="ADD_CHG_DATE"/>
+        <viewAttribute id="CHANGE_BY_USER"/>
+        <viewAttribute id="Z_STOCKOUT_DETERMINE"/>
+        <viewAttribute id="MFRPN"/>
+        <viewAttribute id="MAT_PRICE"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CURRENT_PERIOD" length="7" expressionLanguage="SQL">
+          <formula>LEFT(add_months(CURRENT_DATE, -1),7)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="FIRST_PERIOD" length="7" expressionLanguage="SQL">
+          <formula>LEFT(add_months(CURRENT_DATE, -12),7)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="PERIOD1" length="6" expressionLanguage="COLUMN_ENGINE">
+          <formula>LEFTSTR(&quot;FIRST_PERIOD&quot;,4)+RIGHTSTR(&quot;FIRST_PERIOD&quot;,2)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="PERIOD12" length="6" expressionLanguage="COLUMN_ENGINE">
+          <formula>LEFTSTR(&quot;CURRENT_PERIOD&quot;,4)+RIGHTSTR(&quot;CURRENT_PERIOD&quot;,2)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IN_PERIOD" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(LEFTSTR(&quot;CREA_DATE&quot;,6)  &gt;= &quot;PERIOD1&quot; AND LEFTSTR(&quot;CREA_DATE&quot;,6)  &lt;= &quot;PERIOD12&quot; , 'Y', 'N')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="CA_LO_CART_LOG"/>
+    </calculationView>
+</calculationViews>
+  <logicalModel id="Projection_1">
+    <descriptions/>
+    <attributes>
+      <attribute id="PROF_MAXQTY" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROF_MAXQTY"/>
+        <keyMapping columnObjectName="Projection_1" columnName="PROF_MAXQTY"/>
+      </attribute>
+      <attribute id="PROF_UOM" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROF_UOM"/>
+        <keyMapping columnObjectName="Projection_1" columnName="PROF_UOM"/>
+      </attribute>
+      <attribute id="CART_LI_PLATE" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cart License Plate"/>
+        <keyMapping columnObjectName="Projection_1" columnName="CART_LI_PLATE"/>
+      </attribute>
+      <attribute id="BUKRS" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Company Code"/>
+        <keyMapping columnObjectName="Projection_1" columnName="BUKRS"/>
+      </attribute>
+      <attribute id="WERKS" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Plant"/>
+        <keyMapping columnObjectName="Projection_1" columnName="WERKS"/>
+      </attribute>
+      <attribute id="MATNR" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Number"/>
+        <keyMapping columnObjectName="Projection_1" columnName="MATNR"/>
+      </attribute>
+      <attribute id="LGORT" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Storage Location"/>
+        <keyMapping columnObjectName="Projection_1" columnName="LGORT"/>
+      </attribute>
+      <attribute id="ZCALENDAR_YEAR" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZCALENDAR_YEAR"/>
+        <keyMapping columnObjectName="Projection_1" columnName="ZCALENDAR_YEAR"/>
+      </attribute>
+      <attribute id="ZCAL_MONTH" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZCAL_MONTH"/>
+        <keyMapping columnObjectName="Projection_1" columnName="ZCAL_MONTH"/>
+      </attribute>
+      <attribute id="ROP" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ROP"/>
+        <keyMapping columnObjectName="Projection_1" columnName="ROP"/>
+      </attribute>
+      <attribute id="CURRENT_PERIOD" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CURRENT_PERIOD"/>
+        <keyMapping columnObjectName="Projection_1" columnName="CURRENT_PERIOD"/>
+      </attribute>
+      <attribute id="IN_PERIOD" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IN_PERIOD"/>
+        <keyMapping columnObjectName="Projection_1" columnName="IN_PERIOD"/>
+      </attribute>
+      <attribute id="FIRST_PERIOD" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FIRST_PERIOD"/>
+        <keyMapping columnObjectName="Projection_1" columnName="FIRST_PERIOD"/>
+      </attribute>
+      <attribute id="PERIOD1" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PERIOD1"/>
+        <keyMapping columnObjectName="Projection_1" columnName="PERIOD1"/>
+      </attribute>
+      <attribute id="PERIOD12" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PERIOD12"/>
+        <keyMapping columnObjectName="Projection_1" columnName="PERIOD12"/>
+      </attribute>
+      <attribute id="MAKTX" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MAKTX"/>
+        <keyMapping columnObjectName="Projection_1" columnName="MAKTX"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes>
+      <calculatedAttribute id="MATNR_LPAD" hidden="false" order="11" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MATNR_LPAD"/>
+        <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="18">
+          <formula>LPAD(&quot;MATNR&quot;, 18,'0')</formula>
+        </keyCalculation>
+      </calculatedAttribute>
+    </calculatedAttributes>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="Z_NR_SCANS" order="1" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Z_NR_SCANS"/>
+        <measureMapping columnObjectName="Projection_1" columnName="Z_NR_SCANS"/>
+      </measure>
+      <measure id="Z_STOCKOUT_NO" order="2" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Z_STOCKOUT_NO"/>
+        <measureMapping columnObjectName="Projection_1" columnName="Z_STOCKOUT_NO"/>
+      </measure>
+      <measure id="CREA_DATE" order="10" aggregationType="count" measureType="simple">
+        <descriptions defaultDescription="Creation / Assignment Date"/>
+        <measureMapping columnObjectName="Projection_1" columnName="CREA_DATE"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+<layout>
+  <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="22" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+</layout>
+</Calculation:scenario>

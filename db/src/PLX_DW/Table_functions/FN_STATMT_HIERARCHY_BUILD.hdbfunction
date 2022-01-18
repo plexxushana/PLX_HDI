@@ -1,0 +1,249 @@
+FUNCTION "plx_analytics::FN_STATMT_HIERARCHY_BUILD" ( 
+		CHART_OF_ACCOUNTS NVARCHAR(12),
+		CONTROLLING_AREA NVARCHAR(12),
+		REPORT VARCHAR(50)
+) 
+ 	RETURNS table(
+ 		 HIERARCHYNAME VARCHAR(50),
+ 		 PARENTID VARCHAR(50),
+ 		 CHILDID VARCHAR(50),
+ 		 CHILDDESCRIPTION VARCHAR(50),
+ 		 LEVEL_CCCE INTEGER,
+		 CE_GRPNM NVARCHAR(50),
+		 CC_GRPNM NVARCHAR(50),
+		 COST_ELEMENT NVARCHAR(24),
+		 COST_CENTER NVARCHAR(24)
+	)
+
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER AS
+BEGIN
+
+/* Compute the nodes to which each Cost Element and Cost Center belongs */
+
+DECLARE NUM1 int := 0; 
+DECLARE NUM2 int := 0; 
+DECLARE LEV int := 1;
+declare STCLS1 nvarchar(4) := '0102';
+declare STCLS2 nvarchar(4) := '0101';
+
+BEGIN
+
+	/* Start by building the list of all of the cost elements */
+
+	/* Get the listing of the hierarchy which belong to the input report */
+	LT_GROUPLIST = select distinct HIERARCHYNAME,
+									PARENTID,
+									CHILDID,
+									CHILDDESCRIPTION,
+									LEVEL_CCCE,
+									COSTELEMENTGROUP AS CE_GRPNM,
+									COSTCENTERGROUP AS CC_GRPNM
+			    	from "MANUAL_FIN_STATMT_HIERARCHY"
+					WHERE HIERARCHYNAME = :REPORT;
+
+	/* Get all of the Leaf values to begin */
+	LT_LEAF_CE = 
+		SELECT DISTINCT :CHART_OF_ACCOUNTS AS CHART_OF_ACCOUNTS,
+						trim(SETNAME) AS CE_GRPNM, 
+						VALFROM AS COST_ELEMENT
+		FROM ECC_SETLEAF
+		WHERE SETCLASS = :STCLS1 
+		and   trim(SUBCLASS)  = :CHART_OF_ACCOUNTS;
+
+	/* Get all of the node values at all levels*/
+	LT_NODES_CE = 
+		SELECT DISTINCT :CHART_OF_ACCOUNTS AS CHART_OF_ACCOUNTS,
+						trim(SETNAME) AS CE_GRPNM, 
+						trim(SUBSETNAME) AS CHILD,
+						NULL AS COST_ELEMENT
+		FROM ECC_SETNODE
+		WHERE SETCLASS = :STCLS1
+		and   trim(SUBCLASS)  = :CHART_OF_ACCOUNTS;
+
+	/* First join - connect the leaf lines to the respective nodes */
+	
+	LT_NODELIST_TMP_CE = 
+		 SELECT :CHART_OF_ACCOUNTS AS CHART_OF_ACCOUNTS,
+		 		node.CE_GRPNM AS CE_GRPNM,
+			    leaf.COST_ELEMENT AS COST_ELEMENT,
+			    NULL AS FLAG
+		    FROM :LT_LEAF_CE as leaf
+			    inner join :LT_NODES_CE as node
+			    ON (leaf.CE_GRPNM = node.CHILD);
+
+	LT_NODELIST_CE = 
+		SELECT CHART_OF_ACCOUNTS,
+			   CE_GRPNM,
+			   COST_ELEMENT,
+			   'X' AS FLAG
+	      FROM :LT_LEAF_CE
+	      
+	    UNION
+	    
+	    SELECT CHART_OF_ACCOUNTS,
+	    	   CE_GRPNM,
+	    	   COST_ELEMENT,
+			   NULL AS FLAG
+	      FROM :LT_NODELIST_TMP_CE;
+
+	while 1 = 1 do
+
+		LT_NODELIST_TMP_CE = 
+			 SELECT :CHART_OF_ACCOUNTS AS CHART_OF_ACCOUNTS,
+		 			node.CE_GRPNM AS CE_GRPNM,
+			    	leaf.COST_ELEMENT AS COST_ELEMENT,
+			    	NULL as FLAG
+			    FROM :LT_NODELIST_CE as leaf
+				    inner join :LT_NODES_CE as node
+				    ON (leaf.CE_GRPNM = node.CHILD)
+				  WHERE leaf.FLAG IS NULL;
+
+		LT_NODELIST_CE = 
+			SELECT CHART_OF_ACCOUNTS,
+				   CE_GRPNM,
+				   COST_ELEMENT,
+				   'X' AS FLAG
+		      FROM :LT_NODELIST_CE
+	      
+		    UNION
+	    
+	    	SELECT CHART_OF_ACCOUNTS,
+	    		   CE_GRPNM,
+	    	   	   COST_ELEMENT,
+	    	   	   NULL AS FLAG
+		      FROM :LT_NODELIST_TMP_CE;
+
+		SELECT COUNT(*) INTO NUM1 FROM :LT_NODELIST_CE WHERE FLAG IS NULL;
+	
+	    if :NUM1 = 0 then    
+	        break;   
+	    end if;       
+
+	end while;     
+
+
+
+
+
+
+
+	/* Now build the list of all of the cost centers */
+	
+
+	/* Get all of the Leaf values to begin */
+	LT_LEAF_CC = 
+		SELECT DISTINCT :CONTROLLING_AREA AS CONTROLLING_AREA,
+						trim(SETNAME) AS CC_GRPNM, 
+						VALFROM AS COST_CENTER
+		FROM ECC_SETLEAF
+		WHERE SETCLASS = :STCLS2 
+		and   trim(SUBCLASS)  = TRIM(:CONTROLLING_AREA);
+
+	/* Get all of the node values at all levels*/
+	LT_NODES_CC = 
+		SELECT DISTINCT :CONTROLLING_AREA AS CONTROLLING_AREA,
+						trim(SETNAME) AS CC_GRPNM, 
+						trim(SUBSETNAME) AS CHILD,
+						NULL AS COST_CENTER
+		FROM ECC_SETNODE
+		WHERE SETCLASS = :STCLS2
+		and   trim(SUBCLASS)  = :CONTROLLING_AREA;
+
+	/* First join - connect the leaf lines to the respective nodes */
+	
+	LT_NODELIST_TMP_CC = 
+		 SELECT :CONTROLLING_AREA AS CONTROLLING_AREA,
+		 		node.CC_GRPNM AS CC_GRPNM,
+			    leaf.COST_CENTER AS COST_CENTER,
+			    NULL AS FLAG
+		    FROM :LT_LEAF_CC as leaf
+			    inner join :LT_NODES_CC as node
+			    ON (leaf.CC_GRPNM = node.CHILD);
+
+	LT_NODELIST_CC = 
+		SELECT CONTROLLING_AREA,
+			   CC_GRPNM,
+			   COST_CENTER,
+			   'X' AS FLAG
+	      FROM :LT_LEAF_CC
+	      
+	    UNION
+	    
+	    SELECT CONTROLLING_AREA,
+	    	   CC_GRPNM,
+	    	   COST_CENTER,
+			   NULL AS FLAG
+	      FROM :LT_NODELIST_TMP_CC;
+
+	while 1 = 1 do
+
+		LT_NODELIST_TMP_CC = 
+			 SELECT :CONTROLLING_AREA AS CONTROLLING_AREA,
+		 			node.CC_GRPNM AS CC_GRPNM,
+			    	leaf.COST_CENTER AS COST_CENTER,
+			    	NULL as FLAG
+			    FROM :LT_NODELIST_CC as leaf
+				    inner join :LT_NODES_CC as node
+				    ON (leaf.CC_GRPNM = node.CHILD)
+				  WHERE leaf.FLAG IS NULL;
+
+		LT_NODELIST_CC = 
+			SELECT CONTROLLING_AREA,
+				   CC_GRPNM,
+				   COST_CENTER,
+				   'X' AS FLAG
+		      FROM :LT_NODELIST_CC
+	      
+		    UNION
+	    
+	    	SELECT CONTROLLING_AREA,
+	    		   CC_GRPNM,
+	    	   	   COST_CENTER,
+	    	   	   FLAG
+		      FROM :LT_NODELIST_TMP_CC;
+
+		SELECT COUNT(*) INTO NUM1 FROM :LT_NODELIST_CC WHERE FLAG IS NULL;
+	
+	    if :NUM1 = 0 then  
+	        break;
+	    end if;   
+
+	end while;
+
+	LT_OUT = 
+			 SELECT GROUPLIST.HIERARCHYNAME,
+			 		GROUPLIST.PARENTID,
+			 		GROUPLIST.CHILDID,
+			 		GROUPLIST.CHILDDESCRIPTION,
+			 		GROUPLIST.LEVEL_CCCE,
+			 		GROUPLIST.CE_GRPNM,
+			 		GROUPLIST.CC_GRPNM,
+			 		CE_LIST.COST_ELEMENT,
+			 		CC_LIST.COST_CENTER
+			    FROM :LT_GROUPLIST AS GROUPLIST
+			    INNER JOIN :LT_NODELIST_CE AS CE_LIST
+			    ON (GROUPLIST.CE_GRPNM = CE_LIST.CE_GRPNM)
+			    INNER JOIN :LT_NODELIST_CC AS CC_LIST
+			    ON (GROUPLIST.CC_GRPNM = CC_LIST.CC_GRPNM);
+			    
+
+END;
+
+RETURN 
+
+
+--SELECT * FROM :VAR_OUT;
+select 
+ 	HIERARCHYNAME,
+ 	PARENTID,
+ 	CHILDID,
+ 	CHILDDESCRIPTION,
+ 	LEVEL_CCCE,
+ 	CE_GRPNM,
+ 	CC_GRPNM,
+ 	COST_ELEMENT,
+ 	COST_CENTER
+from :LT_OUT;
+
+end;

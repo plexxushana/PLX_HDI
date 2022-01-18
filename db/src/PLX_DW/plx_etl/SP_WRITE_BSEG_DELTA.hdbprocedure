@@ -1,0 +1,91 @@
+PROCEDURE "plx_etl::SP_WRITE_BSEG_DELTA" ( IN pv_belnr nvarchar(10) , pv_bukrs nvarchar(4), 
+pv_gjahr varchar(4), out t_out "V_ECC_BSEG") 
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+	READS SQL DATA 
+	AS
+BEGIN
+/***************************** 
+	Write your procedure logic 
+ *****************************/
+    DECLARE STRINGARRAY  NVARCHAR(20) ARRAY;
+   	DECLARE TEXT NVARCHAR(100000);
+   	DECLARE rowcount integer;
+   	DECLARE primary_keys NVARCHAR(5000) := '' ;
+   	DECLARE column_list NVARCHAR(30000) := '' ;
+    DECLARE UPSERT_QUERY, IN_WHERE_CLAUSE,  IN_WHERE_BUKRS,  IN_WHERE_GJAHR , IN_WHERE_CLAUSE1 NVARCHAR(30000) := '' ;
+    DECLARE SELECT_QUERY NVARCHAR(30000) := '' ;    
+    DECLARE i integer ; 
+    declare var_belnr nvarchar(10):='9999999999';
+	DECLARE var_bukrs nvarchar(4) := '9999'; 
+	DECLARE var_gjahr nvarchar(4) := '9999'; 
+	
+	
+	DECLARE  IN_SOURCE_SCHEMA VARCHAR(10):= 'PLX_DW'; 
+    DECLARE  IN_SOURCE_TABLE VARCHAR(100) :='V_ECC_BSEG';
+    
+	var_belnr := :pv_belnr;
+	var_bukrs := :pv_bukrs;
+	var_gjahr := :pv_gjahr;
+	t_out = select top 1 * from "V_ECC_BSEG" ;
+	
+  /* GETTING COLUMNS OF THE TARGET TABLE*/
+  col_tab = 
+  SELECT column_name 
+  FROM "SYS::TABLE_COLUMNS"
+  WHERE table_name  = UPPER('V_ECC_BSEG')
+    AND schema_name = UPPER('PLX_DW') ;
+    
+   STRINGARRAY := ARRAY_AGG(:col_tab.column_name);
+   
+   SELECT count(*) 
+   into rowcount 
+   from :col_tab;
+   
+   TEXT := :STRINGARRAY[1];
+   
+    -- To form the column-list
+   FOR i IN 1 ..:rowcount-1
+   DO
+   TEXT := :TEXT || ',' || :STRINGARRAY[:i+1];
+   END FOR;
+   
+   column_list := :TEXT;
+   
+ -- To handle the column names with "Spaces" in between
+   SELECT '"' ||  REPLACE (:column_list,',','","') || '"' 
+   INTO column_list 
+   FROM "SYS::DUMMY";
+   
+ SELECT ''''|| REPLACE (:var_belnr, ',', '",”')||''''  INTO IN_WHERE_CLAUSE FROM "SYS::DUMMY" ;
+ 
+SELECT ''''|| REPLACE (:var_bukrs, ',', '",”')||''''  INTO IN_WHERE_BUKRS FROM "SYS::DUMMY" ;
+
+SELECT ''''|| REPLACE (:var_gjahr, ',', '",”')||''''  INTO IN_WHERE_GJAHR FROM "SYS::DUMMY" ;
+
+
+ 
+ IN_WHERE_CLAUSE:= ' BELNR = ('||:IN_WHERE_CLAUSE||')';
+  IN_WHERE_BUKRS:= ' AND BUKRS = ('||:IN_WHERE_BUKRS||')';
+  IN_WHERE_GJAHR:= ' AND GJAHR =  ('||:IN_WHERE_GJAHR||')';
+  IN_WHERE_CLAUSE:= :IN_WHERE_CLAUSE || :IN_WHERE_BUKRS|| :IN_WHERE_GJAHR ;
+ 
+ 
+ -- Build query
+   UPSERT_QUERY :=
+--  'UPSERT '  || 'PLX_DW.POC_TABLE_VBSEG' || 
+   ' SELECT '||:column_list||
+   ' FROM  PLX_DW.V_ECC_BSEG ' ||  
+  ' WHERE ' ||IN_WHERE_CLAUSE;
+ --' WHERE ' ||'BELNR = :var_belnr';
+-- EXEC (:UPSERT_QUERY); 
+ --insert into TEMP_SELECT_DELTA_STATEMENTS ("STR")
+--VALUES (:upsert_query);
+	
+ 
+ --UPSERT "PLX_DW"."POC_TABLE_VBSEG"
+  t_out = SELECT * 
+  --:column_list
+ FROM "V_ECC_BSEG"
+    WHERE V_ECC_BSEG.BUKRS =  '||:var_bukrs||'  AND V_ECC_BSEG.BELNR =  '||:var_belnr||'  AND V_ECC_BSEG.GJAHR =  '||:var_gjahr||' ;
+END;

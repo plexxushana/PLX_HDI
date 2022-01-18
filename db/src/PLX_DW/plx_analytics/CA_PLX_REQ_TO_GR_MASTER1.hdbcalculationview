@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="plx_analytics::CA_PLX_REQ_TO_GR_MASTER1" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="CA_PLX_REQ_TO_GR_MASTER"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="plx_analytics::FN_WORKDAYS_PRTOGR" type="TABLE_FUNCTION">
+    <resourceUri>plx_analytics::FN_WORKDAYS_PRTOGR</resourceUri>
+  </DataSource>
+  <DataSource id="plx_analytics::CA_PLX_REQ_TO_GR_CYCLETIMES">
+    <resourceUri>plx_analytics::CA_PLX_REQ_TO_GR_CYCLETIMES</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <viewAttributes>
+      <viewAttribute id="ZEILE"/>
+      <viewAttribute id="MBLNR"/>
+      <viewAttribute id="Z_PRGR_CycleTime"/>
+      <viewAttribute id="BNFPO"/>
+      <viewAttribute id="Z_PO_Creation_Date"/>
+      <viewAttribute id="Z_GR_Entry_Date"/>
+      <viewAttribute id="EBELP"/>
+      <viewAttribute id="Z_PRPO_CycleTime"/>
+      <viewAttribute id="BANFN"/>
+      <viewAttribute id="EBELN"/>
+      <viewAttribute id="Z_Requisn_Date"/>
+      <viewAttribute id="Z_POGR_CycleTime"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="Z_MBLNR_MAP" datatype="NVARCHAR" length="10" expressionLanguage="SQL">
+        <formula>CASE WHEN &quot;MBLNR&quot; IS NOT NULL THEN &quot;MBLNR&quot; ELSE 0 END
+
+</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="Z_ZEILE_MAP" datatype="NVARCHAR" length="4" expressionLanguage="SQL">
+        <formula>CASE WHEN &quot;ZEILE&quot; IS NOT NULL  THEN &quot;ZEILE&quot; ELSE 0 END</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="plx_analytics::FN_WORKDAYS_PRTOGR"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+    <viewAttributes>
+      <viewAttribute id="BANFN"/>
+      <viewAttribute id="BNFPO"/>
+      <viewAttribute id="EBELN"/>
+      <viewAttribute id="EBELP"/>
+      <viewAttribute id="BSTYP"/>
+      <viewAttribute id="MATNR"/>
+      <viewAttribute id="NETWR"/>
+      <viewAttribute id="STATU"/>
+      <viewAttribute id="MBLNR"/>
+      <viewAttribute id="ZEILE"/>
+      <viewAttribute id="BWART"/>
+      <viewAttribute id="LOEKZ"/>
+      <viewAttribute id="BUKRS"/>
+      <viewAttribute id="AEDAT_EKKO"/>
+      <viewAttribute id="AEDAT_EKPO"/>
+      <viewAttribute id="OBJKY_10_CHAR"/>
+      <viewAttribute id="DATVR"/>
+      <viewAttribute id="BSART_EKKO"/>
+      <viewAttribute id="BSART_PR"/>
+      <viewAttribute id="AFNAM"/>
+      <viewAttribute id="REVNO"/>
+      <viewAttribute id="LOEKZ_EREV"/>
+      <viewAttribute id="Z_Requisn_Date"/>
+      <viewAttribute id="Z_PO_Creation_Date"/>
+      <viewAttribute id="Z_GR_Entry_Date"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="Z_MBLNR_MAP" datatype="NVARCHAR" length="10" expressionLanguage="SQL">
+        <formula>CASE WHEN &quot;MBLNR&quot; IS NOT NULL THEN &quot;MBLNR&quot; ELSE 0  END</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="Z_ZEILE_MAP" datatype="NVARCHAR" length="4" expressionLanguage="SQL">
+        <formula>CASE WHEN &quot;ZEILE&quot; IS NOT NULL THEN &quot;ZEILE&quot; ELSE 0 END </formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="plx_analytics::CA_PLX_REQ_TO_GR_CYCLETIMES"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinType="rightOuter">
+    <viewAttributes>
+      <viewAttribute id="Z_PRPO_CycleTime" aggregationType="sum"/>
+      <viewAttribute id="Z_POGR_CycleTime" aggregationType="sum"/>
+      <viewAttribute id="Z_PRGR_CycleTime" aggregationType="sum"/>
+      <viewAttribute id="BANFN"/>
+      <viewAttribute id="BNFPO"/>
+      <viewAttribute id="EBELN"/>
+      <viewAttribute id="EBELP"/>
+      <viewAttribute id="BSTYP"/>
+      <viewAttribute id="MATNR"/>
+      <viewAttribute id="NETWR" aggregationType="sum"/>
+      <viewAttribute id="STATU"/>
+      <viewAttribute id="MBLNR"/>
+      <viewAttribute id="ZEILE"/>
+      <viewAttribute id="BWART"/>
+      <viewAttribute id="LOEKZ"/>
+      <viewAttribute id="BUKRS"/>
+      <viewAttribute id="AEDAT_EKKO"/>
+      <viewAttribute id="AEDAT_EKPO"/>
+      <viewAttribute id="OBJKY_10_CHAR"/>
+      <viewAttribute id="DATVR"/>
+      <viewAttribute id="BSART_EKKO"/>
+      <viewAttribute id="BSART_PR"/>
+      <viewAttribute id="AFNAM"/>
+      <viewAttribute id="REVNO"/>
+      <viewAttribute id="LOEKZ_EREV"/>
+      <viewAttribute id="Z_Requisn_Date"/>
+      <viewAttribute id="Z_PO_Creation_Date"/>
+      <viewAttribute id="Z_GR_Entry_Date"/>
+      <viewAttribute id="Z_MBLNR_MAP"/>
+      <viewAttribute id="Z_ZEILE_MAP"/>
+      <viewAttribute hidden="true" id="JOIN$Z_Requisn_Date$Z_Requisn_Date"/>
+      <viewAttribute hidden="true" id="JOIN$Z_PO_Creation_Date$Z_PO_Creation_Date"/>
+      <viewAttribute hidden="true" id="JOIN$Z_GR_Entry_Date$Z_GR_Entry_Date"/>
+      <viewAttribute hidden="true" id="JOIN$BANFN$BANFN"/>
+      <viewAttribute hidden="true" id="JOIN$BNFPO$BNFPO"/>
+      <viewAttribute hidden="true" id="JOIN$EBELN$EBELN"/>
+      <viewAttribute hidden="true" id="JOIN$EBELP$EBELP"/>
+      <viewAttribute hidden="true" id="JOIN$Z_MBLNR_MAP$Z_MBLNR_MAP"/>
+      <viewAttribute hidden="true" id="JOIN$Z_ZEILE_MAP$Z_ZEILE_MAP"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Projection_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="Z_PRPO_CycleTime" source="Z_PRPO_CycleTime"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Z_POGR_CycleTime" source="Z_POGR_CycleTime"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Z_PRGR_CycleTime" source="Z_PRGR_CycleTime"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$Z_Requisn_Date$Z_Requisn_Date" source="Z_Requisn_Date"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$Z_PO_Creation_Date$Z_PO_Creation_Date" source="Z_PO_Creation_Date"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$Z_GR_Entry_Date$Z_GR_Entry_Date" source="Z_GR_Entry_Date"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$BANFN$BANFN" source="BANFN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$BNFPO$BNFPO" source="BNFPO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$EBELN$EBELN" source="EBELN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$EBELP$EBELP" source="EBELP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$Z_MBLNR_MAP$Z_MBLNR_MAP" source="Z_MBLNR_MAP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$Z_ZEILE_MAP$Z_ZEILE_MAP" source="Z_ZEILE_MAP"/>
+    </input>
+    <input node="Projection_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="BANFN" source="BANFN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BNFPO" source="BNFPO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BSTYP" source="BSTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NETWR" source="NETWR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STATU" source="STATU"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MBLNR" source="MBLNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZEILE" source="ZEILE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BWART" source="BWART"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOEKZ" source="LOEKZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKKO" source="AEDAT_EKKO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKPO" source="AEDAT_EKPO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OBJKY_10_CHAR" source="OBJKY_10_CHAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DATVR" source="DATVR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BSART_EKKO" source="BSART_EKKO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BSART_PR" source="BSART_PR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AFNAM" source="AFNAM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REVNO" source="REVNO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOEKZ_EREV" source="LOEKZ_EREV"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Z_Requisn_Date" source="Z_Requisn_Date"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Z_PO_Creation_Date" source="Z_PO_Creation_Date"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Z_GR_Entry_Date" source="Z_GR_Entry_Date"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Z_MBLNR_MAP" source="Z_MBLNR_MAP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Z_ZEILE_MAP" source="Z_ZEILE_MAP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$Z_Requisn_Date$Z_Requisn_Date" source="Z_Requisn_Date"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$Z_PO_Creation_Date$Z_PO_Creation_Date" source="Z_PO_Creation_Date"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$Z_GR_Entry_Date$Z_GR_Entry_Date" source="Z_GR_Entry_Date"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$BANFN$BANFN" source="BANFN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$BNFPO$BNFPO" source="BNFPO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$EBELN$EBELN" source="EBELN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$EBELP$EBELP" source="EBELP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$Z_MBLNR_MAP$Z_MBLNR_MAP" source="Z_MBLNR_MAP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$Z_ZEILE_MAP$Z_ZEILE_MAP" source="Z_ZEILE_MAP"/>
+    </input>
+    <joinAttribute name="JOIN$Z_Requisn_Date$Z_Requisn_Date"/>
+    <joinAttribute name="JOIN$Z_PO_Creation_Date$Z_PO_Creation_Date"/>
+    <joinAttribute name="JOIN$Z_GR_Entry_Date$Z_GR_Entry_Date"/>
+    <joinAttribute name="JOIN$BANFN$BANFN"/>
+    <joinAttribute name="JOIN$BNFPO$BNFPO"/>
+    <joinAttribute name="JOIN$EBELN$EBELN"/>
+    <joinAttribute name="JOIN$EBELP$EBELP"/>
+    <joinAttribute name="JOIN$Z_MBLNR_MAP$Z_MBLNR_MAP"/>
+    <joinAttribute name="JOIN$Z_ZEILE_MAP$Z_ZEILE_MAP"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
+    <viewAttributes>
+      <viewAttribute id="Z_PRPO_CycleTime"/>
+      <viewAttribute id="Z_POGR_CycleTime"/>
+      <viewAttribute id="Z_PRGR_CycleTime"/>
+      <viewAttribute id="BANFN"/>
+      <viewAttribute id="BNFPO"/>
+      <viewAttribute id="EBELN"/>
+      <viewAttribute id="EBELP"/>
+      <viewAttribute id="BSTYP"/>
+      <viewAttribute id="MATNR"/>
+      <viewAttribute id="NETWR"/>
+      <viewAttribute id="STATU"/>
+      <viewAttribute id="MBLNR"/>
+      <viewAttribute id="ZEILE"/>
+      <viewAttribute id="BWART"/>
+      <viewAttribute id="LOEKZ"/>
+      <viewAttribute id="BUKRS"/>
+      <viewAttribute id="AEDAT_EKKO"/>
+      <viewAttribute id="AEDAT_EKPO"/>
+      <viewAttribute id="OBJKY_10_CHAR"/>
+      <viewAttribute id="DATVR"/>
+      <viewAttribute id="BSART_EKKO"/>
+      <viewAttribute id="BSART_PR"/>
+      <viewAttribute id="AFNAM"/>
+      <viewAttribute id="REVNO"/>
+      <viewAttribute id="LOEKZ_EREV"/>
+      <viewAttribute id="Z_Requisn_Date"/>
+      <viewAttribute id="Z_PO_Creation_Date"/>
+      <viewAttribute id="Z_GR_Entry_Date"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="Z_Purchasing_CycleTime_SLA" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>7</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="Z_Preq_PO_Manual_SLA" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>3</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="Z_Preq_PO_Electronic_SLA" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>1</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="Z_PRGR_Match" datatype="NVARCHAR" length="8" expressionLanguage="SQL">
+    
+        <formula>case when &quot;Z_PRGR_CycleTime&quot; is not null and &quot;Z_PRGR_CycleTime&quot; &lt;= &quot;Z_Purchasing_CycleTime_SLA&quot;
+     then 'Match'
+     when &quot;Z_PRGR_CycleTime&quot; is not null and &quot;Z_PRGR_CycleTime&quot; &gt; &quot;Z_Purchasing_CycleTime_SLA&quot;
+     then 'NonMatch'
+     when &quot;Z_PRGR_CycleTime&quot; is null
+     then ''
+     else ''
+end</formula>
+    
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="Z_PRPO_Match" datatype="NVARCHAR" length="8" expressionLanguage="SQL">
+        <formula>case when TRIM(&quot;BSART_PR&quot;) = 'NB' OR (TRIM(&quot;BSART_PR&quot;)='ZINT' and &quot;AFNAM&quot;='proline') OR TRIM(&quot;BSART_EKKO&quot;) = 'ZCAP' 
+            and &quot;Z_PRPO_CycleTime&quot; &lt;= &quot;Z_Preq_PO_Manual_SLA&quot; then 'Match'
+      when TRIM(&quot;BSART_PR&quot;) = 'NB' OR (TRIM(&quot;BSART_PR&quot;)='ZINT' and &quot;AFNAM&quot;='proline') OR TRIM(&quot;BSART_EKKO&quot;) = 'ZCAP' 
+            and &quot;Z_PRPO_CycleTime&quot; &gt; &quot;Z_Preq_PO_Manual_SLA&quot; then 'NonMatch'
+      when &quot;Z_PRPO_CycleTime&quot; &lt;= &quot;Z_Preq_PO_Electronic_SLA&quot; then 'Match'
+      when &quot;Z_PRPO_CycleTime&quot; &gt; &quot;Z_Preq_PO_Electronic_SLA&quot; then 'NonMatch'
+     else ''
+ end</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="Join_1"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Projection_3">
+  <attributes>
+    <attribute id="BANFN" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Purchase Req."/>
+      <keyMapping columnObjectName="Projection_3" columnName="BANFN"/>
+    </attribute>
+    <attribute id="BNFPO" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Requisn Item"/>
+      <keyMapping columnObjectName="Projection_3" columnName="BNFPO"/>
+    </attribute>
+    <attribute id="EBELN" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Purchasing Document Number"/>
+      <keyMapping columnObjectName="Projection_3" columnName="EBELN"/>
+    </attribute>
+    <attribute id="EBELP" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Item Number of Purchasing Document"/>
+      <keyMapping columnObjectName="Projection_3" columnName="EBELP"/>
+    </attribute>
+    <attribute id="BSTYP" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Purchasing Document Category"/>
+      <keyMapping columnObjectName="Projection_3" columnName="BSTYP"/>
+    </attribute>
+    <attribute id="MATNR" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Material Number"/>
+      <keyMapping columnObjectName="Projection_3" columnName="MATNR"/>
+    </attribute>
+    <attribute id="STATU" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Status of Purchasing Document"/>
+      <keyMapping columnObjectName="Projection_3" columnName="STATU"/>
+    </attribute>
+    <attribute id="MBLNR" order="12" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Number of Material Document"/>
+      <keyMapping columnObjectName="Projection_3" columnName="MBLNR"/>
+    </attribute>
+    <attribute id="ZEILE" order="13" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Item in Material Document"/>
+      <keyMapping columnObjectName="Projection_3" columnName="ZEILE"/>
+    </attribute>
+    <attribute id="BWART" order="14" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Movement Type (Inventory Management)"/>
+      <keyMapping columnObjectName="Projection_3" columnName="BWART"/>
+    </attribute>
+    <attribute id="LOEKZ" order="15" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Deletion Indicator in Purchasing Document"/>
+      <keyMapping columnObjectName="Projection_3" columnName="LOEKZ"/>
+    </attribute>
+    <attribute id="BUKRS" order="16" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Company Code"/>
+      <keyMapping columnObjectName="Projection_3" columnName="BUKRS"/>
+    </attribute>
+    <attribute id="AEDAT_EKKO" order="17" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Created on"/>
+      <keyMapping columnObjectName="Projection_3" columnName="AEDAT_EKKO"/>
+    </attribute>
+    <attribute id="AEDAT_EKPO" order="18" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Purchasing Document Item Change Date"/>
+      <keyMapping columnObjectName="Projection_3" columnName="AEDAT_EKPO"/>
+    </attribute>
+    <attribute id="OBJKY_10_CHAR" order="19" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Object key"/>
+      <keyMapping columnObjectName="Projection_3" columnName="OBJKY_10_CHAR"/>
+    </attribute>
+    <attribute id="DATVR" order="20" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Processing date"/>
+      <keyMapping columnObjectName="Projection_3" columnName="DATVR"/>
+    </attribute>
+    <attribute id="BSART_EKKO" order="21" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Purchasing Document Type"/>
+      <keyMapping columnObjectName="Projection_3" columnName="BSART_EKKO"/>
+    </attribute>
+    <attribute id="BSART_PR" order="22" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Document Type"/>
+      <keyMapping columnObjectName="Projection_3" columnName="BSART_PR"/>
+    </attribute>
+    <attribute id="AFNAM" order="23" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Requisitioner"/>
+      <keyMapping columnObjectName="Projection_3" columnName="AFNAM"/>
+    </attribute>
+    <attribute id="REVNO" order="24" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Version number in Purchasing"/>
+      <keyMapping columnObjectName="Projection_3" columnName="REVNO"/>
+    </attribute>
+    <attribute id="LOEKZ_EREV" order="25" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Asset class marked for deletion"/>
+      <keyMapping columnObjectName="Projection_3" columnName="LOEKZ_EREV"/>
+    </attribute>
+    <attribute id="Z_Requisn_Date" order="26" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Requisition Date"/>
+      <keyMapping columnObjectName="Projection_3" columnName="Z_Requisn_Date"/>
+    </attribute>
+    <attribute id="Z_PO_Creation_Date" order="27" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PO Creation Date"/>
+      <keyMapping columnObjectName="Projection_3" columnName="Z_PO_Creation_Date"/>
+    </attribute>
+    <attribute id="Z_GR_Entry_Date" order="28" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="GR Entry Date"/>
+      <keyMapping columnObjectName="Projection_3" columnName="Z_GR_Entry_Date"/>
+    </attribute>
+    <attribute id="Z_PRGR_Match" order="32" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRGR Match"/>
+      <keyMapping columnObjectName="Projection_3" columnName="Z_PRGR_Match"/>
+    </attribute>
+    <attribute id="Z_PRPO_Match" order="33" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRPO Match"/>
+      <keyMapping columnObjectName="Projection_3" columnName="Z_PRPO_Match"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="Z_PRPO_CycleTime" order="1" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="PRPO CycleTime"/>
+      <measureMapping columnObjectName="Projection_3" columnName="Z_PRPO_CycleTime"/>
+    </measure>
+    <measure id="Z_POGR_CycleTime" order="2" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="POGR CycleTime"/>
+      <measureMapping columnObjectName="Projection_3" columnName="Z_POGR_CycleTime"/>
+    </measure>
+    <measure id="Z_PRGR_CycleTime" order="3" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="PRGR CycleTime"/>
+      <measureMapping columnObjectName="Projection_3" columnName="Z_PRGR_CycleTime"/>
+    </measure>
+    <measure id="NETWR" order="10" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Net Order Value in PO Currency"/>
+      <measureMapping columnObjectName="Projection_3" columnName="NETWR"/>
+    </measure>
+    <measure id="Z_Purchasing_CycleTime_SLA" order="29" aggregationType="max" measureType="simple">
+      <descriptions defaultDescription="Purchasing CycleTime SLA"/>
+      <measureMapping columnObjectName="Projection_3" columnName="Z_Purchasing_CycleTime_SLA"/>
+    </measure>
+    <measure id="Z_Preq_PO_Manual_SLA" order="30" aggregationType="max" measureType="simple">
+      <descriptions defaultDescription="Preq PO Manual SLA"/>
+      <measureMapping columnObjectName="Projection_3" columnName="Z_Preq_PO_Manual_SLA"/>
+    </measure>
+    <measure id="Z_Preq_PO_Electronic_SLA" order="31" aggregationType="max" measureType="simple">
+      <descriptions defaultDescription="Preq PO Electronic SLA"/>
+      <measureMapping columnObjectName="Projection_3" columnName="Z_Preq_PO_Electronic_SLA"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures>
+    <measure id="Z_PR_DOC_COUNT" order="34" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
+      <descriptions defaultDescription="PR DOC COUNT"/>
+      <exceptionAggregation>
+        <attribute attributeName="BANFN"/>
+      </exceptionAggregation>
+      <formula>1</formula>
+      </measure>
+    <measure id="Z_PR_LINE_COUNT" order="35" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
+      <descriptions defaultDescription="PR LINE COUNT"/>
+      <exceptionAggregation>
+        <attribute attributeName="BANFN"/>
+        <attribute attributeName="BNFPO"/>
+      </exceptionAggregation>
+      <formula>1</formula>
+      </measure>
+    <measure id="Z_PO_DOC_COUNT" order="36" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
+      <descriptions defaultDescription="PO DOC COUNT"/>
+      <exceptionAggregation>
+        <attribute attributeName="EBELN"/>
+      </exceptionAggregation>
+      <formula>1</formula>
+      </measure>
+    <measure id="Z_PO_LINE_COUNT" order="37" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" aggregatable="true" datatype="BIGINT" length="">
+      <descriptions defaultDescription="PO LINE COUNT"/>
+      <exceptionAggregation>
+        <attribute attributeName="EBELN"/>
+        <attribute attributeName="EBELP"/>
+      </exceptionAggregation>
+      <formula>1</formula>
+      </measure>
+  </calculatedMeasures>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="241.21650018073555" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92.00000000000006" y="501.9999976158142"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302.0000000000001" y="501.9999976158142"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="222.93631278293594" y="341.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="191"/>
+    </shape>
+    <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="177"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="222.93631278293594" y="236.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

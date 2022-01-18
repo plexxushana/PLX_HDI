@@ -1,0 +1,51 @@
+ID: PLX_HDI
+_schema-version: '2.1'
+version: 0.0.1
+modules:
+  - name: db
+    type: hdb
+    path: db
+    requires:
+      - name: PLX_HDI
+        properties:
+          TARGET_CONTAINER: '~{hdi-container-name}'
+      - name: grant-service
+  - name: jobs
+    type: nodejs
+    path: jobs
+    provides:
+      - name: jobs_api
+        properties:
+          url: '${default-url}'
+    requires:
+      - name: PLX_HDI
+      - name: myjobxsjs-uaa
+      - name: jobScheduler
+      - name: smtp_config
+    properties:
+      SAP_JWT_TRUST_ACL: '[{"clientid":"*","identityzone":"*"}]'
+resources:
+  - name: PLX_HDI
+    parameters:
+      service-name: PLX_HDI
+      config:
+        schema: PLX_DW
+        makeUniqueName: false
+    properties:
+      hdi-container-name: '${service-name}'
+    type: com.sap.xs.hdi-container
+  - name: grant-service
+    type: org.cloudfoundry.existing-service
+    parameters:
+      service-name: grant-service
+  - name: jobScheduler
+    type: com.sap.xs.job-scheduler
+    parameters:
+      service-plan: standard
+  - name: myjobxsjs-uaa
+    type: com.sap.xs.uaa-space
+
+  - name: smtp_config
+    type: org.cloudfoundry.existing-service
+    parameters:
+      service-name: smtp_config

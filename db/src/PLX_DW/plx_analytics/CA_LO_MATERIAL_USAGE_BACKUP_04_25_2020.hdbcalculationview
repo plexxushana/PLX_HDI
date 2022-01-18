@@ -1,0 +1,1417 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="plx_analytics::CA_LO_MATERIAL_USAGE_BACKUP_04_25_2020" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+  <origin/>
+  <descriptions defaultDescription="CA_LO_MATERIAL_USAGE"/>
+  <metadata changedAt="2020-04-25 13:33:03.077" createdAt="2020-04-25 13:33:03.077"/>
+  <localVariables>
+    <variable id="IP_FACTOR" parameter="true">
+      <descriptions defaultDescription="Factor for Estimation"/>
+      <variableProperties datatype="DECIMAL" defaultValue="" length="5" mandatory="false" scale="2">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="51"/>
+  <dataSources>
+    <DataSource id="ECC_MKPF">
+      <resourceUri>ECC_MKPF</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_MSEG">
+      <resourceUri>ECC_MSEG</resourceUri>
+    </DataSource>
+    <DataSource id="CA_DIM_MATERIALS">
+      <resourceUri>plx_analytics::CA_DIM_MATERIALS</resourceUri>
+    </DataSource>
+    <DataSource id="CA_DIM_FISC_CAL">
+      <resourceUri>plx_analytics::CA_DIM_FISC_CAL</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_MARD">
+      <resourceUri>ECC_MARD</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_T156T">
+      <resourceUri>ECC_T156T</resourceUri>
+    </DataSource>
+    <DataSource id="CA_DIM_ORG_STRCTR">
+      <resourceUri>plx_analytics::CA_DIM_ORG_STRCTR</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_CSKT">
+      <resourceUri>ECC_CSKT</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MBLNR"/>
+        <viewAttribute id="MJAHR"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="XBLNR"/>
+        <viewAttribute id="BKTXT"/>
+        <viewAttribute id="BLDAT"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="CPUTM"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="DT_BUDAT" expressionLanguage="COLUMN_ENGINE">
+          <formula>DAYDATE(&quot;BUDAT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="INTEGER" id="WEEK_DA" expressionLanguage="SQL">
+          <formula>weekday(&quot;DT_BUDAT&quot;) + 1</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="START_DT_WEEK" length="8" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;WEEK_DA&quot;=7, adddays(DAYDATE(&quot;BUDAT&quot;), (-1)*&quot;WEEK_DA&quot;+7), adddays(DAYDATE(&quot;BUDAT&quot;), (-1)*&quot;WEEK_DA&quot;))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="END_DT_WEEK" length="20" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;WEEK_DA&quot;=7, adddays(DAYDATE(&quot;BUDAT&quot;), ( 6-&quot;WEEK_DA&quot;))+7 , adddays(DAYDATE(&quot;BUDAT&quot;), ( 6-&quot;WEEK_DA&quot;)))</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#ECC_MKPF">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MBLNR" source="MBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MJAHR" source="MJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BKTXT" source="BKTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT" source="CPUDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUTM" source="CPUTM"/>
+      </input>
+      <filter>(&quot;MJAHR&quot; >='2019')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MBLNR"/>
+        <viewAttribute id="MJAHR"/>
+        <viewAttribute id="ZEILE"/>
+        <viewAttribute id="BWART"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="CHARG"/>
+        <viewAttribute id="INSMK"/>
+        <viewAttribute id="MENGE"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="DMBTR"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="SHKZG"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="RSNUM"/>
+        <viewAttribute id="RSPOS"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="SOBKZ"/>
+        <viewAttribute id="KZBEW"/>
+        <viewAttribute id="KZVBR"/>
+        <viewAttribute id="KZZUG"/>
+        <viewAttribute id="ERFMG"/>
+        <viewAttribute id="ERFME"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DECIMAL" id="Z_MENGE" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>CASE(&quot;BWART&quot;, '102', (-1)*&quot;MENGE&quot;, '122', (-1)*&quot;MENGE&quot;,  '262', (-1)*&quot;MENGE&quot;  , '312', (-1)*&quot;MENGE&quot; , '202', (-1)*&quot;MENGE&quot; , '162', (-1)*&quot;MENGE&quot; , '302', (-1)*&quot;MENGE&quot; ,  '101',&quot;MENGE&quot;, &quot;MENGE&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="Z_DMBTR" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>CASE(&quot;BWART&quot;, '102', (-1)*&quot;DMBTR&quot;, '122', (-1)*&quot;DMBTR&quot;,  '262', (-1)*&quot;DMBTR&quot;  , '312', (-1)*&quot;DMBTR&quot; , '202', (-1)*&quot;DMBTR&quot; , '162', (-1)*&quot;DMBTR&quot; , '302', (-1)*&quot;DMBTR&quot; ,  '101',&quot;DMBTR&quot;, &quot;DMBTR&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="Z_ERFMG" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>CASE(&quot;BWART&quot;, '102', (-1)*&quot;ERFMG&quot;, '122', (-1)*&quot;ERFMG&quot;,  '262', (-1)*&quot;ERFMG&quot;  , '312', (-1)*&quot;ERFMG&quot; , '202', (-1)*&quot;ERFMG&quot; , '162', (-1)*&quot;ERFMG&quot; , '302', (-1)*&quot;ERFMG&quot; ,  '101',&quot;ERFMG&quot;, &quot;ERFMG&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="Z_UTILIZATION" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(TRIM(&quot;KOSTL&quot;) !='' AND TRIM(&quot;BWART&quot;)!='161'  AND TRIM(&quot;BWART&quot;)!='162'  AND TRIM(&quot;BWART&quot;)!='202'  AND (NOT (MATCH(TRIM(&quot;BWART&quot;), '7*'))), 'X','')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="Z_SUPPLY" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(TRIM(&quot;KOSTL&quot;)='' AND TRIM(&quot;BWART&quot;)!='161'  AND TRIM(&quot;BWART&quot;)!='162'  AND TRIM(&quot;BWART&quot;)!='202'  AND (NOT (MATCH(TRIM(&quot;BWART&quot;), '7*'))), 'X','')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="Z_ADJUSTMENTS" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(MATCH(TRIM(&quot;BWART&quot;),  '7*') , 'X', '')  </formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="Z_RETURN_TO_STORES" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(MATCH(TRIM(&quot;KOSTL&quot;), '' )  AND IN(&quot;BWART&quot; , '161', '162', '202' ) , 'X', '')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="Z_ACTIVITY" length="25" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;Z_UTILIZATION&quot;='X', 'Utilization', if(&quot;Z_SUPPLY&quot;='X', 'Supply', IF(&quot;Z_ADJUSTMENTS&quot;='X', 'Adjustments', IF(&quot;Z_RETURN_TO_STORES&quot;='X', 'Return to Stores', 'Unclassified'))))</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#ECC_MSEG">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MBLNR" source="MBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MJAHR" source="MJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZEILE" source="ZEILE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BWART" source="BWART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARG" source="CHARG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSMK" source="INSMK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE" source="MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR" source="DMBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SHKZG" source="SHKZG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RSNUM" source="RSNUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RSPOS" source="RSPOS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOBKZ" source="SOBKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KZBEW" source="KZBEW"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KZVBR" source="KZVBR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KZZUG" source="KZZUG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFMG" source="ERFMG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFME" source="ERFME"/>
+      </input>
+      <filter>(&quot;MJAHR&quot; >='2019')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinOrder="OUTSIDE_IN" joinType="inner">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MBLNR"/>
+        <viewAttribute id="MJAHR"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="XBLNR"/>
+        <viewAttribute id="BKTXT"/>
+        <viewAttribute id="BLDAT"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="ZEILE"/>
+        <viewAttribute id="BWART"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="CHARG"/>
+        <viewAttribute id="INSMK"/>
+        <viewAttribute id="MENGE"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="DMBTR"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="SHKZG"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="RSNUM"/>
+        <viewAttribute id="RSPOS"/>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="CPUTM"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="Z_MENGE"/>
+        <viewAttribute id="DT_BUDAT"/>
+        <viewAttribute id="WEEK_DA"/>
+        <viewAttribute id="START_DT_WEEK"/>
+        <viewAttribute id="END_DT_WEEK"/>
+        <viewAttribute id="SOBKZ"/>
+        <viewAttribute id="KZBEW"/>
+        <viewAttribute id="KZVBR"/>
+        <viewAttribute id="KZZUG"/>
+        <viewAttribute id="ERFMG"/>
+        <viewAttribute id="ERFME"/>
+        <viewAttribute id="Z_DMBTR"/>
+        <viewAttribute id="Z_ERFMG"/>
+        <viewAttribute id="Z_ACTIVITY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Projection_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MBLNR" source="MBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MJAHR" source="MJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BKTXT" source="BKTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT" source="CPUDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUTM" source="CPUTM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DT_BUDAT" source="DT_BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WEEK_DA" source="WEEK_DA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="START_DT_WEEK" source="START_DT_WEEK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_DT_WEEK" source="END_DT_WEEK"/>
+      </input>
+      <input node="#Projection_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZEILE" source="ZEILE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BWART" source="BWART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARG" source="CHARG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSMK" source="INSMK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE" source="MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR" source="DMBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SHKZG" source="SHKZG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RSNUM" source="RSNUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RSPOS" source="RSPOS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_MENGE" source="Z_MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOBKZ" source="SOBKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KZBEW" source="KZBEW"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KZVBR" source="KZVBR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KZZUG" source="KZZUG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFMG" source="ERFMG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFME" source="ERFME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_DMBTR" source="Z_DMBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_ERFMG" source="Z_ERFMG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_ACTIVITY" source="Z_ACTIVITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MBLNR" source="MBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MJAHR" source="MJAHR"/>
+      </input>
+      <joinAttribute name="MBLNR"/>
+      <joinAttribute name="MJAHR"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MATNR_FORMATED"/>
+        <viewAttribute id="MAKTX"/>
+        <viewAttribute id="MAKTG"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="MTART"/>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute id="MAT_BASE_UOM"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MFRPN"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_DIM_MATERIALS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR_FORMATED" source="MATNR_FORMATED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTX" source="MAKTX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTG" source="MAKTG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MTART" source="MTART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAT_BASE_UOM" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRPN" source="MFRPN"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_2" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MBLNR"/>
+        <viewAttribute id="MJAHR"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="XBLNR"/>
+        <viewAttribute id="BKTXT"/>
+        <viewAttribute id="BLDAT"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="ZEILE"/>
+        <viewAttribute id="BWART"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="CHARG"/>
+        <viewAttribute id="INSMK"/>
+        <viewAttribute id="MENGE"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="DMBTR"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="SHKZG"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="RSNUM"/>
+        <viewAttribute id="RSPOS"/>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="CPUTM"/>
+        <viewAttribute id="MAT_BASE_UOM"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="Z_MENGE"/>
+        <viewAttribute id="MAKTX"/>
+        <viewAttribute id="MAKTG"/>
+        <viewAttribute id="MTART"/>
+        <viewAttribute id="MATNR_FORMATED"/>
+        <viewAttribute id="DT_BUDAT"/>
+        <viewAttribute id="WEEK_DA"/>
+        <viewAttribute id="START_DT_WEEK"/>
+        <viewAttribute id="END_DT_WEEK"/>
+        <viewAttribute id="SOBKZ"/>
+        <viewAttribute id="KZBEW"/>
+        <viewAttribute id="KZVBR"/>
+        <viewAttribute id="KZZUG"/>
+        <viewAttribute id="MFRPN"/>
+        <viewAttribute id="ERFMG"/>
+        <viewAttribute id="ERFME"/>
+        <viewAttribute id="Z_DMBTR"/>
+        <viewAttribute id="Z_ERFMG"/>
+        <viewAttribute id="Z_ACTIVITY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Join_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MBLNR" source="MBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MJAHR" source="MJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BKTXT" source="BKTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZEILE" source="ZEILE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BWART" source="BWART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARG" source="CHARG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSMK" source="INSMK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE" source="MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR" source="DMBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SHKZG" source="SHKZG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RSNUM" source="RSNUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RSPOS" source="RSPOS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT" source="CPUDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUTM" source="CPUTM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_MENGE" source="Z_MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DT_BUDAT" source="DT_BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WEEK_DA" source="WEEK_DA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="START_DT_WEEK" source="START_DT_WEEK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_DT_WEEK" source="END_DT_WEEK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOBKZ" source="SOBKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KZBEW" source="KZBEW"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KZVBR" source="KZVBR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KZZUG" source="KZZUG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFMG" source="ERFMG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFME" source="ERFME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_DMBTR" source="Z_DMBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_ERFMG" source="Z_ERFMG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_ACTIVITY" source="Z_ACTIVITY"/>
+      </input>
+      <input node="#Projection_3">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAT_BASE_UOM" source="MAT_BASE_UOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTX" source="MAKTX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTG" source="MAKTG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MTART" source="MTART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR_FORMATED" source="MATNR_FORMATED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRPN" source="MFRPN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+      </input>
+      <joinAttribute name="MATNR"/>
+      <joinAttribute name="WERKS"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_4">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ZFISCAL_MONTH"/>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="SAP_DATE"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_DIM_FISC_CAL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_MONTH" source="ZFISCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCALENDAR_YEAR" source="ZCALENDAR_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAP_DATE" source="SAP_DATE"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_3" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MBLNR"/>
+        <viewAttribute id="MJAHR"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="XBLNR"/>
+        <viewAttribute id="BKTXT"/>
+        <viewAttribute id="BLDAT"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="ZEILE"/>
+        <viewAttribute id="BWART"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="CHARG"/>
+        <viewAttribute id="INSMK"/>
+        <viewAttribute id="MENGE"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="DMBTR"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="SHKZG"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="RSNUM"/>
+        <viewAttribute id="RSPOS"/>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="CPUTM"/>
+        <viewAttribute id="MAT_BASE_UOM"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="Z_MENGE"/>
+        <viewAttribute id="MAKTX"/>
+        <viewAttribute id="MAKTG"/>
+        <viewAttribute id="MTART"/>
+        <viewAttribute id="MATNR_FORMATED"/>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="DT_BUDAT"/>
+        <viewAttribute id="WEEK_DA"/>
+        <viewAttribute id="START_DT_WEEK"/>
+        <viewAttribute id="END_DT_WEEK"/>
+        <viewAttribute id="SOBKZ"/>
+        <viewAttribute id="KZBEW"/>
+        <viewAttribute id="KZVBR"/>
+        <viewAttribute id="KZZUG"/>
+        <viewAttribute id="ZFISCAL_MONTH"/>
+        <viewAttribute id="MFRPN"/>
+        <viewAttribute id="ERFMG"/>
+        <viewAttribute id="ERFME"/>
+        <viewAttribute id="Z_DMBTR"/>
+        <viewAttribute id="Z_ERFMG"/>
+        <viewAttribute id="Z_ACTIVITY"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="LONG_FORMAT_WEEK" length="50" expressionLanguage="COLUMN_ENGINE">
+          <formula>'Week Starting on: ' + &quot;START_DT_WEEK&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#Join_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MBLNR" source="MBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MJAHR" source="MJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BKTXT" source="BKTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZEILE" source="ZEILE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BWART" source="BWART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARG" source="CHARG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSMK" source="INSMK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE" source="MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR" source="DMBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SHKZG" source="SHKZG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RSNUM" source="RSNUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RSPOS" source="RSPOS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT" source="CPUDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUTM" source="CPUTM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAT_BASE_UOM" source="MAT_BASE_UOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_MENGE" source="Z_MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTX" source="MAKTX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTG" source="MAKTG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MTART" source="MTART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR_FORMATED" source="MATNR_FORMATED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DT_BUDAT" source="DT_BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WEEK_DA" source="WEEK_DA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="START_DT_WEEK" source="START_DT_WEEK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_DT_WEEK" source="END_DT_WEEK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOBKZ" source="SOBKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KZBEW" source="KZBEW"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KZVBR" source="KZVBR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KZZUG" source="KZZUG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRPN" source="MFRPN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFMG" source="ERFMG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFME" source="ERFME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_DMBTR" source="Z_DMBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_ERFMG" source="Z_ERFMG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_ACTIVITY" source="Z_ACTIVITY"/>
+      </input>
+      <input node="#Projection_4">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCALENDAR_YEAR" source="ZCALENDAR_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_MONTH" source="ZFISCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="SAP_DATE"/>
+      </input>
+      <joinAttribute name="BUDAT"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_5">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="LABST"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#ECC_MARD">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LABST" source="LABST"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_4" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MBLNR"/>
+        <viewAttribute id="MJAHR"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="XBLNR"/>
+        <viewAttribute id="BKTXT"/>
+        <viewAttribute id="BLDAT"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="ZEILE"/>
+        <viewAttribute id="BWART"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="CHARG"/>
+        <viewAttribute id="INSMK"/>
+        <viewAttribute id="MENGE"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="DMBTR"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="SHKZG"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="RSNUM"/>
+        <viewAttribute id="RSPOS"/>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="CPUTM"/>
+        <viewAttribute id="MAT_BASE_UOM"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="Z_MENGE"/>
+        <viewAttribute id="MAKTX"/>
+        <viewAttribute id="MAKTG"/>
+        <viewAttribute id="MTART"/>
+        <viewAttribute id="MATNR_FORMATED"/>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="DT_BUDAT"/>
+        <viewAttribute id="WEEK_DA"/>
+        <viewAttribute id="START_DT_WEEK"/>
+        <viewAttribute id="END_DT_WEEK"/>
+        <viewAttribute id="LONG_FORMAT_WEEK"/>
+        <viewAttribute id="SOBKZ"/>
+        <viewAttribute id="KZBEW"/>
+        <viewAttribute id="KZVBR"/>
+        <viewAttribute id="KZZUG"/>
+        <viewAttribute id="ZFISCAL_MONTH"/>
+        <viewAttribute id="MFRPN"/>
+        <viewAttribute id="LABST"/>
+        <viewAttribute id="ERFMG"/>
+        <viewAttribute id="ERFME"/>
+        <viewAttribute id="Z_DMBTR"/>
+        <viewAttribute id="Z_ERFMG"/>
+        <viewAttribute id="Z_ACTIVITY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Join_3">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MBLNR" source="MBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MJAHR" source="MJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BKTXT" source="BKTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZEILE" source="ZEILE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BWART" source="BWART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARG" source="CHARG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSMK" source="INSMK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE" source="MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR" source="DMBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SHKZG" source="SHKZG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RSNUM" source="RSNUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RSPOS" source="RSPOS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT" source="CPUDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUTM" source="CPUTM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAT_BASE_UOM" source="MAT_BASE_UOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_MENGE" source="Z_MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTX" source="MAKTX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTG" source="MAKTG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MTART" source="MTART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR_FORMATED" source="MATNR_FORMATED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCALENDAR_YEAR" source="ZCALENDAR_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DT_BUDAT" source="DT_BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WEEK_DA" source="WEEK_DA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="START_DT_WEEK" source="START_DT_WEEK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_DT_WEEK" source="END_DT_WEEK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LONG_FORMAT_WEEK" source="LONG_FORMAT_WEEK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOBKZ" source="SOBKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KZBEW" source="KZBEW"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KZVBR" source="KZVBR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KZZUG" source="KZZUG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_MONTH" source="ZFISCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRPN" source="MFRPN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFMG" source="ERFMG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFME" source="ERFME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_DMBTR" source="Z_DMBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_ERFMG" source="Z_ERFMG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_ACTIVITY" source="Z_ACTIVITY"/>
+      </input>
+      <input node="#Projection_5">
+        <mapping xsi:type="Calculation:AttributeMapping" target="LABST" source="LABST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+      </input>
+      <joinAttribute name="MATNR"/>
+      <joinAttribute name="LGORT"/>
+      <joinAttribute name="WERKS"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_6">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BWART"/>
+        <viewAttribute id="SOBKZ"/>
+        <viewAttribute id="KZBEW"/>
+        <viewAttribute id="KZZUG"/>
+        <viewAttribute id="KZVBR"/>
+        <viewAttribute id="BTEXT"/>
+        <viewAttribute id="SPRAS"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#ECC_T156T">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BWART" source="BWART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOBKZ" source="SOBKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KZBEW" source="KZBEW"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KZZUG" source="KZZUG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KZVBR" source="KZVBR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BTEXT" source="BTEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPRAS" source="SPRAS"/>
+      </input>
+      <filter>(&quot;SPRAS&quot; ='E')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_5" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MBLNR"/>
+        <viewAttribute id="MJAHR"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="XBLNR"/>
+        <viewAttribute id="BKTXT"/>
+        <viewAttribute id="BLDAT"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="ZEILE"/>
+        <viewAttribute id="BWART"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="CHARG"/>
+        <viewAttribute id="INSMK"/>
+        <viewAttribute id="MENGE"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="DMBTR"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="SHKZG"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="RSNUM"/>
+        <viewAttribute id="RSPOS"/>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="CPUTM"/>
+        <viewAttribute id="MAT_BASE_UOM"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="Z_MENGE"/>
+        <viewAttribute id="MAKTX"/>
+        <viewAttribute id="MAKTG"/>
+        <viewAttribute id="MTART"/>
+        <viewAttribute id="MATNR_FORMATED"/>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="DT_BUDAT"/>
+        <viewAttribute id="WEEK_DA"/>
+        <viewAttribute id="START_DT_WEEK"/>
+        <viewAttribute id="END_DT_WEEK"/>
+        <viewAttribute id="LONG_FORMAT_WEEK"/>
+        <viewAttribute id="SOBKZ"/>
+        <viewAttribute id="KZBEW"/>
+        <viewAttribute id="KZVBR"/>
+        <viewAttribute id="KZZUG"/>
+        <viewAttribute id="BTEXT"/>
+        <viewAttribute id="ZFISCAL_MONTH"/>
+        <viewAttribute id="MFRPN"/>
+        <viewAttribute id="LABST"/>
+        <viewAttribute id="ERFMG"/>
+        <viewAttribute id="ERFME"/>
+        <viewAttribute id="Z_DMBTR"/>
+        <viewAttribute id="Z_ERFMG"/>
+        <viewAttribute id="Z_ACTIVITY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Join_4">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MBLNR" source="MBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MJAHR" source="MJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BKTXT" source="BKTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZEILE" source="ZEILE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BWART" source="BWART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARG" source="CHARG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSMK" source="INSMK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE" source="MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR" source="DMBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SHKZG" source="SHKZG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RSNUM" source="RSNUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RSPOS" source="RSPOS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT" source="CPUDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUTM" source="CPUTM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAT_BASE_UOM" source="MAT_BASE_UOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_MENGE" source="Z_MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTX" source="MAKTX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTG" source="MAKTG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MTART" source="MTART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR_FORMATED" source="MATNR_FORMATED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCALENDAR_YEAR" source="ZCALENDAR_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DT_BUDAT" source="DT_BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WEEK_DA" source="WEEK_DA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="START_DT_WEEK" source="START_DT_WEEK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_DT_WEEK" source="END_DT_WEEK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LONG_FORMAT_WEEK" source="LONG_FORMAT_WEEK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOBKZ" source="SOBKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KZBEW" source="KZBEW"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KZVBR" source="KZVBR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KZZUG" source="KZZUG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_MONTH" source="ZFISCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRPN" source="MFRPN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LABST" source="LABST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFMG" source="ERFMG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFME" source="ERFME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_DMBTR" source="Z_DMBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_ERFMG" source="Z_ERFMG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_ACTIVITY" source="Z_ACTIVITY"/>
+      </input>
+      <input node="#Projection_6">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BTEXT" source="BTEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BWART" source="BWART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOBKZ" source="SOBKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KZBEW" source="KZBEW"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KZZUG" source="KZZUG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KZVBR" source="KZVBR"/>
+      </input>
+      <joinAttribute name="BWART"/>
+      <joinAttribute name="SOBKZ"/>
+      <joinAttribute name="KZBEW"/>
+      <joinAttribute name="KZZUG"/>
+      <joinAttribute name="KZVBR"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_7">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="BUTXT"/>
+        <viewAttribute id="PLANT_NAME"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_DIM_ORG_STRCTR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUTXT" source="BUTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PLANT_NAME" source="PLANT_NAME"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_6" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MBLNR"/>
+        <viewAttribute id="MJAHR"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="XBLNR"/>
+        <viewAttribute id="BKTXT"/>
+        <viewAttribute id="BLDAT"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="ZEILE"/>
+        <viewAttribute id="BWART"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="CHARG"/>
+        <viewAttribute id="INSMK"/>
+        <viewAttribute id="MENGE"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="DMBTR"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="SHKZG"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="RSNUM"/>
+        <viewAttribute id="RSPOS"/>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="CPUTM"/>
+        <viewAttribute id="MAT_BASE_UOM"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="Z_MENGE"/>
+        <viewAttribute id="MAKTX"/>
+        <viewAttribute id="MAKTG"/>
+        <viewAttribute id="MTART"/>
+        <viewAttribute id="MATNR_FORMATED"/>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="DT_BUDAT"/>
+        <viewAttribute id="WEEK_DA"/>
+        <viewAttribute id="START_DT_WEEK"/>
+        <viewAttribute id="END_DT_WEEK"/>
+        <viewAttribute id="LONG_FORMAT_WEEK"/>
+        <viewAttribute id="SOBKZ"/>
+        <viewAttribute id="KZBEW"/>
+        <viewAttribute id="KZVBR"/>
+        <viewAttribute id="KZZUG"/>
+        <viewAttribute id="BTEXT"/>
+        <viewAttribute id="ZFISCAL_MONTH"/>
+        <viewAttribute id="MFRPN"/>
+        <viewAttribute id="LABST"/>
+        <viewAttribute id="ERFMG"/>
+        <viewAttribute id="ERFME"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="Z_DMBTR"/>
+        <viewAttribute id="Z_ERFMG"/>
+        <viewAttribute id="Z_ACTIVITY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Join_5">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MBLNR" source="MBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MJAHR" source="MJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BKTXT" source="BKTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZEILE" source="ZEILE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BWART" source="BWART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARG" source="CHARG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSMK" source="INSMK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE" source="MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR" source="DMBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SHKZG" source="SHKZG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RSNUM" source="RSNUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RSPOS" source="RSPOS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT" source="CPUDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUTM" source="CPUTM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAT_BASE_UOM" source="MAT_BASE_UOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_MENGE" source="Z_MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTX" source="MAKTX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTG" source="MAKTG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MTART" source="MTART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR_FORMATED" source="MATNR_FORMATED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCALENDAR_YEAR" source="ZCALENDAR_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DT_BUDAT" source="DT_BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WEEK_DA" source="WEEK_DA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="START_DT_WEEK" source="START_DT_WEEK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_DT_WEEK" source="END_DT_WEEK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LONG_FORMAT_WEEK" source="LONG_FORMAT_WEEK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOBKZ" source="SOBKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KZBEW" source="KZBEW"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KZVBR" source="KZVBR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KZZUG" source="KZZUG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BTEXT" source="BTEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_MONTH" source="ZFISCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRPN" source="MFRPN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LABST" source="LABST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFMG" source="ERFMG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFME" source="ERFME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_DMBTR" source="Z_DMBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_ERFMG" source="Z_ERFMG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_ACTIVITY" source="Z_ACTIVITY"/>
+      </input>
+      <input node="#Projection_7">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+      </input>
+      <joinAttribute name="WERKS"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_8" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="LTEXT"/>
+        <viewAttribute id="DATBI"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CURRENT_DATE" length="10" expressionLanguage="SQL">
+          <formula>current_date</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="VALID_TO_DATE" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>daydate(&quot;DATBI&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#ECC_CSKT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LTEXT" source="LTEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATBI" source="DATBI"/>
+      </input>
+      <filter>&quot;CURRENT_DATE&quot;&lt;=&quot;VALID_TO_DATE&quot;</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_7" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MBLNR"/>
+        <viewAttribute id="MJAHR"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="XBLNR"/>
+        <viewAttribute id="BKTXT"/>
+        <viewAttribute id="BLDAT"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="ZEILE"/>
+        <viewAttribute id="BWART"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="CHARG"/>
+        <viewAttribute id="INSMK"/>
+        <viewAttribute id="MENGE"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="DMBTR"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="SHKZG"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="RSNUM"/>
+        <viewAttribute id="RSPOS"/>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="CPUTM"/>
+        <viewAttribute id="MAT_BASE_UOM"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="Z_MENGE"/>
+        <viewAttribute id="MAKTX"/>
+        <viewAttribute id="MAKTG"/>
+        <viewAttribute id="MTART"/>
+        <viewAttribute id="MATNR_FORMATED"/>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="DT_BUDAT"/>
+        <viewAttribute id="WEEK_DA"/>
+        <viewAttribute id="START_DT_WEEK"/>
+        <viewAttribute id="END_DT_WEEK"/>
+        <viewAttribute id="LONG_FORMAT_WEEK"/>
+        <viewAttribute id="SOBKZ"/>
+        <viewAttribute id="KZBEW"/>
+        <viewAttribute id="KZVBR"/>
+        <viewAttribute id="KZZUG"/>
+        <viewAttribute id="BTEXT"/>
+        <viewAttribute id="ZFISCAL_MONTH"/>
+        <viewAttribute id="MFRPN"/>
+        <viewAttribute id="LABST"/>
+        <viewAttribute id="ERFMG"/>
+        <viewAttribute id="ERFME"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="LTEXT"/>
+        <viewAttribute id="Z_DMBTR"/>
+        <viewAttribute id="Z_ERFMG"/>
+        <viewAttribute id="Z_ACTIVITY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Join_6">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MBLNR" source="MBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MJAHR" source="MJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BKTXT" source="BKTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZEILE" source="ZEILE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BWART" source="BWART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARG" source="CHARG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSMK" source="INSMK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE" source="MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR" source="DMBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SHKZG" source="SHKZG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RSNUM" source="RSNUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RSPOS" source="RSPOS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT" source="CPUDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUTM" source="CPUTM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAT_BASE_UOM" source="MAT_BASE_UOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_MENGE" source="Z_MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTX" source="MAKTX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTG" source="MAKTG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MTART" source="MTART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR_FORMATED" source="MATNR_FORMATED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCALENDAR_YEAR" source="ZCALENDAR_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DT_BUDAT" source="DT_BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WEEK_DA" source="WEEK_DA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="START_DT_WEEK" source="START_DT_WEEK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_DT_WEEK" source="END_DT_WEEK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LONG_FORMAT_WEEK" source="LONG_FORMAT_WEEK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOBKZ" source="SOBKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KZBEW" source="KZBEW"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KZVBR" source="KZVBR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KZZUG" source="KZZUG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BTEXT" source="BTEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_MONTH" source="ZFISCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRPN" source="MFRPN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LABST" source="LABST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFMG" source="ERFMG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFME" source="ERFME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_DMBTR" source="Z_DMBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_ERFMG" source="Z_ERFMG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_ACTIVITY" source="Z_ACTIVITY"/>
+      </input>
+      <input node="#Projection_8">
+        <mapping xsi:type="Calculation:AttributeMapping" target="LTEXT" source="LTEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+      </input>
+      <joinAttribute name="KOKRS"/>
+      <joinAttribute name="KOSTL"/>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="Join_7">
+    <descriptions/>
+    <attributes>
+      <attribute id="MBLNR" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Number of Material Document"/>
+        <keyMapping columnObjectName="Join_7" columnName="MBLNR"/>
+      </attribute>
+      <attribute id="MJAHR" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Document Year"/>
+        <keyMapping columnObjectName="Join_7" columnName="MJAHR"/>
+      </attribute>
+      <attribute id="BLART" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Document Type"/>
+        <keyMapping columnObjectName="Join_7" columnName="BLART"/>
+      </attribute>
+      <attribute id="XBLNR" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Reference Document Number"/>
+        <keyMapping columnObjectName="Join_7" columnName="XBLNR"/>
+      </attribute>
+      <attribute id="BKTXT" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Document Header Text"/>
+        <keyMapping columnObjectName="Join_7" columnName="BKTXT"/>
+      </attribute>
+      <attribute id="BLDAT" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Document Date in Document"/>
+        <keyMapping columnObjectName="Join_7" columnName="BLDAT"/>
+      </attribute>
+      <attribute id="BUDAT" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Posting Date in the Document"/>
+        <keyMapping columnObjectName="Join_7" columnName="BUDAT"/>
+      </attribute>
+      <attribute id="ZEILE" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Item in Material Document"/>
+        <keyMapping columnObjectName="Join_7" columnName="ZEILE"/>
+      </attribute>
+      <attribute id="BWART" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Movement Type (Inventory Management)"/>
+        <keyMapping columnObjectName="Join_7" columnName="BWART"/>
+      </attribute>
+      <attribute id="MATNR" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MATNR"/>
+        <keyMapping columnObjectName="Join_7" columnName="MATNR"/>
+      </attribute>
+      <attribute id="LGORT" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Storage Location"/>
+        <keyMapping columnObjectName="Join_7" columnName="LGORT"/>
+      </attribute>
+      <attribute id="CHARG" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CHARG"/>
+        <keyMapping columnObjectName="Join_7" columnName="CHARG"/>
+      </attribute>
+      <attribute id="INSMK" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INSMK"/>
+        <keyMapping columnObjectName="Join_7" columnName="INSMK"/>
+      </attribute>
+      <attribute id="MEINS" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Base Unit of Measure"/>
+        <keyMapping columnObjectName="Join_7" columnName="MEINS"/>
+      </attribute>
+      <attribute id="WAERS" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Currency Key"/>
+        <keyMapping columnObjectName="Join_7" columnName="WAERS"/>
+      </attribute>
+      <attribute id="SHKZG" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SHKZG"/>
+        <keyMapping columnObjectName="Join_7" columnName="SHKZG"/>
+      </attribute>
+      <attribute id="LIFNR" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Vendor Account Number"/>
+        <keyMapping columnObjectName="Join_7" columnName="LIFNR"/>
+      </attribute>
+      <attribute id="EBELN" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchase Order Number"/>
+        <keyMapping columnObjectName="Join_7" columnName="EBELN"/>
+      </attribute>
+      <attribute id="EBELP" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Item Number of Purchasing Document"/>
+        <keyMapping columnObjectName="Join_7" columnName="EBELP"/>
+      </attribute>
+      <attribute id="RSNUM" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Number of Reservation/Dependent Requirement"/>
+        <keyMapping columnObjectName="Join_7" columnName="RSNUM"/>
+      </attribute>
+      <attribute id="RSPOS" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Item Number of Reservation/Dependent Requirement"/>
+        <keyMapping columnObjectName="Join_7" columnName="RSPOS"/>
+      </attribute>
+      <attribute id="CPUDT" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Day On Which Accounting Document Was Entered"/>
+        <keyMapping columnObjectName="Join_7" columnName="CPUDT"/>
+      </attribute>
+      <attribute id="CPUTM" order="26" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Time of Entry"/>
+        <keyMapping columnObjectName="Join_7" columnName="CPUTM"/>
+      </attribute>
+      <attribute id="MAT_BASE_UOM" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Base Unit of Measure"/>
+        <keyMapping columnObjectName="Join_7" columnName="MAT_BASE_UOM"/>
+      </attribute>
+      <attribute id="WERKS" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Plant"/>
+        <keyMapping columnObjectName="Join_7" columnName="WERKS"/>
+      </attribute>
+      <attribute id="KOSTL" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cost Center"/>
+        <keyMapping columnObjectName="Join_7" columnName="KOSTL"/>
+      </attribute>
+      <attribute id="MAKTX" order="31" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Description (Short Text)"/>
+        <keyMapping columnObjectName="Join_7" columnName="MAKTX"/>
+      </attribute>
+      <attribute id="MAKTG" order="32" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material description in upper case for matchcodes"/>
+        <keyMapping columnObjectName="Join_7" columnName="MAKTG"/>
+      </attribute>
+      <attribute id="MTART" order="33" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Type"/>
+        <keyMapping columnObjectName="Join_7" columnName="MTART"/>
+      </attribute>
+      <attribute id="MATNR_FORMATED" order="34" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Number"/>
+        <keyMapping columnObjectName="Join_7" columnName="MATNR_FORMATED"/>
+      </attribute>
+      <attribute id="ZCALENDAR_YEAR" order="35" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Calendar Yr"/>
+        <keyMapping columnObjectName="Join_7" columnName="ZCALENDAR_YEAR"/>
+      </attribute>
+      <attribute id="ZCAL_MONTH" order="36" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Calendar Month"/>
+        <keyMapping columnObjectName="Join_7" columnName="ZCAL_MONTH"/>
+      </attribute>
+      <attribute id="DT_BUDAT" order="37" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="Join_7" columnName="DT_BUDAT"/>
+      </attribute>
+      <attribute id="START_DT_WEEK" order="39" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="Join_7" columnName="START_DT_WEEK"/>
+      </attribute>
+      <attribute id="END_DT_WEEK" order="40" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="Join_7" columnName="END_DT_WEEK"/>
+      </attribute>
+      <attribute id="LONG_FORMAT_WEEK" order="41" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="Join_7" columnName="LONG_FORMAT_WEEK"/>
+      </attribute>
+      <attribute id="SOBKZ" order="42" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Special Stock Indicator"/>
+        <keyMapping columnObjectName="Join_7" columnName="SOBKZ"/>
+      </attribute>
+      <attribute id="KZBEW" order="43" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="KZBEW"/>
+        <keyMapping columnObjectName="Join_7" columnName="KZBEW"/>
+      </attribute>
+      <attribute id="KZVBR" order="44" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="KZVBR"/>
+        <keyMapping columnObjectName="Join_7" columnName="KZVBR"/>
+      </attribute>
+      <attribute id="KZZUG" order="45" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="KZZUG"/>
+        <keyMapping columnObjectName="Join_7" columnName="KZZUG"/>
+      </attribute>
+      <attribute id="BTEXT" order="46" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BTEXT"/>
+        <keyMapping columnObjectName="Join_7" columnName="BTEXT"/>
+      </attribute>
+      <attribute id="ZFISCAL_MONTH" order="47" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZFISCAL_MONTH"/>
+        <keyMapping columnObjectName="Join_7" columnName="ZFISCAL_MONTH"/>
+      </attribute>
+      <attribute id="MFRPN" order="48" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Manufacturer Part Number"/>
+        <keyMapping columnObjectName="Join_7" columnName="MFRPN"/>
+      </attribute>
+      <attribute id="ERFME" order="50" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Unit of Entry"/>
+        <keyMapping columnObjectName="Join_7" columnName="ERFME"/>
+      </attribute>
+      <attribute id="KOKRS" order="51" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Controlling Area"/>
+        <keyMapping columnObjectName="Join_7" columnName="KOKRS"/>
+      </attribute>
+      <attribute id="LTEXT" order="52" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cost Ctr Description"/>
+        <keyMapping columnObjectName="Join_7" columnName="LTEXT"/>
+      </attribute>
+      <attribute id="Z_DMBTR" hidden="false" order="53" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="Join_7" columnName="Z_DMBTR"/>
+      </attribute>
+      <attribute id="Z_ACTIVITY" order="55" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="Join_7" columnName="Z_ACTIVITY"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="MENGE" order="15" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Quantity"/>
+        <measureMapping columnObjectName="Join_7" columnName="MENGE"/>
+      </measure>
+      <measure id="DMBTR" order="17" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Amount in Local Currency"/>
+        <measureMapping columnObjectName="Join_7" columnName="DMBTR"/>
+      </measure>
+      <measure id="Z_MENGE" order="30" aggregationType="sum" measureType="simple">
+        <descriptions/>
+        <measureMapping columnObjectName="Join_7" columnName="Z_MENGE"/>
+      </measure>
+      <measure id="WEEK_DA" order="38" aggregationType="sum" measureType="simple">
+        <descriptions/>
+        <measureMapping columnObjectName="Join_7" columnName="WEEK_DA"/>
+      </measure>
+      <measure id="ERFMG" order="49" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Quantity in Unit of Entry"/>
+        <measureMapping columnObjectName="Join_7" columnName="ERFMG"/>
+      </measure>
+      <measure id="Z_ERFMG" hidden="false" order="54" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Qty in Unit of Entry with the Sign"/>
+        <measureMapping columnObjectName="Join_7" columnName="Z_ERFMG"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures>
+      <measure id="ESTIMATED" hidden="false" order="1" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="13" scale="3">
+        <descriptions defaultDescription="Estimated Consumption"/>
+        <formula>&quot;Z_MENGE&quot;* $$IP_FACTOR$$</formula>
+      </measure>
+    </calculatedMeasures>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="398" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="839"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="839"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="743"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="743"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="175" y="647"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_4" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="329" y="647"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="250" y="551"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_5" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="404" y="551"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_4" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="324" y="455"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_6" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="478" y="455"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_5" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="399" y="359"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_7" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="553" y="359"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_6" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="475" y="263"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_8" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="321" y="263"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_7" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="398" y="167"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

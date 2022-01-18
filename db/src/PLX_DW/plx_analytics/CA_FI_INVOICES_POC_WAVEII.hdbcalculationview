@@ -1,0 +1,1201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="plx_analytics::CA_FI_INVOICES_POC_WAVEII" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" xscCompatibilityMode="true">
+  <origin/>
+  <descriptions defaultDescription="CA_FI_INVOICES"/>
+  <metadata changedAt="2021-02-18 13:02:13.136"/>
+  <localVariables>
+    <variable id="IP_OI_KEYDATE" parameter="true">
+      <descriptions defaultDescription="Open Items at Keydate"/>
+      <variableProperties datatype="DATE" defaultValue="" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="IP_INTERVAL_DAYS" parameter="true">
+      <descriptions defaultDescription="Interval Days"/>
+      <variableProperties datatype="INTEGER" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+        <defaultRange/>
+      </variableProperties>
+    </variable>
+    <variable id="Company_Code">
+      <descriptions defaultDescription="Company Code"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="" length="4" mandatory="true">
+        <valueDomain type="AttributeValue">
+          <attribute name="BUKRS"/>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="Vendor">
+      <descriptions defaultDescription="Vendor"/>
+      <variableProperties datatype="VARCHAR" defaultValue="" length="7" mandatory="false">
+        <valueDomain type="AttributeValue">
+          <attribute name="LIFNR_Formated" resourceUri="plx_analytics::CA_DIM_VENDORS"/>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="Posting_Date">
+      <descriptions defaultDescription="Posting Date"/>
+      <variableProperties datatype="DATE" mandatory="false">
+        <valueDomain type="AttributeValue">
+          <attribute name="POSTING_DATE"/>
+        </valueDomain>
+        <selection multiLine="false" type="Range"/>
+        <defaultRange including="true"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="43"/>
+  <dataSources>
+    <DataSource id="ECC_BSAK">
+      <resourceUri>ECC_BSAK</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_BSIK">
+      <resourceUri>ECC_BSIK</resourceUri>
+    </DataSource>
+    <DataSource id="CA_DIM_ORG_STRCTR">
+      <resourceUri>plx_analytics::CA_DIM_ORG_STRCTR</resourceUri>
+    </DataSource>
+    <DataSource id="CA_DIM_FISC_CAL">
+      <resourceUri>plx_analytics::CA_DIM_FISC_CAL</resourceUri>
+    </DataSource>
+    <DataSource id="CA_DIM_TARGET_THRESHOLD">
+      <resourceUri>plx_analytics::CA_DIM_TARGET_THRESHOLD</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="AUGDT"/>
+        <viewAttribute id="AUGBL"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="BLDAT"/>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="DMBTR"/>
+        <viewAttribute id="MONAT"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="UMSKS"/>
+        <viewAttribute id="UMSKZ"/>
+        <viewAttribute id="ZUONR"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="XBLNR"/>
+        <viewAttribute id="BSCHL"/>
+        <viewAttribute id="SHKZG"/>
+        <viewAttribute id="GSBER"/>
+        <viewAttribute id="MWSKZ"/>
+        <viewAttribute id="WRBTR"/>
+        <viewAttribute id="WMWST"/>
+        <viewAttribute id="SGTXT"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="SAKNR"/>
+        <viewAttribute id="ZTERM"/>
+        <viewAttribute id="SKNTO"/>
+        <viewAttribute id="WSKTO"/>
+        <viewAttribute id="ZLSCH"/>
+        <viewAttribute id="ZLSPR"/>
+        <viewAttribute id="MABER"/>
+        <viewAttribute id="BSTAT"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="ZBD3T"/>
+        <viewAttribute id="ZBD2T"/>
+        <viewAttribute id="ZBD1T"/>
+        <viewAttribute id="ZFBDT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#ECC_BSAK">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUGDT" source="AUGDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL" source="AUGBL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT" source="CPUDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR" source="DMBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MONAT" source="MONAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UMSKS" source="UMSKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UMSKZ" source="UMSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZUONR" source="ZUONR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSCHL" source="BSCHL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SHKZG" source="SHKZG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GSBER" source="GSBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MWSKZ" source="MWSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WRBTR" source="WRBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WMWST" source="WMWST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SGTXT" source="SGTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAKNR" source="SAKNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZTERM" source="ZTERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SKNTO" source="SKNTO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSKTO" source="WSKTO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZLSCH" source="ZLSCH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZLSPR" source="ZLSPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MABER" source="MABER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSTAT" source="BSTAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZBD3T" source="ZBD3T"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZBD2T" source="ZBD2T"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZBD1T" source="ZBD1T"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFBDT" source="ZFBDT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="AUGDT"/>
+        <viewAttribute id="AUGBL"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="BLDAT"/>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="DMBTR"/>
+        <viewAttribute id="MONAT"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="UMSKS"/>
+        <viewAttribute id="UMSKZ"/>
+        <viewAttribute id="ZUONR"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="XBLNR"/>
+        <viewAttribute id="BSCHL"/>
+        <viewAttribute id="SHKZG"/>
+        <viewAttribute id="GSBER"/>
+        <viewAttribute id="MWSKZ"/>
+        <viewAttribute id="WRBTR"/>
+        <viewAttribute id="WMWST"/>
+        <viewAttribute id="SGTXT"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="SAKNR"/>
+        <viewAttribute id="ZTERM"/>
+        <viewAttribute id="SKNTO"/>
+        <viewAttribute id="WSKTO"/>
+        <viewAttribute id="BSTAT"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="ZBD3T"/>
+        <viewAttribute id="ZBD2T"/>
+        <viewAttribute id="ZBD1T"/>
+        <viewAttribute id="ZFBDT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#ECC_BSIK">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUGDT" source="AUGDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL" source="AUGBL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT" source="CPUDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR" source="DMBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MONAT" source="MONAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UMSKS" source="UMSKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UMSKZ" source="UMSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZUONR" source="ZUONR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSCHL" source="BSCHL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SHKZG" source="SHKZG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GSBER" source="GSBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MWSKZ" source="MWSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WRBTR" source="WRBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WMWST" source="WMWST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SGTXT" source="SGTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAKNR" source="SAKNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZTERM" source="ZTERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SKNTO" source="SKNTO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSKTO" source="WSKTO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSTAT" source="BSTAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZBD3T" source="ZBD3T"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZBD2T" source="ZBD2T"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZBD1T" source="ZBD1T"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFBDT" source="ZFBDT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:UnionView" id="Union_1">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="AUGDT"/>
+        <viewAttribute id="AUGBL"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="BLDAT"/>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="DMBTR"/>
+        <viewAttribute id="MONAT"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="UMSKS"/>
+        <viewAttribute id="UMSKZ"/>
+        <viewAttribute id="ZUONR"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="XBLNR"/>
+        <viewAttribute id="BSCHL"/>
+        <viewAttribute id="SHKZG"/>
+        <viewAttribute id="GSBER"/>
+        <viewAttribute id="MWSKZ"/>
+        <viewAttribute id="WRBTR"/>
+        <viewAttribute id="WMWST"/>
+        <viewAttribute id="SGTXT"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="SAKNR"/>
+        <viewAttribute id="ZTERM"/>
+        <viewAttribute id="SKNTO"/>
+        <viewAttribute id="WSKTO"/>
+        <viewAttribute id="BSTAT"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="ZLSCH"/>
+        <viewAttribute id="ZLSPR"/>
+        <viewAttribute id="MABER"/>
+        <viewAttribute id="ZBD3T"/>
+        <viewAttribute id="ZBD2T"/>
+        <viewAttribute id="ZBD1T"/>
+        <viewAttribute id="ZFBDT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input emptyUnionBehavior="NO_ROW" node="#Projection_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUGDT" source="AUGDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL" source="AUGBL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT" source="CPUDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR" source="DMBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MONAT" source="MONAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UMSKS" source="UMSKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UMSKZ" source="UMSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZUONR" source="ZUONR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSCHL" source="BSCHL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SHKZG" source="SHKZG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GSBER" source="GSBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MWSKZ" source="MWSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WRBTR" source="WRBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WMWST" source="WMWST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SGTXT" source="SGTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAKNR" source="SAKNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZTERM" source="ZTERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SKNTO" source="SKNTO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSKTO" source="WSKTO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSTAT" source="BSTAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ZLSCH" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ZLSPR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="MABER" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZBD3T" source="ZBD3T"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZBD2T" source="ZBD2T"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZBD1T" source="ZBD1T"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFBDT" source="ZFBDT"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#Projection_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUGDT" source="AUGDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL" source="AUGBL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT" source="CPUDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR" source="DMBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MONAT" source="MONAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UMSKS" source="UMSKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UMSKZ" source="UMSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZUONR" source="ZUONR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSCHL" source="BSCHL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SHKZG" source="SHKZG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GSBER" source="GSBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MWSKZ" source="MWSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WRBTR" source="WRBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WMWST" source="WMWST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SGTXT" source="SGTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAKNR" source="SAKNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZTERM" source="ZTERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SKNTO" source="SKNTO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSKTO" source="WSKTO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSTAT" source="BSTAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZLSCH" source="ZLSCH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZLSPR" source="ZLSPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MABER" source="MABER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZBD3T" source="ZBD3T"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZBD2T" source="ZBD2T"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZBD1T" source="ZBD1T"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFBDT" source="ZFBDT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="BUTXT"/>
+        <viewAttribute id="PERIV"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_DIM_ORG_STRCTR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUTXT" source="BUTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERIV" source="PERIV"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinOrder="OUTSIDE_IN" joinType="inner">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="AUGDT"/>
+        <viewAttribute id="AUGBL"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="BLDAT"/>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="DMBTR"/>
+        <viewAttribute id="MONAT"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="BUTXT"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="UMSKS"/>
+        <viewAttribute id="UMSKZ"/>
+        <viewAttribute id="ZUONR"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="XBLNR"/>
+        <viewAttribute id="BSCHL"/>
+        <viewAttribute id="SHKZG"/>
+        <viewAttribute id="GSBER"/>
+        <viewAttribute id="MWSKZ"/>
+        <viewAttribute id="WRBTR"/>
+        <viewAttribute id="WMWST"/>
+        <viewAttribute id="SGTXT"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="SAKNR"/>
+        <viewAttribute id="ZTERM"/>
+        <viewAttribute id="SKNTO"/>
+        <viewAttribute id="WSKTO"/>
+        <viewAttribute id="BSTAT"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="ZLSCH"/>
+        <viewAttribute id="ZLSPR"/>
+        <viewAttribute id="MABER"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="ZBD3T"/>
+        <viewAttribute id="ZBD2T"/>
+        <viewAttribute id="ZBD1T"/>
+        <viewAttribute id="ZFBDT"/>
+        <viewAttribute hidden="true" id="JOIN$BUKRS$BUKRS"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="INTEGER" id="DocumentCount" expressionLanguage="COLUMN_ENGINE">
+          <formula>1</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="INTEGER" id="PAYMENT_TERMS" expressionLanguage="COLUMN_ENGINE">
+          <formula> IF(&quot;ZBD3T&quot; !=0, &quot;ZBD3T&quot;, IF(&quot;ZBD2T&quot;!=0,&quot;ZBD2T&quot;,&quot;ZBD1T&quot;))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="NET_DATE" expressionLanguage="COLUMN_ENGINE">
+          <formula>ADDDAYS(daydate(&quot;ZFBDT&quot;),&quot;PAYMENT_TERMS&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="INTEGER" id="DAYS_CALC" expressionLanguage="COLUMN_ENGINE">
+          <formula>daysbetween(&quot;NET_DATE&quot;,daydate('$$IP_OI_KEYDATE$$'))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="AMOUNT" length="13" scale="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;SHKZG&quot; = 'H',  (-1) * &quot;DMBTR&quot; ,  &quot;DMBTR&quot;  )</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="VARCHAR" id="FLAG_OPEN_ITEM" length="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(daydate(&quot;BUDAT&quot;)&lt;=daydate('$$IP_OI_KEYDATE$$') AND 
+(daydate(&quot;AUGDT&quot;) > daydate('$$IP_OI_KEYDATE$$') 
+OR &quot;AUGDT&quot; = '00000000'), 
+'O', 'NO')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#Union_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUGDT" source="AUGDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL" source="AUGBL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT" source="CPUDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR" source="DMBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MONAT" source="MONAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UMSKS" source="UMSKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UMSKZ" source="UMSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZUONR" source="ZUONR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSCHL" source="BSCHL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SHKZG" source="SHKZG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GSBER" source="GSBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MWSKZ" source="MWSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WRBTR" source="WRBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WMWST" source="WMWST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SGTXT" source="SGTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAKNR" source="SAKNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZTERM" source="ZTERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SKNTO" source="SKNTO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSKTO" source="WSKTO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSTAT" source="BSTAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZLSCH" source="ZLSCH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZLSPR" source="ZLSPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MABER" source="MABER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZBD3T" source="ZBD3T"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZBD2T" source="ZBD2T"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZBD1T" source="ZBD1T"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFBDT" source="ZFBDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$BUKRS$BUKRS" source="BUKRS"/>
+      </input>
+      <input node="#Projection_3">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUTXT" source="BUTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$BUKRS$BUKRS" source="BUKRS"/>
+      </input>
+      <joinAttribute name="JOIN$BUKRS$BUKRS"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_4">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SAP_DATE"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR_QUARTER"/>
+        <viewAttribute id="ZFISCAL_MONTH"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_DIM_FISC_CAL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAP_DATE" source="SAP_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR_QUARTER" source="ZFISCAL_YEAR_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_MONTH" source="ZFISCAL_MONTH"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_2" joinOrder="OUTSIDE_IN" joinType="inner">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="AUGDT"/>
+        <viewAttribute id="AUGBL"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="BLDAT"/>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="DMBTR"/>
+        <viewAttribute id="MONAT"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="BUTXT"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR_QUARTER"/>
+        <viewAttribute id="ZFISCAL_MONTH"/>
+        <viewAttribute id="UMSKS"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="UMSKZ"/>
+        <viewAttribute id="ZUONR"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="XBLNR"/>
+        <viewAttribute id="BSCHL"/>
+        <viewAttribute id="SHKZG"/>
+        <viewAttribute id="GSBER"/>
+        <viewAttribute id="MWSKZ"/>
+        <viewAttribute id="WRBTR"/>
+        <viewAttribute id="WMWST"/>
+        <viewAttribute id="SGTXT"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="SAKNR"/>
+        <viewAttribute id="ZTERM"/>
+        <viewAttribute id="SKNTO"/>
+        <viewAttribute id="WSKTO"/>
+        <viewAttribute id="BSTAT"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="ZLSCH"/>
+        <viewAttribute id="ZLSPR"/>
+        <viewAttribute id="MABER"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="DocumentCount"/>
+        <viewAttribute id="ZBD3T"/>
+        <viewAttribute id="ZBD2T"/>
+        <viewAttribute id="ZBD1T"/>
+        <viewAttribute id="ZFBDT"/>
+        <viewAttribute id="PAYMENT_TERMS"/>
+        <viewAttribute id="DAYS_CALC"/>
+        <viewAttribute id="AMOUNT"/>
+        <viewAttribute id="NET_DATE"/>
+        <viewAttribute id="FLAG_OPEN_ITEM"/>
+        <viewAttribute hidden="true" id="JOIN$SAP_DATE$BUDAT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DECIMAL" id="BRACKET1" length="13" scale="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(not(isnull(&quot;DAYS_CALC&quot;)) AND &quot;DAYS_CALC&quot;>= 0 and
+&quot;DAYS_CALC&quot;&lt;=INT($$IP_INTERVAL_DAYS$$)
+AND  TRIM(&quot;FLAG_OPEN_ITEM&quot;) = 'O'  , &quot;AMOUNT&quot;,0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="BRACKET2" length="13" scale="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;DAYS_CALC&quot;>$$IP_INTERVAL_DAYS$$ AND &quot;DAYS_CALC&quot;&lt;=2*$$IP_INTERVAL_DAYS$$  
+ AND  TRIM(&quot;FLAG_OPEN_ITEM&quot;) = 'O', &quot;AMOUNT&quot;,0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="BRACKET3" length="13" scale="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;DAYS_CALC&quot;>2*$$IP_INTERVAL_DAYS$$ AND &quot;DAYS_CALC&quot;&lt;=3*$$IP_INTERVAL_DAYS$$    AND  TRIM(&quot;FLAG_OPEN_ITEM&quot;) = 'O' , &quot;AMOUNT&quot;,0) </formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="BRACKET4" length="13" scale="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;DAYS_CALC&quot;>3*$$IP_INTERVAL_DAYS$$ AND &quot;DAYS_CALC&quot;&lt;=4*$$IP_INTERVAL_DAYS$$  AND  TRIM(&quot;FLAG_OPEN_ITEM&quot;) = 'O' , &quot;AMOUNT&quot;,0)    </formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="BRACKET5" length="13" scale="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;DAYS_CALC&quot;>4*$$IP_INTERVAL_DAYS$$ and &quot;DAYS_CALC&quot;&lt;=5*$$IP_INTERVAL_DAYS$$  AND  TRIM(&quot;FLAG_OPEN_ITEM&quot;) = 'O' , &quot;AMOUNT&quot;,0)   </formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="BRACKET6" length="13" scale="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;DAYS_CALC&quot;>5*$$IP_INTERVAL_DAYS$$  AND  TRIM(&quot;FLAG_OPEN_ITEM&quot;) = 'O'   , &quot;AMOUNT&quot;,0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="AMOUNT_NOT_DUE" length="13" scale="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;DAYS_CALC&quot;&lt; 0 and TRIM(&quot;FLAG_OPEN_ITEM&quot;) = 'O' , &quot;AMOUNT&quot;,0)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#Projection_4">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR_QUARTER" source="ZFISCAL_YEAR_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_MONTH" source="ZFISCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SAP_DATE$BUDAT" source="SAP_DATE"/>
+      </input>
+      <input node="#Join_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUGDT" source="AUGDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL" source="AUGBL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT" source="CPUDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR" source="DMBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MONAT" source="MONAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUTXT" source="BUTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UMSKS" source="UMSKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UMSKZ" source="UMSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZUONR" source="ZUONR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSCHL" source="BSCHL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SHKZG" source="SHKZG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GSBER" source="GSBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MWSKZ" source="MWSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WRBTR" source="WRBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WMWST" source="WMWST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SGTXT" source="SGTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAKNR" source="SAKNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZTERM" source="ZTERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SKNTO" source="SKNTO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSKTO" source="WSKTO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSTAT" source="BSTAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZLSCH" source="ZLSCH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZLSPR" source="ZLSPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MABER" source="MABER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DocumentCount" source="DocumentCount"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZBD3T" source="ZBD3T"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZBD2T" source="ZBD2T"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZBD1T" source="ZBD1T"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFBDT" source="ZFBDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PAYMENT_TERMS" source="PAYMENT_TERMS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DAYS_CALC" source="DAYS_CALC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMOUNT" source="AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NET_DATE" source="NET_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FLAG_OPEN_ITEM" source="FLAG_OPEN_ITEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SAP_DATE$BUDAT" source="BUDAT"/>
+      </input>
+      <joinAttribute name="JOIN$SAP_DATE$BUDAT"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_5" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="THRESHOLD"/>
+        <viewAttribute id="TARGET"/>
+        <viewAttribute id="METRIC_ID"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_DIM_TARGET_THRESHOLD">
+        <mapping xsi:type="Calculation:AttributeMapping" target="THRESHOLD" source="THRESHOLD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TARGET" source="TARGET"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="METRIC_ID" source="METRIC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+      </input>
+      <filter>(&quot;METRIC_ID&quot; ='EINV')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_3" cardinality="C1_1" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="THRESHOLD"/>
+        <viewAttribute id="TARGET"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="AUGDT"/>
+        <viewAttribute id="AUGBL"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="BLDAT"/>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="DMBTR"/>
+        <viewAttribute id="MONAT"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="BUTXT"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR_QUARTER"/>
+        <viewAttribute id="ZFISCAL_MONTH"/>
+        <viewAttribute id="UMSKS"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="UMSKZ"/>
+        <viewAttribute id="ZUONR"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="XBLNR"/>
+        <viewAttribute id="BSCHL"/>
+        <viewAttribute id="SHKZG"/>
+        <viewAttribute id="GSBER"/>
+        <viewAttribute id="MWSKZ"/>
+        <viewAttribute id="WRBTR"/>
+        <viewAttribute id="WMWST"/>
+        <viewAttribute id="SGTXT"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="SAKNR"/>
+        <viewAttribute id="ZTERM"/>
+        <viewAttribute id="SKNTO"/>
+        <viewAttribute id="WSKTO"/>
+        <viewAttribute id="BSTAT"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="ZLSCH"/>
+        <viewAttribute id="ZLSPR"/>
+        <viewAttribute id="MABER"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="ZBD3T"/>
+        <viewAttribute id="ZBD2T"/>
+        <viewAttribute id="ZBD1T"/>
+        <viewAttribute id="ZFBDT"/>
+        <viewAttribute id="PAYMENT_TERMS"/>
+        <viewAttribute id="DAYS_CALC"/>
+        <viewAttribute id="AMOUNT"/>
+        <viewAttribute id="BRACKET1"/>
+        <viewAttribute id="BRACKET2"/>
+        <viewAttribute id="BRACKET3"/>
+        <viewAttribute id="BRACKET4"/>
+        <viewAttribute id="BRACKET5"/>
+        <viewAttribute id="BRACKET6"/>
+        <viewAttribute id="AMOUNT_NOT_DUE"/>
+        <viewAttribute id="NET_DATE"/>
+        <viewAttribute id="FLAG_OPEN_ITEM"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="POSTING_DATE" expressionLanguage="COLUMN_ENGINE">
+          <formula>DAYDATE(&quot;BUDAT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CLEARING_DATE" expressionLanguage="COLUMN_ENGINE">
+          <formula>DAYDATE(&quot;AUGDT&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#Join_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUGDT" source="AUGDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL" source="AUGBL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT" source="CPUDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR" source="DMBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MONAT" source="MONAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUTXT" source="BUTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR_QUARTER" source="ZFISCAL_YEAR_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_MONTH" source="ZFISCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UMSKS" source="UMSKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UMSKZ" source="UMSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZUONR" source="ZUONR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSCHL" source="BSCHL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SHKZG" source="SHKZG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GSBER" source="GSBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MWSKZ" source="MWSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WRBTR" source="WRBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WMWST" source="WMWST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SGTXT" source="SGTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAKNR" source="SAKNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZTERM" source="ZTERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SKNTO" source="SKNTO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSKTO" source="WSKTO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSTAT" source="BSTAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZLSCH" source="ZLSCH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZLSPR" source="ZLSPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MABER" source="MABER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZBD3T" source="ZBD3T"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZBD2T" source="ZBD2T"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZBD1T" source="ZBD1T"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFBDT" source="ZFBDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PAYMENT_TERMS" source="PAYMENT_TERMS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DAYS_CALC" source="DAYS_CALC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMOUNT" source="AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRACKET1" source="BRACKET1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRACKET2" source="BRACKET2"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRACKET3" source="BRACKET3"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRACKET4" source="BRACKET4"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRACKET5" source="BRACKET5"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRACKET6" source="BRACKET6"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMOUNT_NOT_DUE" source="AMOUNT_NOT_DUE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NET_DATE" source="NET_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FLAG_OPEN_ITEM" source="FLAG_OPEN_ITEM"/>
+      </input>
+      <input node="#Projection_5">
+        <mapping xsi:type="Calculation:AttributeMapping" target="THRESHOLD" source="THRESHOLD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TARGET" source="TARGET"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+      </input>
+      <joinAttribute name="MEMBER"/>
+      <joinAttribute name="ZFISCAL_YEAR"/>
+      <joinAttribute name="ZFISCAL_PERIOD"/>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="Join_3">
+    <descriptions/>
+    <attributes>
+      <attribute id="THRESHOLD" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Threshold"/>
+        <keyMapping columnObjectName="Join_3" columnName="THRESHOLD"/>
+      </attribute>
+      <attribute id="TARGET" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Target"/>
+        <keyMapping columnObjectName="Join_3" columnName="TARGET"/>
+      </attribute>
+      <attribute id="AUGDT" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Clearing Date"/>
+        <keyMapping columnObjectName="Join_3" columnName="AUGDT"/>
+      </attribute>
+      <attribute id="AUGBL" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Document Number of the Clearing Document"/>
+        <keyMapping columnObjectName="Join_3" columnName="AUGBL"/>
+      </attribute>
+      <attribute id="GJAHR" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Year"/>
+        <keyMapping columnObjectName="Join_3" columnName="GJAHR"/>
+      </attribute>
+      <attribute id="BELNR" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Accounting Document Number"/>
+        <keyMapping columnObjectName="Join_3" columnName="BELNR"/>
+      </attribute>
+      <attribute id="BUDAT" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Posting Date in the Document"/>
+        <keyMapping columnObjectName="Join_3" columnName="BUDAT"/>
+      </attribute>
+      <attribute id="BLDAT" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Document Date in Document"/>
+        <keyMapping columnObjectName="Join_3" columnName="BLDAT"/>
+      </attribute>
+      <attribute id="CPUDT" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Day On Which Accounting Document Was Entered"/>
+        <keyMapping columnObjectName="Join_3" columnName="CPUDT"/>
+      </attribute>
+      <attribute id="BLART" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Document Type"/>
+        <keyMapping columnObjectName="Join_3" columnName="BLART"/>
+      </attribute>
+      <attribute id="MONAT" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Period"/>
+        <keyMapping columnObjectName="Join_3" columnName="MONAT"/>
+      </attribute>
+      <attribute id="MEMBER" order="14" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Member ID"/>
+        <keyMapping columnObjectName="Join_3" columnName="MEMBER"/>
+      </attribute>
+      <attribute id="BUTXT" order="15" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Name of Company Code or Company"/>
+        <keyMapping columnObjectName="Join_3" columnName="BUTXT"/>
+      </attribute>
+      <attribute id="ZFISCAL_YEAR" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Year"/>
+        <keyMapping columnObjectName="Join_3" columnName="ZFISCAL_YEAR"/>
+      </attribute>
+      <attribute id="ZFISCAL_PERIOD" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Period"/>
+        <keyMapping columnObjectName="Join_3" columnName="ZFISCAL_PERIOD"/>
+      </attribute>
+      <attribute id="ZFISCAL_QUARTER" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Quarter"/>
+        <keyMapping columnObjectName="Join_3" columnName="ZFISCAL_QUARTER"/>
+      </attribute>
+      <attribute id="ZFISCAL_YEAR_QUARTER" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Year / Qtr"/>
+        <keyMapping columnObjectName="Join_3" columnName="ZFISCAL_YEAR_QUARTER"/>
+      </attribute>
+      <attribute id="ZFISCAL_MONTH" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Month"/>
+        <keyMapping columnObjectName="Join_3" columnName="ZFISCAL_MONTH"/>
+      </attribute>
+      <attribute id="UMSKS" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Special G/L Transaction Type"/>
+        <keyMapping columnObjectName="Join_3" columnName="UMSKS"/>
+      </attribute>
+      <attribute id="BUZEI" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Number of Line Item Within Accounting Document"/>
+        <keyMapping columnObjectName="Join_3" columnName="BUZEI"/>
+      </attribute>
+      <attribute id="UMSKZ" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Special G/L Indicator"/>
+        <keyMapping columnObjectName="Join_3" columnName="UMSKZ"/>
+      </attribute>
+      <attribute id="ZUONR" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Assignment Number"/>
+        <keyMapping columnObjectName="Join_3" columnName="ZUONR"/>
+      </attribute>
+      <attribute id="WAERS" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Currency Key"/>
+        <keyMapping columnObjectName="Join_3" columnName="WAERS"/>
+      </attribute>
+      <attribute id="XBLNR" order="26" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Reference Document Number"/>
+        <keyMapping columnObjectName="Join_3" columnName="XBLNR"/>
+      </attribute>
+      <attribute id="BSCHL" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Posting Key"/>
+        <keyMapping columnObjectName="Join_3" columnName="BSCHL"/>
+      </attribute>
+      <attribute id="SHKZG" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Debit/Credit Indicator"/>
+        <keyMapping columnObjectName="Join_3" columnName="SHKZG"/>
+      </attribute>
+      <attribute id="GSBER" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Business Area"/>
+        <keyMapping columnObjectName="Join_3" columnName="GSBER"/>
+      </attribute>
+      <attribute id="MWSKZ" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Tax on sales/purchases code"/>
+        <keyMapping columnObjectName="Join_3" columnName="MWSKZ"/>
+      </attribute>
+      <attribute id="SGTXT" order="33" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Item Text"/>
+        <keyMapping columnObjectName="Join_3" columnName="SGTXT"/>
+      </attribute>
+      <attribute id="EBELN" order="34" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchasing Document Number"/>
+        <keyMapping columnObjectName="Join_3" columnName="EBELN"/>
+      </attribute>
+      <attribute id="EBELP" order="35" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Item Number of Purchasing Document"/>
+        <keyMapping columnObjectName="Join_3" columnName="EBELP"/>
+      </attribute>
+      <attribute id="SAKNR" order="36" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="G/L Account Number"/>
+        <keyMapping columnObjectName="Join_3" columnName="SAKNR"/>
+      </attribute>
+      <attribute id="ZTERM" order="37" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Terms of Payment Key"/>
+        <keyMapping columnObjectName="Join_3" columnName="ZTERM"/>
+      </attribute>
+      <attribute id="BSTAT" order="40" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Document Status"/>
+        <keyMapping columnObjectName="Join_3" columnName="BSTAT"/>
+      </attribute>
+      <attribute id="KOSTL" order="41" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cost Center"/>
+        <keyMapping columnObjectName="Join_3" columnName="KOSTL"/>
+      </attribute>
+      <attribute id="ZLSCH" order="42" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Payment Method"/>
+        <keyMapping columnObjectName="Join_3" columnName="ZLSCH"/>
+      </attribute>
+      <attribute id="ZLSPR" order="43" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Payment Block Key"/>
+        <keyMapping columnObjectName="Join_3" columnName="ZLSPR"/>
+      </attribute>
+      <attribute id="MABER" order="44" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Dunning Area"/>
+        <keyMapping columnObjectName="Join_3" columnName="MABER"/>
+      </attribute>
+      <attribute id="BUKRS" order="46" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Company Code"/>
+        <localVariable>#Company_Code</localVariable>
+        <keyMapping columnObjectName="Join_3" columnName="BUKRS"/>
+      </attribute>
+      <attribute id="POSTING_DATE" order="47" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Posting Date (Date type)"/>
+        <localVariable>#Posting_Date</localVariable>
+        <keyMapping columnObjectName="Join_3" columnName="POSTING_DATE"/>
+      </attribute>
+      <attribute id="CLEARING_DATE" order="48" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Clearing Date(Date Type)"/>
+        <keyMapping columnObjectName="Join_3" columnName="CLEARING_DATE"/>
+      </attribute>
+      <attribute id="ZFBDT" order="52" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Baseline Date"/>
+        <keyMapping columnObjectName="Join_3" columnName="ZFBDT"/>
+      </attribute>
+      <attribute id="PAYMENT_TERMS" order="53" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Payment Terms"/>
+        <keyMapping columnObjectName="Join_3" columnName="PAYMENT_TERMS"/>
+      </attribute>
+      <attribute id="DAYS_CALC" order="54" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Nr of Days"/>
+        <keyMapping columnObjectName="Join_3" columnName="DAYS_CALC"/>
+      </attribute>
+      <attribute id="NET_DATE" order="63" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="Join_3" columnName="NET_DATE"/>
+      </attribute>
+      <attribute id="FLAG_OPEN_ITEM" order="65" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Flag ( OI or no) "/>
+        <keyMapping columnObjectName="Join_3" columnName="FLAG_OPEN_ITEM"/>
+      </attribute>
+      <attribute id="LIFNR$local">
+        <descriptions/>
+        <keyMapping columnObjectName="Join_3" columnName="LIFNR"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="DMBTR" order="12" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Amount in Local Currency"/>
+        <measureMapping columnObjectName="Join_3" columnName="DMBTR"/>
+      </measure>
+      <measure id="WRBTR" order="31" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Amount in Document Currency"/>
+        <measureMapping columnObjectName="Join_3" columnName="WRBTR"/>
+      </measure>
+      <measure id="WMWST" order="32" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Tax Amount in Document Currency"/>
+        <measureMapping columnObjectName="Join_3" columnName="WMWST"/>
+      </measure>
+      <measure id="SKNTO" order="38" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Cash Discount Amount in Local Currency"/>
+        <measureMapping columnObjectName="Join_3" columnName="SKNTO"/>
+      </measure>
+      <measure id="WSKTO" order="39" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Cash Discount Amount in Document Currency"/>
+        <measureMapping columnObjectName="Join_3" columnName="WSKTO"/>
+      </measure>
+      <measure id="ZBD3T" order="49" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Net Payment Terms Period"/>
+        <measureMapping columnObjectName="Join_3" columnName="ZBD3T"/>
+      </measure>
+      <measure id="ZBD2T" order="50" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Cash Discount Days 2"/>
+        <measureMapping columnObjectName="Join_3" columnName="ZBD2T"/>
+      </measure>
+      <measure id="ZBD1T" order="51" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Cash Discount Days 1"/>
+        <measureMapping columnObjectName="Join_3" columnName="ZBD1T"/>
+      </measure>
+      <measure id="AMOUNT" order="55" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Amount"/>
+        <measureMapping columnObjectName="Join_3" columnName="AMOUNT"/>
+      </measure>
+      <measure id="AMOUNT_NOT_DUE" order="56" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Not Due (Open Items)"/>
+        <measureMapping columnObjectName="Join_3" columnName="AMOUNT_NOT_DUE"/>
+      </measure>
+      <measure id="BRACKET1" order="57" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="From x - x  days"/>
+        <measureMapping columnObjectName="Join_3" columnName="BRACKET1"/>
+      </measure>
+      <measure id="BRACKET2" order="58" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Between x - x  days"/>
+        <measureMapping columnObjectName="Join_3" columnName="BRACKET2"/>
+      </measure>
+      <measure id="BRACKET3" order="59" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Between x - x days"/>
+        <measureMapping columnObjectName="Join_3" columnName="BRACKET3"/>
+      </measure>
+      <measure id="BRACKET4" order="60" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Between x - x days"/>
+        <measureMapping columnObjectName="Join_3" columnName="BRACKET4"/>
+      </measure>
+      <measure id="BRACKET5" order="61" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Between x - x days"/>
+        <measureMapping columnObjectName="Join_3" columnName="BRACKET5"/>
+      </measure>
+      <measure id="BRACKET6" order="62" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Above x Days"/>
+        <measureMapping columnObjectName="Join_3" columnName="BRACKET6"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures>
+      <measure id="ZDocumentCount" hidden="false" order="1" aggregationType="sum" measureType="simple" aggregatable="true" calculatedMeasureType="counter" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+        <descriptions defaultDescription=" Document Count"/>
+        <exceptionAggregation exceptionAggregationType="countDistinct">
+          <attribute attributeName="BELNR"/>
+        </exceptionAggregation>
+        <formula>1</formula>
+      </measure>
+      <measure id="DocumentCount" hidden="false" order="45" aggregationType="sum" measureType="simple" aggregatable="true" calculatedMeasureType="counter" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+        <descriptions defaultDescription="Document Line Count"/>
+        <exceptionAggregation exceptionAggregationType="countDistinct">
+          <attribute attributeName="BELNR"/>
+          <attribute attributeName="BUZEI"/>
+        </exceptionAggregation>
+        <formula>1</formula>
+      </measure>
+      <measure id="AMT_DUE" hidden="false" order="64" aggregationType="sum" measureType="simple" aggregatable="true" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="23" scale="3">
+        <descriptions defaultDescription="Due Amount (Open Items)"/>
+        <formula>if(TRIM(&quot;FLAG_OPEN_ITEM&quot;) = 'O', &quot;AMOUNT&quot;-&quot;AMOUNT_NOT_DUE&quot;,0) </formula>
+      </measure>
+      <measure id="BALANCE_OPEN_ITEMS" hidden="false" order="66" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="23" scale="3">
+        <descriptions defaultDescription="Balance Open Items"/>
+        <formula>&quot;AMT_DUE&quot;+&quot;AMOUNT_NOT_DUE&quot;</formula>
+      </measure>
+    </calculatedMeasures>
+    <restrictedMeasures/>
+    <localDimensions/>
+    <sharedDimensions>
+      <logicalJoin associatedObjectUri="plx_analytics::CA_DIM_VENDORS">
+        <attributes>
+          <attributeRef>#LIFNR$local</attributeRef>
+        </attributes>
+        <associatedAttributeNames>
+          <attributeName>LIFNR</attributeName>
+        </associatedAttributeNames>
+        <properties cardinality="C1_1" joinOperator="Equal" joinType="referential"/>
+        <associatedAttributeFeatures>
+          <attributeReference attributeName="LIFNR_Formated">
+            <localVariable>#Vendor</localVariable>
+          </attributeReference>
+        </associatedAttributeFeatures>
+      </logicalJoin>
+    </sharedDimensions>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="176" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="607"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="607"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Union_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="491"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="491"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="395"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_4" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="395"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="299"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_5" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="299"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="203"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape modelObjectName="Join_3" modelObjectNameSpace="StarJoinViewNodeInput" modelObjectType="repository">
+        <upperLeftCorner x="410" y="107"/>
+      </shape>
+      <shape modelObjectName="plx_analytics::CA_DIM_VENDORS" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
+        <upperLeftCorner x="8" y="21"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

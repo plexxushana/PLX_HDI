@@ -1,0 +1,26 @@
+FUNCTION "plx_analytics::FN_COST_ELEMENT_GROUP" ( ) 
+	RETURNS "Z_COST_ELEMENT_GROUP"
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER AS
+BEGIN
+/***************************** 
+	the setleaf table has rules to capture
+	and group RANGES of cost elements.  this 
+	requires the type of SQL below, which cannot 
+	be performed in a calculation view.
+ *****************************/
+ return  
+	 select csku.kstar
+		, setleaf.setname
+		, setleaf.subclass
+		, setleaf.lineid
+		, setleaf.seqnr
+		, setleaf.setclass		
+	from "ECC_CSKU" 	as csku
+	join "ECC_SETLEAF" as setleaf
+	on
+	trim(subclass) = trim(ktopl)
+	and	   
+	trim(kstar) between trim(valfrom) and trim(valto);
+
+END;

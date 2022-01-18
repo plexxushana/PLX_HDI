@@ -1,0 +1,150 @@
+FUNCTION "plx_analytics::FN_HIERARCHY_IE_GROUPING" ( 
+	
+	  	CE_NODE  NVARCHAR(4),
+		COMP_CD NVARCHAR(4) 
+)   
+ 	RETURNS table(
+		  PARENT_ID nvarchar(54), 
+ 	  CHILD_ID NVARCHAR(54), 
+ 	   	  IE_DESC	NVARCHAR(54),
+ 	   	  IE_DESC2	NVARCHAR(54)
+	)
+
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER AS
+BEGIN
+/***************************** 
+	Write your function logic
+ *****************************/
+ DECLARE lv_node nvarchar(4);
+ declare lv_comp_cd nvarchar(4);
+ declare lv_crt_parent, LV_CRT_CHILD, LV_CRT_OUT_PARENT, LV_CRT_OUT_CHILD  nvarchar(20) ; 
+ 	declare lv_row_COUNT, lv_row_parent, lv_counter, LV_ROW_GL, LV_GL_COUNTER  integer ;
+ 	declare lv_row_child, lv_counter_child integer;
+ DECLARE	ARR_PARENT, arr_child, arr_outliar_parent, arr_outliar_child, 
+ arr_new_parent		NVARCHAR(20) ARRAY;
+  DECLARE ARR_OUTLIAR_LEVEL	INTEGER ARRAY;
+  
+ declare lv_all_done, lv_found  nvarchar(1);	
+ lv_row_COUNT  := 1;
+ lv_row_parent :=1;	
+ lv_node := :CE_NODE;
+ lv_comp_cd:=:COMP_CD;
+ lv_row_child :=1;
+ 
+ 
+ 
+ LT_IE_GROUPING  =    SELECT distinct 
+	
+	LEVEL_CE, PARENT_CE, CHILD_CE 
+FROM "plx_analytics::CA_DIM_CE_HIERARCHY_ALL"('PLACEHOLDER' = ('$$IP_CHART$$',
+	 'HOSP'),
+	 'PLACEHOLDER' = ('$$IP_CE_GROUP_NODE$$',
+	 '1800TEGHPL.CFO'))  WHERE LEVEL_CE>=4 
+and left(child_Ce,4) <> '1800'
+order by level_ce  ;
+
+
+ LT_IE_OUTLIAR  =    SELECT distinct 
+	
+	LEVEL_CE, PARENT_CE, CHILD_CE 
+FROM "plx_analytics::CA_DIM_CE_HIERARCHY_ALL"('PLACEHOLDER' = ('$$IP_CHART$$',
+	 'HOSP'),
+	 'PLACEHOLDER' = ('$$IP_CE_GROUP_NODE$$',
+	 '1800TEGHPL.CFO'))  WHERE LEVEL_CE>=4 
+and left(child_Ce,4) = '1800'
+order by level_ce  ;
+	 
+ ARR_PARENT				:= ARRAY_AGG(:lt_IE_GROUPING.PARENT_CE  order by PARENT_CE);
+ 
+ ARR_OUTLIAR_PARENT		:= ARRAY_AGG(:LT_IE_OUTLIAR.PARENT_CE  order by PARENT_CE);
+ 
+ ARR_OUTLIAR_CHILD		:= ARRAY_AGG(:LT_IE_OUTLIAR.CHILD_CE  order by PARENT_CE);
+ 
+ ARR_OUTLIAR_LEVEL   	:= ARRAY_AGG(:LT_IE_OUTLIAR.LEVEL_CE  order by PARENT_CE);
+ 
+
+ lv_counter 	:=	CARDINALITY(:ARR_OUTLIAR_PARENT);
+ lv_crt_out_parent := :ARR_OUTLIAR_PARENT[1];
+ lv_crt_out_child := :ARR_OUTLIAR_CHILD[1];
+ lv_all_done	:='n';
+ 
+-- LT_IE_PARENT = SELECT '' AS PARENT_ID, '' AS CHILD_ID, '' AS PARENT_dESC FROM DUMMY;
+
+ --FOR each parent , go search and the children nodes. :-) 
+ 
+ for lv_row_parent IN 1..lv_COUNTER  do
+ 
+ lv_crt_out_parent := :ARR_OUTLIAR_PARENT[:lv_row_parent];
+ lv_crt_out_CHILD := :ARR_OUTLIAR_CHILD[:lv_row_parent];
+ lv_row_count := :lv_row_parent;
+ 
+  IF :ARR_OUTLIAR_LEVEL[:lv_row_parent]=4 then 
+  else 
+  lv_crt_out_parent:= :arr_OUTLIAR_parent[:lv_row_parent];
+  lv_row_child :=1;
+  -- search for the parent. 
+ --for lv_row_count IN 1..lv_COUNTER  do
+    while lv_all_done = 'n' do 
+ 
+         if  :arr_OUTLIAR_child[:lv_row_child]=:lv_crt_out_parent then 
+         -- check the level
+             if  :ARR_OUTLIAR_LEVEL[:lv_row_child]=4 then 
+                   lv_all_done := 'y';
+                   ARR_OUTLIAR_PARENT[:lv_row_parent]:=:ARR_OUTLIAR_PARENT[:lv_row_child];
+             end if;
+         else
+           lv_row_child:=:lv_row_child + 1 ;
+           end if; 
+      end while;
+      
+    --- lv_row_parent:=:lv_row_parent + 1; 
+    
+  	
+	 end if; 
+	lv_row_parent:=:lv_row_parent + 1;
+	 
+  end for ; 
+  
+
+ lt_temp_child = UNNEST(:ARR_OUTLIAR_LEVEL, :ARR_OUTLIAR_PARENT,:ARR_OUTLIAR_CHILD) 
+                  AS ("LEVEL_CE","PARENT_CE", "CHILD_CE");
+ 	
+ 
+	RETURN
+	  
+	 SELECT  A."PARENT_CE" AS PARENT_ID, A."CHILD_CE" AS CHILD_ID, 
+	 ( CASE  WHEN ( A.PARENT_CE='1800MOH' OR  B.PARENT_CE='1800MOH') THEN  ' 1- Ministry of Health Funding'
+	  WHEN ( A.PARENT_CE = '1800PATIN' OR B.PARENT_CE = '1800PATIN'  )THEN ' 2-Patient Income'
+	 when ( A.parent_CE = '1800PREACC' OR B.parent_CE = '1800PREACC' )  THEN  ' 3- Preferred Accomodation'
+	 when (A.parent_CE = '1800INVOTH' OR B.parent_CE = '1800INVOTH')  THEN  ' 4- Investment and Other Income'
+	 when (A.parent_CE = '1800SAL' OR B.parent_CE = '1800SAL' )  THEN  ' 5- Salaries and Wages'
+	 when (A.parent_CE = '1800EMP' OR B.parent_CE = '1800EMP') THEN  ' 6- Employee Benefits'
+	 when (A.parent_CE = '1800MED' OR B.parent_CE = '1800MED') THEN  ' 7- Medical Remunaeration'
+	 when (A.parent_CE = '1800DRUG' OR B.parent_CE = '1800DRUG')  THEN  ' 8- Drugs'
+	 when (A.parent_CE = '1800MEDSUP' OR B.parent_CE = '1800MEDSUP')  THEN  ' 9-Medical and Surgical Supplies'
+	 when (A.parent_CE = '1800GENSUP' OR B.parent_CE = '1800GENSUP')  THEN  '10-General Supplies and Other Expenses'
+	 when (A.parent_CE = '1800NET' OR B.parent_CE = '1800NET')  THEN  '11- Net Amortization Expense'
+	 ELSE B.PARENT_CE END ) 
+	 --else SUBSTR(A.PARENT_CE, 5,20) end ) 
+	   AS IE_DESC, 
+	    ( CASE  WHEN ( A.PARENT_CE='1800MOH' OR  B.PARENT_CE='1800MOH') THEN  ' 1- Income'
+	  WHEN ( A.PARENT_CE = '1800PATIN' OR B.PARENT_CE = '1800PATIN'  )THEN ' 1- Income'
+	 when ( A.parent_CE = '1800PREACC' OR B.parent_CE = '1800PREACC' )  THEN  ' 1- Income'
+	 when (A.parent_CE = '1800INVOTH' OR B.parent_CE = '1800INVOTH')  THEN  ' 1- Income'
+	 when (A.parent_CE = '1800SAL' OR B.parent_CE = '1800SAL' )  THEN  ' 2- Salaries and Wages'
+	 when (A.parent_CE = '1800EMP' OR B.parent_CE = '1800EMP') THEN  ' 3- Employee Benefits'
+	 when (A.parent_CE = '1800MED' OR B.parent_CE = '1800MED') THEN  ' 4- Medical Remunaeration'
+	 when (A.parent_CE = '1800DRUG' OR B.parent_CE = '1800DRUG')  THEN  ' 5- Drugs'
+	 when (A.parent_CE = '1800MEDSUP' OR B.parent_CE = '1800MEDSUP')  THEN  ' 6-Medical and Surgical Supplies'
+	 when (A.parent_CE = '1800GENSUP' OR B.parent_CE = '1800GENSUP')  THEN  ' 7-General Supplies and Other Expenses'
+	 when (A.parent_CE = '1800NET' OR B.parent_CE = '1800NET')  THEN  ' 8- Net Amortization Expense'
+	 ELSE B.PARENT_CE END ) 
+	
+	   AS IE_DESC2
+	   
+	  FROM :LT_IE_GROUPING AS A LEFT OUTER JOIN :lt_temp_child AS B on a.PARENT_ce = b.CHILD_ce    ; 
+ 
+
+	
+END;

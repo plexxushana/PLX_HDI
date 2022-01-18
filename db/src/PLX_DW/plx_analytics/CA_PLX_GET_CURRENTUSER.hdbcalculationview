@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="plx_analytics::CA_PLX_GET_CURRENTUSER" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection" xscCompatibilityMode="true">
+  <descriptions defaultDescription="CA_PLX_GET_CURRENTUSER"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="58"/>
+  <dataSources>
+    <DataSource id="ECC_AGR_USERS">
+      <resourceUri>ECC_AGR_USERS</resourceUri>
+    </DataSource>
+    <DataSource id="FN_GET_CURRENTUSER" type="TABLE_FUNCTION">
+      <resourceUri>plx_analytics::FN_GET_CURRENTUSER</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="AGR_NAME"/>
+        <viewAttribute id="UNAME"/>
+        <viewAttribute id="FROM_DAT"/>
+        <viewAttribute id="TO_DAT"/>
+        <viewAttribute id="EXCLUDE"/>
+        <viewAttribute id="CHANGE_DAT"/>
+        <viewAttribute id="CHANGE_TIM"/>
+        <viewAttribute id="CHANGE_TST"/>
+        <viewAttribute id="ORG_FLAG"/>
+        <viewAttribute id="COL_FLAG"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#ECC_AGR_USERS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGR_NAME" source="AGR_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UNAME" source="UNAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FROM_DAT" source="FROM_DAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TO_DAT" source="TO_DAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXCLUDE" source="EXCLUDE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHANGE_DAT" source="CHANGE_DAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHANGE_TIM" source="CHANGE_TIM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHANGE_TST" source="CHANGE_TST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORG_FLAG" source="ORG_FLAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COL_FLAG" source="COL_FLAG"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CURR_USER"/>
+        <viewAttribute id="SESS_USER"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#FN_GET_CURRENTUSER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURR_USER" source="CURR_USER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SESS_USER" source="SESS_USER"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CURR_USER"/>
+        <viewAttribute id="SESS_USER"/>
+        <viewAttribute id="AGR_NAME"/>
+        <viewAttribute id="UNAME"/>
+        <viewAttribute id="FROM_DAT"/>
+        <viewAttribute id="TO_DAT"/>
+        <viewAttribute id="EXCLUDE"/>
+        <viewAttribute id="CHANGE_DAT"/>
+        <viewAttribute id="CHANGE_TIM"/>
+        <viewAttribute id="CHANGE_TST"/>
+        <viewAttribute id="ORG_FLAG"/>
+        <viewAttribute id="COL_FLAG"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="VARCHAR" id="TEST" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>1</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#Projection_3">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURR_USER" source="CURR_USER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SESS_USER" source="SESS_USER"/>
+      </input>
+      <input node="#Projection_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGR_NAME" source="AGR_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UNAME" source="UNAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FROM_DAT" source="FROM_DAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TO_DAT" source="TO_DAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXCLUDE" source="EXCLUDE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHANGE_DAT" source="CHANGE_DAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHANGE_TIM" source="CHANGE_TIM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHANGE_TST" source="CHANGE_TST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORG_FLAG" source="ORG_FLAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COL_FLAG" source="COL_FLAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURR_USER" source="UNAME"/>
+      </input>
+      <joinAttribute name="CURR_USER"/>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="Join_1">
+    <descriptions/>
+    <attributes>
+      <attribute id="CURR_USER" order="1" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CURR_USER"/>
+        <keyMapping columnObjectName="Join_1" columnName="CURR_USER"/>
+      </attribute>
+      <attribute id="SESS_USER" order="2" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SESS_USER"/>
+        <keyMapping columnObjectName="Join_1" columnName="SESS_USER"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="TEST" hidden="false" order="3" semanticType="empty" aggregationType="max" measureType="simple">
+        <descriptions/>
+        <measureMapping columnObjectName="Join_1" columnName="TEST"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="40" y="85"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="169" y="350"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="30" y="200"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="-10" y="310"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

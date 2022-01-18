@@ -1,0 +1,37 @@
+PROCEDURE "plx_analytics::SP_INVOICE_MATCH_D5" (OUT t_out "Z_INVMAT_SNAPSHOT_D5") 
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER 
+	--DEFAULT SCHEMA <default_schema_name>
+	READS SQL DATA AS
+BEGIN
+/***************************** 
+	Write your procedure logic 
+ *****************************/
+ 
+  t_out = 
+SELECT 
+"BELNR" as "D5_BELNR",
+"BUZEI" as "D5_BUZEI",
+"EBELN" as "D5_EBELN",
+"EBELP" as "D5_EBELP",
+
+"Z_IR_Price" as "D5_IR_Price",
+"Z_IR_Qty" as "D5_IR_Qty",
+"Z_IR_Value" as "D5_IR_Value",
+"Z_IR_Total_Qty" as "D5_IR_Total_Qty",
+"Z_IR_Total_Value" as"D5_IR_Total_Value",
+"Z_PO_Price" as "D5_PO_Price",
+"Z_GR_Total_Qty" as "D5_GR_Total_Qty",
+"Z_POIR_Price_Match" as "D5_POIR_Price_Match",
+"Z_POIR_Total_Qty_Match" as "D5_POIR_Total_Qty_Match", 
+"Z_GRIR_Total_Qty_Match" as "D5_GRIR_Total_Qty_Match",
+to_date(Current_Date) as "D5_LoadingDate",
+"Z_WORKDAYS_BETWEEN" as "D5_WORKDAYS_BETWEEN",
+"Z_2WAY_3WAY" as "D5_2WAY_3WAY",
+"PO_Qty" as "D5_PO_Qty"
+
+FROM "plx_analytics::CA_PLX_INVOICE_RECEIPT_MATCH"
+WHERE to_date(Current_Date) = "Z_D5_IR_ADJUSTED";
+--WHERE "Z_WORKDAYS_BETWEEN"=5;
+
+END;

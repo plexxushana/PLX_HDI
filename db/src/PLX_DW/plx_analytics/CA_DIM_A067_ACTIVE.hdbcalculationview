@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="plx_analytics::CA_DIM_A067_ACTIVE" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection" xscCompatibilityMode="true">
+  <descriptions defaultDescription="CA_DIM_A067_ACTIVE"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="39"/>
+  <dataSources>
+    <DataSource id="ECC_A067">
+      <resourceUri>ECC_A067</resourceUri>
+    </DataSource>
+    <DataSource id="A067_NULLDATES$$$$ECC_A067$$">
+      <resourceUri>ECC_A067</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_KONP">
+      <resourceUri>ECC_KONP</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="A067_ACTIVE" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="KAPPL"/>
+        <viewAttribute id="KSCHL"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="EKORG"/>
+        <viewAttribute id="ESOKZ"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="BSTME"/>
+        <viewAttribute id="DATBI"/>
+        <viewAttribute id="DATAB"/>
+        <viewAttribute id="KNUMH"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="VARCHAR" id="TODAYS_DATE" length="8" expressionLanguage="COLUMN_ENGINE">
+          <formula>format(now(), 'YYYYMMDD')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#ECC_A067">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KAPPL" source="KAPPL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSCHL" source="KSCHL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKORG" source="EKORG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ESOKZ" source="ESOKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSTME" source="BSTME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATBI" source="DATBI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATAB" source="DATAB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KNUMH" source="KNUMH"/>
+      </input>
+      <filter>(&quot;DATBI&quot; >=&quot;TODAYS_DATE&quot;) AND (&quot;DATAB&quot; &lt;= &quot;TODAYS_DATE&quot;)</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="A067_NULLDATES">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="KAPPL"/>
+        <viewAttribute id="KSCHL"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="EKORG"/>
+        <viewAttribute id="ESOKZ"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="BSTME"/>
+        <viewAttribute id="DATBI"/>
+        <viewAttribute id="DATAB"/>
+        <viewAttribute id="KNUMH"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#A067_NULLDATES$$$$ECC_A067$$">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KAPPL" source="KAPPL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSCHL" source="KSCHL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKORG" source="EKORG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ESOKZ" source="ESOKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSTME" source="BSTME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATBI" source="DATBI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATAB" source="DATAB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KNUMH" source="KNUMH"/>
+      </input>
+      <filter>(&quot;DATBI&quot; ='') AND (&quot;DATAB&quot; ='')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:UnionView" id="A067">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="KAPPL"/>
+        <viewAttribute id="KSCHL"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="EKORG"/>
+        <viewAttribute id="ESOKZ"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="BSTME"/>
+        <viewAttribute id="DATBI"/>
+        <viewAttribute id="DATAB"/>
+        <viewAttribute id="KNUMH"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input emptyUnionBehavior="NO_ROW" node="#A067_ACTIVE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KAPPL" source="KAPPL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSCHL" source="KSCHL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKORG" source="EKORG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ESOKZ" source="ESOKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSTME" source="BSTME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATBI" source="DATBI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATAB" source="DATAB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KNUMH" source="KNUMH"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#A067_NULLDATES">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KAPPL" source="KAPPL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSCHL" source="KSCHL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKORG" source="EKORG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ESOKZ" source="ESOKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSTME" source="BSTME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATBI" source="DATBI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATAB" source="DATAB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KNUMH" source="KNUMH"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="KONP">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="KNUMH"/>
+        <viewAttribute id="KOPOS"/>
+        <viewAttribute id="LOEVM_KO"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="KPEIN"/>
+        <viewAttribute id="KBETR"/>
+        <viewAttribute id="KMEIN"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#ECC_KONP">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KNUMH" source="KNUMH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOPOS" source="KOPOS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOEVM_KO" source="LOEVM_KO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KPEIN" source="KPEIN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KBETR" source="KBETR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KMEIN" source="KMEIN"/>
+      </input>
+      <filter>(&quot;LOEVM_KO&quot; !='X')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="A067_KONP" cardinality="C1_N" joinType="inner">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="KAPPL"/>
+        <viewAttribute id="KSCHL"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="EKORG"/>
+        <viewAttribute id="ESOKZ"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="BSTME"/>
+        <viewAttribute id="DATBI"/>
+        <viewAttribute id="DATAB"/>
+        <viewAttribute id="KNUMH"/>
+        <viewAttribute id="KOPOS"/>
+        <viewAttribute id="LOEVM_KO"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="KPEIN"/>
+        <viewAttribute id="KBETR"/>
+        <viewAttribute id="KMEIN"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#A067">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KAPPL" source="KAPPL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSCHL" source="KSCHL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKORG" source="EKORG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ESOKZ" source="ESOKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSTME" source="BSTME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATBI" source="DATBI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATAB" source="DATAB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KNUMH" source="KNUMH"/>
+      </input>
+      <input node="#KONP">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOPOS" source="KOPOS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOEVM_KO" source="LOEVM_KO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KPEIN" source="KPEIN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KBETR" source="KBETR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KMEIN" source="KMEIN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KNUMH" source="KNUMH"/>
+      </input>
+      <joinAttribute name="KNUMH"/>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="A067_KONP">
+    <descriptions/>
+    <attributes>
+      <attribute id="KNUMH" key="true" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cond.record no."/>
+        <keyMapping columnObjectName="A067_KONP" columnName="KNUMH"/>
+      </attribute>
+      <attribute id="KAPPL" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Application"/>
+        <keyMapping columnObjectName="A067_KONP" columnName="KAPPL"/>
+      </attribute>
+      <attribute id="KSCHL" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Condition type"/>
+        <keyMapping columnObjectName="A067_KONP" columnName="KSCHL"/>
+      </attribute>
+      <attribute id="LIFNR" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Vendor"/>
+        <keyMapping columnObjectName="A067_KONP" columnName="LIFNR"/>
+      </attribute>
+      <attribute id="MATNR" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material"/>
+        <keyMapping columnObjectName="A067_KONP" columnName="MATNR"/>
+      </attribute>
+      <attribute id="EKORG" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchasing Org."/>
+        <keyMapping columnObjectName="A067_KONP" columnName="EKORG"/>
+      </attribute>
+      <attribute id="ESOKZ" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Infotype"/>
+        <keyMapping columnObjectName="A067_KONP" columnName="ESOKZ"/>
+      </attribute>
+      <attribute id="WERKS" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Plant"/>
+        <keyMapping columnObjectName="A067_KONP" columnName="WERKS"/>
+      </attribute>
+      <attribute id="BSTME" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Order Unit"/>
+        <keyMapping columnObjectName="A067_KONP" columnName="BSTME"/>
+      </attribute>
+      <attribute id="DATBI" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Valid to"/>
+        <keyMapping columnObjectName="A067_KONP" columnName="DATBI"/>
+      </attribute>
+      <attribute id="DATAB" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Valid From"/>
+        <keyMapping columnObjectName="A067_KONP" columnName="DATAB"/>
+      </attribute>
+      <attribute id="KOPOS" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SequNo of cond."/>
+        <keyMapping columnObjectName="A067_KONP" columnName="KOPOS"/>
+      </attribute>
+      <attribute id="LOEVM_KO" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Deletion Indic."/>
+        <keyMapping columnObjectName="A067_KONP" columnName="LOEVM_KO"/>
+      </attribute>
+      <attribute id="MEINS" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Base Unit"/>
+        <keyMapping columnObjectName="A067_KONP" columnName="MEINS"/>
+      </attribute>
+      <attribute id="KPEIN" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Pricing unit"/>
+        <keyMapping columnObjectName="A067_KONP" columnName="KPEIN"/>
+      </attribute>
+      <attribute id="KBETR" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Amount"/>
+        <keyMapping columnObjectName="A067_KONP" columnName="KBETR"/>
+      </attribute>
+      <attribute id="KMEIN" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Unit of measure"/>
+        <keyMapping columnObjectName="A067_KONP" columnName="KMEIN"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="230" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="A067_ACTIVE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="377"/>
+        <rectangleSize height="64" width="169"/>
+      </shape>
+      <shape expanded="true" modelObjectName="A067_NULLDATES" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="205" y="377"/>
+        <rectangleSize height="64" width="191"/>
+      </shape>
+      <shape expanded="true" modelObjectName="A067" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="93" y="261"/>
+        <rectangleSize height="102" width="221"/>
+      </shape>
+      <shape expanded="true" modelObjectName="A067_KONP" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="230" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="KONP" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="328" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

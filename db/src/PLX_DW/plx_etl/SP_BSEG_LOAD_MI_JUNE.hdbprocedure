@@ -1,0 +1,228 @@
+PROCEDURE "plx_etl::SP_BSEG_LOAD_MI_JUNE" (in ip_bukrs nvarchar(4), out t_out  "V_ECC_BSEG" ) 
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+	READS SQL DATA AS
+BEGIN
+/***************************** 
+	Write your procedure logic 
+ *****************************/
+ 
+	DECLARE lv_start_date VARCHAR(8) := '20180301';
+	DECLARE lv_end_date VARCHAR(8) := '20180301';
+	DECLARE lv_cpudt_start, lv_cpudt_end, lv_aedat_start, lv_aedat_end VARCHAR(8) := '29990101';
+	
+/*--5200598107*/
+--5200508434
+	
+	DECLARE lv_row_count, lv_step , lv_counter1 INTEGER;
+	DECLARE i, lv_mod, lv_rest,  lv_div , lv_first_time, lv_counter  INTEGER;
+	declare lv_belnr,lv_belnr1,lv_belnr2,lv_belnr3,lv_belnr4,lv_belnr5,lv_belnr6,lv_belnr7,lv_belnr8,lv_belnr9 nvarchar(10):='9999999999';
+	declare lv_belnr10,lv_belnr11,lv_belnr12,lv_belnr13,lv_belnr14,lv_belnr15,lv_belnr16,lv_belnr17,lv_belnr18,lv_belnr19 nvarchar(10):='9999999999';
+	declare lv_belnr20,lv_belnr21,lv_belnr22,lv_belnr23,lv_belnr24,lv_belnr25,lv_belnr26,lv_belnr27,lv_belnr28,lv_belnr29 nvarchar(10):='9999999999';
+	declare lv_belnr30,lv_belnr31,lv_belnr32,lv_belnr33,lv_belnr34,lv_belnr35,lv_belnr36,lv_belnr37,lv_belnr38,lv_belnr39 nvarchar(10):='9999999999';
+	declare lv_belnr40,lv_belnr41,lv_belnr42,lv_belnr43,lv_belnr44,lv_belnr45,lv_belnr46,lv_belnr47,lv_belnr48,lv_belnr49 nvarchar(10):='9999999999';
+	declare lv_belnr50,lv_belnr51,lv_belnr52,lv_belnr53,lv_belnr54,lv_belnr55,lv_belnr56,lv_belnr57,lv_belnr58,lv_belnr59 nvarchar(10):='9999999999';
+	declare lv_belnr60,lv_belnr61,lv_belnr62,lv_belnr63,lv_belnr64,lv_belnr65,lv_belnr66,lv_belnr67,lv_belnr68,lv_belnr69 nvarchar(10):='9999999999';
+	declare lv_belnr70,lv_belnr71,lv_belnr72,lv_belnr73,lv_belnr74,lv_belnr75,lv_belnr76,lv_belnr77,lv_belnr78,lv_belnr79 nvarchar(10):='9999999999';
+	declare lv_belnr80,lv_belnr81,lv_belnr82,lv_belnr83,lv_belnr84,lv_belnr85,lv_belnr86,lv_belnr87,lv_belnr88,lv_belnr89 nvarchar(10):='9999999999';
+	
+	DECLARE lv_bukrs nvarchar(4) := '9999'; 
+	DECLARE lv_gjahr nvarchar(4) := '9999'; 
+ 	DECLARE arr_dates  VARCHAR(8) ARRAY;
+ 	  DECLARE UPSERT_QUERY, IN_WHERE_CLAUSE,  IN_WHERE_BUKRS,  IN_WHERE_GJAHR , IN_WHERE_CLAUSE1 NVARCHAR(30000) := '' ;
+  
+	DECLARE ARR_BKPF_NR  NVARCHAR(10) ARRAY;
+	DECLARE ARR_BKPF_BUKRS  NVARCHAR(4) ARRAY;
+	DECLARE ARR_BKPF_GJAHR  VARCHAR(4) ARRAY;
+	--GET DATES FROM PLX_DW.HANA_CNTRL_BSEG_LOADS
+	
+	--CREATE LOCAL TEMPORARY TABLE "PLX_DW"."#TEST_TABLE" AS (SELECT TOP 1 *  FROM  "PLX_DW"."V_ECC_BSEG") ;
+	
+	
+	-- get list of docs in BKPF within this 
+	-- start & end time frame
+	lt_bkpf_doc_list = 
+	SELECT  BUKRS, BELNR, GJAHR
+	FROM    "ECC_BKPF"
+	WHERE   CONCAT("BELNR","BUKRS") NOT IN (SELECT CONCAT("BELNR","BUKRS") AS A  
+	FROM "ECC_BSEG" where gjahr = '2021' and "BUKRS" = ip_bukrs )  
+    AND "GJAHR" = '2021'   AND  budat  BETWEEN '20200601'  AND '20200630'
+	and "BUKRS" = ip_bukrs ; 
+	
+   
+	ARR_BKPF_NR  := ARRAY_AGG(:lt_bkpf_doc_list.BELNR ORDER BY BUKRS, BELNR, GJAHR);
+	--ARR_BKPF_BUKRS := ARRAY_AGG(:lt_bkpf_doc_list.BUKRS ORDER BY BUKRS, BELNR, GJAHR);
+  --	ARR_BKPF_GJAHR := ARRAY_AGG(:lt_bkpf_doc_list.GJAHR ORDER BY BUKRS, BELNR, GJAHR);
+	-- After each record set is returned, add it to our accumulated t_out table
+		lv_step := 90;
+		lv_rest := mod(CARDINALITY(:arr_bkpf_nr), 90);
+		lv_div :=  floor(CARDINALITY(:arr_bkpf_nr)/ 90 )   ;
+		lv_counter:= 1;
+		lv_counter1 := 0;
+   FOR lv_row_count IN 1..lv_div  do
+   --CARDINALITY(:arr_bkpf_nr) DO 
+   
+  
+    
+   
+    lv_belnr  := :ARR_BKPF_NR[lv_counter];
+    lv_belnr1 := :ARR_BKPF_NR[lv_counter+1];
+    lv_belnr2 := :ARR_BKPF_NR[lv_counter+2];
+    lv_belnr3 := :ARR_BKPF_NR[lv_counter+3];
+    lv_belnr4 := :ARR_BKPF_NR[lv_counter+4];
+    lv_belnr5 := :ARR_BKPF_NR[lv_counter+5];
+    lv_belnr6 := :ARR_BKPF_NR[lv_counter+6];
+    lv_belnr7 := :ARR_BKPF_NR[lv_counter+7];
+    lv_belnr8 := :ARR_BKPF_NR[lv_counter+8];
+    lv_belnr9 := :ARR_BKPF_NR[lv_counter+9];
+    lv_belnr10 := :ARR_BKPF_NR[lv_counter+10];
+    lv_belnr11 := :ARR_BKPF_NR[lv_counter+11];
+    lv_belnr12 := :ARR_BKPF_NR[lv_counter+12];
+    lv_belnr13 := :ARR_BKPF_NR[lv_counter+13];
+    lv_belnr14 := :ARR_BKPF_NR[lv_counter+14];
+    lv_belnr15 := :ARR_BKPF_NR[lv_counter+15];
+    lv_belnr16 := :ARR_BKPF_NR[lv_counter+16];
+    lv_belnr17 := :ARR_BKPF_NR[lv_counter+17];
+    lv_belnr18 := :ARR_BKPF_NR[lv_counter+18];
+    lv_belnr19 := :ARR_BKPF_NR[lv_counter+19];
+    lv_belnr20 := :ARR_BKPF_NR[lv_counter+20];
+    lv_belnr21 := :ARR_BKPF_NR[lv_counter+21];
+    lv_belnr22 := :ARR_BKPF_NR[lv_counter+22];
+    lv_belnr23 := :ARR_BKPF_NR[lv_counter+23];
+    lv_belnr24 := :ARR_BKPF_NR[lv_counter+24];
+    lv_belnr25 := :ARR_BKPF_NR[lv_counter+25];
+    lv_belnr26 := :ARR_BKPF_NR[lv_counter+26];
+    lv_belnr27 := :ARR_BKPF_NR[lv_counter+27];
+    lv_belnr28 := :ARR_BKPF_NR[lv_counter+28];
+    lv_belnr29 := :ARR_BKPF_NR[lv_counter+29];
+    lv_belnr30 := :ARR_BKPF_NR[lv_counter+30];
+    lv_belnr31 := :ARR_BKPF_NR[lv_counter+31];
+    lv_belnr32 := :ARR_BKPF_NR[lv_counter+32];
+    lv_belnr33 := :ARR_BKPF_NR[lv_counter+33];
+    lv_belnr34 := :ARR_BKPF_NR[lv_counter+34];
+    lv_belnr35 := :ARR_BKPF_NR[lv_counter+35];
+    lv_belnr36 := :ARR_BKPF_NR[lv_counter+36];
+    lv_belnr37 := :ARR_BKPF_NR[lv_counter+37];
+    lv_belnr38 := :ARR_BKPF_NR[lv_counter+38];
+    lv_belnr39 := :ARR_BKPF_NR[lv_counter+39]; 
+    lv_belnr40 := :ARR_BKPF_NR[lv_counter+40];
+    lv_belnr41 := :ARR_BKPF_NR[lv_counter+41];
+    lv_belnr42 := :ARR_BKPF_NR[lv_counter+42];
+    lv_belnr43 := :ARR_BKPF_NR[lv_counter+43];
+    lv_belnr44 := :ARR_BKPF_NR[lv_counter+44];
+    lv_belnr45 := :ARR_BKPF_NR[lv_counter+45];
+    lv_belnr46 := :ARR_BKPF_NR[lv_counter+46];
+    lv_belnr47 := :ARR_BKPF_NR[lv_counter+47];
+    lv_belnr48 := :ARR_BKPF_NR[lv_counter+48];
+    lv_belnr49 := :ARR_BKPF_NR[lv_counter+49]; 
+    lv_belnr50 := :ARR_BKPF_NR[lv_counter+50];
+    lv_belnr51 := :ARR_BKPF_NR[lv_counter+51];
+    lv_belnr52 := :ARR_BKPF_NR[lv_counter+52];
+    lv_belnr53 := :ARR_BKPF_NR[lv_counter+53];
+    lv_belnr54 := :ARR_BKPF_NR[lv_counter+54];
+    lv_belnr55 := :ARR_BKPF_NR[lv_counter+55];
+    lv_belnr56 := :ARR_BKPF_NR[lv_counter+56];
+    lv_belnr57 := :ARR_BKPF_NR[lv_counter+57];
+    lv_belnr58 := :ARR_BKPF_NR[lv_counter+58];
+    lv_belnr59 := :ARR_BKPF_NR[lv_counter+59]; 
+    lv_belnr60 := :ARR_BKPF_NR[lv_counter+60];
+    lv_belnr61 := :ARR_BKPF_NR[lv_counter+61];
+    lv_belnr62 := :ARR_BKPF_NR[lv_counter+62];
+    lv_belnr63 := :ARR_BKPF_NR[lv_counter+63];
+    lv_belnr64 := :ARR_BKPF_NR[lv_counter+64];
+    lv_belnr65 := :ARR_BKPF_NR[lv_counter+65];
+    lv_belnr66 := :ARR_BKPF_NR[lv_counter+66];
+    lv_belnr67 := :ARR_BKPF_NR[lv_counter+67];
+    lv_belnr68 := :ARR_BKPF_NR[lv_counter+68];
+    lv_belnr69 := :ARR_BKPF_NR[lv_counter+69]; 
+    lv_belnr70 := :ARR_BKPF_NR[lv_counter+70];
+    lv_belnr71 := :ARR_BKPF_NR[lv_counter+71];
+    lv_belnr72 := :ARR_BKPF_NR[lv_counter+72];
+    lv_belnr73 := :ARR_BKPF_NR[lv_counter+73];
+    lv_belnr74 := :ARR_BKPF_NR[lv_counter+74];
+    lv_belnr75 := :ARR_BKPF_NR[lv_counter+75];
+    lv_belnr76 := :ARR_BKPF_NR[lv_counter+76];
+    lv_belnr77 := :ARR_BKPF_NR[lv_counter+77];
+    lv_belnr78 := :ARR_BKPF_NR[lv_counter+78];
+    lv_belnr79 := :ARR_BKPF_NR[lv_counter+79];    
+    lv_belnr80 := :ARR_BKPF_NR[lv_counter+80];
+    lv_belnr81 := :ARR_BKPF_NR[lv_counter+81];
+    lv_belnr82 := :ARR_BKPF_NR[lv_counter+82];
+    lv_belnr83 := :ARR_BKPF_NR[lv_counter+83];
+    lv_belnr84 := :ARR_BKPF_NR[lv_counter+84];
+    lv_belnr85 := :ARR_BKPF_NR[lv_counter+85];
+    lv_belnr86 := :ARR_BKPF_NR[lv_counter+86];
+    lv_belnr87 := :ARR_BKPF_NR[lv_counter+87];
+    lv_belnr88 := :ARR_BKPF_NR[lv_counter+88];
+    lv_belnr89 := :ARR_BKPF_NR[lv_counter+89];    
+   
+    --   lv_belnr := :ARR_BKPF_NR[lv_row_count];
+	--    lv_bukrs := :ARR_BKPF_BUKRS[lv_row_count];
+	--	lv_gjahr := :ARR_BKPF_GJAHR[lv_row_count];
+		
+	 --CALL "PLX_DW"."SP_WRITE_BSEG_DELTA" (lv_belnr, lv_bukrs ,    lv_gjahr, t_out );
+  
+  
+  
+      t_bseg1 =  select 	*  FROM "V_ECC_BSEG"  
+                 WHERE BELNR IN (lv_belnr, lv_belnr1, lv_belnr2,  lv_belnr3,  lv_belnr4, lv_belnr5, lv_belnr6, lv_belnr7, lv_belnr8, lv_belnr9 ,
+                 lv_belnr10, lv_belnr11, lv_belnr12,  lv_belnr13,  lv_belnr14, lv_belnr15, lv_belnr16, lv_belnr17, lv_belnr18, lv_belnr19 ,
+                 lv_belnr20, lv_belnr21, lv_belnr22,  lv_belnr23,  lv_belnr24, lv_belnr25, lv_belnr26, lv_belnr27, lv_belnr28, lv_belnr29,
+                 lv_belnr30, lv_belnr31, lv_belnr32,  lv_belnr33,  lv_belnr34, lv_belnr35, lv_belnr36, lv_belnr37, lv_belnr38, lv_belnr39,
+                 lv_belnr40, lv_belnr41, lv_belnr42,  lv_belnr43,  lv_belnr44, lv_belnr45, lv_belnr46, lv_belnr47, lv_belnr48, lv_belnr49 ,
+                 lv_belnr50, lv_belnr51, lv_belnr52,  lv_belnr53,  lv_belnr54, lv_belnr55, lv_belnr56, lv_belnr57, lv_belnr58, lv_belnr59 ,
+                 lv_belnr60, lv_belnr61, lv_belnr62,  lv_belnr63,  lv_belnr64, lv_belnr65, lv_belnr66, lv_belnr67, lv_belnr68, lv_belnr69 ,
+                 lv_belnr70, lv_belnr71, lv_belnr72,  lv_belnr73,  lv_belnr74, lv_belnr75, lv_belnr76, lv_belnr77, lv_belnr78, lv_belnr79 ,
+                 lv_belnr80, lv_belnr81, lv_belnr82,  lv_belnr83,  lv_belnr84, lv_belnr85, lv_belnr86, lv_belnr87, lv_belnr88, lv_belnr89 )
+                
+                  
+                 --= :lv_belnr
+                 and BUKRS = ip_bukrs
+                 and GJAHR =  '2021';
+                 --and BUKRS = :lv_bukrs
+                 --and GJAHR =  :lv_gjahr;
+ 
+    	
+	   				
+	   				t_out = select * from :t_bseg1  where bukrs = ip_bukrs and gjahr = '2021'
+	   							union all 
+               				select *  from :t_out ; 
+               				
+    
+  
+      lv_counter := lv_row_count * lv_step  ;
+   
+      
+	END FOR;
+
+--lv_rest := CARDINALITY(:arr_bkpf_nr) - lv_mod * 30 ; 
+--lv_rest := 3;
+if lv_div = 0 then 
+   lv_counter:=0;
+   else  
+   lv_counter := lv_div * 90 ;
+ 
+end if;
+for lv_row_count IN 1..lv_rest  do
+
+   lv_belnr := :ARR_BKPF_NR[lv_counter  + lv_row_count];
+    
+
+     t_bseg2 =  select 	*  FROM "V_ECC_BSEG"  
+                 WHERE BELNR IN (lv_belnr )
+                 and BUKRS = ip_bukrs
+                 and GJAHR =  '2021';
+               
+    	
+	   				
+	   				t_out = select * from :t_bseg2
+	   							union all 
+              				select *  from :t_out ; 
+    
+end for;
+
+
+
+END;
+ 
+ 

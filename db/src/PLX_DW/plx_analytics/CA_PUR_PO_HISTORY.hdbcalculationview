@@ -1,0 +1,1292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="plx_analytics::CA_PUR_PO_HISTORY" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+  <origin/>
+  <descriptions defaultDescription="CA_PUR_PROCURE_TO_INVOICE"/>
+  <metadata changedAt="2018-01-17 10:10:29.653"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="36"/>
+  <dataSources>
+    <DataSource id="ECC_EKKO">
+      <resourceUri>ECC_EKKO</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_EKPO">
+      <resourceUri>ECC_EKPO</resourceUri>
+    </DataSource>
+    <DataSource id="CA_DIM_VENDORS">
+      <resourceUri>plx_analytics::CA_DIM_VENDORS</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_T024">
+      <resourceUri>ECC_T024</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_EKBE">
+      <resourceUri>ECC_EKBE</resourceUri>
+    </DataSource>
+    <DataSource id="CA_DIM_ORG_STRCTR">
+      <resourceUri>plx_analytics::CA_DIM_ORG_STRCTR</resourceUri>
+    </DataSource>
+    <DataSource id="CA_DIM_FISC_CAL">
+      <resourceUri>plx_analytics::CA_DIM_FISC_CAL</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PO_Header">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="EKGRP"/>
+        <viewAttribute id="EKORG"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="PO_CurrencyKey"/>
+        <viewAttribute id="BEDAT"/>
+        <viewAttribute id="AEDAT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#ECC_EKKO">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKGRP" source="EKGRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKORG" source="EKORG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART" source="BSART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_CurrencyKey" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEDAT" source="BEDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT" source="AEDAT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PO_Item">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="PO_Qty"/>
+        <viewAttribute id="WEPOS"/>
+        <viewAttribute id="PO_Value"/>
+        <viewAttribute id="NETPR"/>
+        <viewAttribute id="ELIKZ"/>
+        <viewAttribute id="EREKZ"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#ECC_EKPO">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Qty" source="MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WEPOS" source="WEPOS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Value" source="NETWR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETPR" source="NETPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ELIKZ" source="ELIKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EREKZ" source="EREKZ"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="PO" joinOrder="OUTSIDE_IN" joinType="rightOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="EKGRP"/>
+        <viewAttribute id="EKORG"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="PO_CurrencyKey"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="PO_Qty"/>
+        <viewAttribute id="WEPOS"/>
+        <viewAttribute id="PO_Value"/>
+        <viewAttribute id="NETPR"/>
+        <viewAttribute id="ELIKZ"/>
+        <viewAttribute id="EREKZ"/>
+        <viewAttribute id="BEDAT"/>
+        <viewAttribute id="AEDAT"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute hidden="true" id="JOIN$EBELN$EBELN"/>
+        <viewAttribute hidden="true" id="JOIN$BUKRS$BUKRS"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PO_Item">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Qty" source="PO_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WEPOS" source="WEPOS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Value" source="PO_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETPR" source="NETPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ELIKZ" source="ELIKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EREKZ" source="EREKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$EBELN$EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$BUKRS$BUKRS" source="BUKRS"/>
+      </input>
+      <input node="#PO_Header">
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKGRP" source="EKGRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKORG" source="EKORG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART" source="BSART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_CurrencyKey" source="PO_CurrencyKey"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEDAT" source="BEDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT" source="AEDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$EBELN$EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$BUKRS$BUKRS" source="BUKRS"/>
+      </input>
+      <joinAttribute name="JOIN$EBELN$EBELN"/>
+      <joinAttribute name="JOIN$BUKRS$BUKRS"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_9">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="VENDOR_NAME"/>
+        <viewAttribute id="LIFNR_Formated"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_DIM_VENDORS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VENDOR_NAME" source="VENDOR_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR_Formated" source="LIFNR_Formated"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Pur_Grp_Des">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="EKGRP"/>
+        <viewAttribute id="EKNAM"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#ECC_T024">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKGRP" source="EKGRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKNAM" source="EKNAM"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="PO_POGroup" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="EKGRP"/>
+        <viewAttribute id="EKORG"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="PO_CurrencyKey"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="WEPOS"/>
+        <viewAttribute id="EKNAM"/>
+        <viewAttribute id="PO_Qty"/>
+        <viewAttribute id="PO_Value"/>
+        <viewAttribute id="NETPR"/>
+        <viewAttribute id="ELIKZ"/>
+        <viewAttribute id="EREKZ"/>
+        <viewAttribute id="BEDAT"/>
+        <viewAttribute id="AEDAT"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="BUKRS"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PO">
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKGRP" source="EKGRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKORG" source="EKORG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART" source="BSART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_CurrencyKey" source="PO_CurrencyKey"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WEPOS" source="WEPOS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Qty" source="PO_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Value" source="PO_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETPR" source="NETPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ELIKZ" source="ELIKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EREKZ" source="EREKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEDAT" source="BEDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT" source="AEDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+      </input>
+      <input node="#Pur_Grp_Des">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKNAM" source="EKNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKGRP" source="EKGRP"/>
+      </input>
+      <joinAttribute name="EKGRP"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_3" joinOrder="OUTSIDE_IN" joinType="rightOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="VENDOR_NAME"/>
+        <viewAttribute id="EKGRP"/>
+        <viewAttribute id="EKORG"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="PO_CurrencyKey"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="WEPOS"/>
+        <viewAttribute id="EKNAM"/>
+        <viewAttribute id="PO_Qty"/>
+        <viewAttribute id="PO_Value"/>
+        <viewAttribute id="NETPR"/>
+        <viewAttribute id="ELIKZ"/>
+        <viewAttribute id="EREKZ"/>
+        <viewAttribute id="LIFNR_Formated"/>
+        <viewAttribute id="BEDAT"/>
+        <viewAttribute id="AEDAT"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute hidden="true" id="JOIN$LIFNR$LIFNR"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Projection_9">
+        <mapping xsi:type="Calculation:AttributeMapping" target="VENDOR_NAME" source="VENDOR_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR_Formated" source="LIFNR_Formated"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LIFNR$LIFNR" source="LIFNR"/>
+      </input>
+      <input node="#PO_POGroup">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKGRP" source="EKGRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKORG" source="EKORG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART" source="BSART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_CurrencyKey" source="PO_CurrencyKey"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WEPOS" source="WEPOS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKNAM" source="EKNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Qty" source="PO_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Value" source="PO_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETPR" source="NETPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ELIKZ" source="ELIKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EREKZ" source="EREKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEDAT" source="BEDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT" source="AEDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LIFNR$LIFNR" source="LIFNR"/>
+      </input>
+      <joinAttribute name="JOIN$LIFNR$LIFNR"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="BEWTP"/>
+        <viewAttribute id="BWART"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="MENGE"/>
+        <viewAttribute id="BPMNG"/>
+        <viewAttribute id="DMBTR"/>
+        <viewAttribute id="WRBTR"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="SHKZG"/>
+        <viewAttribute id="XBLNR"/>
+        <viewAttribute id="REFWR"/>
+        <viewAttribute id="REEWR"/>
+        <viewAttribute id="LSMNG"/>
+        <viewAttribute id="LSMEH"/>
+        <viewAttribute id="BLDAT"/>
+        <viewAttribute id="REWRB"/>
+        <viewAttribute id="AREWR"/>
+        <viewAttribute id="VGABE"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="EMATN"/>
+        <viewAttribute id="HSWAE"/>
+        <viewAttribute id="AREWW"/>
+        <viewAttribute id="BAMNG"/>
+        <viewAttribute id="ERNAM"/>
+        <viewAttribute id="AREWB"/>
+        <viewAttribute id="BPWES"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DECIMAL" id="Z_GR_Qty" length="10" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(leftstr(&quot;EBELN&quot;,2)='41' OR leftstr(&quot;EBELN&quot;,2)='42', IF(&quot;SHKZG&quot; = 'H', &quot;MENGE&quot; , &quot;MENGE&quot;),IF(&quot;SHKZG&quot; = 'H', &quot;MENGE&quot; * -1, &quot;MENGE&quot;))</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#ECC_EKBE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEWTP" source="BEWTP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BWART" source="BWART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE" source="MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BPMNG" source="BPMNG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR" source="DMBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WRBTR" source="WRBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SHKZG" source="SHKZG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFWR" source="REFWR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REEWR" source="REEWR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LSMNG" source="LSMNG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LSMEH" source="LSMEH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REWRB" source="REWRB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AREWR" source="AREWR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VGABE" source="VGABE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EMATN" source="EMATN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSWAE" source="HSWAE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AREWW" source="AREWW"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAMNG" source="BAMNG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERNAM" source="ERNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AREWB" source="AREWB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BPWES" source="BPWES"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_2" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="WEPOS"/>
+        <viewAttribute id="EKNAM"/>
+        <viewAttribute id="PO_Qty"/>
+        <viewAttribute id="PO_Value"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="BEWTP"/>
+        <viewAttribute id="BWART"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="MENGE"/>
+        <viewAttribute id="BPMNG"/>
+        <viewAttribute id="DMBTR"/>
+        <viewAttribute id="WRBTR"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="SHKZG"/>
+        <viewAttribute id="XBLNR"/>
+        <viewAttribute id="REFWR"/>
+        <viewAttribute id="REEWR"/>
+        <viewAttribute id="LSMNG"/>
+        <viewAttribute id="LSMEH"/>
+        <viewAttribute id="BLDAT"/>
+        <viewAttribute id="REWRB"/>
+        <viewAttribute id="NETPR"/>
+        <viewAttribute id="ELIKZ"/>
+        <viewAttribute id="EREKZ"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="PO_CurrencyKey"/>
+        <viewAttribute id="VENDOR_NAME"/>
+        <viewAttribute id="LIFNR_Formated"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="EKORG"/>
+        <viewAttribute id="EKGRP"/>
+        <viewAttribute id="AREWR"/>
+        <viewAttribute id="VGABE"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="EMATN"/>
+        <viewAttribute id="HSWAE"/>
+        <viewAttribute id="AREWW"/>
+        <viewAttribute id="BAMNG"/>
+        <viewAttribute id="ERNAM"/>
+        <viewAttribute id="AREWB"/>
+        <viewAttribute id="BPWES"/>
+        <viewAttribute id="Z_GR_Qty"/>
+        <viewAttribute id="BEDAT"/>
+        <viewAttribute id="AEDAT"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Join_3">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WEPOS" source="WEPOS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKNAM" source="EKNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Qty" source="PO_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Value" source="PO_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETPR" source="NETPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ELIKZ" source="ELIKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EREKZ" source="EREKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_CurrencyKey" source="PO_CurrencyKey"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VENDOR_NAME" source="VENDOR_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR_Formated" source="LIFNR_Formated"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART" source="BSART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKORG" source="EKORG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKGRP" source="EKGRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEDAT" source="BEDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT" source="AEDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+      </input>
+      <input node="#Projection_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEWTP" source="BEWTP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BWART" source="BWART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE" source="MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BPMNG" source="BPMNG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR" source="DMBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WRBTR" source="WRBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SHKZG" source="SHKZG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFWR" source="REFWR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REEWR" source="REEWR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LSMNG" source="LSMNG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LSMEH" source="LSMEH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REWRB" source="REWRB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AREWR" source="AREWR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VGABE" source="VGABE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EMATN" source="EMATN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSWAE" source="HSWAE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AREWW" source="AREWW"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAMNG" source="BAMNG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERNAM" source="ERNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AREWB" source="AREWB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BPWES" source="BPWES"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_GR_Qty" source="Z_GR_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+      </input>
+      <joinAttribute name="EBELP"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_7">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="BUKRS"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_DIM_ORG_STRCTR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="PO_GR_IR_LIne" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="WEPOS"/>
+        <viewAttribute id="EKNAM"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="PO_Qty"/>
+        <viewAttribute id="PO_Value"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="BEWTP"/>
+        <viewAttribute id="BWART"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="MENGE"/>
+        <viewAttribute id="BPMNG"/>
+        <viewAttribute id="DMBTR"/>
+        <viewAttribute id="WRBTR"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="SHKZG"/>
+        <viewAttribute id="XBLNR"/>
+        <viewAttribute id="REFWR"/>
+        <viewAttribute id="REEWR"/>
+        <viewAttribute id="LSMNG"/>
+        <viewAttribute id="LSMEH"/>
+        <viewAttribute id="BLDAT"/>
+        <viewAttribute id="REWRB"/>
+        <viewAttribute id="NETPR"/>
+        <viewAttribute id="ELIKZ"/>
+        <viewAttribute id="EREKZ"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="PO_CurrencyKey"/>
+        <viewAttribute id="VENDOR_NAME"/>
+        <viewAttribute id="LIFNR_Formated"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="EKORG"/>
+        <viewAttribute id="EKGRP"/>
+        <viewAttribute id="AREWR"/>
+        <viewAttribute id="VGABE"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="EMATN"/>
+        <viewAttribute id="HSWAE"/>
+        <viewAttribute id="AREWW"/>
+        <viewAttribute id="BAMNG"/>
+        <viewAttribute id="ERNAM"/>
+        <viewAttribute id="AREWB"/>
+        <viewAttribute id="BPWES"/>
+        <viewAttribute id="Z_GR_Qty"/>
+        <viewAttribute id="BEDAT"/>
+        <viewAttribute id="AEDAT"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Join_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WEPOS" source="WEPOS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKNAM" source="EKNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Qty" source="PO_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Value" source="PO_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEWTP" source="BEWTP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BWART" source="BWART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE" source="MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BPMNG" source="BPMNG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR" source="DMBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WRBTR" source="WRBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SHKZG" source="SHKZG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFWR" source="REFWR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REEWR" source="REEWR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LSMNG" source="LSMNG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LSMEH" source="LSMEH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REWRB" source="REWRB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETPR" source="NETPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ELIKZ" source="ELIKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EREKZ" source="EREKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_CurrencyKey" source="PO_CurrencyKey"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VENDOR_NAME" source="VENDOR_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR_Formated" source="LIFNR_Formated"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART" source="BSART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKORG" source="EKORG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKGRP" source="EKGRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AREWR" source="AREWR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VGABE" source="VGABE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EMATN" source="EMATN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSWAE" source="HSWAE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AREWW" source="AREWW"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAMNG" source="BAMNG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERNAM" source="ERNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AREWB" source="AREWB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BPWES" source="BPWES"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_GR_Qty" source="Z_GR_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEDAT" source="BEDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT" source="AEDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+      </input>
+      <input node="#Projection_7">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+      </input>
+      <joinAttribute name="BUKRS"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SAP_DATE"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="DATE_SQL"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_DIM_FISC_CAL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAP_DATE" source="SAP_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCALENDAR_YEAR" source="ZCALENDAR_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATE_SQL" source="DATE_SQL"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JoinPOGRIRFIS" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="WEPOS"/>
+        <viewAttribute id="EKNAM"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="PO_Qty"/>
+        <viewAttribute id="PO_Value"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="BEWTP"/>
+        <viewAttribute id="BWART"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="MENGE"/>
+        <viewAttribute id="BPMNG"/>
+        <viewAttribute id="DMBTR"/>
+        <viewAttribute id="WRBTR"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="SHKZG"/>
+        <viewAttribute id="XBLNR"/>
+        <viewAttribute id="REFWR"/>
+        <viewAttribute id="REEWR"/>
+        <viewAttribute id="LSMNG"/>
+        <viewAttribute id="LSMEH"/>
+        <viewAttribute id="BLDAT"/>
+        <viewAttribute id="REWRB"/>
+        <viewAttribute id="NETPR"/>
+        <viewAttribute id="ELIKZ"/>
+        <viewAttribute id="EREKZ"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="PO_CurrencyKey"/>
+        <viewAttribute id="VENDOR_NAME"/>
+        <viewAttribute id="LIFNR_Formated"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="EKORG"/>
+        <viewAttribute id="EKGRP"/>
+        <viewAttribute id="AREWR"/>
+        <viewAttribute id="VGABE"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="EMATN"/>
+        <viewAttribute id="HSWAE"/>
+        <viewAttribute id="AREWW"/>
+        <viewAttribute id="BAMNG"/>
+        <viewAttribute id="ERNAM"/>
+        <viewAttribute id="AREWB"/>
+        <viewAttribute id="BPWES"/>
+        <viewAttribute id="Z_GR_Qty"/>
+        <viewAttribute id="BEDAT"/>
+        <viewAttribute id="AEDAT"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PO_GR_IR_LIne">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WEPOS" source="WEPOS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKNAM" source="EKNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Qty" source="PO_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Value" source="PO_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEWTP" source="BEWTP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BWART" source="BWART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE" source="MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BPMNG" source="BPMNG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR" source="DMBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WRBTR" source="WRBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SHKZG" source="SHKZG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFWR" source="REFWR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REEWR" source="REEWR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LSMNG" source="LSMNG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LSMEH" source="LSMEH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REWRB" source="REWRB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETPR" source="NETPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ELIKZ" source="ELIKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EREKZ" source="EREKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_CurrencyKey" source="PO_CurrencyKey"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VENDOR_NAME" source="VENDOR_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR_Formated" source="LIFNR_Formated"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART" source="BSART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKORG" source="EKORG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKGRP" source="EKGRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AREWR" source="AREWR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VGABE" source="VGABE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EMATN" source="EMATN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSWAE" source="HSWAE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AREWW" source="AREWW"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAMNG" source="BAMNG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERNAM" source="ERNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AREWB" source="AREWB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BPWES" source="BPWES"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_GR_Qty" source="Z_GR_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEDAT" source="BEDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT" source="AEDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+      </input>
+      <input node="#Projection_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCALENDAR_YEAR" source="ZCALENDAR_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="SAP_DATE"/>
+      </input>
+      <joinAttribute name="BUDAT"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Join_All">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="WEPOS"/>
+        <viewAttribute id="EKNAM"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="PO_Qty"/>
+        <viewAttribute id="PO_Value"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="BEWTP"/>
+        <viewAttribute id="BWART"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="MENGE"/>
+        <viewAttribute id="BPMNG"/>
+        <viewAttribute id="DMBTR"/>
+        <viewAttribute id="WRBTR"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="SHKZG"/>
+        <viewAttribute id="XBLNR"/>
+        <viewAttribute id="REFWR"/>
+        <viewAttribute id="REEWR"/>
+        <viewAttribute id="LSMNG"/>
+        <viewAttribute id="LSMEH"/>
+        <viewAttribute id="BLDAT"/>
+        <viewAttribute id="REWRB"/>
+        <viewAttribute id="NETPR"/>
+        <viewAttribute id="ELIKZ"/>
+        <viewAttribute id="EREKZ"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="PO_CurrencyKey"/>
+        <viewAttribute id="VENDOR_NAME"/>
+        <viewAttribute id="LIFNR_Formated"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="EKORG"/>
+        <viewAttribute id="EKGRP"/>
+        <viewAttribute id="AREWR"/>
+        <viewAttribute id="VGABE"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="EMATN"/>
+        <viewAttribute id="HSWAE"/>
+        <viewAttribute id="AREWW"/>
+        <viewAttribute id="BAMNG"/>
+        <viewAttribute id="ERNAM"/>
+        <viewAttribute id="AREWB"/>
+        <viewAttribute id="BPWES"/>
+        <viewAttribute id="Z_GR_Qty"/>
+        <viewAttribute id="BEDAT"/>
+        <viewAttribute id="AEDAT"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JoinPOGRIRFIS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WEPOS" source="WEPOS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKNAM" source="EKNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Qty" source="PO_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Value" source="PO_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEWTP" source="BEWTP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BWART" source="BWART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCALENDAR_YEAR" source="ZCALENDAR_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE" source="MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BPMNG" source="BPMNG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR" source="DMBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WRBTR" source="WRBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SHKZG" source="SHKZG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFWR" source="REFWR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REEWR" source="REEWR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LSMNG" source="LSMNG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LSMEH" source="LSMEH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REWRB" source="REWRB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETPR" source="NETPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ELIKZ" source="ELIKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EREKZ" source="EREKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_CurrencyKey" source="PO_CurrencyKey"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VENDOR_NAME" source="VENDOR_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR_Formated" source="LIFNR_Formated"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART" source="BSART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKORG" source="EKORG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKGRP" source="EKGRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AREWR" source="AREWR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VGABE" source="VGABE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EMATN" source="EMATN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSWAE" source="HSWAE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AREWW" source="AREWW"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAMNG" source="BAMNG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERNAM" source="ERNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AREWB" source="AREWB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BPWES" source="BPWES"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_GR_Qty" source="Z_GR_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEDAT" source="BEDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT" source="AEDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_3">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="WEPOS"/>
+        <viewAttribute id="EKNAM"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="PO_Qty"/>
+        <viewAttribute id="PO_Value"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="BEWTP"/>
+        <viewAttribute id="BWART"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="MENGE"/>
+        <viewAttribute id="BPMNG"/>
+        <viewAttribute id="DMBTR"/>
+        <viewAttribute id="WRBTR"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="SHKZG"/>
+        <viewAttribute id="XBLNR"/>
+        <viewAttribute id="REFWR"/>
+        <viewAttribute id="REEWR"/>
+        <viewAttribute id="LSMNG"/>
+        <viewAttribute id="LSMEH"/>
+        <viewAttribute id="BLDAT"/>
+        <viewAttribute id="REWRB"/>
+        <viewAttribute id="NETPR"/>
+        <viewAttribute id="ELIKZ"/>
+        <viewAttribute id="EREKZ"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="PO_CurrencyKey"/>
+        <viewAttribute id="VENDOR_NAME"/>
+        <viewAttribute id="LIFNR_Formated"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="EKORG"/>
+        <viewAttribute id="EKGRP"/>
+        <viewAttribute id="AREWR"/>
+        <viewAttribute id="VGABE"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="EMATN"/>
+        <viewAttribute id="HSWAE"/>
+        <viewAttribute id="AREWW"/>
+        <viewAttribute id="BAMNG"/>
+        <viewAttribute id="ERNAM"/>
+        <viewAttribute id="AREWB"/>
+        <viewAttribute id="BPWES"/>
+        <viewAttribute id="Z_GR_Qty"/>
+        <viewAttribute id="BEDAT"/>
+        <viewAttribute id="AEDAT"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DECIMAL" id="PO_Price" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;PO_Qty&quot;!=0,&quot;PO_Value&quot;/&quot;PO_Qty&quot;,null)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#Join_All">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WEPOS" source="WEPOS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKNAM" source="EKNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Qty" source="PO_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Value" source="PO_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEWTP" source="BEWTP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BWART" source="BWART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCALENDAR_YEAR" source="ZCALENDAR_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE" source="MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BPMNG" source="BPMNG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR" source="DMBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WRBTR" source="WRBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SHKZG" source="SHKZG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFWR" source="REFWR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REEWR" source="REEWR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LSMNG" source="LSMNG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LSMEH" source="LSMEH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REWRB" source="REWRB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETPR" source="NETPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ELIKZ" source="ELIKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EREKZ" source="EREKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_CurrencyKey" source="PO_CurrencyKey"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VENDOR_NAME" source="VENDOR_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR_Formated" source="LIFNR_Formated"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART" source="BSART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKORG" source="EKORG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKGRP" source="EKGRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AREWR" source="AREWR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VGABE" source="VGABE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EMATN" source="EMATN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HSWAE" source="HSWAE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AREWW" source="AREWW"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAMNG" source="BAMNG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERNAM" source="ERNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AREWB" source="AREWB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BPWES" source="BPWES"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_GR_Qty" source="Z_GR_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEDAT" source="BEDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT" source="AEDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="Aggregation_3">
+    <descriptions/>
+    <attributes>
+      <attribute id="MEINS" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchase Order Unit of Measure"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="MEINS"/>
+      </attribute>
+      <attribute id="WEPOS" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Goods Receipt Indicator"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="WEPOS"/>
+      </attribute>
+      <attribute id="EKNAM" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Description of purchasing group"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="EKNAM"/>
+      </attribute>
+      <attribute id="MEMBER" order="4" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Org ID"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="MEMBER"/>
+      </attribute>
+      <attribute id="GJAHR" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Document Year"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="GJAHR"/>
+      </attribute>
+      <attribute id="BELNR" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Number of Material Document"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="BELNR"/>
+      </attribute>
+      <attribute id="BUZEI" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Item in Material Document"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="BUZEI"/>
+      </attribute>
+      <attribute id="BEWTP" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchase Order History Category"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="BEWTP"/>
+      </attribute>
+      <attribute id="BWART" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Movement Type (Inventory Management)"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="BWART"/>
+      </attribute>
+      <attribute id="BUDAT" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Posting Date in the Document"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="BUDAT"/>
+      </attribute>
+      <attribute id="ZFISCAL_YEAR" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Yr"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="ZFISCAL_YEAR"/>
+      </attribute>
+      <attribute id="ZFISCAL_PERIOD" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Period"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="ZFISCAL_PERIOD"/>
+      </attribute>
+      <attribute id="ZFISCAL_QUARTER" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Qtr"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="ZFISCAL_QUARTER"/>
+      </attribute>
+      <attribute id="ZCALENDAR_YEAR" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Calendar Yr"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="ZCALENDAR_YEAR"/>
+      </attribute>
+      <attribute id="ZCAL_MONTH" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Calendar Month"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="ZCAL_MONTH"/>
+      </attribute>
+      <attribute id="WAERS" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IR Currency Key"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="WAERS"/>
+      </attribute>
+      <attribute id="SHKZG" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Debit/Credit Indicator"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="SHKZG"/>
+      </attribute>
+      <attribute id="XBLNR" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Reference Document Number"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="XBLNR"/>
+      </attribute>
+      <attribute id="LSMEH" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Unit of Measure From Delivery Note"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="LSMEH"/>
+      </attribute>
+      <attribute id="BLDAT" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Document Date in Document"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="BLDAT"/>
+      </attribute>
+      <attribute id="ELIKZ" order="33" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Delivery Completed Indicator"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="ELIKZ"/>
+      </attribute>
+      <attribute id="EREKZ" order="34" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Final Invoice Indicator"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="EREKZ"/>
+      </attribute>
+      <attribute id="WERKS" order="35" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Plant"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="WERKS"/>
+      </attribute>
+      <attribute id="PO_CurrencyKey" order="36" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PO Currency Key"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="PO_CurrencyKey"/>
+      </attribute>
+      <attribute id="VENDOR_NAME" order="37" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Vendor Name"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="VENDOR_NAME"/>
+      </attribute>
+      <attribute id="LIFNR_Formated" order="38" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Vendor ID"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="LIFNR_Formated"/>
+      </attribute>
+      <attribute id="BSART" order="39" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchasing Document Type"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="BSART"/>
+      </attribute>
+      <attribute id="EKORG" order="40" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchasing Organization"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="EKORG"/>
+      </attribute>
+      <attribute id="EKGRP" order="41" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchasing Group"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="EKGRP"/>
+      </attribute>
+      <attribute id="VGABE" order="43" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Transaction/event type, purchase order history"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="VGABE"/>
+      </attribute>
+      <attribute id="MATNR" order="44" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Number"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="MATNR"/>
+      </attribute>
+      <attribute id="EMATN" order="45" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Number"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="EMATN"/>
+      </attribute>
+      <attribute id="HSWAE" order="46" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Local currency key"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="HSWAE"/>
+      </attribute>
+      <attribute id="ERNAM" order="49" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Name of Person who Created the Object"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="ERNAM"/>
+      </attribute>
+      <attribute id="BEDAT" order="53" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchasing Document Date"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="BEDAT"/>
+      </attribute>
+      <attribute id="AEDAT" order="54" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Date on Which Record Was Created"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="AEDAT"/>
+      </attribute>
+      <attribute id="BUKRS" order="55" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Company Code"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="BUKRS"/>
+      </attribute>
+      <attribute id="EBELN" order="56" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchasing Document Number"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="EBELN"/>
+      </attribute>
+      <attribute id="EBELP" order="57" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Item Number of Purchasing Document"/>
+        <keyMapping columnObjectName="Aggregation_3" columnName="EBELP"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="PO_Qty" order="5" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Purchase Order Quantity"/>
+        <measureMapping columnObjectName="Aggregation_3" columnName="PO_Qty"/>
+      </measure>
+      <measure id="PO_Value" order="6" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Net Order Value in PO Currency"/>
+        <measureMapping columnObjectName="Aggregation_3" columnName="PO_Value"/>
+      </measure>
+      <measure id="PO_Price" order="7" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="PO Price"/>
+        <measureMapping columnObjectName="Aggregation_3" columnName="PO_Price"/>
+      </measure>
+      <measure id="MENGE" order="19" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Quantity"/>
+        <measureMapping columnObjectName="Aggregation_3" columnName="MENGE"/>
+      </measure>
+      <measure id="BPMNG" order="20" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Quantity in purchase order price unit"/>
+        <measureMapping columnObjectName="Aggregation_3" columnName="BPMNG"/>
+      </measure>
+      <measure id="DMBTR" order="21" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Amount in Local Currency"/>
+        <measureMapping columnObjectName="Aggregation_3" columnName="DMBTR"/>
+      </measure>
+      <measure id="WRBTR" order="22" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Amount in Document Currency"/>
+        <measureMapping columnObjectName="Aggregation_3" columnName="WRBTR"/>
+      </measure>
+      <measure id="REFWR" order="26" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Invoice Value in Foreign Currency"/>
+        <measureMapping columnObjectName="Aggregation_3" columnName="REFWR"/>
+      </measure>
+      <measure id="REEWR" order="27" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Invoice Value Entered (in Local Currency)"/>
+        <measureMapping columnObjectName="Aggregation_3" columnName="REEWR"/>
+      </measure>
+      <measure id="LSMNG" order="28" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Quantity in Unit of Measure from Delivery Note"/>
+        <measureMapping columnObjectName="Aggregation_3" columnName="LSMNG"/>
+      </measure>
+      <measure id="REWRB" order="31" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Invoice Amount in PO Currency"/>
+        <measureMapping columnObjectName="Aggregation_3" columnName="REWRB"/>
+      </measure>
+      <measure id="NETPR" order="32" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Net Price in Purchasing Document (in Document Currency)"/>
+        <measureMapping columnObjectName="Aggregation_3" columnName="NETPR"/>
+      </measure>
+      <measure id="AREWR" order="42" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="GR/IR clr.value"/>
+        <measureMapping columnObjectName="Aggregation_3" columnName="AREWR"/>
+      </measure>
+      <measure id="AREWW" order="47" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Clearing value on GR/IR clearing account (transac. currency)"/>
+        <measureMapping columnObjectName="Aggregation_3" columnName="AREWW"/>
+      </measure>
+      <measure id="BAMNG" order="48" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Quantity"/>
+        <measureMapping columnObjectName="Aggregation_3" columnName="BAMNG"/>
+      </measure>
+      <measure id="AREWB" order="50" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Clearing Value on GR/IR Account in PO Currency"/>
+        <measureMapping columnObjectName="Aggregation_3" columnName="AREWB"/>
+      </measure>
+      <measure id="BPWES" order="51" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Quantity in GR blocked stock in order price unit"/>
+        <measureMapping columnObjectName="Aggregation_3" columnName="BPWES"/>
+      </measure>
+      <measure id="Z_GR_Qty" order="52" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="GR Qty"/>
+        <measureMapping columnObjectName="Aggregation_3" columnName="Z_GR_Qty"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="171" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PO_Header" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="177" y="897"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PO_Item" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="23" y="897"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PO" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="100" y="801"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_9" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="705"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Pur_Grp_Des" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="254" y="801"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PO_POGroup" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="705"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="97" y="609"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="251" y="609"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="172" y="513"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_7" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="326" y="513"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PO_GR_IR_LIne" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="248" y="417"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="94" y="417"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JoinPOGRIRFIS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="171" y="321"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_All" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="160" y="243"/>
+        <rectangleSize height="64" width="163"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Aggregation_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="171" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

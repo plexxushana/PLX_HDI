@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="plx_analytics::CA_ZPOC_VND" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+  <origin/>
+  <descriptions defaultDescription="CA_POC_VND"/>
+  <metadata changedAt="2018-08-08 15:51:08.816"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="37"/>
+  <dataSources>
+    <DataSource id="CA_PLX_SPEND_INVOICES">
+      <resourceUri>plx_analytics::CA_PLX_SPEND_INVOICES</resourceUri>
+    </DataSource>
+    <DataSource id="AGG_SPEND$$$$CA_PLX_SPEND_INVOICES$$">
+      <resourceUri>plx_analytics::CA_PLX_SPEND_INVOICES</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="Z_INV_LAMT"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="Z_LIFNR"/>
+        <viewAttribute id="Z_ORDER_TYPE"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_PLX_SPEND_INVOICES">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_LAMT" source="Z_INV_LAMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_LIFNR" source="Z_LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_ORDER_TYPE" source="Z_ORDER_TYPE"/>
+      </input>
+      <filter>&quot;Z_ORDER_TYPE&quot; != 'Plexxus DC' and &quot;Z_ORDER_TYPE&quot; != 'Hospital Store'</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="AGG_SPEND" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="Z_INV_LAMT"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="Z_LIFNR"/>
+        <viewAttribute id="Z_ORDER_TYPE"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#AGG_SPEND$$$$CA_PLX_SPEND_INVOICES$$">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_LAMT" source="Z_INV_LAMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_LIFNR" source="Z_LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_ORDER_TYPE" source="Z_ORDER_TYPE"/>
+      </input>
+      <filter>&quot;Z_ORDER_TYPE&quot; != 'Plexxus DC' and &quot;Z_ORDER_TYPE&quot; != 'Hospital Store'</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_3">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="Z_INV_LAMT"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="Z_LIFNR"/>
+        <viewAttribute id="Z_ORDER_TYPE"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#AGG_SPEND">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_LAMT" source="Z_INV_LAMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_LIFNR" source="Z_LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_ORDER_TYPE" source="Z_ORDER_TYPE"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_4">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="Z_INV_LAMT"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="Z_LIFNR"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Aggregation_3">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_LAMT" source="Z_INV_LAMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_LIFNR" source="Z_LIFNR"/>
+      </input>
+      <filter>&quot;Z_INV_LAMT&quot;>0</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute aggregationType="sum" id="Z_INV_LAMT"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="Z_LIFNR"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Aggregation_4">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_LAMT" source="Z_INV_LAMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_LIFNR" source="Z_LIFNR"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_2">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute aggregationType="count" id="Z_COUNT_LIFNR"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DECIMAL" id="TOP5_PERCENT" length="34" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;Z_COUNT_LIFNR&quot;*0.05</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#Aggregation_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_COUNT_LIFNR" source="Z_LIFNR"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_5">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute aggregationType="sum" id="Z_INV_LAMT"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="Z_LIFNR"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Projection_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_LAMT" source="Z_INV_LAMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_LIFNR" source="Z_LIFNR"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_6">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="Z_INV_LAMT"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="Z_LIFNR"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Aggregation_5">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_LAMT" source="Z_INV_LAMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_LIFNR" source="Z_LIFNR"/>
+      </input>
+      <filter>&quot;Z_INV_LAMT&quot;>0</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:RankView" id="Rank_1">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="Z_INV_LAMT"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="Z_LIFNR"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Aggregation_6">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_LAMT" source="Z_INV_LAMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_LIFNR" source="Z_LIFNR"/>
+      </input>
+      <windowFunction dynamicPartitionAttributes="false">
+        <partitionViewAttributeName>ZFISCAL_YEAR</partitionViewAttributeName>
+        <partitionViewAttributeName>ZFISCAL_PERIOD</partitionViewAttributeName>
+        <order byViewAttributeName="Z_INV_LAMT" direction="DESC"/>
+        <rankThreshold>
+          <value>99999</value>
+        </rankThreshold>
+        <rankViewAttributeName>Rank_Column</rankViewAttributeName>
+      </windowFunction>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinOrder="OUTSIDE_IN" joinType="inner">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="TOP5_PERCENT"/>
+        <viewAttribute id="Z_COUNT_LIFNR"/>
+        <viewAttribute id="Z_LIFNR"/>
+        <viewAttribute id="Rank_Column"/>
+        <viewAttribute id="Z_INV_LAMT"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute hidden="true" id="JOIN$ZFISCAL_PERIOD$ZFISCAL_PERIOD"/>
+        <viewAttribute hidden="true" id="JOIN$ZFISCAL_YEAR$ZFISCAL_YEAR"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="VARCHAR" id="Grouping_Vendor" length="15" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;Rank_Column&quot;&lt;=&quot;TOP5_PERCENT&quot;, 'Top 5%','BOTTOM 95%')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="Z_SPEND_TOP5_PERC" length="34" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;Rank_Column&quot;&lt;=&quot;TOP5_PERCENT&quot;,&quot;Z_INV_LAMT&quot;,0)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#Aggregation_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOP5_PERCENT" source="TOP5_PERCENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_COUNT_LIFNR" source="Z_COUNT_LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ZFISCAL_YEAR$ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ZFISCAL_PERIOD$ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+      </input>
+      <input node="#Rank_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_LIFNR" source="Z_LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Rank_Column" source="Rank_Column"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_LAMT" source="Z_INV_LAMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ZFISCAL_YEAR$ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ZFISCAL_PERIOD$ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+      </input>
+      <joinAttribute name="JOIN$ZFISCAL_YEAR$ZFISCAL_YEAR"/>
+      <joinAttribute name="JOIN$ZFISCAL_PERIOD$ZFISCAL_PERIOD"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_7">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute aggregationType="max" id="Z_COUNT_LIFNR"/>
+        <viewAttribute id="Grouping_Vendor"/>
+        <viewAttribute id="Z_SPEND_TOP5_PERC"/>
+        <viewAttribute id="TOP5_PERCENT"/>
+        <viewAttribute id="Z_LIFNR"/>
+        <viewAttribute id="Rank_Column"/>
+        <viewAttribute id="Z_INV_LAMT"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Join_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_COUNT_LIFNR" source="Z_COUNT_LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Grouping_Vendor" source="Grouping_Vendor"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_SPEND_TOP5_PERC" source="Z_SPEND_TOP5_PERC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOP5_PERCENT" source="TOP5_PERCENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_LIFNR" source="Z_LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Rank_Column" source="Rank_Column"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_INV_LAMT" source="Z_INV_LAMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="Aggregation_7">
+    <descriptions/>
+    <attributes>
+      <attribute id="Grouping_Vendor" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Grouping_Vendor"/>
+        <keyMapping columnObjectName="Aggregation_7" columnName="Grouping_Vendor"/>
+      </attribute>
+      <attribute id="Z_LIFNR" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Vendor ID"/>
+        <keyMapping columnObjectName="Aggregation_7" columnName="Z_LIFNR"/>
+      </attribute>
+      <attribute id="ZFISCAL_YEAR" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Yr"/>
+        <keyMapping columnObjectName="Aggregation_7" columnName="ZFISCAL_YEAR"/>
+      </attribute>
+      <attribute id="ZFISCAL_PERIOD" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Period"/>
+        <keyMapping columnObjectName="Aggregation_7" columnName="ZFISCAL_PERIOD"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="Z_COUNT_LIFNR" order="1" aggregationType="max" measureType="simple">
+        <descriptions defaultDescription="Count of Vendors"/>
+        <measureMapping columnObjectName="Aggregation_7" columnName="Z_COUNT_LIFNR"/>
+      </measure>
+      <measure id="Z_SPEND_TOP5_PERC" order="3" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Top 5% Spend"/>
+        <measureMapping columnObjectName="Aggregation_7" columnName="Z_SPEND_TOP5_PERC"/>
+      </measure>
+      <measure id="TOP5_PERCENT" order="4" aggregationType="max" measureType="simple">
+        <descriptions defaultDescription="Top 5%"/>
+        <measureMapping columnObjectName="Aggregation_7" columnName="TOP5_PERCENT"/>
+      </measure>
+      <measure id="Rank_Column" order="6" aggregationType="max" measureType="simple">
+        <descriptions defaultDescription="Vendor Ranking"/>
+        <measureMapping columnObjectName="Aggregation_7" columnName="Rank_Column"/>
+      </measure>
+      <measure id="Z_INV_LAMT" order="7" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Spend Amount"/>
+        <measureMapping columnObjectName="Aggregation_7" columnName="Z_INV_LAMT"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="10" y="690"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="AGG_SPEND" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="651"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Aggregation_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="573"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Aggregation_4" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="495"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="417"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Aggregation_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Aggregation_5" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="10" y="600"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Aggregation_6" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="10" y="510"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Rank_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="0" y="370"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Aggregation_7" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

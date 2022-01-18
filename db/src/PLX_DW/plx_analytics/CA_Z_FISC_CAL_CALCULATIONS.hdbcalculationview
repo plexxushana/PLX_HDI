@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="plx_analytics::CA_Z_FISC_CAL_CALCULATIONS" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="DIMENSION" dimensionType="TIME" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+  <origin/>
+  <descriptions defaultDescription="Fiscal calendar"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="22"/>
+  <dataSources>
+    <DataSource id="CA_DIM_ORG_STRCTR">
+      <resourceUri>plx_analytics::CA_DIM_ORG_STRCTR</resourceUri>
+    </DataSource>
+    <DataSource id="M_FISCAL_CALENDAR">
+      <resourceUri>M_FISCAL_CALENDAR</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:JoinView" id="FISCAL_YEAR_CCODE" joinOrder="OUTSIDE_IN" joinType="inner">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="DATE"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="BUTXT"/>
+        <viewAttribute id="PERIV"/>
+        <viewAttribute id="FISCAL_YEAR"/>
+        <viewAttribute id="FISCAL_PERIOD"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="DATE_SQL"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="PLANT_NAME"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="VARCHAR" id="ZFISCAL_YEAR" length="4" expressionLanguage="COLUMN_ENGINE">
+          <formula> IF( &quot;PERIV&quot; = 'K4', LEFTSTR(STRING(adddays(&quot;DATE_SQL&quot;, 275)),4), &quot;FISCAL_YEAR&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="VARCHAR" id="ZFISCAL_PERIOD" length="2" expressionLanguage="COLUMN_ENGINE">
+          <formula> IF( &quot;PERIV&quot; = 'K4', CASE(&quot;FISCAL_PERIOD&quot;, 
+'001', '10',
+'002', '11',
+'003', '12',
+'004', '01',
+'005', '02',
+'006', '03',
+'007', '04',
+'008', '05',
+'009', '06',
+'010', '07',
+'011', '08',
+'012', '09'), RIGHTSTR(&quot;FISCAL_PERIOD&quot;,2))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="VARCHAR" id="ZFISCAL_QUARTER" length="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>CASE(&quot;ZFISCAL_PERIOD&quot;, 
+'01', 'Q1',
+'02', 'Q1',
+'03', 'Q1',
+'04', 'Q2',
+'05', 'Q2',
+'06', 'Q2',
+'07', 'Q3',
+'08', 'Q3',
+'09', 'Q3',
+'10', 'Q4',
+'11', 'Q4',
+'12', 'Q4',
+'Q4')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="VARCHAR" id="ZFISCAL_YEAR_QUARTER" length="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>rightstr(&quot;ZFISCAL_YEAR&quot;, 2)+&quot;ZFISCAL_QUARTER&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="VARCHAR" id="FISCAL_QUARTER" length="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;ZFISCAL_QUARTER&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="VARCHAR" id="ZFISCAL_MONTH" length="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>CASE(&quot;ZFISCAL_PERIOD&quot;, 
+'01', 'Apr',
+'02', 'May',
+'03', 'Jun',
+'04', 'Jul',
+'05', 'Aug',
+'06', 'Sep',
+'07', 'Oct',
+'08', 'Nov',
+'09', 'Dec',
+'10', 'Jan',
+'11', 'Feb',
+'12', 'Mar')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="VARCHAR" id="ZCALENDAR_YEAR" length="4" expressionLanguage="COLUMN_ENGINE">
+          <formula>LEFTSTR(&quot;DATE&quot;, 4)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="VARCHAR" id="ZCAL_MONTH" length="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>CASE(MIDSTR(&quot;DATE&quot;, 5,2) , '01' , 'Jan', '02', 'Feb', '03', 'Mar', '04', 'Apr', '05','May','06', 'Jun', '07','Jul', '08','Aug','09','Sep', '10', 'Oct','11', 'Nov','12','Dec')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CA_DIM_ORG_STRCTR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUTXT" source="BUTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERIV" source="PERIV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PLANT_NAME" source="PLANT_NAME"/>
+      </input>
+      <input node="#M_FISCAL_CALENDAR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATE" source="DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_PERIOD" source="FISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATE_SQL" source="DATE_SQL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERIV" source="CALENDAR_VARIANT"/>
+      </input>
+      <joinAttribute name="PERIV"/>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="FISCAL_YEAR_CCODE">
+    <descriptions/>
+    <attributes>
+      <attribute id="SAP_DATE" key="true" order="1" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Date (YYYYMMDD)"/>
+        <keyMapping columnObjectName="FISCAL_YEAR_CCODE" columnName="DATE"/>
+      </attribute>
+      <attribute id="FISCAL_YEAR" order="2" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Yr"/>
+        <keyMapping columnObjectName="FISCAL_YEAR_CCODE" columnName="FISCAL_YEAR"/>
+      </attribute>
+      <attribute id="FISCAL_PERIOD" order="3" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Period"/>
+        <keyMapping columnObjectName="FISCAL_YEAR_CCODE" columnName="FISCAL_PERIOD"/>
+      </attribute>
+      <attribute id="MEMBER" order="4" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Org ID"/>
+        <keyMapping columnObjectName="FISCAL_YEAR_CCODE" columnName="MEMBER"/>
+      </attribute>
+      <attribute id="KOKRS" order="5" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cntrl Area"/>
+        <keyMapping columnObjectName="FISCAL_YEAR_CCODE" columnName="KOKRS"/>
+      </attribute>
+      <attribute id="BUKRS" order="6" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Company Code"/>
+        <keyMapping columnObjectName="FISCAL_YEAR_CCODE" columnName="BUKRS"/>
+      </attribute>
+      <attribute id="BUTXT" order="7" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Company Name"/>
+        <keyMapping columnObjectName="FISCAL_YEAR_CCODE" columnName="BUTXT"/>
+      </attribute>
+      <attribute id="PERIV" order="8" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fi.Year Variant"/>
+        <keyMapping columnObjectName="FISCAL_YEAR_CCODE" columnName="PERIV"/>
+      </attribute>
+      <attribute id="DATE_SQL" order="9" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Date"/>
+        <keyMapping columnObjectName="FISCAL_YEAR_CCODE" columnName="DATE_SQL"/>
+      </attribute>
+      <attribute id="ZFISCAL_YEAR" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Yr"/>
+        <keyMapping columnObjectName="FISCAL_YEAR_CCODE" columnName="ZFISCAL_YEAR"/>
+      </attribute>
+      <attribute id="ZFISCAL_PERIOD" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Period"/>
+        <keyMapping columnObjectName="FISCAL_YEAR_CCODE" columnName="ZFISCAL_PERIOD"/>
+      </attribute>
+      <attribute id="ZFISCAL_QUARTER" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Qtr"/>
+        <keyMapping columnObjectName="FISCAL_YEAR_CCODE" columnName="ZFISCAL_QUARTER"/>
+      </attribute>
+      <attribute id="WERKS" order="13" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Plant"/>
+        <keyMapping columnObjectName="FISCAL_YEAR_CCODE" columnName="WERKS"/>
+      </attribute>
+      <attribute id="PLANT_NAME" order="14" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Name"/>
+        <keyMapping columnObjectName="FISCAL_YEAR_CCODE" columnName="PLANT_NAME"/>
+      </attribute>
+      <attribute id="ZFISCAL_YEAR_QUARTER" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Yr / Qtr"/>
+        <keyMapping columnObjectName="FISCAL_YEAR_CCODE" columnName="ZFISCAL_YEAR_QUARTER"/>
+      </attribute>
+      <attribute id="FISCAL_QUARTER" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Qter"/>
+        <keyMapping columnObjectName="FISCAL_YEAR_CCODE" columnName="FISCAL_QUARTER"/>
+      </attribute>
+      <attribute id="ZFISCAL_MONTH" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Month"/>
+        <keyMapping columnObjectName="FISCAL_YEAR_CCODE" columnName="ZFISCAL_MONTH"/>
+      </attribute>
+      <attribute id="ZCALENDAR_YEAR" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Calendar Yr"/>
+        <keyMapping columnObjectName="FISCAL_YEAR_CCODE" columnName="ZCALENDAR_YEAR"/>
+      </attribute>
+      <attribute id="ZCAL_MONTH" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Calendar Month"/>
+        <keyMapping columnObjectName="FISCAL_YEAR_CCODE" columnName="ZCAL_MONTH"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="22" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="FISCAL_YEAR_CCODE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

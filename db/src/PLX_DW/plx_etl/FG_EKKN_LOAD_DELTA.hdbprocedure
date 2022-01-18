@@ -1,0 +1,215 @@
+PROCEDURE "plx_etl::FG_EKKN_LOAD_DELTA" (out t_out  "V_ECC_EKKN" )
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+	READS SQL DATA AS
+BEGIN
+
+/***************************** 
+	Write your procedure logic 
+ *****************************/
+ 
+	DECLARE lv_start_date VARCHAR(8) := '20180301';
+	DECLARE lv_end_date VARCHAR(8) := '20180301';
+	DECLARE lv_cpudt_start, lv_cpudt_end, lv_aedat_start, lv_aedat_end VARCHAR(8) := '29990101';
+	
+	
+	DECLARE lv_row_count, lv_step INTEGER;
+	DECLARE i, lv_mod, lv_rest,  lv_div , lv_first_time, lv_counter  INTEGER;
+	declare lv_ebeln,lv_ebeln1,lv_ebeln2,lv_ebeln3,lv_ebeln4,lv_ebeln5,lv_ebeln6,lv_ebeln7,lv_ebeln8,lv_ebeln9 nvarchar(10):='9999999999';
+	declare lv_ebeln10,lv_ebeln11,lv_ebeln12,lv_ebeln13,lv_ebeln14,lv_ebeln15,lv_ebeln16,lv_ebeln17,lv_ebeln18,lv_ebeln19 nvarchar(10):='9999999999';
+	declare lv_ebeln20,lv_ebeln21,lv_ebeln22,lv_ebeln23,lv_ebeln24,lv_ebeln25,lv_ebeln26,lv_ebeln27,lv_ebeln28,lv_ebeln29 nvarchar(10):='9999999999';
+	declare lv_ebeln30,lv_ebeln31,lv_ebeln32,lv_ebeln33,lv_ebeln34,lv_ebeln35,lv_ebeln36,lv_ebeln37,lv_ebeln38,lv_ebeln39 nvarchar(10):='9999999999';
+	declare lv_ebeln40,lv_ebeln41,lv_ebeln42,lv_ebeln43,lv_ebeln44,lv_ebeln45,lv_ebeln46,lv_ebeln47,lv_ebeln48,lv_ebeln49 nvarchar(10):='9999999999';
+	declare lv_ebeln50,lv_ebeln51,lv_ebeln52,lv_ebeln53,lv_ebeln54,lv_ebeln55,lv_ebeln56,lv_ebeln57,lv_ebeln58,lv_ebeln59 nvarchar(10):='9999999999';
+	declare lv_ebeln60,lv_ebeln61,lv_ebeln62,lv_ebeln63,lv_ebeln64,lv_ebeln65,lv_ebeln66,lv_ebeln67,lv_ebeln68,lv_ebeln69 nvarchar(10):='9999999999';
+	declare lv_ebeln70,lv_ebeln71,lv_ebeln72,lv_ebeln73,lv_ebeln74,lv_ebeln75,lv_ebeln76,lv_ebeln77,lv_ebeln78,lv_ebeln79 nvarchar(10):='9999999999';
+	declare lv_ebeln80,lv_ebeln81,lv_ebeln82,lv_ebeln83,lv_ebeln84,lv_ebeln85,lv_ebeln86,lv_ebeln87,lv_ebeln88,lv_ebeln89 nvarchar(10):='9999999999';
+	
+	DECLARE lv_kokrs nvarchar(4) := '9999'; 
+	DECLARE lv_gjahr nvarchar(4) := '9999'; 
+ 	DECLARE arr_dates  VARCHAR(8) ARRAY;
+ 	  DECLARE UPSERT_QUERY, IN_WHERE_CLAUSE,  IN_WHERE_BUKRS,  IN_WHERE_GJAHR , IN_WHERE_CLAUSE1 NVARCHAR(30000) := '' ;
+  
+	DECLARE ARR_BKPF_NR  NVARCHAR(10) ARRAY;
+	DECLARE ARR_BKPF_BUKRS  NVARCHAR(4) ARRAY;
+	DECLARE ARR_BKPF_GJAHR  VARCHAR(4) ARRAY;
+	--GET DATES FROM PLX_DW.HANA_CNTRL_BSEG_LOADS
+	
+	--CREATE LOCAL TEMPORARY TABLE "PLX_DW"."#TEST_TABLE" AS (SELECT TOP 1 *  FROM  "PLX_DW"."V_ECC_BSEG") ;
+	
+	
+	     
+	
+	select cpudt_start into  lv_cpudt_start from "HANA_CNTRL_BSEG_LOADS";
+	select cpudt_end   into  lv_cpudt_end from "HANA_CNTRL_BSEG_LOADS";
+	select aedat_start into  lv_aedat_start from "HANA_CNTRL_BSEG_LOADS";
+	select aedat_end   into  lv_aedat_end from "HANA_CNTRL_BSEG_LOADS";
+	
+					
+	
+	-- get list of docs in BKPF within this 
+	-- start & end time frame
+	lt_bkpf_doc_list = 
+	SELECT  EBELN
+	FROM    "ECC_EKKO"
+	WHERE   ("AEDAT" BETWEEN '20200514' AND '20200522')
+	; 
+   
+	ARR_BKPF_NR  := ARRAY_AGG(:lt_bkpf_doc_list.EBELN ORDER BY EBELN);
+		lv_step := 90;
+		lv_rest := mod(CARDINALITY(:arr_bkpf_nr), 90);
+		lv_div :=  floor(CARDINALITY(:arr_bkpf_nr)/ 90 ) ;
+		lv_counter :=1;
+   FOR lv_row_count IN 1..lv_div  do
+   --CARDINALITY(:arr_bkpf_nr) DO 
+   
+  
+   
+  
+   
+    lv_ebeln  := :ARR_BKPF_NR[lv_counter];
+    lv_ebeln1 := :ARR_BKPF_NR[lv_counter+1];
+    lv_ebeln2 := :ARR_BKPF_NR[lv_counter+2];
+    lv_ebeln3 := :ARR_BKPF_NR[lv_counter+3];
+    lv_ebeln4 := :ARR_BKPF_NR[lv_counter+4];
+    lv_ebeln5 := :ARR_BKPF_NR[lv_counter+5];
+    lv_ebeln6 := :ARR_BKPF_NR[lv_counter+6];
+    lv_ebeln7 := :ARR_BKPF_NR[lv_counter+7];
+    lv_ebeln8 := :ARR_BKPF_NR[lv_counter+8];
+    lv_ebeln9 := :ARR_BKPF_NR[lv_counter+9];
+    lv_ebeln10 := :ARR_BKPF_NR[lv_counter+10];
+    lv_ebeln11 := :ARR_BKPF_NR[lv_counter+11];
+    lv_ebeln12 := :ARR_BKPF_NR[lv_counter+12];
+    lv_ebeln13 := :ARR_BKPF_NR[lv_counter+13];
+    lv_ebeln14 := :ARR_BKPF_NR[lv_counter+14];
+    lv_ebeln15 := :ARR_BKPF_NR[lv_counter+15];
+    lv_ebeln16 := :ARR_BKPF_NR[lv_counter+16];
+    lv_ebeln17 := :ARR_BKPF_NR[lv_counter+17];
+    lv_ebeln18 := :ARR_BKPF_NR[lv_counter+18];
+    lv_ebeln19 := :ARR_BKPF_NR[lv_counter+19];
+    lv_ebeln20 := :ARR_BKPF_NR[lv_counter+20];
+    lv_ebeln21 := :ARR_BKPF_NR[lv_counter+21];
+    lv_ebeln22 := :ARR_BKPF_NR[lv_counter+22];
+    lv_ebeln23 := :ARR_BKPF_NR[lv_counter+23];
+    lv_ebeln24 := :ARR_BKPF_NR[lv_counter+24];
+    lv_ebeln25 := :ARR_BKPF_NR[lv_counter+25];
+    lv_ebeln26 := :ARR_BKPF_NR[lv_counter+26];
+    lv_ebeln27 := :ARR_BKPF_NR[lv_counter+27];
+    lv_ebeln28 := :ARR_BKPF_NR[lv_counter+28];
+    lv_ebeln29 := :ARR_BKPF_NR[lv_counter+29];
+    lv_ebeln30 := :ARR_BKPF_NR[lv_counter+30];
+    lv_ebeln31 := :ARR_BKPF_NR[lv_counter+31];
+    lv_ebeln32 := :ARR_BKPF_NR[lv_counter+32];
+    lv_ebeln33 := :ARR_BKPF_NR[lv_counter+33];
+    lv_ebeln34 := :ARR_BKPF_NR[lv_counter+34];
+    lv_ebeln35 := :ARR_BKPF_NR[lv_counter+35];
+    lv_ebeln36 := :ARR_BKPF_NR[lv_counter+36];
+    lv_ebeln37 := :ARR_BKPF_NR[lv_counter+37];
+    lv_ebeln38 := :ARR_BKPF_NR[lv_counter+38];
+    lv_ebeln39 := :ARR_BKPF_NR[lv_counter+39]; 
+    lv_ebeln40 := :ARR_BKPF_NR[lv_counter+40];
+    lv_ebeln41 := :ARR_BKPF_NR[lv_counter+41];
+    lv_ebeln42 := :ARR_BKPF_NR[lv_counter+42];
+    lv_ebeln43 := :ARR_BKPF_NR[lv_counter+43];
+    lv_ebeln44 := :ARR_BKPF_NR[lv_counter+44];
+    lv_ebeln45 := :ARR_BKPF_NR[lv_counter+45];
+    lv_ebeln46 := :ARR_BKPF_NR[lv_counter+46];
+    lv_ebeln47 := :ARR_BKPF_NR[lv_counter+47];
+    lv_ebeln48 := :ARR_BKPF_NR[lv_counter+48];
+    lv_ebeln49 := :ARR_BKPF_NR[lv_counter+49]; 
+    lv_ebeln50 := :ARR_BKPF_NR[lv_counter+50];
+    lv_ebeln51 := :ARR_BKPF_NR[lv_counter+51];
+    lv_ebeln52 := :ARR_BKPF_NR[lv_counter+52];
+    lv_ebeln53 := :ARR_BKPF_NR[lv_counter+53];
+    lv_ebeln54 := :ARR_BKPF_NR[lv_counter+54];
+    lv_ebeln55 := :ARR_BKPF_NR[lv_counter+55];
+    lv_ebeln56 := :ARR_BKPF_NR[lv_counter+56];
+    lv_ebeln57 := :ARR_BKPF_NR[lv_counter+57];
+    lv_ebeln58 := :ARR_BKPF_NR[lv_counter+58];
+    lv_ebeln59 := :ARR_BKPF_NR[lv_counter+59]; 
+    lv_ebeln60 := :ARR_BKPF_NR[lv_counter+60];
+    lv_ebeln61 := :ARR_BKPF_NR[lv_counter+61];
+    lv_ebeln62 := :ARR_BKPF_NR[lv_counter+62];
+    lv_ebeln63 := :ARR_BKPF_NR[lv_counter+63];
+    lv_ebeln64 := :ARR_BKPF_NR[lv_counter+64];
+    lv_ebeln65 := :ARR_BKPF_NR[lv_counter+65];
+    lv_ebeln66 := :ARR_BKPF_NR[lv_counter+66];
+    lv_ebeln67 := :ARR_BKPF_NR[lv_counter+67];
+    lv_ebeln68 := :ARR_BKPF_NR[lv_counter+68];
+    lv_ebeln69 := :ARR_BKPF_NR[lv_counter+69]; 
+    lv_ebeln70 := :ARR_BKPF_NR[lv_counter+70];
+    lv_ebeln71 := :ARR_BKPF_NR[lv_counter+71];
+    lv_ebeln72 := :ARR_BKPF_NR[lv_counter+72];
+    lv_ebeln73 := :ARR_BKPF_NR[lv_counter+73];
+    lv_ebeln74 := :ARR_BKPF_NR[lv_counter+74];
+    lv_ebeln75 := :ARR_BKPF_NR[lv_counter+75];
+    lv_ebeln76 := :ARR_BKPF_NR[lv_counter+76];
+    lv_ebeln77 := :ARR_BKPF_NR[lv_counter+77];
+    lv_ebeln78 := :ARR_BKPF_NR[lv_counter+78];
+    lv_ebeln79 := :ARR_BKPF_NR[lv_counter+79];    
+    lv_ebeln80 := :ARR_BKPF_NR[lv_counter+80];
+    lv_ebeln81 := :ARR_BKPF_NR[lv_counter+81];
+    lv_ebeln82 := :ARR_BKPF_NR[lv_counter+82];
+    lv_ebeln83 := :ARR_BKPF_NR[lv_counter+83];
+    lv_ebeln84 := :ARR_BKPF_NR[lv_counter+84];
+    lv_ebeln85 := :ARR_BKPF_NR[lv_counter+85];
+    lv_ebeln86 := :ARR_BKPF_NR[lv_counter+86];
+    lv_ebeln87 := :ARR_BKPF_NR[lv_counter+87];
+    lv_ebeln88 := :ARR_BKPF_NR[lv_counter+88];
+    lv_ebeln89 := :ARR_BKPF_NR[lv_counter+89];    
+     
+    
+
+  
+  
+      t_bseg1 =  select 	*  FROM "V_ECC_EKKN"  
+                 WHERE EBELN IN (lv_ebeln, lv_ebeln1, lv_ebeln2,  lv_ebeln3,  lv_ebeln4, lv_ebeln5, lv_ebeln6, lv_ebeln7, lv_ebeln8, lv_ebeln9 ,
+                 lv_ebeln10, lv_ebeln11, lv_ebeln12,  lv_ebeln13,  lv_ebeln14, lv_ebeln15, lv_ebeln16, lv_ebeln17, lv_ebeln18, lv_ebeln19 ,
+                 lv_ebeln20, lv_ebeln21, lv_ebeln22,  lv_ebeln23,  lv_ebeln24, lv_ebeln25, lv_ebeln26, lv_ebeln27, lv_ebeln28, lv_ebeln29 ,
+                 lv_ebeln30, lv_ebeln31, lv_ebeln32,  lv_ebeln33,  lv_ebeln34, lv_ebeln35, lv_ebeln36, lv_ebeln37, lv_ebeln38, lv_ebeln39,
+                 lv_ebeln40, lv_ebeln41, lv_ebeln42,  lv_ebeln43,  lv_ebeln44, lv_ebeln45, lv_ebeln46, lv_ebeln47, lv_ebeln48, lv_ebeln49 ,
+                 lv_ebeln50, lv_ebeln51, lv_ebeln52,  lv_ebeln53,  lv_ebeln54, lv_ebeln55, lv_ebeln56, lv_ebeln57, lv_ebeln58, lv_ebeln59 ,
+                 lv_ebeln60, lv_ebeln61, lv_ebeln62,  lv_ebeln63,  lv_ebeln64, lv_ebeln65, lv_ebeln66, lv_ebeln67, lv_ebeln68, lv_ebeln69 ,
+                 lv_ebeln70, lv_ebeln71, lv_ebeln72,  lv_ebeln73,  lv_ebeln74, lv_ebeln75, lv_ebeln76, lv_ebeln77, lv_ebeln78, lv_ebeln79 ,
+                 lv_ebeln80, lv_ebeln81, lv_ebeln82,  lv_ebeln83,  lv_ebeln84, lv_ebeln85, lv_ebeln86, lv_ebeln87, lv_ebeln88, lv_ebeln89 )
+              
+                
+                ;
+                 
+ 
+    	
+	   				
+	   				t_out = select * from :t_bseg1  
+	   							union all 
+               				select *  from :t_out ; 
+               				
+     lv_counter := lv_row_count * lv_step + 1 ;
+       
+	END FOR;
+
+--lv_rest := CARDINALITY(:arr_bkpf_nr) - lv_mod * 30 ; 
+--lv_rest := 3;
+if lv_div = 0 then 
+   lv_counter:=0;
+   else  
+   lv_counter := lv_div * 90 ;
+ 
+end if;
+for lv_row_count IN 1..lv_rest  do
+    lv_ebeln := :ARR_BKPF_NR[lv_counter  + lv_row_count];
+    
+     t_bseg2 =  select 	*  FROM "V_ECC_EKKN"  
+                 WHERE EBELN IN (lv_ebeln )
+                 ;
+               
+    	
+	   				
+	   				t_out = select * from :t_bseg2
+	   							union all 
+              				select *  from :t_out ; 
+    
+end for;
+
+
+
+END;

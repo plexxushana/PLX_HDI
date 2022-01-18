@@ -1,0 +1,634 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="plx_analytics::CA_DIM_NET_VALUE_TARGET" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+  <descriptions defaultDescription="CA_DIM_NET_VALUE_TARGET"/>
+  <metadata changedAt="2017-06-15 15:58:22.674"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="46"/>
+  <dataSources>
+    <DataSource id="MANUAL_NET_VALUE_TARGETS">
+      <resourceUri>MANUAL_NET_VALUE_TARGETS</resourceUri>
+    </DataSource>
+    <DataSource id="Projection_4$$$$MANUAL_NET_VALUE_TARGETS$$">
+      <resourceUri>MANUAL_NET_VALUE_TARGETS</resourceUri>
+    </DataSource>
+    <DataSource id="Projection_1$$$$MANUAL_NET_VALUE_TARGETS$$">
+      <resourceUri>MANUAL_NET_VALUE_TARGETS</resourceUri>
+    </DataSource>
+    <DataSource id="Projection_3$$$$MANUAL_NET_VALUE_TARGETS$$">
+      <resourceUri>MANUAL_NET_VALUE_TARGETS</resourceUri>
+    </DataSource>
+    <DataSource id="Projection_5$$$$MANUAL_NET_VALUE_TARGETS$$">
+      <resourceUri>MANUAL_NET_VALUE_TARGETS</resourceUri>
+    </DataSource>
+    <DataSource id="Projection_6$$$$MANUAL_NET_VALUE_TARGETS$$">
+      <resourceUri>MANUAL_NET_VALUE_TARGETS</resourceUri>
+    </DataSource>
+    <DataSource id="Projection_7$$$$MANUAL_NET_VALUE_TARGETS$$">
+      <resourceUri>MANUAL_NET_VALUE_TARGETS</resourceUri>
+    </DataSource>
+    <DataSource id="Projection_8$$$$MANUAL_NET_VALUE_TARGETS$$">
+      <resourceUri>MANUAL_NET_VALUE_TARGETS</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="FISCAL_YEAR"/>
+        <viewAttribute id="SAVINGS_ACCUMULATIVE"/>
+        <viewAttribute id="COSTS_PLEXXUS"/>
+        <viewAttribute id="COSTS_HOSPITAL"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="VARCHAR" id="JOIN_FIELD" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>'1'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="COSTS_ACCUMULATIVE" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;COSTS_PLEXXUS&quot;+&quot;COSTS_HOSPITAL&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#MANUAL_NET_VALUE_TARGETS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS_ACCUMULATIVE" source="SAVINGS_ACCUMULATIVE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COSTS_PLEXXUS" source="COSTS_PLEXXUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COSTS_HOSPITAL" source="COSTS_HOSPITAL"/>
+      </input>
+      <filter>(&quot;FISCAL_YEAR&quot; ='2017')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_4">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="FISCAL_YEAR_ALL"/>
+        <viewAttribute id="CAPITAL_ONE_TIME"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="VARCHAR" id="JOIN_FIELD" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>'1'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="INTEGER" id="ACCUM_FACTOR" expressionLanguage="COLUMN_ENGINE">
+          <formula>INT(&quot;FISCAL_YEAR_ALL&quot;) - INT('2017') + 1</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#Projection_4$$$$MANUAL_NET_VALUE_TARGETS$$">
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR_ALL" source="FISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAPITAL_ONE_TIME" source="CAPITAL_ONE_TIME"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinOrder="OUTSIDE_IN" joinType="rightOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="FISCAL_YEAR_ALL"/>
+        <viewAttribute id="SAVINGS_ACCUMULATIVE"/>
+        <viewAttribute id="ACCUM_FACTOR"/>
+        <viewAttribute id="CAPITAL_ONE_TIME"/>
+        <viewAttribute id="COSTS_ACCUMULATIVE"/>
+        <viewAttribute hidden="true" id="JOIN$JOIN_FIELD$JOIN_FIELD"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DECIMAL" id="SAVINGS_ACCUM_1" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;SAVINGS_ACCUMULATIVE&quot;*&quot;ACCUM_FACTOR&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="CAPITAL" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;CAPITAL_ONE_TIME&quot;*&quot;ACCUM_FACTOR&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="COSTS_ACCUM_1" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;COSTS_ACCUMULATIVE&quot;*&quot;ACCUM_FACTOR&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#Projection_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS_ACCUMULATIVE" source="SAVINGS_ACCUMULATIVE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COSTS_ACCUMULATIVE" source="COSTS_ACCUMULATIVE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$JOIN_FIELD$JOIN_FIELD" source="JOIN_FIELD"/>
+      </input>
+      <input node="#Projection_4">
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR_ALL" source="FISCAL_YEAR_ALL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCUM_FACTOR" source="ACCUM_FACTOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAPITAL_ONE_TIME" source="CAPITAL_ONE_TIME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$JOIN_FIELD$JOIN_FIELD" source="JOIN_FIELD"/>
+      </input>
+      <joinAttribute name="JOIN$JOIN_FIELD$JOIN_FIELD"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="FISCAL_YEAR"/>
+        <viewAttribute id="SAVINGS_ACCUMULATIVE"/>
+        <viewAttribute id="COSTS_PLEXXUS"/>
+        <viewAttribute id="COSTS_HOSPITAL"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="VARCHAR" id="JOIN_FIELD" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>'1'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="COSTS_ACCUMULATIVE" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;COSTS_PLEXXUS&quot;+&quot;COSTS_HOSPITAL&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#Projection_1$$$$MANUAL_NET_VALUE_TARGETS$$">
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS_ACCUMULATIVE" source="SAVINGS_ACCUMULATIVE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COSTS_PLEXXUS" source="COSTS_PLEXXUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COSTS_HOSPITAL" source="COSTS_HOSPITAL"/>
+      </input>
+      <filter>(&quot;FISCAL_YEAR&quot; ='2018')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="FISCAL_YEAR"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="VARCHAR" id="JOIN_FIELD" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>'1'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="INTEGER" id="ACCUM_FACTOR" expressionLanguage="COLUMN_ENGINE">
+          <formula>INT(&quot;FISCAL_YEAR&quot;) - INT('2017') </formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#Projection_3$$$$MANUAL_NET_VALUE_TARGETS$$">
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_2" joinOrder="OUTSIDE_IN" joinType="rightOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="FISCAL_YEAR_ALL"/>
+        <viewAttribute id="ACCUM_FACTOR"/>
+        <viewAttribute id="SAVINGS_ACCUMULATIVE"/>
+        <viewAttribute id="COSTS_ACCUMULATIVE"/>
+        <viewAttribute hidden="true" id="JOIN$JOIN_FIELD$JOIN_FIELD"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DECIMAL" id="SAVINGS_ACCUM_2" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;SAVINGS_ACCUMULATIVE&quot;*&quot;ACCUM_FACTOR&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="COSTS_ACCUM_2" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;COSTS_ACCUMULATIVE&quot;*&quot;ACCUM_FACTOR&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#Projection_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS_ACCUMULATIVE" source="SAVINGS_ACCUMULATIVE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COSTS_ACCUMULATIVE" source="COSTS_ACCUMULATIVE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$JOIN_FIELD$JOIN_FIELD" source="JOIN_FIELD"/>
+      </input>
+      <input node="#Projection_3">
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR_ALL" source="FISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCUM_FACTOR" source="ACCUM_FACTOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$JOIN_FIELD$JOIN_FIELD" source="JOIN_FIELD"/>
+      </input>
+      <joinAttribute name="JOIN$JOIN_FIELD$JOIN_FIELD"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_3" joinOrder="OUTSIDE_IN" joinType="inner">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="FISCAL_YEAR_ALL_1"/>
+        <viewAttribute id="SAVINGS_ACCUM_1"/>
+        <viewAttribute id="SAVINGS_ACCUM_2"/>
+        <viewAttribute id="CAPITAL"/>
+        <viewAttribute id="COSTS_ACCUM_1"/>
+        <viewAttribute id="COSTS_ACCUM_2"/>
+        <viewAttribute id="CAPITAL_ONE_TIME"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Join_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR_ALL_1" source="FISCAL_YEAR_ALL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS_ACCUM_1" source="SAVINGS_ACCUM_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAPITAL" source="CAPITAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COSTS_ACCUM_1" source="COSTS_ACCUM_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAPITAL_ONE_TIME" source="CAPITAL_ONE_TIME"/>
+      </input>
+      <input node="#Join_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS_ACCUM_2" source="SAVINGS_ACCUM_2"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COSTS_ACCUM_2" source="COSTS_ACCUM_2"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR_ALL_1" source="FISCAL_YEAR_ALL"/>
+      </input>
+      <joinAttribute name="FISCAL_YEAR_ALL_1"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_5">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SAVINGS_ACCUMULATIVE"/>
+        <viewAttribute id="FISCAL_YEAR"/>
+        <viewAttribute id="COSTS_PLEXXUS"/>
+        <viewAttribute id="COSTS_HOSPITAL"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="VARCHAR" id="JOIN_FIELD" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>'1'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="COSTS_ACCUMULATIVE" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;COSTS_PLEXXUS&quot;+&quot;COSTS_HOSPITAL&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#Projection_5$$$$MANUAL_NET_VALUE_TARGETS$$">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS_ACCUMULATIVE" source="SAVINGS_ACCUMULATIVE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COSTS_PLEXXUS" source="COSTS_PLEXXUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COSTS_HOSPITAL" source="COSTS_HOSPITAL"/>
+      </input>
+      <filter>(&quot;FISCAL_YEAR&quot; ='2019')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_6">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="FISCAL_YEAR"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="INTEGER" id="ACCUM_FACTOR" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(INT(&quot;FISCAL_YEAR&quot;) >=INT('2018'),  INT(&quot;FISCAL_YEAR&quot;)  - INT('2018'),0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="VARCHAR" id="JOIN_FIELD" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>'1'</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#Projection_6$$$$MANUAL_NET_VALUE_TARGETS$$">
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_4" joinOrder="OUTSIDE_IN" joinType="rightOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="FISCAL_YEAR"/>
+        <viewAttribute id="SAVINGS_ACCUMULATIVE"/>
+        <viewAttribute id="ACCUM_FACTOR"/>
+        <viewAttribute id="COSTS_ACCUMULATIVE"/>
+        <viewAttribute hidden="true" id="JOIN$JOIN_FIELD$JOIN_FIELD"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DECIMAL" id="SAVINGS_ACCUM_3" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;SAVINGS_ACCUMULATIVE&quot;*&quot;ACCUM_FACTOR&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="COSTS_ACCUM_3" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;COSTS_ACCUMULATIVE&quot;*&quot;ACCUM_FACTOR&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#Projection_5">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS_ACCUMULATIVE" source="SAVINGS_ACCUMULATIVE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COSTS_ACCUMULATIVE" source="COSTS_ACCUMULATIVE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$JOIN_FIELD$JOIN_FIELD" source="JOIN_FIELD"/>
+      </input>
+      <input node="#Projection_6">
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCUM_FACTOR" source="ACCUM_FACTOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$JOIN_FIELD$JOIN_FIELD" source="JOIN_FIELD"/>
+      </input>
+      <joinAttribute name="JOIN$JOIN_FIELD$JOIN_FIELD"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_7">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="FISCAL_YEAR"/>
+        <viewAttribute id="SAVINGS_ACCUMULATIVE"/>
+        <viewAttribute id="COSTS_PLEXXUS"/>
+        <viewAttribute id="COSTS_HOSPITAL"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="VARCHAR" id="JOIN_FIELD" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>'1'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="COSTS_ACCUMULATIVE" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;COSTS_PLEXXUS&quot;+&quot;COSTS_HOSPITAL&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#Projection_7$$$$MANUAL_NET_VALUE_TARGETS$$">
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS_ACCUMULATIVE" source="SAVINGS_ACCUMULATIVE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COSTS_PLEXXUS" source="COSTS_PLEXXUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COSTS_HOSPITAL" source="COSTS_HOSPITAL"/>
+      </input>
+      <filter>(&quot;FISCAL_YEAR&quot; ='2020')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_8">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="FISCAL_YEAR"/>
+        <viewAttribute id="SAVINGS_ACCUMULATIVE"/>
+        <viewAttribute id="COSTS_PLEXXUS"/>
+        <viewAttribute id="COSTS_HOSPITAL"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="VARCHAR" id="JOIN_FIELD" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>'1'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="INTEGER" id="ACCUM_FACTOR" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(INT(&quot;FISCAL_YEAR&quot;) >=INT('2019'),  INT(&quot;FISCAL_YEAR&quot;)  - INT('2019'),0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="COSTS_ACCUMULATIVE" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;COSTS_PLEXXUS&quot;+&quot;COSTS_HOSPITAL&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="COSTS_ACCUM_5" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;FISCAL_YEAR&quot;='2021',&quot;COSTS_ACCUMULATIVE&quot;,0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="SAVINGS_ACCUM_5" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;FISCAL_YEAR&quot;='2021', &quot;SAVINGS_ACCUMULATIVE&quot;,0)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#Projection_8$$$$MANUAL_NET_VALUE_TARGETS$$">
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS_ACCUMULATIVE" source="SAVINGS_ACCUMULATIVE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COSTS_PLEXXUS" source="COSTS_PLEXXUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COSTS_HOSPITAL" source="COSTS_HOSPITAL"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_5" joinOrder="OUTSIDE_IN" joinType="rightOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="FISCAL_YEAR"/>
+        <viewAttribute id="ACCUM_FACTOR"/>
+        <viewAttribute id="SAVINGS_ACCUMULATIVE"/>
+        <viewAttribute id="SAVINGS_ACCUMULATIVE_1"/>
+        <viewAttribute id="COSTS_HOSPITAL"/>
+        <viewAttribute id="COSTS_PLEXXUS"/>
+        <viewAttribute id="COSTS_ACCUM_5"/>
+        <viewAttribute id="SAVINGS_ACCUM_5"/>
+        <viewAttribute id="COSTS_ACCUMULATIVE"/>
+        <viewAttribute hidden="true" id="JOIN$JOIN_FIELD$JOIN_FIELD"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DECIMAL" id="SAVINGS_ACCUM_4" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;SAVINGS_ACCUMULATIVE&quot;*&quot;ACCUM_FACTOR&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="COSTS_ACCUM_4" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;COSTS_ACCUMULATIVE&quot;*&quot;ACCUM_FACTOR&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#Projection_7">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS_ACCUMULATIVE" source="SAVINGS_ACCUMULATIVE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COSTS_ACCUMULATIVE" source="COSTS_ACCUMULATIVE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$JOIN_FIELD$JOIN_FIELD" source="JOIN_FIELD"/>
+      </input>
+      <input node="#Projection_8">
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCUM_FACTOR" source="ACCUM_FACTOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS_ACCUMULATIVE_1" source="SAVINGS_ACCUMULATIVE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COSTS_HOSPITAL" source="COSTS_HOSPITAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COSTS_PLEXXUS" source="COSTS_PLEXXUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COSTS_ACCUM_5" source="COSTS_ACCUM_5"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS_ACCUM_5" source="SAVINGS_ACCUM_5"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$JOIN_FIELD$JOIN_FIELD" source="JOIN_FIELD"/>
+      </input>
+      <joinAttribute name="JOIN$JOIN_FIELD$JOIN_FIELD"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_6" joinOrder="OUTSIDE_IN" joinType="inner">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SAVINGS_ACCUM_3"/>
+        <viewAttribute id="SAVINGS_ACCUM_4"/>
+        <viewAttribute id="FISCAL_YEAR"/>
+        <viewAttribute id="SAVINGS_ACCUMULATIVE_1"/>
+        <viewAttribute id="COSTS_ACCUM_3"/>
+        <viewAttribute id="COSTS_ACCUM_4"/>
+        <viewAttribute id="COSTS_HOSPITAL"/>
+        <viewAttribute id="COSTS_PLEXXUS"/>
+        <viewAttribute id="COSTS_ACCUM_5"/>
+        <viewAttribute id="SAVINGS_ACCUM_5"/>
+        <viewAttribute hidden="true" id="JOIN$FISCAL_YEAR$FISCAL_YEAR"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Join_4">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS_ACCUM_3" source="SAVINGS_ACCUM_3"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COSTS_ACCUM_3" source="COSTS_ACCUM_3"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$FISCAL_YEAR$FISCAL_YEAR" source="FISCAL_YEAR"/>
+      </input>
+      <input node="#Join_5">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS_ACCUM_4" source="SAVINGS_ACCUM_4"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS_ACCUMULATIVE_1" source="SAVINGS_ACCUMULATIVE_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COSTS_ACCUM_4" source="COSTS_ACCUM_4"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COSTS_HOSPITAL" source="COSTS_HOSPITAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COSTS_PLEXXUS" source="COSTS_PLEXXUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COSTS_ACCUM_5" source="COSTS_ACCUM_5"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS_ACCUM_5" source="SAVINGS_ACCUM_5"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$FISCAL_YEAR$FISCAL_YEAR" source="FISCAL_YEAR"/>
+      </input>
+      <joinAttribute name="JOIN$FISCAL_YEAR$FISCAL_YEAR"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_7" joinOrder="OUTSIDE_IN" joinType="inner">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="FISCAL_YEAR_ALL"/>
+        <viewAttribute id="SAVINGS_ACCUM_1"/>
+        <viewAttribute id="SAVINGS_ACCUM_2"/>
+        <viewAttribute id="SAVINGS_ACCUM_3"/>
+        <viewAttribute id="SAVINGS_ACCUM_4"/>
+        <viewAttribute id="SAVINGS_ACCUMULATIVE_1"/>
+        <viewAttribute id="CAPITAL"/>
+        <viewAttribute id="COSTS_ACCUM_1"/>
+        <viewAttribute id="COSTS_ACCUM_3"/>
+        <viewAttribute id="COSTS_ACCUM_4"/>
+        <viewAttribute id="COSTS_ACCUM_2"/>
+        <viewAttribute id="COSTS_HOSPITAL"/>
+        <viewAttribute id="COSTS_PLEXXUS"/>
+        <viewAttribute id="COSTS_ACCUM_5"/>
+        <viewAttribute id="SAVINGS_ACCUM_5"/>
+        <viewAttribute id="CAPITAL_ONE_TIME"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Join_3">
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR_ALL" source="FISCAL_YEAR_ALL_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS_ACCUM_1" source="SAVINGS_ACCUM_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS_ACCUM_2" source="SAVINGS_ACCUM_2"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAPITAL" source="CAPITAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COSTS_ACCUM_1" source="COSTS_ACCUM_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COSTS_ACCUM_2" source="COSTS_ACCUM_2"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAPITAL_ONE_TIME" source="CAPITAL_ONE_TIME"/>
+      </input>
+      <input node="#Join_6">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS_ACCUM_3" source="SAVINGS_ACCUM_3"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS_ACCUM_4" source="SAVINGS_ACCUM_4"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS_ACCUMULATIVE_1" source="SAVINGS_ACCUMULATIVE_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COSTS_ACCUM_3" source="COSTS_ACCUM_3"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COSTS_ACCUM_4" source="COSTS_ACCUM_4"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COSTS_HOSPITAL" source="COSTS_HOSPITAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COSTS_PLEXXUS" source="COSTS_PLEXXUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COSTS_ACCUM_5" source="COSTS_ACCUM_5"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAVINGS_ACCUM_5" source="SAVINGS_ACCUM_5"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR_ALL" source="FISCAL_YEAR"/>
+      </input>
+      <joinAttribute name="FISCAL_YEAR_ALL"/>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="Join_7">
+    <descriptions/>
+    <attributes>
+      <attribute id="FISCAL_YEAR_ALL" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FISCAL_YEAR_ALL"/>
+        <keyMapping columnObjectName="Join_7" columnName="FISCAL_YEAR_ALL"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes>
+      <calculatedAttribute id="FISCAL_YEAR" hidden="false" order="3" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FISCAL_YEAR"/>
+        <keyCalculation datatype="VARCHAR" expressionLanguage="COLUMN_ENGINE" length="4">
+          <formula>&quot;FISCAL_YEAR_ALL&quot;</formula>
+        </keyCalculation>
+      </calculatedAttribute>
+    </calculatedAttributes>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="SAVINGS_ACCUM_1" order="5" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="SAVINGS_ACCUM_1"/>
+        <measureMapping columnObjectName="Join_7" columnName="SAVINGS_ACCUM_1"/>
+      </measure>
+      <measure id="SAVINGS_ACCUM_2" order="6" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="SAVINGS_ACCUM_2"/>
+        <measureMapping columnObjectName="Join_7" columnName="SAVINGS_ACCUM_2"/>
+      </measure>
+      <measure id="SAVINGS_ACCUM_3" order="7" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="SAVINGS_ACCUM_3"/>
+        <measureMapping columnObjectName="Join_7" columnName="SAVINGS_ACCUM_3"/>
+      </measure>
+      <measure id="SAVINGS_ACCUM_4" order="8" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="SAVINGS_ACCUM_4"/>
+        <measureMapping columnObjectName="Join_7" columnName="SAVINGS_ACCUM_4"/>
+      </measure>
+      <measure id="SAVINGS_ACCUMULATIVE_0" order="9" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Savings-Accumulative"/>
+        <measureMapping columnObjectName="Join_7" columnName="SAVINGS_ACCUMULATIVE_1"/>
+      </measure>
+      <measure id="CAPITAL" order="10" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="CAPITAL"/>
+        <measureMapping columnObjectName="Join_7" columnName="CAPITAL"/>
+      </measure>
+      <measure id="COSTS_ACCUM_1" order="12" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="COSTS_ACCUM_1"/>
+        <measureMapping columnObjectName="Join_7" columnName="COSTS_ACCUM_1"/>
+      </measure>
+      <measure id="COSTS_ACCUM_3" order="13" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="COSTS_ACCUM_3"/>
+        <measureMapping columnObjectName="Join_7" columnName="COSTS_ACCUM_3"/>
+      </measure>
+      <measure id="COSTS_ACCUM_4" order="14" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="COSTS_ACCUM_4"/>
+        <measureMapping columnObjectName="Join_7" columnName="COSTS_ACCUM_4"/>
+      </measure>
+      <measure id="COSTS_ACCUM_2" order="15" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="COSTS_ACCUM_2"/>
+        <measureMapping columnObjectName="Join_7" columnName="COSTS_ACCUM_2"/>
+      </measure>
+      <measure id="COSTS_HOSPITAL" order="16" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Costs-Hospital"/>
+        <measureMapping columnObjectName="Join_7" columnName="COSTS_HOSPITAL"/>
+      </measure>
+      <measure id="COSTS_PLEXXUS" order="17" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Costs-Plexxus"/>
+        <measureMapping columnObjectName="Join_7" columnName="COSTS_PLEXXUS"/>
+      </measure>
+      <measure id="COSTS_ACCUM_5" order="19" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="COSTS_ACCUM_5"/>
+        <measureMapping columnObjectName="Join_7" columnName="COSTS_ACCUM_5"/>
+      </measure>
+      <measure id="SAVINGS_ACCUM_5" order="20" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="SAVINGS_ACCUM_5"/>
+        <measureMapping columnObjectName="Join_7" columnName="SAVINGS_ACCUM_5"/>
+      </measure>
+      <measure id="CAPITAL_ONE_TIME" order="22" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="CAPITAL_ONE_TIME"/>
+        <measureMapping columnObjectName="Join_7" columnName="CAPITAL_ONE_TIME"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures>
+      <measure id="TOTAL_SAVINGS_ACCUMULATIVE" hidden="false" order="1" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="13" scale="2">
+        <descriptions defaultDescription="TOTAL_SAVINGS_ACCUMULATIVE"/>
+        <formula>&quot;SAVINGS_ACCUMULATIVE&quot;+&quot;CAPITAL&quot;</formula>
+      </measure>
+      <measure id="NET_SAVINGS_ACCUMULATIVE" hidden="false" order="2" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="13" scale="2">
+        <descriptions defaultDescription="NET_SAVINGS_ACCUMULATIVE"/>
+        <formula>&quot;TOTAL_SAVINGS_ACCUMULATIVE&quot;-&quot;COSTS_ACCUMULATIVE&quot;</formula>
+      </measure>
+      <measure id="SAVINGS_ACCUMULATIVE" hidden="false" order="11" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="13" scale="2">
+        <descriptions defaultDescription="SAVINGS_ACCUMULATIVE"/>
+        <formula>&quot;SAVINGS_ACCUM_1&quot;+&quot;SAVINGS_ACCUM_2&quot;+&quot;SAVINGS_ACCUM_3&quot;+&quot;SAVINGS_ACCUM_4&quot;+&quot;SAVINGS_ACCUM_5&quot;</formula>
+      </measure>
+      <measure id="COSTS_ACCUMULATIVE" hidden="false" order="18" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="13" scale="2">
+        <descriptions defaultDescription="COSTS_ACCUMULATIVE"/>
+        <formula>&quot;COSTS_ACCUM_1&quot;+&quot;COSTS_ACCUM_2&quot;+&quot;COSTS_ACCUM_3&quot;+&quot;COSTS_ACCUM_4&quot;+&quot;COSTS_ACCUM_5&quot;</formula>
+      </measure>
+      <measure id="TOTAL_SAVINGS_YEARLY" hidden="false" order="21" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="13" scale="2">
+        <descriptions defaultDescription="TOTAL_SAVINGS_YEARLY"/>
+        <formula>&quot;SAVINGS_ACCUMULATIVE_0&quot; +&quot;CAPITAL_ONE_TIME&quot;</formula>
+      </measure>
+      <measure id="NET_SAVING_YEARLY" hidden="false" order="23" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="13" scale="2">
+        <descriptions defaultDescription="NET_SAVING_YEARLY"/>
+        <formula>&quot;TOTAL_SAVINGS_YEARLY&quot; - (&quot;COSTS_PLEXXUS&quot;+&quot;COSTS_HOSPITAL&quot;)</formula>
+      </measure>
+    </calculatedMeasures>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="false" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="561" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="false" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="453"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_4" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="453"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="160" y="350"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="330" y="453"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="484" y="453"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="388" y="357"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="388" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_5" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="638" y="453"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_6" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="792" y="453"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_4" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="734" y="357"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_7" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="946" y="453"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_8" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="1100" y="453"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_5" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="946" y="357"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_6" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="734" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="false" modelObjectName="Join_7" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="561" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

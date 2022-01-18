@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="3.0" id="plx_analytics::CA_HBKR_EBUSINESS" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection" xscCompatibilityMode="true">
+<origin/>
+  <descriptions defaultDescription="CA_HBKR_ALL"/>
+  <metadata changedAt="2018-02-09 15:16:37.161"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="37"/>
+  <dataSources>
+    <DataSource id="MANUAL_HBKR">
+      <resourceUri>MANUAL_HBKR</resourceUri>
+    </DataSource>
+    <DataSource id="CA_DIM_FISC_CAL">
+      <resourceUri>plx_analytics::CA_DIM_FISC_CAL</resourceUri>
+    </DataSource>
+  </dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="EREQ_COUNTER"/>
+        <viewAttribute id="EDI_PO_COUNTER"/>
+        <viewAttribute id="PAPER_REQ_COUNTER"/>
+        <viewAttribute id="EFT_COUNTER"/>
+        <viewAttribute id="CHEQUES_COUNTER"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="INTEGER" id="Payments_Counter" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;EFT_COUNTER&quot;+&quot;CHEQUES_COUNTER&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="BIGINT" id="Req_Counter" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;EREQ_COUNTER&quot;+&quot;PAPER_REQ_COUNTER&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="MANUAL_HBKR"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR_QUARTER"/>
+        <viewAttribute id="ZFISCAL_MONTH"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="CA_DIM_FISC_CAL"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinType="inner">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR_QUARTER"/>
+        <viewAttribute id="EREQ_COUNTER"/>
+        <viewAttribute id="EDI_PO_COUNTER"/>
+        <viewAttribute id="PAPER_REQ_COUNTER"/>
+        <viewAttribute id="EFT_COUNTER"/>
+        <viewAttribute id="CHEQUES_COUNTER"/>
+        <viewAttribute id="Payments_Counter"/>
+        <viewAttribute id="Req_Counter"/>
+        <viewAttribute id="ZFISCAL_MONTH"/>
+        <viewAttribute id="MEMBER"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="Projection_3">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR_QUARTER" source="ZFISCAL_YEAR_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_MONTH" source="ZFISCAL_MONTH"/>
+      </input>
+      <input node="Projection_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EREQ_COUNTER" source="EREQ_COUNTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EDI_PO_COUNTER" source="EDI_PO_COUNTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PAPER_REQ_COUNTER" source="PAPER_REQ_COUNTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFT_COUNTER" source="EFT_COUNTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHEQUES_COUNTER" source="CHEQUES_COUNTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Payments_Counter" source="Payments_Counter"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Req_Counter" source="Req_Counter"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+      </input>
+    <joinAttribute name="ZFISCAL_YEAR"/>
+    <joinAttribute name="ZFISCAL_PERIOD"/>
+  </calculationView>
+</calculationViews>
+  <logicalModel id="Join_1">
+    <descriptions/>
+    <attributes>
+      <attribute id="ZFISCAL_YEAR" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Year"/>
+        <keyMapping columnObjectName="Join_1" columnName="ZFISCAL_YEAR"/>
+      </attribute>
+      <attribute id="ZFISCAL_PERIOD" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Period"/>
+        <keyMapping columnObjectName="Join_1" columnName="ZFISCAL_PERIOD"/>
+      </attribute>
+      <attribute id="ZFISCAL_QUARTER" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Quarter"/>
+        <keyMapping columnObjectName="Join_1" columnName="ZFISCAL_QUARTER"/>
+      </attribute>
+      <attribute id="ZFISCAL_YEAR_QUARTER" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Year / Qtr"/>
+        <keyMapping columnObjectName="Join_1" columnName="ZFISCAL_YEAR_QUARTER"/>
+      </attribute>
+      <attribute id="EREQ_COUNTER" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EREQ_COUNTER"/>
+        <keyMapping columnObjectName="Join_1" columnName="EREQ_COUNTER"/>
+      </attribute>
+      <attribute id="EDI_PO_COUNTER" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EDI_PO_COUNTER"/>
+        <keyMapping columnObjectName="Join_1" columnName="EDI_PO_COUNTER"/>
+      </attribute>
+      <attribute id="PAPER_REQ_COUNTER" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PAPER_REQ_COUNTER"/>
+        <keyMapping columnObjectName="Join_1" columnName="PAPER_REQ_COUNTER"/>
+      </attribute>
+      <attribute id="EFT_COUNTER" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFT_COUNTER"/>
+        <keyMapping columnObjectName="Join_1" columnName="EFT_COUNTER"/>
+      </attribute>
+      <attribute id="CHEQUES_COUNTER" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CHEQUES_COUNTER"/>
+        <keyMapping columnObjectName="Join_1" columnName="CHEQUES_COUNTER"/>
+      </attribute>
+      <attribute id="Payments_Counter" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Payments_Counter"/>
+        <keyMapping columnObjectName="Join_1" columnName="Payments_Counter"/>
+      </attribute>
+      <attribute id="Req_Counter" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Req_Counter"/>
+        <keyMapping columnObjectName="Join_1" columnName="Req_Counter"/>
+      </attribute>
+      <attribute id="ZFISCAL_MONTH" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Month"/>
+        <keyMapping columnObjectName="Join_1" columnName="ZFISCAL_MONTH"/>
+      </attribute>
+      <attribute id="MEMBER" order="13" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MEMBER"/>
+        <keyMapping columnObjectName="Join_1" columnName="MEMBER"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+<layout>
+  <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="175" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="260" y="300"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="50" y="290"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="175" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    
+    <shape modelObjectName="Projection_3" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

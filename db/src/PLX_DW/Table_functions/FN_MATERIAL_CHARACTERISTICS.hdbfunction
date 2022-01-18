@@ -1,0 +1,61 @@
+FUNCTION "plx_analytics::FN_MATERIAL_CHARACTERISTICS" ( ) 
+	RETURNS "Z_MAT_CHAR"
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER AS
+BEGIN
+
+
+t_matchar = select 
+			 left(inob.objek,18) as matnr	
+			,ausp.atinn			--Internal char key	
+			,cabnt.atbez		--characteristic Description	
+			,ausp.atwrt			--char value / value key
+			,cawnt.atwtb		--value key Description
+
+ 			from "ECC_INOB" inob 
+ 			
+ 			join "ECC_AUSP" ausp
+ 			on    left(ausp.objek,18)  = inob.cuobj
+ 			 			-- characteristic description
+ 			left join "ECC_CABNT" cabnt
+ 			on	  cabnt.atinn = ausp.atinn
+ 			 			-- char value & value description
+ 			left join  "ECC_CAWN" cawn
+ 			on	  cawn.atinn = ausp.atinn
+ 			and   right(cawn.atzhl,3) = ausp.atzhl 
+ 			and	  cawn.adzhl = ausp.adzhl
+-- 			and   cawn.atwrt = ausp.atwrt
+ 			
+ 			left join  "ECC_CAWNT" cawnt
+ 			on	  (cawnt.atinn = cawn.atinn
+ 			and    cawnt.atzhl = cawn.atzhl
+ 			and	   cawnt.adzhl = cawn.adzhl
+ 			and	   cawnt.spras = 'E');
+
+
+ 			--get all material characteristics to show blanks
+ t_all_chars =  select mara.matnr
+						,ksml.imerk as "ATINN"	
+				        ,cabnt.atbez		
+				  from 	"ECC_KSML" ksml join "ECC_CABNT" cabnt on ksml.imerk = cabnt.atinn
+				      	,"ECC_MARA" mara
+				 where ksml.klart = '001'
+				 order by matnr;
+ 
+ t_return = select 
+ 				 	 :t_all_chars.matnr	
+					,:t_all_chars.atinn
+		 			,:t_all_chars.atbez								  
+					,:t_matchar.atwrt
+		 			,:t_matchar.atwtb
+ 		from 	  	 :t_all_chars 
+ 		left join 	 :t_matchar 
+ 		on			(:t_matchar.matnr = :t_all_chars.matnr
+ 		and			 :t_matchar.atinn = :t_all_chars.atinn)
+ 		order by 
+ 					 :t_all_chars.matnr
+ 					,:t_all_chars.atinn;				  
+ 
+ return select * from :t_return;
+ 				  
+END

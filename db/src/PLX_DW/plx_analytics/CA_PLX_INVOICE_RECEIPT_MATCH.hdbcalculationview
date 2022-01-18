@@ -1,0 +1,2590 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="plx_analytics::CA_PLX_INVOICE_RECEIPT_MATCH" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+  <origin/>
+  <descriptions defaultDescription="CA_PLX_INVOICE_RECEIPT_MATCH"/>
+  <metadata changedAt="2018-08-01 13:49:29.261"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="51"/>
+  <dataSources>
+    <DataSource id="CA_PUR_INCOMING_INVOICE">
+      <resourceUri>plx_analytics::CA_PUR_INCOMING_INVOICE</resourceUri>
+    </DataSource>
+    <DataSource id="CA_PUR_GOODS_MOVEMENT">
+      <resourceUri>plx_analytics::CA_PUR_GOODS_MOVEMENT</resourceUri>
+    </DataSource>
+    <DataSource id="IR_Line$$$$CA_PUR_INCOMING_INVOICE$$">
+      <resourceUri>plx_analytics::CA_PUR_INCOMING_INVOICE</resourceUri>
+    </DataSource>
+    <DataSource id="FN_WORKDAYS_BETWEEN_INVOICEMATCH" type="TABLE_FUNCTION">
+      <resourceUri>plx_analytics::FN_WORKDAYS_BETWEEN_INVOICEMATCH</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_EKKO">
+      <resourceUri>ECC_EKKO</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_EKPO">
+      <resourceUri>ECC_EKPO</resourceUri>
+    </DataSource>
+    <DataSource id="CA_DIM_VENDORS">
+      <resourceUri>plx_analytics::CA_DIM_VENDORS</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_T024">
+      <resourceUri>ECC_T024</resourceUri>
+    </DataSource>
+    <DataSource id="CA_DIM_ORG_STRCTR">
+      <resourceUri>plx_analytics::CA_DIM_ORG_STRCTR</resourceUri>
+    </DataSource>
+    <DataSource id="Z_SNAPSHOT_DAY0">
+      <resourceUri>Z_SNAPSHOT_DAY0</resourceUri>
+    </DataSource>
+    <DataSource id="Z_SNAPSHOT_DAY5">
+      <resourceUri>Z_SNAPSHOT_DAY5</resourceUri>
+    </DataSource>
+    <DataSource id="CA_DIM_MATERIAL_DESCRIP">
+      <resourceUri>plx_analytics::CA_DIM_MATERIAL_DESCRIP</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Incoming_Invoice">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="IR_SHKZG"/>
+        <viewAttribute id="MENGE"/>
+        <viewAttribute id="WRBTR"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="BLART"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DECIMAL" id="Z_IR_Total_Qty" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;IR_SHKZG&quot;='H', -&quot;MENGE&quot; , &quot;MENGE&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="Z_IR_Total_Value" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;IR_SHKZG&quot; = 'H', &quot;WRBTR&quot; * -1, &quot;WRBTR&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CA_PUR_INCOMING_INVOICE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IR_SHKZG" source="SHKZG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE" source="MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WRBTR" source="WRBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+      </input>
+      <filter>(not in (&quot;GJAHR&quot;,'2010','2011','2012','2013','2014','2015')) AND (&quot;BLART&quot; !='KP')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="SHKZG"/>
+        <viewAttribute id="BPMNG"/>
+        <viewAttribute id="BSTMG"/>
+        <viewAttribute id="ERFME"/>
+        <viewAttribute id="ERFMG"/>
+        <viewAttribute id="BWART"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DECIMAL" id="Z_GR_Total_Qty" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(leftstr(&quot;EBELN&quot;,2)='41' OR leftstr(&quot;EBELN&quot;,2)='42', IF(&quot;SHKZG&quot; = 'H', &quot;BSTMG&quot; , &quot;BSTMG&quot;),IF(&quot;SHKZG&quot; = 'H', &quot;BSTMG&quot; * -1, &quot;BSTMG&quot;))</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CA_PUR_GOODS_MOVEMENT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SHKZG" source="SHKZG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BPMNG" source="BPMNG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSTMG" source="BSTMG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFME" source="ERFME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFMG" source="ERFMG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BWART" source="BWART"/>
+      </input>
+      <filter>(&quot;BWART&quot; !='645')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_IR">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute aggregationType="sum" id="Z_IR_Total_Qty"/>
+        <viewAttribute aggregationType="sum" id="Z_IR_Total_Value"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Incoming_Invoice">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Total_Qty" source="Z_IR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Total_Value" source="Z_IR_Total_Value"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_GR">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute aggregationType="sum" id="Z_GR_Total_Qty"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="ERFME"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Projection_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_GR_Total_Qty" source="Z_GR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFME" source="ERFME"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="GR_IR_Total" joinOrder="OUTSIDE_IN" joinType="rightOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="Z_GR_Total_Qty"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="Z_IR_Total_Qty"/>
+        <viewAttribute id="Z_IR_Total_Value"/>
+        <viewAttribute id="ERFME"/>
+        <viewAttribute hidden="true" id="JOIN$EBELN$EBELN"/>
+        <viewAttribute hidden="true" id="JOIN$EBELP$EBELP"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Aggregation_GR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_GR_Total_Qty" source="Z_GR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFME" source="ERFME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$EBELN$EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$EBELP$EBELP" source="EBELP"/>
+      </input>
+      <input node="#Aggregation_IR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Total_Qty" source="Z_IR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Total_Value" source="Z_IR_Total_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$EBELN$EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$EBELP$EBELP" source="EBELP"/>
+      </input>
+      <joinAttribute name="JOIN$EBELN$EBELN"/>
+      <joinAttribute name="JOIN$EBELP$EBELP"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="IR_Line">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="WRBTR"/>
+        <viewAttribute id="SPGRP"/>
+        <viewAttribute id="SPGRM"/>
+        <viewAttribute id="SPGRQ"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="DATE_SQL"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="BLDAT"/>
+        <viewAttribute id="IR_CurrencyKey"/>
+        <viewAttribute id="MENGE"/>
+        <viewAttribute id="IR_SHKZG"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="XBLNR"/>
+        <viewAttribute id="XBLNR_ItemRef"/>
+        <viewAttribute id="ZTERM"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="RSEG_SGTXT"/>
+        <viewAttribute id="RBKP_BKTXT"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="TBTKZ"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DECIMAL" id="Z_IR_Qty" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;IR_SHKZG&quot;='H', -&quot;MENGE&quot; , &quot;MENGE&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="Z_IR_Value" length="12" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;Z_IR_Qty&quot;&lt;0, -&quot;WRBTR&quot;,&quot;WRBTR&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="Z_IR_Price" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(ISNULL(&quot;Z_IR_Qty&quot;) or &quot;Z_IR_Qty&quot;=0, NULL,&quot;Z_IR_Value&quot;/&quot;Z_IR_Qty&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="BLDAT_IR" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;BLDAT&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IR_MATNR" length="18" expressionLanguage="COLUMN_ENGINE">
+          <formula>ltrim(&quot;MATNR&quot;, '0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CPUDT_DATE" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;CPUDT&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="Z_EnteredonDate_PlusOneDay" expressionLanguage="COLUMN_ENGINE">
+          <formula>adddays(&quot;CPUDT_DATE&quot;,1)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IR_Line$$$$CA_PUR_INCOMING_INVOICE$$">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WRBTR" source="WRBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPGRP" source="SPGRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPGRM" source="SPGRM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPGRQ" source="SPGRQ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATE_SQL" source="DATE_SQL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IR_CurrencyKey" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE" source="MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IR_SHKZG" source="SHKZG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCALENDAR_YEAR" source="ZCALENDAR_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR_ItemRef" source="XBLNR_ItemRef"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZTERM" source="ZTERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RSEG_SGTXT" source="SGTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RBKP_BKTXT" source="BKTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT" source="CPUDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TBTKZ" source="TBTKZ"/>
+      </input>
+      <filter>(&quot;BLART&quot; !='KP') AND (not in (&quot;GJAHR&quot;,'2010','2011','2012','2013','2014','2015'))</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_4">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="Z_IR_POSTING_DATE"/>
+        <viewAttribute id="Z_WORKDAYS_BETWEEN"/>
+        <viewAttribute id="Z_D5_IR_ADJUSTED"/>
+        <viewAttribute id="Z_D0_IR_PLUS_ONEDAY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#FN_WORKDAYS_BETWEEN_INVOICEMATCH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_POSTING_DATE" source="Z_IR_POSTING_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_WORKDAYS_BETWEEN" source="Z_WORKDAYS_BETWEEN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_D5_IR_ADJUSTED" source="Z_D5_IR_ADJUSTED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_D0_IR_PLUS_ONEDAY" source="Z_D0_IR_PLUS_ONEDAY"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="IR_Line_Detail" joinOrder="OUTSIDE_IN" joinType="rightOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="SPGRP"/>
+        <viewAttribute id="SPGRM"/>
+        <viewAttribute id="SPGRQ"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="DATE_SQL"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="IR_CurrencyKey"/>
+        <viewAttribute id="Z_IR_Qty"/>
+        <viewAttribute id="Z_IR_Value"/>
+        <viewAttribute id="Z_IR_Price"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="XBLNR"/>
+        <viewAttribute id="XBLNR_ItemRef"/>
+        <viewAttribute id="ZTERM"/>
+        <viewAttribute id="BLDAT_IR"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="RSEG_SGTXT"/>
+        <viewAttribute id="RBKP_BKTXT"/>
+        <viewAttribute id="IR_MATNR"/>
+        <viewAttribute id="Z_WORKDAYS_BETWEEN"/>
+        <viewAttribute id="Z_D5_IR_ADJUSTED"/>
+        <viewAttribute id="Z_D0_IR_PLUS_ONEDAY"/>
+        <viewAttribute id="Z_EnteredonDate_PlusOneDay"/>
+        <viewAttribute id="CPUDT_DATE"/>
+        <viewAttribute id="TBTKZ"/>
+        <viewAttribute hidden="true" id="JOIN$Z_IR_POSTING_DATE$DATE_SQL"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Projection_4">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_WORKDAYS_BETWEEN" source="Z_WORKDAYS_BETWEEN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_D5_IR_ADJUSTED" source="Z_D5_IR_ADJUSTED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_D0_IR_PLUS_ONEDAY" source="Z_D0_IR_PLUS_ONEDAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$Z_IR_POSTING_DATE$DATE_SQL" source="Z_IR_POSTING_DATE"/>
+      </input>
+      <input node="#IR_Line">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPGRP" source="SPGRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPGRM" source="SPGRM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPGRQ" source="SPGRQ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATE_SQL" source="DATE_SQL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IR_CurrencyKey" source="IR_CurrencyKey"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Qty" source="Z_IR_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Value" source="Z_IR_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Price" source="Z_IR_Price"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCALENDAR_YEAR" source="ZCALENDAR_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR_ItemRef" source="XBLNR_ItemRef"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZTERM" source="ZTERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT_IR" source="BLDAT_IR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RSEG_SGTXT" source="RSEG_SGTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RBKP_BKTXT" source="RBKP_BKTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IR_MATNR" source="IR_MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_EnteredonDate_PlusOneDay" source="Z_EnteredonDate_PlusOneDay"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT_DATE" source="CPUDT_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TBTKZ" source="TBTKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$Z_IR_POSTING_DATE$DATE_SQL" source="DATE_SQL"/>
+      </input>
+      <joinAttribute name="JOIN$Z_IR_POSTING_DATE$DATE_SQL"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="GR_IR" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="Z_GR_Total_Qty"/>
+        <viewAttribute id="Z_IR_Total_Qty"/>
+        <viewAttribute id="Z_IR_Total_Value"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="SPGRP"/>
+        <viewAttribute id="SPGRM"/>
+        <viewAttribute id="SPGRQ"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="DATE_SQL"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="IR_CurrencyKey"/>
+        <viewAttribute id="Z_IR_Qty"/>
+        <viewAttribute id="Z_IR_Value"/>
+        <viewAttribute id="Z_IR_Price"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="XBLNR"/>
+        <viewAttribute id="XBLNR_ItemRef"/>
+        <viewAttribute id="ERFME"/>
+        <viewAttribute id="ZTERM"/>
+        <viewAttribute id="BLDAT_IR"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="RSEG_SGTXT"/>
+        <viewAttribute id="RBKP_BKTXT"/>
+        <viewAttribute id="IR_MATNR"/>
+        <viewAttribute id="Z_WORKDAYS_BETWEEN"/>
+        <viewAttribute id="Z_D5_IR_ADJUSTED"/>
+        <viewAttribute id="Z_D0_IR_PLUS_ONEDAY"/>
+        <viewAttribute id="Z_EnteredonDate_PlusOneDay"/>
+        <viewAttribute id="CPUDT_DATE"/>
+        <viewAttribute id="TBTKZ"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="VARCHAR" id="EBELN_Rtrim" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>rtrim(&quot;EBELN&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IR_Line_Detail">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPGRP" source="SPGRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPGRM" source="SPGRM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPGRQ" source="SPGRQ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATE_SQL" source="DATE_SQL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IR_CurrencyKey" source="IR_CurrencyKey"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Qty" source="Z_IR_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Value" source="Z_IR_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Price" source="Z_IR_Price"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCALENDAR_YEAR" source="ZCALENDAR_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR_ItemRef" source="XBLNR_ItemRef"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZTERM" source="ZTERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT_IR" source="BLDAT_IR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RSEG_SGTXT" source="RSEG_SGTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RBKP_BKTXT" source="RBKP_BKTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IR_MATNR" source="IR_MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_WORKDAYS_BETWEEN" source="Z_WORKDAYS_BETWEEN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_D5_IR_ADJUSTED" source="Z_D5_IR_ADJUSTED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_D0_IR_PLUS_ONEDAY" source="Z_D0_IR_PLUS_ONEDAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_EnteredonDate_PlusOneDay" source="Z_EnteredonDate_PlusOneDay"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT_DATE" source="CPUDT_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TBTKZ" source="TBTKZ"/>
+      </input>
+      <input node="#GR_IR_Total">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_GR_Total_Qty" source="Z_GR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Total_Qty" source="Z_IR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Total_Value" source="Z_IR_Total_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFME" source="ERFME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+      </input>
+      <joinAttribute name="EBELN"/>
+      <joinAttribute name="EBELP"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_5">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="EKGRP"/>
+        <viewAttribute id="EKORG"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="PO_CurrencyKey"/>
+        <viewAttribute id="BEDAT"/>
+        <viewAttribute id="AEDAT"/>
+        <viewAttribute id="KNUMV"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="AEDAT_EKKO" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;AEDAT&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="BEDAT_EKKO" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;BEDAT&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#ECC_EKKO">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKGRP" source="EKGRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKORG" source="EKORG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART" source="BSART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_CurrencyKey" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEDAT" source="BEDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT" source="AEDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KNUMV" source="KNUMV"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_6">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="PO_Qty"/>
+        <viewAttribute id="WEPOS"/>
+        <viewAttribute id="PO_Value"/>
+        <viewAttribute id="AEDAT"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="EKPO_TXZ01"/>
+        <viewAttribute id="NETPR"/>
+        <viewAttribute id="PEINH"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="AEDAT_EKPO" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;AEDAT&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="PO_MATNR" length="18" expressionLanguage="COLUMN_ENGINE">
+          <formula>ltrim(&quot;MATNR&quot;, '0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#ECC_EKPO">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Qty" source="MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WEPOS" source="WEPOS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Value" source="NETWR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT" source="AEDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKPO_TXZ01" source="TXZ01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETPR" source="NETPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PEINH" source="PEINH"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="PO" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="EKGRP"/>
+        <viewAttribute id="EKORG"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="PO_CurrencyKey"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="PO_Qty"/>
+        <viewAttribute id="WEPOS"/>
+        <viewAttribute id="PO_Value"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="AEDAT_EKPO"/>
+        <viewAttribute id="AEDAT_EKKO"/>
+        <viewAttribute id="BEDAT_EKKO"/>
+        <viewAttribute id="EKPO_TXZ01"/>
+        <viewAttribute id="KNUMV"/>
+        <viewAttribute id="NETPR"/>
+        <viewAttribute id="PEINH"/>
+        <viewAttribute id="PO_MATNR"/>
+        <viewAttribute id="MATNR"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Projection_6">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Qty" source="PO_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WEPOS" source="WEPOS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Value" source="PO_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKPO" source="AEDAT_EKPO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKPO_TXZ01" source="EKPO_TXZ01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETPR" source="NETPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PEINH" source="PEINH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_MATNR" source="PO_MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+      </input>
+      <input node="#Projection_5">
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKGRP" source="EKGRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKORG" source="EKORG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART" source="BSART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_CurrencyKey" source="PO_CurrencyKey"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKKO" source="AEDAT_EKKO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEDAT_EKKO" source="BEDAT_EKKO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KNUMV" source="KNUMV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+      </input>
+      <joinAttribute name="EBELN"/>
+      <joinAttribute name="BUKRS"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_9">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="VENDOR_NAME"/>
+        <viewAttribute id="LIFNR_Formated"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_DIM_VENDORS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VENDOR_NAME" source="VENDOR_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR_Formated" source="LIFNR_Formated"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Pur_Grp_Des">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="EKGRP"/>
+        <viewAttribute id="EKNAM"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#ECC_T024">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKGRP" source="EKGRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKNAM" source="EKNAM"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="EKGRP"/>
+        <viewAttribute id="EKORG"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="PO_CurrencyKey"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="WEPOS"/>
+        <viewAttribute id="EKNAM"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="PO_Qty"/>
+        <viewAttribute id="PO_Value"/>
+        <viewAttribute id="AEDAT_EKPO"/>
+        <viewAttribute id="AEDAT_EKKO"/>
+        <viewAttribute id="BEDAT_EKKO"/>
+        <viewAttribute id="EKPO_TXZ01"/>
+        <viewAttribute id="KNUMV"/>
+        <viewAttribute id="NETPR"/>
+        <viewAttribute id="PEINH"/>
+        <viewAttribute id="PO_MATNR"/>
+        <viewAttribute id="MATNR"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PO">
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKGRP" source="EKGRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKORG" source="EKORG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART" source="BSART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_CurrencyKey" source="PO_CurrencyKey"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WEPOS" source="WEPOS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Qty" source="PO_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Value" source="PO_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKPO" source="AEDAT_EKPO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKKO" source="AEDAT_EKKO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEDAT_EKKO" source="BEDAT_EKKO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKPO_TXZ01" source="EKPO_TXZ01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KNUMV" source="KNUMV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETPR" source="NETPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PEINH" source="PEINH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_MATNR" source="PO_MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+      </input>
+      <input node="#Pur_Grp_Des">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKNAM" source="EKNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKGRP" source="EKGRP"/>
+      </input>
+      <joinAttribute name="EKGRP"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_3" joinOrder="OUTSIDE_IN" joinType="rightOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="VENDOR_NAME"/>
+        <viewAttribute id="EKGRP"/>
+        <viewAttribute id="EKORG"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="PO_CurrencyKey"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="WEPOS"/>
+        <viewAttribute id="EKNAM"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="PO_Qty"/>
+        <viewAttribute id="PO_Value"/>
+        <viewAttribute id="LIFNR_Formated"/>
+        <viewAttribute id="AEDAT_EKPO"/>
+        <viewAttribute id="AEDAT_EKKO"/>
+        <viewAttribute id="BEDAT_EKKO"/>
+        <viewAttribute id="EKPO_TXZ01"/>
+        <viewAttribute id="KNUMV"/>
+        <viewAttribute id="NETPR"/>
+        <viewAttribute id="PEINH"/>
+        <viewAttribute id="PO_MATNR"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute hidden="true" id="JOIN$LIFNR$LIFNR"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="VARCHAR" id="EBELN_Rtrim" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>rtrim(&quot;EBELN&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#Projection_9">
+        <mapping xsi:type="Calculation:AttributeMapping" target="VENDOR_NAME" source="VENDOR_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR_Formated" source="LIFNR_Formated"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LIFNR$LIFNR" source="LIFNR"/>
+      </input>
+      <input node="#Join_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKGRP" source="EKGRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKORG" source="EKORG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART" source="BSART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_CurrencyKey" source="PO_CurrencyKey"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WEPOS" source="WEPOS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKNAM" source="EKNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Qty" source="PO_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Value" source="PO_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKPO" source="AEDAT_EKPO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKKO" source="AEDAT_EKKO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEDAT_EKKO" source="BEDAT_EKKO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKPO_TXZ01" source="EKPO_TXZ01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KNUMV" source="KNUMV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETPR" source="NETPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PEINH" source="PEINH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_MATNR" source="PO_MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LIFNR$LIFNR" source="LIFNR"/>
+      </input>
+      <joinAttribute name="JOIN$LIFNR$LIFNR"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_2" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="Z_GR_Total_Qty"/>
+        <viewAttribute id="Z_IR_Total_Qty"/>
+        <viewAttribute id="Z_IR_Total_Value"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="SPGRP"/>
+        <viewAttribute id="SPGRM"/>
+        <viewAttribute id="SPGRQ"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="DATE_SQL"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="IR_CurrencyKey"/>
+        <viewAttribute id="Z_IR_Qty"/>
+        <viewAttribute id="Z_IR_Value"/>
+        <viewAttribute id="Z_IR_Price"/>
+        <viewAttribute id="VENDOR_NAME"/>
+        <viewAttribute id="EKGRP"/>
+        <viewAttribute id="EKORG"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="PO_CurrencyKey"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="WEPOS"/>
+        <viewAttribute id="EKNAM"/>
+        <viewAttribute id="PO_Qty"/>
+        <viewAttribute id="PO_Value"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="XBLNR"/>
+        <viewAttribute id="XBLNR_ItemRef"/>
+        <viewAttribute id="LIFNR_Formated"/>
+        <viewAttribute id="ERFME"/>
+        <viewAttribute id="AEDAT_EKPO"/>
+        <viewAttribute id="AEDAT_EKKO"/>
+        <viewAttribute id="ZTERM"/>
+        <viewAttribute id="BEDAT_EKKO"/>
+        <viewAttribute id="BLDAT_IR"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="EKPO_TXZ01"/>
+        <viewAttribute id="RSEG_SGTXT"/>
+        <viewAttribute id="RBKP_BKTXT"/>
+        <viewAttribute id="KNUMV"/>
+        <viewAttribute id="NETPR"/>
+        <viewAttribute id="PEINH"/>
+        <viewAttribute id="IR_MATNR"/>
+        <viewAttribute id="Z_WORKDAYS_BETWEEN"/>
+        <viewAttribute id="Z_D5_IR_ADJUSTED"/>
+        <viewAttribute id="PO_MATNR"/>
+        <viewAttribute id="Z_D0_IR_PLUS_ONEDAY"/>
+        <viewAttribute id="EBELN_Rtrim"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="Z_EnteredonDate_PlusOneDay"/>
+        <viewAttribute id="CPUDT_DATE"/>
+        <viewAttribute id="TBTKZ"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#GR_IR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_GR_Total_Qty" source="Z_GR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Total_Qty" source="Z_IR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Total_Value" source="Z_IR_Total_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPGRP" source="SPGRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPGRM" source="SPGRM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPGRQ" source="SPGRQ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATE_SQL" source="DATE_SQL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IR_CurrencyKey" source="IR_CurrencyKey"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Qty" source="Z_IR_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Value" source="Z_IR_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Price" source="Z_IR_Price"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCALENDAR_YEAR" source="ZCALENDAR_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR_ItemRef" source="XBLNR_ItemRef"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFME" source="ERFME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZTERM" source="ZTERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT_IR" source="BLDAT_IR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RSEG_SGTXT" source="RSEG_SGTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RBKP_BKTXT" source="RBKP_BKTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IR_MATNR" source="IR_MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_WORKDAYS_BETWEEN" source="Z_WORKDAYS_BETWEEN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_D5_IR_ADJUSTED" source="Z_D5_IR_ADJUSTED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_D0_IR_PLUS_ONEDAY" source="Z_D0_IR_PLUS_ONEDAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN_Rtrim" source="EBELN_Rtrim"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_EnteredonDate_PlusOneDay" source="Z_EnteredonDate_PlusOneDay"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT_DATE" source="CPUDT_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TBTKZ" source="TBTKZ"/>
+      </input>
+      <input node="#Join_3">
+        <mapping xsi:type="Calculation:AttributeMapping" target="VENDOR_NAME" source="VENDOR_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKGRP" source="EKGRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKORG" source="EKORG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART" source="BSART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_CurrencyKey" source="PO_CurrencyKey"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WEPOS" source="WEPOS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKNAM" source="EKNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Qty" source="PO_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Value" source="PO_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR_Formated" source="LIFNR_Formated"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKPO" source="AEDAT_EKPO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKKO" source="AEDAT_EKKO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEDAT_EKKO" source="BEDAT_EKKO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKPO_TXZ01" source="EKPO_TXZ01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KNUMV" source="KNUMV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETPR" source="NETPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PEINH" source="PEINH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_MATNR" source="PO_MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN_Rtrim" source="EBELN_Rtrim"/>
+      </input>
+      <joinAttribute name="EBELP"/>
+      <joinAttribute name="EBELN_Rtrim"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_7">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="BUKRS"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_DIM_ORG_STRCTR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_4" joinOrder="OUTSIDE_IN" joinType="inner">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="Z_GR_Total_Qty"/>
+        <viewAttribute id="Z_IR_Total_Qty"/>
+        <viewAttribute id="Z_IR_Total_Value"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="SPGRP"/>
+        <viewAttribute id="SPGRM"/>
+        <viewAttribute id="SPGRQ"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="DATE_SQL"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="IR_CurrencyKey"/>
+        <viewAttribute id="Z_IR_Qty"/>
+        <viewAttribute id="Z_IR_Value"/>
+        <viewAttribute id="Z_IR_Price"/>
+        <viewAttribute id="VENDOR_NAME"/>
+        <viewAttribute id="EKGRP"/>
+        <viewAttribute id="EKORG"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="PO_CurrencyKey"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="WEPOS"/>
+        <viewAttribute id="EKNAM"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="PO_Qty"/>
+        <viewAttribute id="PO_Value"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="XBLNR"/>
+        <viewAttribute id="XBLNR_ItemRef"/>
+        <viewAttribute id="LIFNR_Formated"/>
+        <viewAttribute id="ERFME"/>
+        <viewAttribute id="AEDAT_EKPO"/>
+        <viewAttribute id="AEDAT_EKKO"/>
+        <viewAttribute id="ZTERM"/>
+        <viewAttribute id="BEDAT_EKKO"/>
+        <viewAttribute id="BLDAT_IR"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="EKPO_TXZ01"/>
+        <viewAttribute id="RSEG_SGTXT"/>
+        <viewAttribute id="RBKP_BKTXT"/>
+        <viewAttribute id="KNUMV"/>
+        <viewAttribute id="NETPR"/>
+        <viewAttribute id="PEINH"/>
+        <viewAttribute id="IR_MATNR"/>
+        <viewAttribute id="Z_WORKDAYS_BETWEEN"/>
+        <viewAttribute id="Z_D5_IR_ADJUSTED"/>
+        <viewAttribute id="PO_MATNR"/>
+        <viewAttribute id="Z_D0_IR_PLUS_ONEDAY"/>
+        <viewAttribute id="EBELN_Rtrim"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="Z_EnteredonDate_PlusOneDay"/>
+        <viewAttribute id="CPUDT_DATE"/>
+        <viewAttribute id="TBTKZ"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Join_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_GR_Total_Qty" source="Z_GR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Total_Qty" source="Z_IR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Total_Value" source="Z_IR_Total_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPGRP" source="SPGRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPGRM" source="SPGRM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPGRQ" source="SPGRQ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATE_SQL" source="DATE_SQL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IR_CurrencyKey" source="IR_CurrencyKey"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Qty" source="Z_IR_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Value" source="Z_IR_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Price" source="Z_IR_Price"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VENDOR_NAME" source="VENDOR_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKGRP" source="EKGRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKORG" source="EKORG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART" source="BSART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_CurrencyKey" source="PO_CurrencyKey"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WEPOS" source="WEPOS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKNAM" source="EKNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Qty" source="PO_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Value" source="PO_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCALENDAR_YEAR" source="ZCALENDAR_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR_ItemRef" source="XBLNR_ItemRef"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR_Formated" source="LIFNR_Formated"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFME" source="ERFME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKPO" source="AEDAT_EKPO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKKO" source="AEDAT_EKKO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZTERM" source="ZTERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEDAT_EKKO" source="BEDAT_EKKO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT_IR" source="BLDAT_IR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKPO_TXZ01" source="EKPO_TXZ01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RSEG_SGTXT" source="RSEG_SGTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RBKP_BKTXT" source="RBKP_BKTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KNUMV" source="KNUMV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETPR" source="NETPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PEINH" source="PEINH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IR_MATNR" source="IR_MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_WORKDAYS_BETWEEN" source="Z_WORKDAYS_BETWEEN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_D5_IR_ADJUSTED" source="Z_D5_IR_ADJUSTED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_MATNR" source="PO_MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_D0_IR_PLUS_ONEDAY" source="Z_D0_IR_PLUS_ONEDAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN_Rtrim" source="EBELN_Rtrim"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_EnteredonDate_PlusOneDay" source="Z_EnteredonDate_PlusOneDay"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT_DATE" source="CPUDT_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TBTKZ" source="TBTKZ"/>
+      </input>
+      <input node="#Projection_7">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+      </input>
+      <joinAttribute name="BUKRS"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Day0_Data">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="D0_BELNR"/>
+        <viewAttribute id="D0_BUZEI"/>
+        <viewAttribute id="D0_EBELN"/>
+        <viewAttribute id="D0_EBELP"/>
+        <viewAttribute id="D0_IR_Price"/>
+        <viewAttribute id="D0_IR_Qty"/>
+        <viewAttribute id="D0_IR_Value"/>
+        <viewAttribute id="D0_IR_Total_Qty"/>
+        <viewAttribute id="D0_IR_Total_Value"/>
+        <viewAttribute id="D0_PO_Price"/>
+        <viewAttribute id="D0_POIR_Price_Match"/>
+        <viewAttribute id="D0_POIR_Total_Qty_Match"/>
+        <viewAttribute id="D0_LoadingDate"/>
+        <viewAttribute id="D0_GR_Total_Qty"/>
+        <viewAttribute id="D0_GRIR_Total_Qty_Match"/>
+        <viewAttribute id="D0_Daysbet_IRvsLoading"/>
+        <viewAttribute id="D0_PO_Qty"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Z_SNAPSHOT_DAY0">
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_BELNR" source="D0_BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_BUZEI" source="D0_BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_EBELN" source="D0_EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_EBELP" source="D0_EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_IR_Price" source="D0_IR_Price"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_IR_Qty" source="D0_IR_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_IR_Value" source="D0_IR_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_IR_Total_Qty" source="D0_IR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_IR_Total_Value" source="D0_IR_Total_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_PO_Price" source="D0_PO_Price"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_POIR_Price_Match" source="D0_POIR_Price_Match"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_POIR_Total_Qty_Match" source="D0_POIR_Total_Qty_Match"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_LoadingDate" source="D0_LoadingDate"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_GR_Total_Qty" source="D0_GR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_GRIR_Total_Qty_Match" source="D0_GRIR_Total_Qty_Match"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_Daysbet_IRvsLoading" source="D0_Daysbet_IRvsLoading"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_PO_Qty" source="D0_PO_Qty"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_5" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="Z_GR_Total_Qty"/>
+        <viewAttribute id="Z_IR_Total_Qty"/>
+        <viewAttribute id="Z_IR_Total_Value"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="SPGRP"/>
+        <viewAttribute id="SPGRM"/>
+        <viewAttribute id="SPGRQ"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="DATE_SQL"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="IR_CurrencyKey"/>
+        <viewAttribute id="Z_IR_Qty"/>
+        <viewAttribute id="Z_IR_Value"/>
+        <viewAttribute id="Z_IR_Price"/>
+        <viewAttribute id="VENDOR_NAME"/>
+        <viewAttribute id="EKGRP"/>
+        <viewAttribute id="EKORG"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="PO_CurrencyKey"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="WEPOS"/>
+        <viewAttribute id="EKNAM"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="PO_Qty"/>
+        <viewAttribute id="PO_Value"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="XBLNR"/>
+        <viewAttribute id="XBLNR_ItemRef"/>
+        <viewAttribute id="LIFNR_Formated"/>
+        <viewAttribute id="ERFME"/>
+        <viewAttribute id="AEDAT_EKPO"/>
+        <viewAttribute id="AEDAT_EKKO"/>
+        <viewAttribute id="ZTERM"/>
+        <viewAttribute id="BEDAT_EKKO"/>
+        <viewAttribute id="BLDAT_IR"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="EKPO_TXZ01"/>
+        <viewAttribute id="RSEG_SGTXT"/>
+        <viewAttribute id="RBKP_BKTXT"/>
+        <viewAttribute id="KNUMV"/>
+        <viewAttribute id="NETPR"/>
+        <viewAttribute id="PEINH"/>
+        <viewAttribute id="IR_MATNR"/>
+        <viewAttribute id="Z_WORKDAYS_BETWEEN"/>
+        <viewAttribute id="D0_IR_Price"/>
+        <viewAttribute id="D0_IR_Qty"/>
+        <viewAttribute id="D0_IR_Value"/>
+        <viewAttribute id="D0_IR_Total_Qty"/>
+        <viewAttribute id="D0_IR_Total_Value"/>
+        <viewAttribute id="D0_PO_Price"/>
+        <viewAttribute id="D0_POIR_Price_Match"/>
+        <viewAttribute id="D0_POIR_Total_Qty_Match"/>
+        <viewAttribute id="D0_LoadingDate"/>
+        <viewAttribute id="D0_GR_Total_Qty"/>
+        <viewAttribute id="D0_GRIR_Total_Qty_Match"/>
+        <viewAttribute id="D0_Daysbet_IRvsLoading"/>
+        <viewAttribute id="Z_D5_IR_ADJUSTED"/>
+        <viewAttribute id="PO_MATNR"/>
+        <viewAttribute id="Z_D0_IR_PLUS_ONEDAY"/>
+        <viewAttribute id="EBELN_Rtrim"/>
+        <viewAttribute id="D0_PO_Qty"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="Z_EnteredonDate_PlusOneDay"/>
+        <viewAttribute id="CPUDT_DATE"/>
+        <viewAttribute id="TBTKZ"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Join_4">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_GR_Total_Qty" source="Z_GR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Total_Qty" source="Z_IR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Total_Value" source="Z_IR_Total_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPGRP" source="SPGRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPGRM" source="SPGRM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPGRQ" source="SPGRQ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATE_SQL" source="DATE_SQL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IR_CurrencyKey" source="IR_CurrencyKey"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Qty" source="Z_IR_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Value" source="Z_IR_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Price" source="Z_IR_Price"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VENDOR_NAME" source="VENDOR_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKGRP" source="EKGRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKORG" source="EKORG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART" source="BSART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_CurrencyKey" source="PO_CurrencyKey"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WEPOS" source="WEPOS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKNAM" source="EKNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Qty" source="PO_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Value" source="PO_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCALENDAR_YEAR" source="ZCALENDAR_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR_ItemRef" source="XBLNR_ItemRef"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR_Formated" source="LIFNR_Formated"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFME" source="ERFME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKPO" source="AEDAT_EKPO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKKO" source="AEDAT_EKKO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZTERM" source="ZTERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEDAT_EKKO" source="BEDAT_EKKO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT_IR" source="BLDAT_IR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKPO_TXZ01" source="EKPO_TXZ01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RSEG_SGTXT" source="RSEG_SGTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RBKP_BKTXT" source="RBKP_BKTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KNUMV" source="KNUMV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETPR" source="NETPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PEINH" source="PEINH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IR_MATNR" source="IR_MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_WORKDAYS_BETWEEN" source="Z_WORKDAYS_BETWEEN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_D5_IR_ADJUSTED" source="Z_D5_IR_ADJUSTED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_MATNR" source="PO_MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_D0_IR_PLUS_ONEDAY" source="Z_D0_IR_PLUS_ONEDAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN_Rtrim" source="EBELN_Rtrim"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_EnteredonDate_PlusOneDay" source="Z_EnteredonDate_PlusOneDay"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT_DATE" source="CPUDT_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TBTKZ" source="TBTKZ"/>
+      </input>
+      <input node="#Day0_Data">
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_IR_Price" source="D0_IR_Price"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_IR_Qty" source="D0_IR_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_IR_Value" source="D0_IR_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_IR_Total_Qty" source="D0_IR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_IR_Total_Value" source="D0_IR_Total_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_PO_Price" source="D0_PO_Price"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_POIR_Price_Match" source="D0_POIR_Price_Match"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_POIR_Total_Qty_Match" source="D0_POIR_Total_Qty_Match"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_LoadingDate" source="D0_LoadingDate"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_GR_Total_Qty" source="D0_GR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_GRIR_Total_Qty_Match" source="D0_GRIR_Total_Qty_Match"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_Daysbet_IRvsLoading" source="D0_Daysbet_IRvsLoading"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_PO_Qty" source="D0_PO_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="D0_BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="D0_BUZEI"/>
+      </input>
+      <joinAttribute name="BELNR"/>
+      <joinAttribute name="BUZEI"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Day5_Data">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="D5_BELNR"/>
+        <viewAttribute id="D5_BUZEI"/>
+        <viewAttribute id="D5_EBELN"/>
+        <viewAttribute id="D5_EBELP"/>
+        <viewAttribute id="D5_GR_Total_Qty"/>
+        <viewAttribute id="D5_GRIR_Total_Qty_Match"/>
+        <viewAttribute id="D5_LoadingDate"/>
+        <viewAttribute id="D5_IR_Price"/>
+        <viewAttribute id="D5_IR_Qty"/>
+        <viewAttribute id="D5_IR_Value"/>
+        <viewAttribute id="D5_IR_Total_Qty"/>
+        <viewAttribute id="D5_IR_Total_Value"/>
+        <viewAttribute id="D5_PO_Price"/>
+        <viewAttribute id="D5_WORKDAYS_BETWEEN"/>
+        <viewAttribute id="D5_PO_Qty"/>
+        <viewAttribute id="D5_POIR_Price_Match"/>
+        <viewAttribute id="D5_POIR_Total_Qty_Match"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Z_SNAPSHOT_DAY5">
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_BELNR" source="D5_BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_BUZEI" source="D5_BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_EBELN" source="D5_EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_EBELP" source="D5_EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_GR_Total_Qty" source="D5_GR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_GRIR_Total_Qty_Match" source="D5_GRIR_Total_Qty_Match"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_LoadingDate" source="D5_LoadingDate"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_IR_Price" source="D5_IR_Price"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_IR_Qty" source="D5_IR_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_IR_Value" source="D5_IR_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_IR_Total_Qty" source="D5_IR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_IR_Total_Value" source="D5_IR_Total_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_PO_Price" source="D5_PO_Price"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_WORKDAYS_BETWEEN" source="D5_WORKDAYS_BETWEEN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_PO_Qty" source="D5_PO_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_POIR_Price_Match" source="D5_POIR_Price_Match"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_POIR_Total_Qty_Match" source="D5_POIR_Total_Qty_Match"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_6" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="Z_GR_Total_Qty"/>
+        <viewAttribute id="Z_IR_Total_Qty"/>
+        <viewAttribute id="Z_IR_Total_Value"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="SPGRP"/>
+        <viewAttribute id="SPGRM"/>
+        <viewAttribute id="SPGRQ"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="DATE_SQL"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="IR_CurrencyKey"/>
+        <viewAttribute id="Z_IR_Qty"/>
+        <viewAttribute id="Z_IR_Value"/>
+        <viewAttribute id="Z_IR_Price"/>
+        <viewAttribute id="VENDOR_NAME"/>
+        <viewAttribute id="EKGRP"/>
+        <viewAttribute id="EKORG"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="PO_CurrencyKey"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="WEPOS"/>
+        <viewAttribute id="EKNAM"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="PO_Qty"/>
+        <viewAttribute id="PO_Value"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="XBLNR"/>
+        <viewAttribute id="XBLNR_ItemRef"/>
+        <viewAttribute id="LIFNR_Formated"/>
+        <viewAttribute id="ERFME"/>
+        <viewAttribute id="AEDAT_EKPO"/>
+        <viewAttribute id="AEDAT_EKKO"/>
+        <viewAttribute id="ZTERM"/>
+        <viewAttribute id="BEDAT_EKKO"/>
+        <viewAttribute id="BLDAT_IR"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="EKPO_TXZ01"/>
+        <viewAttribute id="RSEG_SGTXT"/>
+        <viewAttribute id="RBKP_BKTXT"/>
+        <viewAttribute id="KNUMV"/>
+        <viewAttribute id="NETPR"/>
+        <viewAttribute id="PEINH"/>
+        <viewAttribute id="IR_MATNR"/>
+        <viewAttribute id="Z_WORKDAYS_BETWEEN"/>
+        <viewAttribute id="D0_IR_Price"/>
+        <viewAttribute id="D0_IR_Qty"/>
+        <viewAttribute id="D0_IR_Value"/>
+        <viewAttribute id="D0_IR_Total_Qty"/>
+        <viewAttribute id="D0_IR_Total_Value"/>
+        <viewAttribute id="D0_PO_Price"/>
+        <viewAttribute id="D0_POIR_Price_Match"/>
+        <viewAttribute id="D0_POIR_Total_Qty_Match"/>
+        <viewAttribute id="D5_GR_Total_Qty"/>
+        <viewAttribute id="D5_GRIR_Total_Qty_Match"/>
+        <viewAttribute id="D5_LoadingDate"/>
+        <viewAttribute id="D0_LoadingDate"/>
+        <viewAttribute id="D5_IR_Price"/>
+        <viewAttribute id="D5_IR_Qty"/>
+        <viewAttribute id="D5_IR_Value"/>
+        <viewAttribute id="D5_IR_Total_Qty"/>
+        <viewAttribute id="D5_IR_Total_Value"/>
+        <viewAttribute id="D5_PO_Price"/>
+        <viewAttribute id="D0_GR_Total_Qty"/>
+        <viewAttribute id="D0_GRIR_Total_Qty_Match"/>
+        <viewAttribute id="D5_WORKDAYS_BETWEEN"/>
+        <viewAttribute id="D0_Daysbet_IRvsLoading"/>
+        <viewAttribute id="Z_D5_IR_ADJUSTED"/>
+        <viewAttribute id="PO_MATNR"/>
+        <viewAttribute id="Z_D0_IR_PLUS_ONEDAY"/>
+        <viewAttribute id="EBELN_Rtrim"/>
+        <viewAttribute id="D0_PO_Qty"/>
+        <viewAttribute id="D5_PO_Qty"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="D5_POIR_Price_Match"/>
+        <viewAttribute id="D5_POIR_Total_Qty_Match"/>
+        <viewAttribute id="Z_EnteredonDate_PlusOneDay"/>
+        <viewAttribute id="CPUDT_DATE"/>
+        <viewAttribute id="TBTKZ"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Join_5">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_GR_Total_Qty" source="Z_GR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Total_Qty" source="Z_IR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Total_Value" source="Z_IR_Total_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPGRP" source="SPGRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPGRM" source="SPGRM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPGRQ" source="SPGRQ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATE_SQL" source="DATE_SQL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IR_CurrencyKey" source="IR_CurrencyKey"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Qty" source="Z_IR_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Value" source="Z_IR_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Price" source="Z_IR_Price"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VENDOR_NAME" source="VENDOR_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKGRP" source="EKGRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKORG" source="EKORG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART" source="BSART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_CurrencyKey" source="PO_CurrencyKey"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WEPOS" source="WEPOS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKNAM" source="EKNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Qty" source="PO_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Value" source="PO_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCALENDAR_YEAR" source="ZCALENDAR_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR_ItemRef" source="XBLNR_ItemRef"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR_Formated" source="LIFNR_Formated"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFME" source="ERFME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKPO" source="AEDAT_EKPO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKKO" source="AEDAT_EKKO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZTERM" source="ZTERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEDAT_EKKO" source="BEDAT_EKKO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT_IR" source="BLDAT_IR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKPO_TXZ01" source="EKPO_TXZ01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RSEG_SGTXT" source="RSEG_SGTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RBKP_BKTXT" source="RBKP_BKTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KNUMV" source="KNUMV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETPR" source="NETPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PEINH" source="PEINH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IR_MATNR" source="IR_MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_WORKDAYS_BETWEEN" source="Z_WORKDAYS_BETWEEN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_IR_Price" source="D0_IR_Price"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_IR_Qty" source="D0_IR_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_IR_Value" source="D0_IR_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_IR_Total_Qty" source="D0_IR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_IR_Total_Value" source="D0_IR_Total_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_PO_Price" source="D0_PO_Price"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_POIR_Price_Match" source="D0_POIR_Price_Match"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_POIR_Total_Qty_Match" source="D0_POIR_Total_Qty_Match"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_LoadingDate" source="D0_LoadingDate"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_GR_Total_Qty" source="D0_GR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_GRIR_Total_Qty_Match" source="D0_GRIR_Total_Qty_Match"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_Daysbet_IRvsLoading" source="D0_Daysbet_IRvsLoading"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_D5_IR_ADJUSTED" source="Z_D5_IR_ADJUSTED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_MATNR" source="PO_MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_D0_IR_PLUS_ONEDAY" source="Z_D0_IR_PLUS_ONEDAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN_Rtrim" source="EBELN_Rtrim"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_PO_Qty" source="D0_PO_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_EnteredonDate_PlusOneDay" source="Z_EnteredonDate_PlusOneDay"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT_DATE" source="CPUDT_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TBTKZ" source="TBTKZ"/>
+      </input>
+      <input node="#Day5_Data">
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_GR_Total_Qty" source="D5_GR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_GRIR_Total_Qty_Match" source="D5_GRIR_Total_Qty_Match"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_LoadingDate" source="D5_LoadingDate"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_IR_Price" source="D5_IR_Price"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_IR_Qty" source="D5_IR_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_IR_Value" source="D5_IR_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_IR_Total_Qty" source="D5_IR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_IR_Total_Value" source="D5_IR_Total_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_PO_Price" source="D5_PO_Price"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_WORKDAYS_BETWEEN" source="D5_WORKDAYS_BETWEEN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_PO_Qty" source="D5_PO_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_POIR_Price_Match" source="D5_POIR_Price_Match"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_POIR_Total_Qty_Match" source="D5_POIR_Total_Qty_Match"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="D5_BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="D5_BUZEI"/>
+      </input>
+      <joinAttribute name="BELNR"/>
+      <joinAttribute name="BUZEI"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="MAKTX"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="VARCHAR" id="Trim_MATRN" length="18" expressionLanguage="COLUMN_ENGINE">
+          <formula>ltrim(&quot;MATNR&quot;, '0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CA_DIM_MATERIAL_DESCRIP">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTX" source="MAKTX"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_7" joinOrder="OUTSIDE_IN" joinType="rightOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="Trim_MATRN"/>
+        <viewAttribute id="MAKTX"/>
+        <viewAttribute id="Z_GR_Total_Qty"/>
+        <viewAttribute id="Z_IR_Total_Qty"/>
+        <viewAttribute id="Z_IR_Total_Value"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="SPGRP"/>
+        <viewAttribute id="SPGRM"/>
+        <viewAttribute id="SPGRQ"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="DATE_SQL"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="IR_CurrencyKey"/>
+        <viewAttribute id="Z_IR_Qty"/>
+        <viewAttribute id="Z_IR_Value"/>
+        <viewAttribute id="Z_IR_Price"/>
+        <viewAttribute id="VENDOR_NAME"/>
+        <viewAttribute id="EKGRP"/>
+        <viewAttribute id="EKORG"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="PO_CurrencyKey"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="WEPOS"/>
+        <viewAttribute id="EKNAM"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="PO_Qty"/>
+        <viewAttribute id="PO_Value"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="XBLNR"/>
+        <viewAttribute id="XBLNR_ItemRef"/>
+        <viewAttribute id="LIFNR_Formated"/>
+        <viewAttribute id="ERFME"/>
+        <viewAttribute id="AEDAT_EKPO"/>
+        <viewAttribute id="AEDAT_EKKO"/>
+        <viewAttribute id="ZTERM"/>
+        <viewAttribute id="BEDAT_EKKO"/>
+        <viewAttribute id="BLDAT_IR"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="EKPO_TXZ01"/>
+        <viewAttribute id="RSEG_SGTXT"/>
+        <viewAttribute id="RBKP_BKTXT"/>
+        <viewAttribute id="KNUMV"/>
+        <viewAttribute id="NETPR"/>
+        <viewAttribute id="PEINH"/>
+        <viewAttribute id="IR_MATNR"/>
+        <viewAttribute id="Z_WORKDAYS_BETWEEN"/>
+        <viewAttribute id="D0_IR_Price"/>
+        <viewAttribute id="D0_IR_Qty"/>
+        <viewAttribute id="D0_IR_Value"/>
+        <viewAttribute id="D0_IR_Total_Qty"/>
+        <viewAttribute id="D0_IR_Total_Value"/>
+        <viewAttribute id="D0_PO_Price"/>
+        <viewAttribute id="D0_POIR_Price_Match"/>
+        <viewAttribute id="D0_POIR_Total_Qty_Match"/>
+        <viewAttribute id="D5_GR_Total_Qty"/>
+        <viewAttribute id="D5_GRIR_Total_Qty_Match"/>
+        <viewAttribute id="D5_LoadingDate"/>
+        <viewAttribute id="D0_LoadingDate"/>
+        <viewAttribute id="D5_IR_Price"/>
+        <viewAttribute id="D5_IR_Qty"/>
+        <viewAttribute id="D5_IR_Value"/>
+        <viewAttribute id="D5_IR_Total_Qty"/>
+        <viewAttribute id="D5_IR_Total_Value"/>
+        <viewAttribute id="D5_PO_Price"/>
+        <viewAttribute id="D0_GR_Total_Qty"/>
+        <viewAttribute id="D0_GRIR_Total_Qty_Match"/>
+        <viewAttribute id="D5_WORKDAYS_BETWEEN"/>
+        <viewAttribute id="D0_Daysbet_IRvsLoading"/>
+        <viewAttribute id="Z_D5_IR_ADJUSTED"/>
+        <viewAttribute id="PO_MATNR"/>
+        <viewAttribute id="Z_D0_IR_PLUS_ONEDAY"/>
+        <viewAttribute id="EBELN_Rtrim"/>
+        <viewAttribute id="D0_PO_Qty"/>
+        <viewAttribute id="D5_PO_Qty"/>
+        <viewAttribute id="D5_POIR_Price_Match"/>
+        <viewAttribute id="D5_POIR_Total_Qty_Match"/>
+        <viewAttribute id="Z_EnteredonDate_PlusOneDay"/>
+        <viewAttribute id="CPUDT_DATE"/>
+        <viewAttribute id="TBTKZ"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Projection_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Trim_MATRN" source="Trim_MATRN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTX" source="MAKTX"/>
+      </input>
+      <input node="#Join_6">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_GR_Total_Qty" source="Z_GR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Total_Qty" source="Z_IR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Total_Value" source="Z_IR_Total_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPGRP" source="SPGRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPGRM" source="SPGRM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPGRQ" source="SPGRQ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATE_SQL" source="DATE_SQL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IR_CurrencyKey" source="IR_CurrencyKey"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Qty" source="Z_IR_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Value" source="Z_IR_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Price" source="Z_IR_Price"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VENDOR_NAME" source="VENDOR_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKGRP" source="EKGRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKORG" source="EKORG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART" source="BSART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_CurrencyKey" source="PO_CurrencyKey"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WEPOS" source="WEPOS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKNAM" source="EKNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Qty" source="PO_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Value" source="PO_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCALENDAR_YEAR" source="ZCALENDAR_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR_ItemRef" source="XBLNR_ItemRef"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR_Formated" source="LIFNR_Formated"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFME" source="ERFME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKPO" source="AEDAT_EKPO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKKO" source="AEDAT_EKKO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZTERM" source="ZTERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEDAT_EKKO" source="BEDAT_EKKO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT_IR" source="BLDAT_IR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKPO_TXZ01" source="EKPO_TXZ01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RSEG_SGTXT" source="RSEG_SGTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RBKP_BKTXT" source="RBKP_BKTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KNUMV" source="KNUMV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETPR" source="NETPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PEINH" source="PEINH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IR_MATNR" source="IR_MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_WORKDAYS_BETWEEN" source="Z_WORKDAYS_BETWEEN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_IR_Price" source="D0_IR_Price"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_IR_Qty" source="D0_IR_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_IR_Value" source="D0_IR_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_IR_Total_Qty" source="D0_IR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_IR_Total_Value" source="D0_IR_Total_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_PO_Price" source="D0_PO_Price"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_POIR_Price_Match" source="D0_POIR_Price_Match"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_POIR_Total_Qty_Match" source="D0_POIR_Total_Qty_Match"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_GR_Total_Qty" source="D5_GR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_GRIR_Total_Qty_Match" source="D5_GRIR_Total_Qty_Match"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_LoadingDate" source="D5_LoadingDate"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_LoadingDate" source="D0_LoadingDate"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_IR_Price" source="D5_IR_Price"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_IR_Qty" source="D5_IR_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_IR_Value" source="D5_IR_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_IR_Total_Qty" source="D5_IR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_IR_Total_Value" source="D5_IR_Total_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_PO_Price" source="D5_PO_Price"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_GR_Total_Qty" source="D0_GR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_GRIR_Total_Qty_Match" source="D0_GRIR_Total_Qty_Match"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_WORKDAYS_BETWEEN" source="D5_WORKDAYS_BETWEEN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_Daysbet_IRvsLoading" source="D0_Daysbet_IRvsLoading"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_D5_IR_ADJUSTED" source="Z_D5_IR_ADJUSTED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_MATNR" source="PO_MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_D0_IR_PLUS_ONEDAY" source="Z_D0_IR_PLUS_ONEDAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN_Rtrim" source="EBELN_Rtrim"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_PO_Qty" source="D0_PO_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_PO_Qty" source="D5_PO_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_POIR_Price_Match" source="D5_POIR_Price_Match"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_POIR_Total_Qty_Match" source="D5_POIR_Total_Qty_Match"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_EnteredonDate_PlusOneDay" source="Z_EnteredonDate_PlusOneDay"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT_DATE" source="CPUDT_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TBTKZ" source="TBTKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Trim_MATRN" source="PO_MATNR"/>
+      </input>
+      <joinAttribute name="Trim_MATRN"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_8">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MAKTX"/>
+        <viewAttribute id="Z_GR_Total_Qty"/>
+        <viewAttribute id="Z_IR_Total_Qty"/>
+        <viewAttribute id="Z_IR_Total_Value"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="SPGRP"/>
+        <viewAttribute id="SPGRM"/>
+        <viewAttribute id="SPGRQ"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="DATE_SQL"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="IR_CurrencyKey"/>
+        <viewAttribute id="Z_IR_Qty"/>
+        <viewAttribute id="Z_IR_Value"/>
+        <viewAttribute id="Z_IR_Price"/>
+        <viewAttribute id="VENDOR_NAME"/>
+        <viewAttribute id="EKGRP"/>
+        <viewAttribute id="EKORG"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="PO_CurrencyKey"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="WEPOS"/>
+        <viewAttribute id="EKNAM"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="PO_Qty"/>
+        <viewAttribute id="PO_Value"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="XBLNR"/>
+        <viewAttribute id="XBLNR_ItemRef"/>
+        <viewAttribute id="LIFNR_Formated"/>
+        <viewAttribute id="ERFME"/>
+        <viewAttribute id="AEDAT_EKPO"/>
+        <viewAttribute id="AEDAT_EKKO"/>
+        <viewAttribute id="ZTERM"/>
+        <viewAttribute id="BEDAT_EKKO"/>
+        <viewAttribute id="BLDAT_IR"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="EKPO_TXZ01"/>
+        <viewAttribute id="RSEG_SGTXT"/>
+        <viewAttribute id="RBKP_BKTXT"/>
+        <viewAttribute id="KNUMV"/>
+        <viewAttribute id="NETPR"/>
+        <viewAttribute id="PEINH"/>
+        <viewAttribute id="IR_MATNR"/>
+        <viewAttribute id="Z_WORKDAYS_BETWEEN"/>
+        <viewAttribute id="D0_IR_Price"/>
+        <viewAttribute id="D0_IR_Qty"/>
+        <viewAttribute id="D0_IR_Value"/>
+        <viewAttribute id="D0_IR_Total_Qty"/>
+        <viewAttribute id="D0_IR_Total_Value"/>
+        <viewAttribute id="D0_PO_Price"/>
+        <viewAttribute id="D0_POIR_Price_Match"/>
+        <viewAttribute id="D0_POIR_Total_Qty_Match"/>
+        <viewAttribute id="D5_GR_Total_Qty"/>
+        <viewAttribute id="D5_GRIR_Total_Qty_Match"/>
+        <viewAttribute id="D5_LoadingDate"/>
+        <viewAttribute id="D0_LoadingDate"/>
+        <viewAttribute id="D5_IR_Price"/>
+        <viewAttribute id="D5_IR_Qty"/>
+        <viewAttribute id="D5_IR_Value"/>
+        <viewAttribute id="D5_IR_Total_Qty"/>
+        <viewAttribute id="D5_IR_Total_Value"/>
+        <viewAttribute id="D5_PO_Price"/>
+        <viewAttribute id="D0_GR_Total_Qty"/>
+        <viewAttribute id="D0_GRIR_Total_Qty_Match"/>
+        <viewAttribute id="D5_WORKDAYS_BETWEEN"/>
+        <viewAttribute id="D0_Daysbet_IRvsLoading"/>
+        <viewAttribute id="Z_D5_IR_ADJUSTED"/>
+        <viewAttribute id="PO_MATNR"/>
+        <viewAttribute id="Z_D0_IR_PLUS_ONEDAY"/>
+        <viewAttribute id="EBELN_Rtrim"/>
+        <viewAttribute id="D0_PO_Qty"/>
+        <viewAttribute id="D5_PO_Qty"/>
+        <viewAttribute id="D5_POIR_Price_Match"/>
+        <viewAttribute id="D5_POIR_Total_Qty_Match"/>
+        <viewAttribute id="Z_EnteredonDate_PlusOneDay"/>
+        <viewAttribute id="CPUDT_DATE"/>
+        <viewAttribute id="TBTKZ"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Join_7">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTX" source="MAKTX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_GR_Total_Qty" source="Z_GR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Total_Qty" source="Z_IR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Total_Value" source="Z_IR_Total_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPGRP" source="SPGRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPGRM" source="SPGRM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPGRQ" source="SPGRQ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATE_SQL" source="DATE_SQL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IR_CurrencyKey" source="IR_CurrencyKey"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Qty" source="Z_IR_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Value" source="Z_IR_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Price" source="Z_IR_Price"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VENDOR_NAME" source="VENDOR_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKGRP" source="EKGRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKORG" source="EKORG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART" source="BSART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_CurrencyKey" source="PO_CurrencyKey"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WEPOS" source="WEPOS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKNAM" source="EKNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Qty" source="PO_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Value" source="PO_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCALENDAR_YEAR" source="ZCALENDAR_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR_ItemRef" source="XBLNR_ItemRef"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR_Formated" source="LIFNR_Formated"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFME" source="ERFME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKPO" source="AEDAT_EKPO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKKO" source="AEDAT_EKKO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZTERM" source="ZTERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEDAT_EKKO" source="BEDAT_EKKO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT_IR" source="BLDAT_IR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKPO_TXZ01" source="EKPO_TXZ01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RSEG_SGTXT" source="RSEG_SGTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RBKP_BKTXT" source="RBKP_BKTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KNUMV" source="KNUMV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETPR" source="NETPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PEINH" source="PEINH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IR_MATNR" source="IR_MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_WORKDAYS_BETWEEN" source="Z_WORKDAYS_BETWEEN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_IR_Price" source="D0_IR_Price"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_IR_Qty" source="D0_IR_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_IR_Value" source="D0_IR_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_IR_Total_Qty" source="D0_IR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_IR_Total_Value" source="D0_IR_Total_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_PO_Price" source="D0_PO_Price"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_POIR_Price_Match" source="D0_POIR_Price_Match"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_POIR_Total_Qty_Match" source="D0_POIR_Total_Qty_Match"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_GR_Total_Qty" source="D5_GR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_GRIR_Total_Qty_Match" source="D5_GRIR_Total_Qty_Match"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_LoadingDate" source="D5_LoadingDate"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_LoadingDate" source="D0_LoadingDate"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_IR_Price" source="D5_IR_Price"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_IR_Qty" source="D5_IR_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_IR_Value" source="D5_IR_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_IR_Total_Qty" source="D5_IR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_IR_Total_Value" source="D5_IR_Total_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_PO_Price" source="D5_PO_Price"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_GR_Total_Qty" source="D0_GR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_GRIR_Total_Qty_Match" source="D0_GRIR_Total_Qty_Match"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_WORKDAYS_BETWEEN" source="D5_WORKDAYS_BETWEEN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_Daysbet_IRvsLoading" source="D0_Daysbet_IRvsLoading"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_D5_IR_ADJUSTED" source="Z_D5_IR_ADJUSTED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_MATNR" source="PO_MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_D0_IR_PLUS_ONEDAY" source="Z_D0_IR_PLUS_ONEDAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN_Rtrim" source="EBELN_Rtrim"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_PO_Qty" source="D0_PO_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_PO_Qty" source="D5_PO_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_POIR_Price_Match" source="D5_POIR_Price_Match"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_POIR_Total_Qty_Match" source="D5_POIR_Total_Qty_Match"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_EnteredonDate_PlusOneDay" source="Z_EnteredonDate_PlusOneDay"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT_DATE" source="CPUDT_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TBTKZ" source="TBTKZ"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MAKTX"/>
+        <viewAttribute id="Z_GR_Total_Qty"/>
+        <viewAttribute id="Z_IR_Total_Qty"/>
+        <viewAttribute id="Z_IR_Total_Value"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="SPGRP"/>
+        <viewAttribute id="SPGRM"/>
+        <viewAttribute id="SPGRQ"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="DATE_SQL"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="IR_CurrencyKey"/>
+        <viewAttribute id="Z_IR_Qty"/>
+        <viewAttribute id="Z_IR_Value"/>
+        <viewAttribute id="Z_IR_Price"/>
+        <viewAttribute id="VENDOR_NAME"/>
+        <viewAttribute id="EKGRP"/>
+        <viewAttribute id="EKORG"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="PO_CurrencyKey"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="WEPOS"/>
+        <viewAttribute id="EKNAM"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="PO_Qty"/>
+        <viewAttribute id="PO_Value"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="XBLNR"/>
+        <viewAttribute id="XBLNR_ItemRef"/>
+        <viewAttribute id="LIFNR_Formated"/>
+        <viewAttribute id="ERFME"/>
+        <viewAttribute id="AEDAT_EKPO"/>
+        <viewAttribute id="AEDAT_EKKO"/>
+        <viewAttribute id="ZTERM"/>
+        <viewAttribute id="BEDAT_EKKO"/>
+        <viewAttribute id="BLDAT_IR"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="EKPO_TXZ01"/>
+        <viewAttribute id="RSEG_SGTXT"/>
+        <viewAttribute id="RBKP_BKTXT"/>
+        <viewAttribute id="KNUMV"/>
+        <viewAttribute id="NETPR"/>
+        <viewAttribute id="PEINH"/>
+        <viewAttribute id="IR_MATNR"/>
+        <viewAttribute id="Z_WORKDAYS_BETWEEN"/>
+        <viewAttribute id="D0_IR_Price"/>
+        <viewAttribute id="D0_IR_Qty"/>
+        <viewAttribute id="D0_IR_Value"/>
+        <viewAttribute id="D0_IR_Total_Qty"/>
+        <viewAttribute id="D0_IR_Total_Value"/>
+        <viewAttribute id="D0_PO_Price"/>
+        <viewAttribute id="D0_POIR_Price_Match"/>
+        <viewAttribute id="D0_POIR_Total_Qty_Match"/>
+        <viewAttribute id="D5_GR_Total_Qty"/>
+        <viewAttribute id="D5_GRIR_Total_Qty_Match"/>
+        <viewAttribute id="D5_LoadingDate"/>
+        <viewAttribute id="D0_LoadingDate"/>
+        <viewAttribute id="D5_IR_Price"/>
+        <viewAttribute id="D5_IR_Qty"/>
+        <viewAttribute id="D5_IR_Value"/>
+        <viewAttribute id="D5_IR_Total_Qty"/>
+        <viewAttribute id="D5_IR_Total_Value"/>
+        <viewAttribute id="D5_PO_Price"/>
+        <viewAttribute id="D0_GR_Total_Qty"/>
+        <viewAttribute id="D0_GRIR_Total_Qty_Match"/>
+        <viewAttribute id="D5_WORKDAYS_BETWEEN"/>
+        <viewAttribute id="D0_Daysbet_IRvsLoading"/>
+        <viewAttribute id="Z_D5_IR_ADJUSTED"/>
+        <viewAttribute id="PO_MATNR"/>
+        <viewAttribute id="Z_D0_IR_PLUS_ONEDAY"/>
+        <viewAttribute id="EBELN_Rtrim"/>
+        <viewAttribute id="D0_PO_Qty"/>
+        <viewAttribute id="D5_PO_Qty"/>
+        <viewAttribute id="D5_POIR_Price_Match"/>
+        <viewAttribute id="D5_POIR_Total_Qty_Match"/>
+        <viewAttribute id="Z_EnteredonDate_PlusOneDay"/>
+        <viewAttribute id="CPUDT_DATE"/>
+        <viewAttribute id="TBTKZ"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="VARCHAR" id="Z_Overall_Match_RealTime" length="15" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;IR_CurrencyKey&quot;!=&quot;PO_CurrencyKey&quot;,'NonMatch', IF(&quot;Z_GR_Indicator&quot;='', IF(&quot;Z_POIR_Total_Qty_Match&quot;='Match' and &quot;Z_POIR_Price_Match&quot;='Match','Match', IF(&quot;Z_POIR_Total_Qty_Match&quot;='','','NonMatch')), IF(&quot;Z_POIR_Total_Qty_Match&quot;='Match' and &quot;Z_POIR_Price_Match&quot;='Match' and &quot;Z_GRIR_Total_Qty_Match&quot;='Match','Match', IF(&quot;Z_GRIR_Total_Qty_Match&quot;='' AND &quot;Z_POIR_Total_Qty_Match&quot;='','','NonMatch'))))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="VARCHAR" id="Z_Overall_Match_D0D5" length="15" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;IR_CurrencyKey&quot;!=&quot;PO_CurrencyKey&quot;,'NonMatch', IF(&quot;Z_GR_Indicator&quot;='', IF(&quot;D0_POIR_Total_Qty_Match&quot;='Match' and &quot;D0_POIR_Price_Match&quot;='Match','Match', IF(&quot;D0_POIR_Total_Qty_Match&quot;='','','NonMatch')), IF(&quot;D0_POIR_Total_Qty_Match&quot;='Match' and &quot;D0_POIR_Price_Match&quot;='Match' and &quot;D5_GRIR_Total_Qty_Match&quot;='Match','Match', IF(&quot;D5_GRIR_Total_Qty_Match&quot;='' AND &quot;D0_POIR_Total_Qty_Match&quot;='','','NonMatch'))))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="VARCHAR" id="Z_POIR_Total_Qty_Match" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(isnull(&quot;Z_IR_Total_Qty&quot;),'',IF(&quot;PO_Qty&quot;>=&quot;Z_IR_Total_Qty&quot; ,'Match','NonMatch'))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="VARCHAR" id="Z_POIR_Price_Match" length="13" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF( ISNULL(&quot;Z_IR_Total_Qty&quot;) AND ISNULL(&quot;Z_GR_Total_Qty&quot;),'',IF(isnull(&quot;Z_IR_Price&quot;),'',if(&quot;Z_PO_Price&quot;>=&quot;Z_IR_Price&quot;,'Match','NonMatch')))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="VARCHAR" id="Z_GRIR_Total_Qty_Match" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;Z_GR_Indicator&quot;!='Yes','',IF(ISNULL(&quot;Z_IR_Total_Qty&quot;),'', IF(ISNULL(&quot;Z_GR_Total_Qty&quot;),'NonMatch',IF(&quot;Z_IR_Total_Qty&quot;&lt;=&quot;Z_GR_Total_Qty&quot;,'Match','NonMatch'))))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="VARCHAR" id="Z_Type" length="12" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;Z_IR_Value&quot;&lt;0,'Credit Memo','Invoice')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="VARCHAR" id="Z_GR_Indicator" length="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;WEPOS&quot;='X','Yes','')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="Z_PO_Price" length="13" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;PO_Qty&quot;!=0,&quot;PO_Value&quot;/&quot;PO_Qty&quot;,null)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="VARCHAR" id="Z_2WAY_3WAY" length="4" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;Z_GR_Indicator&quot;!='Yes','2Way','3Way')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="Z_System_Date" expressionLanguage="COLUMN_ENGINE">
+          <formula>daydate(&quot;Z_Current_Date&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="INTEGER" id="Z_Daysbet_IRvsLoading" expressionLanguage="COLUMN_ENGINE">
+          <formula>daysbetween(&quot;DATE_SQL&quot;,&quot;Z_D0_IR_PLUS_ONEDAY&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="INTEGER" id="Z_OverallMatch_RealTime_Count" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;Z_Overall_Match_RealTime&quot;='Match',1,0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="INTEGER" id="Z_OverallMatch_D0D5_Count" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;Z_Overall_Match_D0D5&quot;='Match',1,0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="VARCHAR" id="Z_Current_Date" length="8" expressionLanguage="COLUMN_ENGINE">
+          <formula>format(now(),'yyyymmdd')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#Projection_8">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTX" source="MAKTX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_GR_Total_Qty" source="Z_GR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Total_Qty" source="Z_IR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Total_Value" source="Z_IR_Total_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPGRP" source="SPGRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPGRM" source="SPGRM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPGRQ" source="SPGRQ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATE_SQL" source="DATE_SQL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IR_CurrencyKey" source="IR_CurrencyKey"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Qty" source="Z_IR_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Value" source="Z_IR_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_IR_Price" source="Z_IR_Price"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VENDOR_NAME" source="VENDOR_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKGRP" source="EKGRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKORG" source="EKORG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART" source="BSART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_CurrencyKey" source="PO_CurrencyKey"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WEPOS" source="WEPOS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKNAM" source="EKNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Qty" source="PO_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_Value" source="PO_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCALENDAR_YEAR" source="ZCALENDAR_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR_ItemRef" source="XBLNR_ItemRef"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR_Formated" source="LIFNR_Formated"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFME" source="ERFME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKPO" source="AEDAT_EKPO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT_EKKO" source="AEDAT_EKKO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZTERM" source="ZTERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEDAT_EKKO" source="BEDAT_EKKO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT_IR" source="BLDAT_IR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EKPO_TXZ01" source="EKPO_TXZ01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RSEG_SGTXT" source="RSEG_SGTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RBKP_BKTXT" source="RBKP_BKTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KNUMV" source="KNUMV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETPR" source="NETPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PEINH" source="PEINH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IR_MATNR" source="IR_MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_WORKDAYS_BETWEEN" source="Z_WORKDAYS_BETWEEN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_IR_Price" source="D0_IR_Price"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_IR_Qty" source="D0_IR_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_IR_Value" source="D0_IR_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_IR_Total_Qty" source="D0_IR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_IR_Total_Value" source="D0_IR_Total_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_PO_Price" source="D0_PO_Price"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_POIR_Price_Match" source="D0_POIR_Price_Match"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_POIR_Total_Qty_Match" source="D0_POIR_Total_Qty_Match"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_GR_Total_Qty" source="D5_GR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_GRIR_Total_Qty_Match" source="D5_GRIR_Total_Qty_Match"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_LoadingDate" source="D5_LoadingDate"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_LoadingDate" source="D0_LoadingDate"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_IR_Price" source="D5_IR_Price"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_IR_Qty" source="D5_IR_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_IR_Value" source="D5_IR_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_IR_Total_Qty" source="D5_IR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_IR_Total_Value" source="D5_IR_Total_Value"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_PO_Price" source="D5_PO_Price"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_GR_Total_Qty" source="D0_GR_Total_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_GRIR_Total_Qty_Match" source="D0_GRIR_Total_Qty_Match"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_WORKDAYS_BETWEEN" source="D5_WORKDAYS_BETWEEN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_Daysbet_IRvsLoading" source="D0_Daysbet_IRvsLoading"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_D5_IR_ADJUSTED" source="Z_D5_IR_ADJUSTED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_MATNR" source="PO_MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_D0_IR_PLUS_ONEDAY" source="Z_D0_IR_PLUS_ONEDAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN_Rtrim" source="EBELN_Rtrim"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D0_PO_Qty" source="D0_PO_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_PO_Qty" source="D5_PO_Qty"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_POIR_Price_Match" source="D5_POIR_Price_Match"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="D5_POIR_Total_Qty_Match" source="D5_POIR_Total_Qty_Match"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_EnteredonDate_PlusOneDay" source="Z_EnteredonDate_PlusOneDay"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT_DATE" source="CPUDT_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TBTKZ" source="TBTKZ"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="Aggregation_1">
+    <descriptions/>
+    <attributes>
+      <attribute id="Z_POIR_Total_Qty_Match" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RealTime_POIR Total Qty Match"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="Z_POIR_Total_Qty_Match"/>
+      </attribute>
+      <attribute id="Z_POIR_Price_Match" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RealTime_POIR Price Match"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="Z_POIR_Price_Match"/>
+      </attribute>
+      <attribute id="Z_GRIR_Total_Qty_Match" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RealTime_GRIR Total Qty Match"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="Z_GRIR_Total_Qty_Match"/>
+      </attribute>
+      <attribute id="Z_Type" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Invoice or Credit Memo"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="Z_Type"/>
+      </attribute>
+      <attribute id="Z_GR_Indicator" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GR Indicator"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="Z_GR_Indicator"/>
+      </attribute>
+      <attribute id="Z_2WAY_3WAY" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="2Way or 3Way"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="Z_2WAY_3WAY"/>
+      </attribute>
+      <attribute id="Z_Overall_Match_RealTime" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Overall Match_RealTime"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="Z_Overall_Match_RealTime"/>
+      </attribute>
+      <attribute id="Z_Overall_Match_D0D5" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Overall Match D0D5"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="Z_Overall_Match_D0D5"/>
+      </attribute>
+      <attribute id="MAKTX" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Description"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="MAKTX"/>
+      </attribute>
+      <attribute id="BELNR" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Accounting Document Number"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="BELNR"/>
+      </attribute>
+      <attribute id="BUZEI" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Document Item in Invoice Document"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="BUZEI"/>
+      </attribute>
+      <attribute id="EBELN" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchasing Document Number"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="EBELN"/>
+      </attribute>
+      <attribute id="EBELP" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Item Number of Purchasing Document"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="EBELP"/>
+      </attribute>
+      <attribute id="SPGRP" order="26" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Blocking Reason: Price"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="SPGRP"/>
+      </attribute>
+      <attribute id="SPGRM" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Blocking Reason: Quantity"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="SPGRM"/>
+      </attribute>
+      <attribute id="SPGRQ" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Manual Blocking Reason"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="SPGRQ"/>
+      </attribute>
+      <attribute id="ZFISCAL_PERIOD" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Period"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="ZFISCAL_PERIOD"/>
+      </attribute>
+      <attribute id="ZFISCAL_QUARTER" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Qtr"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="ZFISCAL_QUARTER"/>
+      </attribute>
+      <attribute id="ZFISCAL_YEAR" order="31" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Yr"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="ZFISCAL_YEAR"/>
+      </attribute>
+      <attribute id="DATE_SQL" order="32" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Invoice Posting Date"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="DATE_SQL"/>
+      </attribute>
+      <attribute id="BUKRS" order="33" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Company Code"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="BUKRS"/>
+      </attribute>
+      <attribute id="IR_CurrencyKey" order="34" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IR CurrencyKey"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="IR_CurrencyKey"/>
+      </attribute>
+      <attribute id="VENDOR_NAME" order="38" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Vendor Name"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="VENDOR_NAME"/>
+      </attribute>
+      <attribute id="EKGRP" order="39" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchasing Group"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="EKGRP"/>
+      </attribute>
+      <attribute id="EKORG" order="40" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchasing Organization"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="EKORG"/>
+      </attribute>
+      <attribute id="BSART" order="41" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchasing Document Type"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="BSART"/>
+      </attribute>
+      <attribute id="PO_CurrencyKey" order="42" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Currency Key"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="PO_CurrencyKey"/>
+      </attribute>
+      <attribute id="WERKS" order="43" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Plant"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="WERKS"/>
+      </attribute>
+      <attribute id="MEINS" order="44" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchase Order Unit of Measure"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="MEINS"/>
+      </attribute>
+      <attribute id="WEPOS" order="45" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Goods Receipt Indicator"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="WEPOS"/>
+      </attribute>
+      <attribute id="EKNAM" order="46" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Description of purchasing group"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="EKNAM"/>
+      </attribute>
+      <attribute id="MEMBER" order="47" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Org ID"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="MEMBER"/>
+      </attribute>
+      <attribute id="ZCAL_MONTH" order="50" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Calendar Month"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="ZCAL_MONTH"/>
+      </attribute>
+      <attribute id="ZCALENDAR_YEAR" order="51" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Calendar Yr"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="ZCALENDAR_YEAR"/>
+      </attribute>
+      <attribute id="XBLNR" order="52" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Reference Document Number"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="XBLNR"/>
+      </attribute>
+      <attribute id="XBLNR_ItemRef" order="53" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Reference Document Number"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="XBLNR_ItemRef"/>
+      </attribute>
+      <attribute id="LIFNR_Formated" order="54" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Vendor ID"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="LIFNR_Formated"/>
+      </attribute>
+      <attribute id="ERFME" order="55" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Unit of Entry"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="ERFME"/>
+      </attribute>
+      <attribute id="AEDAT_EKPO" order="56" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Changed On (PO Item)"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="AEDAT_EKPO"/>
+      </attribute>
+      <attribute id="AEDAT_EKKO" order="57" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Created on (PO Header)"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="AEDAT_EKKO"/>
+      </attribute>
+      <attribute id="ZTERM" order="58" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Terms of Payment Key"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="ZTERM"/>
+      </attribute>
+      <attribute id="BEDAT_EKKO" order="59" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Document Date (PO Header)"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="BEDAT_EKKO"/>
+      </attribute>
+      <attribute id="BLDAT_IR" order="60" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Document Date (Invoice)"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="BLDAT_IR"/>
+      </attribute>
+      <attribute id="BLART" order="61" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Document Type"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="BLART"/>
+      </attribute>
+      <attribute id="EKPO_TXZ01" order="62" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Short Text"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="EKPO_TXZ01"/>
+      </attribute>
+      <attribute id="RSEG_SGTXT" order="63" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Item Text"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="RSEG_SGTXT"/>
+      </attribute>
+      <attribute id="RBKP_BKTXT" order="64" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Document Header Text"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="RBKP_BKTXT"/>
+      </attribute>
+      <attribute id="KNUMV" order="65" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Doc. condition"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="KNUMV"/>
+      </attribute>
+      <attribute id="IR_MATNR" order="68" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material ID (Invoice)"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="IR_MATNR"/>
+      </attribute>
+      <attribute id="D0_POIR_Price_Match" order="76" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="D0 POIR Price Match"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="D0_POIR_Price_Match"/>
+      </attribute>
+      <attribute id="D0_POIR_Total_Qty_Match" order="77" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="D0 POIR Total Qty Match"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="D0_POIR_Total_Qty_Match"/>
+      </attribute>
+      <attribute id="D5_GRIR_Total_Qty_Match" order="79" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="D5 GRIR Total Qty Match"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="D5_GRIR_Total_Qty_Match"/>
+      </attribute>
+      <attribute id="D5_LoadingDate" hidden="true" order="80" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="D5 LoadingDate"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="D5_LoadingDate"/>
+      </attribute>
+      <attribute id="D0_LoadingDate" hidden="true" order="81" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="D0 LoadingDate"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="D0_LoadingDate"/>
+      </attribute>
+      <attribute id="D0_GRIR_Total_Qty_Match" order="89" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="D0 GRIR Total Qty Match"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="D0_GRIR_Total_Qty_Match"/>
+      </attribute>
+      <attribute id="Z_D5_IR_ADJUSTED" order="92" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="D5 After Invoice Posting Date"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="Z_D5_IR_ADJUSTED"/>
+      </attribute>
+      <attribute id="PO_MATNR" order="93" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material ID (PO)"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="PO_MATNR"/>
+      </attribute>
+      <attribute id="Z_D0_IR_PLUS_ONEDAY" order="94" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="D0 IR+OneDay"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="Z_D0_IR_PLUS_ONEDAY"/>
+      </attribute>
+      <attribute id="EBELN_Rtrim" hidden="true" order="95" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EBELN_Rtrim"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="EBELN_Rtrim"/>
+      </attribute>
+      <attribute id="Z_Current_Date" hidden="true" order="98" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Current Date"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="Z_Current_Date"/>
+      </attribute>
+      <attribute id="D5_POIR_Price_Match" hidden="true" order="99" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="D5 POIR Price Match"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="D5_POIR_Price_Match"/>
+      </attribute>
+      <attribute id="D5_POIR_Total_Qty_Match" hidden="true" order="100" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="D5 POIR Total Qty Match"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="D5_POIR_Total_Qty_Match"/>
+      </attribute>
+      <attribute id="Z_EnteredonDate_PlusOneDay" order="101" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Z_EnteredonDate PlusOneDay"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="Z_EnteredonDate_PlusOneDay"/>
+      </attribute>
+      <attribute id="CPUDT_DATE" order="102" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Invoice Entry Date"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="CPUDT_DATE"/>
+      </attribute>
+      <attribute id="TBTKZ" order="103" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Indicator: Subsequent Debit/Credit"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="TBTKZ"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="Z_PO_Price" order="11" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="PO Price"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="Z_PO_Price"/>
+      </measure>
+      <measure id="Z_Daysbet_IRvsLoading" order="13" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="DaysBetween IRvsLoading"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="Z_Daysbet_IRvsLoading"/>
+      </measure>
+      <measure id="Z_OverallMatch_RealTime_Count" order="16" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="OverallMatch RealTime Count"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="Z_OverallMatch_RealTime_Count"/>
+      </measure>
+      <measure id="Z_OverallMatch_D0D5_Count" order="17" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="OverallMatch D0D5 Count"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="Z_OverallMatch_D0D5_Count"/>
+      </measure>
+      <measure id="Z_GR_Total_Qty" order="19" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="GR Total Qty"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="Z_GR_Total_Qty"/>
+      </measure>
+      <measure id="Z_IR_Total_Qty" order="20" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="IR Total Qty"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="Z_IR_Total_Qty"/>
+      </measure>
+      <measure id="Z_IR_Total_Value" order="21" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="IR Total Value"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="Z_IR_Total_Value"/>
+      </measure>
+      <measure id="Z_IR_Qty" order="35" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="IR Qty"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="Z_IR_Qty"/>
+      </measure>
+      <measure id="Z_IR_Value" order="36" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="IR Value"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="Z_IR_Value"/>
+      </measure>
+      <measure id="Z_IR_Price" order="37" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="IR Price"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="Z_IR_Price"/>
+      </measure>
+      <measure id="PO_Qty" order="48" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Purchase Order Quantity"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="PO_Qty"/>
+      </measure>
+      <measure id="PO_Value" order="49" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Net Order Value in PO Currency"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="PO_Value"/>
+      </measure>
+      <measure id="NETPR" order="66" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Net Price in Purchasing Document (in Document Currency)"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="NETPR"/>
+      </measure>
+      <measure id="PEINH" order="67" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Price Unit"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="PEINH"/>
+      </measure>
+      <measure id="Z_WORKDAYS_BETWEEN" order="69" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Workdays Between"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="Z_WORKDAYS_BETWEEN"/>
+      </measure>
+      <measure id="D0_IR_Price" order="70" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="D0 IR Price"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="D0_IR_Price"/>
+      </measure>
+      <measure id="D0_IR_Qty" order="71" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="D0 IR Qty"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="D0_IR_Qty"/>
+      </measure>
+      <measure id="D0_IR_Value" order="72" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="D0 IR Value"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="D0_IR_Value"/>
+      </measure>
+      <measure id="D0_IR_Total_Qty" order="73" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="D0 IR Total Qty"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="D0_IR_Total_Qty"/>
+      </measure>
+      <measure id="D0_IR_Total_Value" order="74" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="D0 IR Total Value"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="D0_IR_Total_Value"/>
+      </measure>
+      <measure id="D0_PO_Price" order="75" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="D0 PO Price"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="D0_PO_Price"/>
+      </measure>
+      <measure id="D5_GR_Total_Qty" order="78" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="D5 GR Total Qty"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="D5_GR_Total_Qty"/>
+      </measure>
+      <measure id="D5_IR_Price" order="82" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="D5 IR Price"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="D5_IR_Price"/>
+      </measure>
+      <measure id="D5_IR_Qty" order="83" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="D5 IR Qty"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="D5_IR_Qty"/>
+      </measure>
+      <measure id="D5_IR_Value" order="84" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="D5 IR Value"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="D5_IR_Value"/>
+      </measure>
+      <measure id="D5_IR_Total_Qty" order="85" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="D5 IR Total Qty"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="D5_IR_Total_Qty"/>
+      </measure>
+      <measure id="D5_IR_Total_Value" order="86" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="D5 IR Total Value"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="D5_IR_Total_Value"/>
+      </measure>
+      <measure id="D5_PO_Price" order="87" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="D5 PO Price"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="D5_PO_Price"/>
+      </measure>
+      <measure id="D0_GR_Total_Qty" order="88" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="D0 GR Total Qty"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="D0_GR_Total_Qty"/>
+      </measure>
+      <measure id="D5_WORKDAYS_BETWEEN" order="90" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="D5 Workdays Between"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="D5_WORKDAYS_BETWEEN"/>
+      </measure>
+      <measure id="D0_Daysbet_IRvsLoading" order="91" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="D0 Daysbet IRvsLoading"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="D0_Daysbet_IRvsLoading"/>
+      </measure>
+      <measure id="D0_PO_Qty" order="96" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="D0 PO Qty"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="D0_PO_Qty"/>
+      </measure>
+      <measure id="D5_PO_Qty" order="97" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="D5 PO Qty"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="D5_PO_Qty"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures>
+      <measure id="Z_Members_Count" hidden="false" order="1" aggregationType="sum" measureType="simple" aggregatable="true" calculatedMeasureType="counter" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+        <descriptions defaultDescription="Members Count"/>
+        <exceptionAggregation exceptionAggregationType="countDistinct">
+          <attribute attributeName="MEMBER"/>
+        </exceptionAggregation>
+        <formula>1</formula>
+      </measure>
+      <measure id="Z_Invoice_Line_Count" hidden="false" order="2" aggregationType="sum" measureType="simple" aggregatable="true" calculatedMeasureType="counter" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+        <descriptions defaultDescription="Invoice Line Count"/>
+        <exceptionAggregation exceptionAggregationType="countDistinct">
+          <attribute attributeName="BELNR"/>
+          <attribute attributeName="BUZEI"/>
+        </exceptionAggregation>
+        <formula>1</formula>
+      </measure>
+      <measure id="Z_Invoice_Doc_Count" hidden="false" order="8" aggregationType="sum" measureType="simple" aggregatable="true" calculatedMeasureType="counter" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+        <descriptions defaultDescription="Invoice Doc Count"/>
+        <exceptionAggregation exceptionAggregationType="countDistinct">
+          <attribute attributeName="BELNR"/>
+        </exceptionAggregation>
+        <formula>1</formula>
+      </measure>
+      <measure id="Z_PO_Doc_Count" hidden="false" order="9" aggregationType="sum" measureType="simple" aggregatable="true" calculatedMeasureType="counter" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+        <descriptions defaultDescription="PO Doc Count"/>
+        <exceptionAggregation exceptionAggregationType="countDistinct">
+          <attribute attributeName="EBELN"/>
+        </exceptionAggregation>
+        <formula>1</formula>
+      </measure>
+      <measure id="Z_PO_Line_Count" hidden="false" order="10" aggregationType="sum" measureType="simple" aggregatable="true" calculatedMeasureType="counter" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+        <descriptions defaultDescription="PO Line Count"/>
+        <exceptionAggregation exceptionAggregationType="countDistinct">
+          <attribute attributeName="EBELN"/>
+          <attribute attributeName="EBELP"/>
+        </exceptionAggregation>
+        <formula>1</formula>
+      </measure>
+    </calculatedMeasures>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="600" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Incoming_Invoice" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="506" y="1089"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="352" y="1089"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Aggregation_IR" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="506" y="993"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Aggregation_GR" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="352" y="993"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="GR_IR_Total" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="352" y="897"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="IR_Line" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="198" y="993"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_4" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="993"/>
+        <rectangleSize height="64" width="162"/>
+      </shape>
+      <shape expanded="true" modelObjectName="IR_Line_Detail" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="198" y="897"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="GR_IR" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="352" y="801"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_5" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="814" y="1089"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_6" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="660" y="1089"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PO" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="660" y="993"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_9" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="506" y="897"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Pur_Grp_Des" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="814" y="993"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="660" y="897"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="506" y="801"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="424" y="705"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_7" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="578" y="705"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_4" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="497" y="609"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Day0_Data" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="651" y="609"/>
+        <rectangleSize height="64" width="206"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_5" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="588" y="513"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Day5_Data" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="742" y="513"/>
+        <rectangleSize height="64" width="193"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_6" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="677" y="417"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="523" y="417"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_7" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="600" y="321"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_8" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="600" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="600" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

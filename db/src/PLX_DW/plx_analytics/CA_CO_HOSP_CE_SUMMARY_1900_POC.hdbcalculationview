@@ -1,0 +1,537 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="3.0" id="plx_analytics::CA_CO_HOSP_CE_SUMMARY_1900_POC" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED">
+  <descriptions defaultDescription="CA_CO_ELEM_HIERARCHY"/>
+  <metadata changedAt="2019-10-07 16:54:31.823"/>
+  <localVariables>
+    <variable id="P_CONTROLLING_AREA" parameter="true">
+      <descriptions defaultDescription="Controlling Area"/>
+      <variableProperties datatype="NVARCHAR" length="4" mandatory="true" scale="0" defaultValue="undefined">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_CONTROLLING_AREAS</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>KOKRS</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="P_GROUP_NODE" parameter="true">
+      <descriptions defaultDescription="Cost Element Group"/>
+      <variableProperties datatype="NVARCHAR" length="24" mandatory="true" scale="0" defaultValue="undefined">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_CE_VALUE_HELP</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>Z_SETNAME</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="P_CHART_OF_ACCOUNTS" parameter="true">
+      <descriptions defaultDescription="Chart of Accounts"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="HOSP" length="4" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="COST_ELEMENT">
+      <descriptions defaultDescription="Cost Element"/>
+      <variableProperties datatype="NVARCHAR" mandatory="false" length="18" scale="null">
+        <valueDomain type="AttributeValue">
+          <attribute name="COST_ELEM" resourceUri="plx_analytics::CA_DIM_COST_ELEMENT_HIERARCHY_1900_POC"/>
+        </valueDomain>
+        <selection multiLine="true" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="COST_CENTER">
+      <descriptions defaultDescription="Cost Center"/>
+      <variableProperties datatype="VARCHAR" mandatory="false">
+        <valueDomain type="AttributeValue">
+          <attribute name="KOSTL"/>
+        </valueDomain>
+        <selection multiLine="true" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="INTERNAL_ORDER">
+      <descriptions defaultDescription="Internal Order"/>
+      <variableProperties datatype="VARCHAR" mandatory="false">
+        <valueDomain type="AttributeValue">
+          <attribute name="AUFNR"/>
+        </valueDomain>
+        <selection multiLine="true" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" forStarJoin="true">
+      <targetVariable name="P_GROUP_NODE" resourceUri="plx_analytics::CA_DIM_COST_ELEMENT_HIERARCHY_1900_POC"/>
+      <localVariable>P_GROUP_NODE</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" forStarJoin="true">
+      <targetVariable name="P_CHART_OF_ACCOUNTS" resourceUri="plx_analytics::CA_DIM_COST_ELEMENT_HIERARCHY_1900_POC"/>
+      <localVariable>P_CHART_OF_ACCOUNTS</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="27"/>
+  <dataSources>
+    <DataSource id="CA_PLX_CO">
+      <resourceUri>plx_analytics::CA_PLX_CO</resourceUri>
+    </DataSource>
+    <DataSource id="CA_PLX_CO_HOSP_PLAN">
+      <resourceUri>plx_analytics::CA_PLX_CO_HOSP_PLAN</resourceUri>
+    </DataSource>
+  </dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2" filterExpressionLanguage="COLUMN_ENGINE">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="PERIO"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="GJAHR_1"/>
+        <viewAttribute id="PERIO_1"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="OBJNR"/>
+        <viewAttribute id="KSTAR_1"/>
+        <viewAttribute id="TWAER"/>
+        <viewAttribute id="WTGBTR"/>
+        <viewAttribute id="GSBER"/>
+        <viewAttribute id="KOKRS_1"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="OBJTYPE"/>
+        <viewAttribute id="AUFNR"/>
+        <viewAttribute id="KOSTL_1"/>
+        <viewAttribute id="PAROB"/>
+        <viewAttribute id="OBJTYPE_PAR"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="REFBN"/>
+        <viewAttribute id="REFGJ"/>
+        <viewAttribute id="AWORG"/>
+        <viewAttribute id="LTEXT_BLART"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="FISCAL_PERIOD"/>
+        <viewAttribute id="FISCAL_QUARTER"/>
+        <viewAttribute id="FISCAL_YEAR"/>
+        <viewAttribute id="SAP_DATE"/>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="ZFISCAL_MONTH"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_YEAR_QUARTER"/>
+        <viewAttribute id="AWKEY"/>
+        <viewAttribute id="KOKRS_PAROB"/>
+        <viewAttribute id="AUFNR_PAROB"/>
+        <viewAttribute id="KTEXT_AUFNR"/>
+        <viewAttribute id="KTEXT_KOSTL_PAR"/>
+        <viewAttribute id="KTEXT_AUFNR_PAR"/>
+        <viewAttribute id="GEBER"/>
+        <viewAttribute id="GRANT_NBR"/>
+        <viewAttribute id="REFBZ"/>
+        <viewAttribute id="WKGBTR"/>
+        <viewAttribute id="KTEXT_KOSTL"/>
+        <viewAttribute id="REFBK"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ZZAUFNR" length="12" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;AUFNR&quot;),'1',&quot;AUFNR&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ZZKOSTL" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;KOSTL&quot;),'1',&quot;KOSTL&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="CA_PLX_CO">
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR_1" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERIO_1" source="PERIO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR_1" source="KSTAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS_1" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL_1" source="KOSTL"/></input>
+    <filter>&quot;KOKRS&quot; = '$$P_CONTROLLING_AREA$$'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="AUFNR"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="WTG00X"/>
+        <viewAttribute id="WOG00X"/>
+        <viewAttribute id="WKG00X"/>
+        <viewAttribute id="WKF00X"/>
+        <viewAttribute id="PAG00X"/>
+        <viewAttribute id="PAF00X"/>
+        <viewAttribute id="MEG00X"/>
+        <viewAttribute id="MEF00X"/>
+        <viewAttribute id="MBG00X"/>
+        <viewAttribute id="MBF00X"/>
+        <viewAttribute id="LEDNR"/>
+        <viewAttribute id="OBJNR"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="WRTTP"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="HRKFT"/>
+        <viewAttribute id="VRGNG"/>
+        <viewAttribute id="PAROB"/>
+        <viewAttribute id="PAROB1"/>
+        <viewAttribute id="USPOB"/>
+        <viewAttribute id="VBUND"/>
+        <viewAttribute id="PARGB"/>
+        <viewAttribute id="BEKNZ"/>
+        <viewAttribute id="TWAER"/>
+        <viewAttribute id="MEINH"/>
+        <viewAttribute id="MEINB"/>
+        <viewAttribute id="SGTXT"/>
+        <viewAttribute id="REFBZ"/>
+        <viewAttribute id="ZLENR"/>
+        <viewAttribute id="BW_REFBZ"/>
+        <viewAttribute id="BELTP"/>
+        <viewAttribute id="TIMESTMP"/>
+        <viewAttribute id="PAOBJNR"/>
+        <viewAttribute id="FKBER"/>
+        <viewAttribute id="PFKBER"/>
+        <viewAttribute id="GEBER"/>
+        <viewAttribute id="PGEBER"/>
+        <viewAttribute id="GRANT_NBR"/>
+        <viewAttribute id="PGRANT_NBR"/>
+        <viewAttribute id="SEGMENT"/>
+        <viewAttribute id="PSEGMENT"/>
+        <viewAttribute id="Z_PERBL"/>
+        <viewAttribute id="KOSTL"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="CA_PLX_CO_HOSP_PLAN"/>
+    <filter>(&quot;KOKRS&quot; ='$$P_CONTROLLING_AREA$$') AND (&quot;VERSN&quot; ='000')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="AUFNR"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute aggregationType="sum" id="WTG00X"/>
+        <viewAttribute aggregationType="sum" id="WKG00X"/>
+        <viewAttribute id="OBJNR"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="WRTTP"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="Z_PERBL"/>
+        <viewAttribute id="KOSTL"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ZZAUFNR_PLAN" length="12" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;AUFNR&quot;),'1',&quot;AUFNR&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="VARCHAR" id="ZZKOSTL_PLAN" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;KOSTL&quot;),'1',&quot;KOSTL&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+      <input node="Projection_1"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" cardinality="C1_1" joinType="fullOuter">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="AUFNR_PLAN"/>
+        <viewAttribute id="KOKRS_PLAN"/>
+        <viewAttribute id="WTG00X"/>
+        <viewAttribute id="WKG00X"/>
+        <viewAttribute id="OBJNR_PLAN"/>
+        <viewAttribute id="GJAHR_PLAN"/>
+        <viewAttribute id="WRTTP"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="KSTAR_PLAN"/>
+        <viewAttribute id="Z_PERBL_PLAN"/>
+        <viewAttribute id="KOSTL_PLAN"/>
+        <viewAttribute id="ZZAUFNR_PLAN"/>
+        <viewAttribute id="ZZKOSTL_PLAN"/>
+        <viewAttribute id="GJAHR_ACT"/>
+        <viewAttribute id="PERIO_ACT"/>
+        <viewAttribute id="KOSTL_ACT"/>
+        <viewAttribute id="KSTAR_ACT"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="OBJNR_ACT"/>
+        <viewAttribute id="TWAER"/>
+        <viewAttribute id="WTGBTR"/>
+        <viewAttribute id="GSBER"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="OBJTYPE"/>
+        <viewAttribute id="AUFNR_ACT"/>
+        <viewAttribute id="PAROB"/>
+        <viewAttribute id="OBJTYPE_PAR"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="REFBN"/>
+        <viewAttribute id="REFGJ"/>
+        <viewAttribute id="AWORG"/>
+        <viewAttribute id="LTEXT_BLART"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="FISCAL_PERIOD"/>
+        <viewAttribute id="FISCAL_QUARTER"/>
+        <viewAttribute id="FISCAL_YEAR"/>
+        <viewAttribute id="SAP_DATE"/>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="ZFISCAL_MONTH"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_YEAR_QUARTER"/>
+        <viewAttribute id="AWKEY"/>
+        <viewAttribute id="KOKRS_PAROB"/>
+        <viewAttribute id="AUFNR_PAROB"/>
+        <viewAttribute id="KTEXT_AUFNR"/>
+        <viewAttribute id="KTEXT_KOSTL_PAR"/>
+        <viewAttribute id="KTEXT_AUFNR_PAR"/>
+        <viewAttribute id="GEBER"/>
+        <viewAttribute id="GRANT_NBR"/>
+        <viewAttribute id="REFBZ"/>
+        <viewAttribute id="WKGBTR"/>
+        <viewAttribute id="KTEXT_KOSTL"/>
+        <viewAttribute id="REFBK"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="ZZAUFNR_ACT"/>
+        <viewAttribute id="ZZKOSTL_ACT"/>
+        <viewAttribute id="KOKRS_ACT"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ZZAUFNR" length="12" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;ZZAUFNR_ACT&quot;),&quot;ZZAUFNR_PLAN&quot; ,&quot;ZZAUFNR_ACT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ZZKOSTL" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;ZZKOSTL_ACT&quot;),&quot;ZZKOSTL_PLAN&quot; ,&quot;ZZKOSTL_ACT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="KSTAR" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;KSTAR_ACT&quot;),&quot;KSTAR_PLAN&quot; ,&quot;KSTAR_ACT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="KOSTL" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;KOSTL_ACT&quot;),&quot;KOSTL_PLAN&quot; ,&quot;KOSTL_ACT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="AUFNR" length="12" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;AUFNR_ACT&quot;),&quot;AUFNR_PLAN&quot; ,&quot;AUFNR_ACT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="PERIO" length="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;PERIO_ACT&quot;),&quot;Z_PERBL_PLAN&quot; ,&quot;PERIO_ACT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="VARCHAR" id="GJAHR" length="4" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;GJAHR_ACT&quot;),&quot;GJAHR_PLAN&quot; ,&quot;GJAHR_ACT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="KOKRS" length="4" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;KOKRS_ACT&quot;),&quot;KOKRS_PLAN&quot; ,&quot;KOKRS_ACT&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="Projection_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR_ACT" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERIO_ACT" source="PERIO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL_ACT" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR_ACT" source="KSTAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OBJNR_ACT" source="OBJNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TWAER" source="TWAER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTGBTR" source="WTGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GSBER" source="GSBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OBJTYPE" source="OBJTYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUFNR_ACT" source="AUFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PAROB" source="PAROB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OBJTYPE_PAR" source="OBJTYPE_PAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFBN" source="REFBN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFGJ" source="REFGJ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWORG" source="AWORG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LTEXT_BLART" source="LTEXT_BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_PERIOD" source="FISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_QUARTER" source="FISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISCAL_YEAR" source="FISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAP_DATE" source="SAP_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCALENDAR_YEAR" source="ZCALENDAR_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_MONTH" source="ZFISCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR_QUARTER" source="ZFISCAL_YEAR_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWKEY" source="AWKEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS_PAROB" source="KOKRS_PAROB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUFNR_PAROB" source="AUFNR_PAROB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KTEXT_AUFNR" source="KTEXT_AUFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KTEXT_KOSTL_PAR" source="KTEXT_KOSTL_PAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KTEXT_AUFNR_PAR" source="KTEXT_AUFNR_PAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GEBER" source="GEBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GRANT_NBR" source="GRANT_NBR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFBZ" source="REFBZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WKGBTR" source="WKGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KTEXT_KOSTL" source="KTEXT_KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFBK" source="REFBK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZAUFNR_ACT" source="ZZAUFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZKOSTL_ACT" source="ZZKOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS_ACT" source="KOKRS"/>
+      </input>
+      <input node="Aggregation_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUFNR_PLAN" source="AUFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS_PLAN" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTG00X" source="WTG00X"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WKG00X" source="WKG00X"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OBJNR_PLAN" source="OBJNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR_PLAN" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WRTTP" source="WRTTP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VERSN" source="VERSN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR_PLAN" source="KSTAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_PERBL_PLAN" source="Z_PERBL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL_PLAN" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZAUFNR_PLAN" source="ZZAUFNR_PLAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZKOSTL_PLAN" source="ZZKOSTL_PLAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS_ACT" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OBJNR_ACT" source="OBJNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR_ACT" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR_ACT" source="KSTAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERIO_ACT" source="Z_PERBL"/>
+      </input>
+    <joinAttribute name="KOKRS_ACT"/>
+    <joinAttribute name="OBJNR_ACT"/>
+    <joinAttribute name="GJAHR_ACT"/>
+    <joinAttribute name="KSTAR_ACT"/>
+    <joinAttribute name="PERIO_ACT"/>
+  </calculationView>
+</calculationViews>
+  <logicalModel id="Join_1">
+    <descriptions/>
+    <attributes>
+      <attribute id="KOSTL" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cost Center"/>
+        <localVariable>COST_CENTER</localVariable>
+        <keyMapping columnObjectName="Join_1" columnName="KOSTL"/>
+      </attribute>
+      <attribute id="AUFNR" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Internal Order Nr"/>
+        <localVariable>INTERNAL_ORDER</localVariable>
+        <keyMapping columnObjectName="Join_1" columnName="AUFNR"/>
+      </attribute>
+      <attribute id="PERIO" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Period"/>
+        <keyMapping columnObjectName="Join_1" columnName="PERIO"/>
+      </attribute>
+      <attribute id="GJAHR" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Year"/>
+        <keyMapping columnObjectName="Join_1" columnName="GJAHR"/>
+      </attribute>
+      <attribute id="ZZAUFNR" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZZAUFNR"/>
+        <keyMapping columnObjectName="Join_1" columnName="ZZAUFNR"/>
+      </attribute>
+      <attribute id="ZZKOSTL" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZZKOSTL"/>
+        <keyMapping columnObjectName="Join_1" columnName="ZZKOSTL"/>
+      </attribute>
+      <attribute id="KOKRS" order="12" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Controlling Area"/>
+        <keyMapping columnObjectName="Join_1" columnName="KOKRS"/>
+      </attribute>
+      <attribute id="GSBER" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GSBER"/>
+        <keyMapping columnObjectName="Join_1" columnName="GSBER"/>
+      </attribute>
+      <attribute id="KSTAR$local">
+        <keyMapping columnObjectName="Join_1" columnName="KSTAR"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="WTG00X" order="1" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total Value in Transaction Currency"/>
+        <measureMapping columnObjectName="Join_1" columnName="WTG00X"/>
+      </measure>
+      <measure id="WKG00X" order="2" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total Value in Controlling Area Currency"/>
+        <measureMapping columnObjectName="Join_1" columnName="WKG00X"/>
+      </measure>
+      <measure id="WTGBTR" order="9" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Actual Amount (Transaction Currency) "/>
+        <measureMapping columnObjectName="Join_1" columnName="WTGBTR"/>
+      </measure>
+      <measure id="WKGBTR" order="10" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Actual Amount (Controlling Area Currency) "/>
+        <measureMapping columnObjectName="Join_1" columnName="WKGBTR"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures>
+      <measure id="VARIANCE_DOLLAR" hidden="false" order="11" aggregationType="sum" measureType="simple" aggregatable="true" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="15" scale="2">
+        <descriptions defaultDescription="Variance vs. Plan ($) in Controlling Area Currency"/>
+        <formula>&quot;WKGBTR&quot;-&quot;WKG00X&quot;</formula>
+      </measure>
+    </calculatedMeasures>
+    <restrictedMeasures/>
+    <localDimensions/>
+    <sharedDimensions>
+      <logicalJoin associatedObjectUri="plx_analytics::CA_DIM_COST_ELEMENT_HIERARCHY_1900_POC">
+        <attributes>
+          <attributeRef>KSTAR$local</attributeRef>
+        </attributes>
+        <associatedAttributeNames>
+          <attributeName>CHILD_CE</attributeName>
+        </associatedAttributeNames>
+        <properties cardinality="CN_N" joinType="rightOuter" joinOperator="Equal"/>
+        <associatedAttributeFeatures>
+          <attributeReference attributeName="COST_ELEM">
+            <localVariable>COST_ELEMENT</localVariable>
+          </attributeReference>
+        </associatedAttributeFeatures>
+      </logicalJoin>
+    </sharedDimensions>
+  </logicalModel>
+<layout>
+  <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="299"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="377"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="299"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="203"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Aggregation_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape modelObjectName="Join_1" modelObjectNameSpace="StarJoinViewNodeInput" modelObjectType="repository">
+        <upperLeftCorner x="250" y="250"/>
+      </shape>
+      <shape modelObjectName="plx_analytics::CA_DIM_COST_ELEMENT_HIERARCHY_1900_POC" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
+        <upperLeftCorner x="712" y="30"/>
+      </shape>
+    </shapes>
+</layout>
+</Calculation:scenario>

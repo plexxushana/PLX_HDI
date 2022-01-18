@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="3.0" id="plx_dev::CV_TASKS_STATUS" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+<origin/>
+  <descriptions defaultDescription="CV_TASKS_STATUS"/>
+  <metadata changedAt="2021-02-08 15:50:53.815"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="27"/>
+  <dataSources>
+    <DataSource id="M_TASKS">
+      <resourceUri>SYS::M_TASKS</resourceUri>
+    </DataSource>
+  </dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="TASK_NAME"/>
+        <viewAttribute id="STATUS"/>
+        <viewAttribute id="PROCESSED_RECORDS"/>
+        <viewAttribute id="START_TIME"/>
+        <viewAttribute id="END_TIME"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="INTEGER" id="TOTAL_COUNT" expressionLanguage="COLUMN_ENGINE">
+          <formula>1</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="SCHEDULE_DATE" expressionLanguage="SQL">
+          <formula>to_date(&quot;START_TIME&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="M_TASKS"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="TASK_NAME"/>
+        <viewAttribute id="STATUS"/>
+        <viewAttribute id="PROCESSED_RECORDS"/>
+        <viewAttribute id="START_TIME"/>
+        <viewAttribute id="END_TIME"/>
+        <viewAttribute id="TOTAL_COUNT"/>
+        <viewAttribute id="SCHEDULE_DATE"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DECIMAL" id="TIME_TAKEN_MINS" length="16" scale="2" expressionLanguage="SQL">
+          <formula>round(seconds_between( &quot;START_TIME&quot; , &quot;END_TIME&quot;) / 60  , 2 )</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="TIME_TAKEN_HRS" length="16" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;TIME_TAKEN_MINS&quot; / 60  </formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="Projection_1"/>
+    </calculationView>
+</calculationViews>
+  <logicalModel id="Projection_2">
+    <descriptions/>
+    <attributes>
+      <attribute id="TASK_NAME" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Name of the task"/>
+        <keyMapping columnObjectName="Projection_2" columnName="TASK_NAME"/>
+      </attribute>
+      <attribute id="STATUS" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Status of the task: STARTING/RUNNING/FAILED/COMPLETED"/>
+        <keyMapping columnObjectName="Projection_2" columnName="STATUS"/>
+      </attribute>
+      <attribute id="START_TIME" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Start time of the task"/>
+        <keyMapping columnObjectName="Projection_2" columnName="START_TIME"/>
+      </attribute>
+      <attribute id="END_TIME" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="End time of the task"/>
+        <keyMapping columnObjectName="Projection_2" columnName="END_TIME"/>
+      </attribute>
+      <attribute id="SCHEDULE_DATE" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SCHEDULE_DATE"/>
+        <keyMapping columnObjectName="Projection_2" columnName="SCHEDULE_DATE"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="PROCESSED_RECORDS" order="3" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total number of records processed"/>
+        <measureMapping columnObjectName="Projection_2" columnName="PROCESSED_RECORDS"/>
+      </measure>
+      <measure id="TOTAL_COUNT" order="6" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="TOTAL_COUNT"/>
+        <measureMapping columnObjectName="Projection_2" columnName="TOTAL_COUNT"/>
+      </measure>
+      <measure id="TIME_TAKEN_MINS" order="8" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="TIME_TAKEN_MINS"/>
+        <measureMapping columnObjectName="Projection_2" columnName="TIME_TAKEN_MINS"/>
+      </measure>
+      <measure id="TIME_TAKEN_HRS" order="9" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="TIME_TAKEN_HRS"/>
+        <measureMapping columnObjectName="Projection_2" columnName="TIME_TAKEN_HRS"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+<layout>
+  <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="40" y="85"/></shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="60" y="330"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="false" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="60" y="230"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+</layout>
+</Calculation:scenario>

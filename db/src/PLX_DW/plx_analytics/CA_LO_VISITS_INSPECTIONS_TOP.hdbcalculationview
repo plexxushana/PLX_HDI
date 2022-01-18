@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="3.0" id="plx_analytics::CA_LO_VISITS_INSPECTIONS_TOP" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+<origin/>
+  <descriptions defaultDescription="Nr of Visits/Inspections"/>
+  <metadata changedAt="2021-04-15 16:17:12.911"/>
+  <localVariables>
+    <variable id="V_WERKS">
+      <descriptions defaultDescription="Plant"/>
+      <variableProperties mandatory="false">
+        <valueDomain type="AttributeValue">
+          <attribute name="WERKS"/>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="V_LGORT">
+      <descriptions defaultDescription="Storage Location"/>
+      <variableProperties mandatory="false">
+        <valueDomain type="AttributeValue">
+          <attribute name="LGORT"/>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="V_YEAR">
+      <descriptions defaultDescription="Calendar Year"/>
+      <variableProperties mandatory="false">
+        <valueDomain type="AttributeValue">
+          <attribute name="ZCALENDAR_YEAR"/>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="V_MONTH">
+      <descriptions defaultDescription="Calendar Month"/>
+      <variableProperties mandatory="false">
+        <valueDomain type="AttributeValue">
+          <attribute name="ZCAL_MONTH"/>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="39"/>
+  <dataSources>
+    <DataSource id="HANA_LO_VISITS_INSPECTIONS">
+      <resourceUri>HANA_LO_VISITS_INSPECTIONS</resourceUri>
+    </DataSource>
+  </dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="CART_LI_PLATE"/>
+        <viewAttribute id="Z_VISITS_NO"/>
+        <viewAttribute id="Z_STOCKOUT_NO"/>
+        <viewAttribute id="Z_NO_INSPECTIONS"/>
+        <viewAttribute id="CART_IN_STOCK"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="HANA_LO_VISITS_INSPECTIONS"/>
+    </calculationView>
+</calculationViews>
+  <logicalModel id="Projection_1">
+    <descriptions/>
+    <attributes>
+      <attribute id="ZCALENDAR_YEAR" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZCALENDAR_YEAR"/>
+        <localVariable>V_YEAR</localVariable>
+        <keyMapping columnObjectName="Projection_1" columnName="ZCALENDAR_YEAR"/>
+      </attribute>
+      <attribute id="ZCAL_MONTH" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZCAL_MONTH"/>
+        <localVariable>V_MONTH</localVariable>
+        <keyMapping columnObjectName="Projection_1" columnName="ZCAL_MONTH"/>
+      </attribute>
+      <attribute id="BUKRS" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BUKRS"/>
+        <keyMapping columnObjectName="Projection_1" columnName="BUKRS"/>
+      </attribute>
+      <attribute id="WERKS" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="WERKS"/>
+        <localVariable>V_WERKS</localVariable>
+        <keyMapping columnObjectName="Projection_1" columnName="WERKS"/>
+      </attribute>
+      <attribute id="LGORT" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="LGORT"/>
+        <localVariable>V_LGORT</localVariable>
+        <keyMapping columnObjectName="Projection_1" columnName="LGORT"/>
+      </attribute>
+      <attribute id="CART_LI_PLATE" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CART_LI_PLATE"/>
+        <keyMapping columnObjectName="Projection_1" columnName="CART_LI_PLATE"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="Z_VISITS_NO" order="7" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Z_VISITS_NO"/>
+        <measureMapping columnObjectName="Projection_1" columnName="Z_VISITS_NO"/>
+      </measure>
+      <measure id="Z_STOCKOUT_NO" order="8" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Z_STOCKOUT_NO"/>
+        <measureMapping columnObjectName="Projection_1" columnName="Z_STOCKOUT_NO"/>
+      </measure>
+      <measure id="Z_NO_INSPECTIONS" order="9" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Z_NO_INSPECTIONS"/>
+        <measureMapping columnObjectName="Projection_1" columnName="Z_NO_INSPECTIONS"/>
+      </measure>
+      <measure id="CART_IN_STOCK" order="10" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="CART_IN_STOCK"/>
+        <measureMapping columnObjectName="Projection_1" columnName="CART_IN_STOCK"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+<layout>
+  <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="22" y="87"/></shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+</layout>
+</Calculation:scenario>

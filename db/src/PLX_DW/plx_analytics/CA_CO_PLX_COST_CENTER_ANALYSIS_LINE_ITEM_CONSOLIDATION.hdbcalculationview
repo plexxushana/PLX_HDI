@@ -1,0 +1,610 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="3.0" id="plx_analytics::CA_CO_PLX_COST_CENTER_ANALYSIS_LINE_ITEM_CONSOLIDATION" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="true" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED">
+<origin/>
+  <descriptions defaultDescription="CA_CO_PLX_COST_CENTER_ANALYSIS_LINE_ITEM_CONSOLIDATION"/>
+  <metadata changedAt="2021-06-30 13:32:59.061"/>
+  <localVariables>
+    <variable id="IP_PERIO" parameter="true">
+      <descriptions defaultDescription="Fiscal Period"/>
+      <variableProperties datatype="NVARCHAR" length="3" mandatory="false" defaultValue="undefined">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="Fiscal_Year" parameter="true">
+      <descriptions defaultDescription="Fiscal Year"/>
+      <variableProperties datatype="NVARCHAR" length="4" mandatory="false" defaultValue="undefined">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="IP_KOKRS" parameter="true">
+      <descriptions defaultDescription="Controlling Area"/>
+      <variableProperties datatype="NVARCHAR" length="4" mandatory="false" scale="0" defaultValue="undefined">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_CONTROLLING_AREAS</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>KOKRS</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="IP_CHART" parameter="true">
+      <descriptions defaultDescription="Chart of Accounts"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="HOSP" length="4" mandatory="false" scale="0">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_CHART_OF_ACCOUNTS</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>KTOPL</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="IP_HIER" parameter="true">
+      <descriptions defaultDescription="Report Selection"/>
+      <variableProperties datatype="NVARCHAR" length="50" mandatory="false" scale="NaN" defaultValue="undefined">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>MANUAL_FIN_STATMT_HIERARCHY</externalLikeStructureName>
+          <externalLikeElementName>HIERARCHYNAME</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="CA_CO_PLX_COST_CENTER_ANALYSIS_LINE_ITEM_CONSOLIDATION_PLAN">
+      <targetVariable name="IP_KOKRS" resourceUri="plx_analytics::CA_CO_PLX_COST_CENTER_ANALYSIS_LINE_ITEM_CONSOLIDATION_PLAN"/>
+      <localVariable>IP_KOKRS</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="CA_CO_PLX_COST_CENTER_ANALYSIS_LINE_ITEM_CONSOLIDATION_PLAN">
+      <targetVariable name="IP_YEAR" resourceUri="plx_analytics::CA_CO_PLX_COST_CENTER_ANALYSIS_LINE_ITEM_CONSOLIDATION_PLAN"/>
+      <localVariable>Fiscal_Year</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="CA_CO_PLX_COST_CENTER_ANALYSIS_LINE_ITEM_CONSOLIDATION_PLAN">
+      <targetVariable name="IP_CHART" resourceUri="plx_analytics::CA_CO_PLX_COST_CENTER_ANALYSIS_LINE_ITEM_CONSOLIDATION_PLAN"/>
+      <localVariable>IP_CHART</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="CA_CO_PLX_COST_CENTER_ANALYSIS_LINE_ITEM_CONSOLIDATION_ACTUAL">
+      <targetVariable name="IP_KOKRS" resourceUri="plx_analytics::CA_CO_PLX_COST_CENTER_ANALYSIS_LINE_ITEM_CONSOLIDATION_ACTUAL"/>
+      <localVariable>IP_KOKRS</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="CA_CO_PLX_COST_CENTER_ANALYSIS_LINE_ITEM_CONSOLIDATION_ACTUAL">
+      <targetVariable name="FISCAL_YEAR" resourceUri="plx_analytics::CA_CO_PLX_COST_CENTER_ANALYSIS_LINE_ITEM_CONSOLIDATION_ACTUAL"/>
+      <localVariable>Fiscal_Year</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="CA_CO_PLX_COST_CENTER_ANALYSIS_LINE_ITEM_CONSOLIDATION_ACTUAL">
+      <targetVariable name="IP_CHART" resourceUri="plx_analytics::CA_CO_PLX_COST_CENTER_ANALYSIS_LINE_ITEM_CONSOLIDATION_ACTUAL"/>
+      <localVariable>IP_CHART</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" forStarJoin="true">
+      <targetVariable name="IP_CHART" resourceUri="plx_analytics::CA_DIM_STATMT_GROUP_LIST_ALL"/>
+      <localVariable>IP_CHART</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" forStarJoin="true">
+      <targetVariable name="IP_HIER" resourceUri="plx_analytics::CA_DIM_STATMT_GROUP_LIST_ALL"/>
+      <localVariable>IP_HIER</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" forStarJoin="true">
+      <targetVariable name="IP_KOKRS" resourceUri="plx_analytics::CA_DIM_STATMT_GROUP_LIST_ALL"/>
+      <localVariable>IP_KOKRS</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="46"/>
+  <dataSources>
+    <DataSource id="CA_CO_PLX_COST_CENTER_ANALYSIS_LINE_ITEM_CONSOLIDATION_PLAN">
+      <resourceUri>plx_analytics::CA_CO_PLX_COST_CENTER_ANALYSIS_LINE_ITEM_CONSOLIDATION_PLAN</resourceUri>
+    </DataSource>
+    <DataSource id="CA_CO_PLX_COST_CENTER_ANALYSIS_LINE_ITEM_CONSOLIDATION_ACTUAL">
+      <resourceUri>plx_analytics::CA_CO_PLX_COST_CENTER_ANALYSIS_LINE_ITEM_CONSOLIDATION_ACTUAL</resourceUri>
+    </DataSource>
+  </dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Plan">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="WTG00N"/>
+        <viewAttribute id="WKG00N"/>
+        <viewAttribute id="OBJNR"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="WRTTP"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="Z_PERIOD"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="REVERSE"/>
+        <viewAttribute id="WAERS"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="CA_CO_PLX_COST_CENTER_ANALYSIS_LINE_ITEM_CONSOLIDATION_PLAN"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Actual">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="KWAER"/>
+        <viewAttribute id="PERIO"/>
+        <viewAttribute id="WTGBTR"/>
+        <viewAttribute id="WOGBTR"/>
+        <viewAttribute id="WKGBTR"/>
+        <viewAttribute id="OBJNR"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="BEKNZ"/>
+        <viewAttribute id="GSBER"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="REVERSE"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="CA_CO_PLX_COST_CENTER_ANALYSIS_LINE_ITEM_CONSOLIDATION_ACTUAL"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="WTG00N"/>
+        <viewAttribute id="WKG00N"/>
+        <viewAttribute id="OBJNR"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="WRTTP"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="Z_PERIOD"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="REVERSE"/>
+        <viewAttribute id="WAERS"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DECIMAL" id="CP_PLAN" length="15" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;WKG00N&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="Plan"/>
+    <filter>(&quot;Z_PERIOD&quot; ='$$IP_PERIO$$')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="CP_Plan">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="OBJNR"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="WRTTP"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="Z_PERIOD"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="REVERSE"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute aggregationType="sum" id="CP_PLAN"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+      <input node="Projection_1"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="WTG00N"/>
+        <viewAttribute id="WKG00N"/>
+        <viewAttribute id="OBJNR"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="WRTTP"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="Z_PERIOD"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="REVERSE"/>
+        <viewAttribute id="WAERS"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DECIMAL" id="YTD_Plan" length="15" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;WKG00N&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="Plan"/>
+    <filter>(&quot;Z_PERIOD&quot; &lt;='$$IP_PERIO$$')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="YTD_Plan">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="OBJNR"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="WRTTP"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute aggregationType="sum" id="YTD_Plan"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+      <input node="Projection_2"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="WTG00N"/>
+        <viewAttribute id="WKG00N"/>
+        <viewAttribute id="OBJNR"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="WRTTP"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="Z_PERIOD"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="REVERSE"/>
+        <viewAttribute id="WAERS"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DECIMAL" id="Annual_Plan" length="15" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;WKG00N&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="Plan"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Annual_Plan">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="OBJNR"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="WRTTP"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute aggregationType="sum" id="Annual_Plan"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+      <input node="Projection_3"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_4">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="KWAER"/>
+        <viewAttribute id="PERIO"/>
+        <viewAttribute id="WTGBTR"/>
+        <viewAttribute id="WOGBTR"/>
+        <viewAttribute id="WKGBTR"/>
+        <viewAttribute id="OBJNR"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="BEKNZ"/>
+        <viewAttribute id="GSBER"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="REVERSE"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DECIMAL" id="CP_Actual" length="15" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;WKGBTR&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="Actual"/>
+    <filter>(&quot;PERIO&quot; ='$$IP_PERIO$$')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="CP_Actual">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="KWAER"/>
+        <viewAttribute id="PERIO"/>
+        <viewAttribute id="OBJNR"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="BEKNZ"/>
+        <viewAttribute id="GSBER"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="REVERSE"/>
+        <viewAttribute aggregationType="sum" id="CP_Actual"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+      <input node="Projection_4"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_5">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="KWAER"/>
+        <viewAttribute id="PERIO"/>
+        <viewAttribute id="WTGBTR"/>
+        <viewAttribute id="WOGBTR"/>
+        <viewAttribute id="WKGBTR"/>
+        <viewAttribute id="OBJNR"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="BEKNZ"/>
+        <viewAttribute id="GSBER"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="REVERSE"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DECIMAL" id="YTD_Actual" length="15" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;WKGBTR&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="Actual"/>
+    <filter>(&quot;PERIO&quot; &lt;='$$IP_PERIO$$')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="YTD_Actual">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="KWAER"/>
+        <viewAttribute id="OBJNR"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="BEKNZ"/>
+        <viewAttribute id="GSBER"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute aggregationType="sum" id="YTD_Actual"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+      <input node="Projection_5"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:UnionView" id="Union_1">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="CP_PLAN"/>
+        <viewAttribute id="CP_Actual"/>
+        <viewAttribute id="YTD_Plan"/>
+        <viewAttribute id="Annual_Plan"/>
+        <viewAttribute id="YTD_Actual"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input emptyUnionBehavior="NO_ROW" node="YTD_Actual">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VERSN" source="VERSN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="KSTAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="KWAER"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CP_PLAN" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CP_Actual" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="YTD_Plan" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Annual_Plan" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="YTD_Actual" source="YTD_Actual"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="CP_Actual">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VERSN" source="VERSN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="KSTAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="KWAER"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CP_PLAN" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CP_Actual" source="CP_Actual"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="YTD_Plan" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Annual_Plan" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="YTD_Actual" null="true" value=""/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="Annual_Plan">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VERSN" source="VERSN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="KSTAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CP_PLAN" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CP_Actual" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="YTD_Plan" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Annual_Plan" source="Annual_Plan"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="YTD_Actual" null="true" value=""/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="YTD_Plan">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VERSN" source="VERSN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="KSTAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CP_PLAN" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CP_Actual" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="YTD_Plan" source="YTD_Plan"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Annual_Plan" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="YTD_Actual" null="true" value=""/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="CP_Plan">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VERSN" source="VERSN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="KSTAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CP_PLAN" source="CP_PLAN"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CP_Actual" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="YTD_Plan" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Annual_Plan" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="YTD_Actual" null="true" value=""/>
+      </input>
+    </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute aggregationType="sum" id="CP_PLAN"/>
+        <viewAttribute aggregationType="sum" id="CP_Actual"/>
+        <viewAttribute aggregationType="sum" id="YTD_Plan"/>
+        <viewAttribute aggregationType="sum" id="Annual_Plan"/>
+        <viewAttribute aggregationType="sum" id="YTD_Actual"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+      <input node="Union_1"/>
+    </calculationView>
+</calculationViews>
+  <logicalModel id="Aggregation_1">
+    <descriptions/>
+    <attributes>
+      <attribute id="KOKRS" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="KOKRS"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="KOKRS"/>
+      </attribute>
+      <attribute id="GJAHR" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GJAHR"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="GJAHR"/>
+      </attribute>
+      <attribute id="VERSN" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="VERSN"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="VERSN"/>
+      </attribute>
+      <attribute id="WAERS" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="WAERS"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="WAERS"/>
+      </attribute>
+      <attribute id="KSTAR$local">
+        <keyMapping columnObjectName="Aggregation_1" columnName="KSTAR"/>
+      </attribute>
+      <attribute id="KOSTL$local">
+        <keyMapping columnObjectName="Aggregation_1" columnName="KOSTL"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="CP_PLAN" order="5" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="CP_PLAN"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="CP_PLAN"/>
+      </measure>
+      <measure id="CP_Actual" order="6" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="CP_Actual"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="CP_Actual"/>
+      </measure>
+      <measure id="YTD_Plan" order="7" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="YTD_Plan"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="YTD_Plan"/>
+      </measure>
+      <measure id="Annual_Plan" order="8" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Annual_Plan"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="Annual_Plan"/>
+      </measure>
+      <measure id="YTD_Actual" order="9" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="YTD_Actual"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="YTD_Actual"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+    <sharedDimensions>
+      <logicalJoin associatedObjectUri="plx_analytics::CA_DIM_STATMT_GROUP_LIST_ALL">
+        <attributes>
+          <attributeRef>KSTAR$local</attributeRef>
+          <attributeRef>KOSTL$local</attributeRef>
+        </attributes>
+        <associatedAttributeNames>
+          <attributeName>COST_ELEMENT</attributeName>
+          <attributeName>COST_CENTER</attributeName>
+        </associatedAttributeNames>
+        <properties cardinality="CN_N" joinType="rightOuter" joinOperator="Equal"/>
+        <associatedAttributeFeatures/>
+        <associatedHierarchyFeature hierarchyName="FS_H">
+          <joinProperties nodeElementName="FS_HNode" expressionParameterName="FS_HExpression"/>
+        </associatedHierarchyFeature>
+      </logicalJoin>
+    </sharedDimensions>
+  </logicalModel>
+<layout>
+  <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="330" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Plan" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="484" y="607"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Actual" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="607"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="638" y="529"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="CP_Plan" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="638" y="451"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="484" y="529"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="YTD_Plan" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="484" y="451"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="330" y="529"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Annual_Plan" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="330" y="451"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_4" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="529"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="CP_Actual" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="451"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_5" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="529"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="YTD_Actual" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="451"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Union_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="330" y="281"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="330" y="203"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape modelObjectName="Aggregation_1" modelObjectNameSpace="StarJoinViewNodeInput" modelObjectType="repository">
+        <upperLeftCorner x="250" y="250"/>
+      </shape>
+      <shape modelObjectName="plx_analytics::CA_DIM_STATMT_GROUP_LIST_ALL" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
+        <upperLeftCorner x="594" y="30"/>
+      </shape>
+    </shapes>
+</layout>
+</Calculation:scenario>

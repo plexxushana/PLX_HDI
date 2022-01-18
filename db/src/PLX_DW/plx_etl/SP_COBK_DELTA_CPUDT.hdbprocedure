@@ -1,0 +1,58 @@
+PROCEDURE "plx_etl::SP_COBK_DELTA_CPUDT" (
+                    out T_OUT  "ECC_COBK" ) 
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER 
+	READS SQL DATA AS
+
+BEGIN
+
+ declare lv_start_date nvarchar(10);
+
+ SELECT max(cpudt) into lv_start_date FROM "ECC_COBK";
+
+	T_OUT = select 
+    			"KOKRS",
+    			"BELNR",
+    			"GJAHR",
+    			"VERSN",
+    			"VRGNG",
+    			"TIMESTMP",
+    			"PERAB",
+    			"PERBI",
+    			"BLDAT",
+    			"BUDAT",
+    			"CPUDT",
+    			"USNAM",
+    			"BLTXT",
+    			"STFLG",
+    			"STOKZ",
+    			"REFBT",
+    			"REFBN",
+    			"REFBK",
+    			"REFGJ",
+    			"BLART",
+    			"ORGVG",
+    			"SUMBZ",
+    			"DELBZ",
+    			"WSDAT",
+    			"KURST",
+    			"VARNR",
+    			"KWAER",
+    			"CTYP1",
+    			"CTYP2",
+    			"CTYP3",
+    			"CTYP4",
+    			"AWTYP",
+    			"AWORG",
+    			"LOGSYSTEM",
+    			"CPUTM",
+    			"ALEBZ",
+    			"ALEBN",
+    			"AWSYS",
+    			"AWREF_REV",
+    			"AWORG_REV",
+    			"VALDT"
+		 from "V_ECC_COBK"
+		       WHERE "CPUDT" >= :lv_start_date;
+		
+END;

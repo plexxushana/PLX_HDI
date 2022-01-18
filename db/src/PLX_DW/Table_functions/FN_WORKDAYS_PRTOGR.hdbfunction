@@ -1,0 +1,29 @@
+FUNCTION "plx_analytics::FN_WORKDAYS_PRTOGR" ( ) 
+	RETURNS "Z_POTOGR_FDATION"
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER AS
+BEGIN
+/***************************** 
+	Write your function logic
+ *****************************/
+ 
+  return 
+ 	select 
+ 		
+ 		"EBELN" as "EBELN",
+ 		"EBELP" as "EBELP",
+ 		"BANFN" as "BANFN",
+ 		"BNFPO" as "BNFPO",
+ 		"MBLNR" as "MBLNR",
+ 		"ZEILE" as "ZEILE",
+ 		"Z_Requisn_Date" AS "Z_Requisn_Date",
+ 		"Z_PO_Creation_Date" AS "Z_PO_Creation_Date",
+ 		"Z_GR_Entry_Date" AS "Z_GR_Entry_Date",
+ 			
+ 		workdays_between('CA',"Z_Requisn_Date","Z_PO_Creation_Date",'PLX_DW') "Z_PRPO_CycleTime",
+ 		workdays_between('CA',"Z_PO_Creation_Date","Z_GR_Entry_Date",'PLX_DW') "Z_POGR_CycleTime",
+ 		workdays_between('CA',"Z_Requisn_Date","Z_GR_Entry_Date",'PLX_DW') "Z_PRGR_CycleTime"
+ 			 			
+ 	from "plx_analytics::CA_PLX_REQ_TO_GR_CYCLETIMES";
+ 
+END;

@@ -1,0 +1,981 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="plx_analytics::CA_PLX_CC003_INVENTORYCOUNT_POSTING" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+  <origin/>
+  <descriptions defaultDescription="CA_PLX_COMPCONTROLS_CC003"/>
+  <metadata changedAt="2021-03-15 15:59:16.819"/>
+  <localVariables>
+    <variable id="Posting_Date">
+      <descriptions defaultDescription="Posting Date"/>
+      <variableProperties datatype="VARCHAR" mandatory="false">
+        <valueDomain type="AttributeValue">
+          <attribute name="BUDAT"/>
+        </valueDomain>
+        <selection multiLine="false" type="Interval"/>
+      </variableProperties>
+    </variable>
+    <variable id="Company_Code">
+      <descriptions defaultDescription="Company Code"/>
+      <variableProperties datatype="VARCHAR" mandatory="false">
+        <valueDomain type="AttributeValue">
+          <attribute name="BUKRS"/>
+        </valueDomain>
+        <selection multiLine="true" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="Plant">
+      <descriptions defaultDescription="Plant"/>
+      <variableProperties datatype="VARCHAR" mandatory="false">
+        <valueDomain type="AttributeValue">
+          <attribute name="WERKS"/>
+        </valueDomain>
+        <selection multiLine="true" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="27"/>
+  <dataSources>
+    <DataSource id="ECC_ISEG">
+      <resourceUri>ECC_ISEG</resourceUri>
+    </DataSource>
+    <DataSource id="CA_DIM_ORG_STRCTR">
+      <resourceUri>plx_analytics::CA_DIM_ORG_STRCTR</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_LFA1">
+      <resourceUri>ECC_LFA1</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="IBLNR"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="ZEILI"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="CHARG"/>
+        <viewAttribute id="SOBKZ"/>
+        <viewAttribute id="BSTAR"/>
+        <viewAttribute id="KDAUF"/>
+        <viewAttribute id="KDPOS"/>
+        <viewAttribute id="KDEIN"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="KUNNR"/>
+        <viewAttribute id="PLPLA"/>
+        <viewAttribute id="USNAM"/>
+        <viewAttribute id="AEDAT"/>
+        <viewAttribute id="USNAZ"/>
+        <viewAttribute id="ZLDAT"/>
+        <viewAttribute id="USNAD"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="XBLNI"/>
+        <viewAttribute id="XZAEL"/>
+        <viewAttribute id="XDIFF"/>
+        <viewAttribute id="XNZAE"/>
+        <viewAttribute id="XLOEK"/>
+        <viewAttribute id="XAMEI"/>
+        <viewAttribute id="BUCHM"/>
+        <viewAttribute id="XNULL"/>
+        <viewAttribute id="MENGE"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="ERFMG"/>
+        <viewAttribute id="ERFME"/>
+        <viewAttribute id="MBLNR"/>
+        <viewAttribute id="MJAHR"/>
+        <viewAttribute id="ZEILE"/>
+        <viewAttribute id="NBLNR"/>
+        <viewAttribute id="DMBTR"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="ABCIN"/>
+        <viewAttribute id="PS_PSP_PNR"/>
+        <viewAttribute id="VKWRT"/>
+        <viewAttribute id="EXVKW"/>
+        <viewAttribute id="BUCHW"/>
+        <viewAttribute id="KWART"/>
+        <viewAttribute id="VKWRA"/>
+        <viewAttribute id="VKMZL"/>
+        <viewAttribute id="VKNZL"/>
+        <viewAttribute id="WRTZL"/>
+        <viewAttribute id="WRTBM"/>
+        <viewAttribute id="DIWZL"/>
+        <viewAttribute id="ATTYP"/>
+        <viewAttribute id="GRUND"/>
+        <viewAttribute id="SAMAT"/>
+        <viewAttribute id="XDISPATCH"/>
+        <viewAttribute id="WSTI_COUNTDATE"/>
+        <viewAttribute id="WSTI_COUNTTIME"/>
+        <viewAttribute id="WSTI_FREEZEDATE"/>
+        <viewAttribute id="WSTI_FREEZETIME"/>
+        <viewAttribute id="WSTI_POSM"/>
+        <viewAttribute id="WSTI_POSW"/>
+        <viewAttribute id="WSTI_XCALC"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="VARCHAR" id="Z_CountedBy_PostingBy" length="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF((&quot;Z_USNAD&quot;=&quot;Z_USNAZ&quot;) AND (&quot;Z_USNAD&quot;!='ALEREMOTE' and &quot;Z_USNAD&quot;!='SBATCH'), 'Yes','No')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="INTEGER" id="Z_Yes_Count" expressionLanguage="COLUMN_ENGINE">
+          <formula>If(&quot;Z_CountedBy_PostingBy&quot;='Yes',1,0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="INTEGER" id="Z_No_Count" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;Z_CountedBy_PostingBy&quot;!='Yes',1,0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="Z_USNAD" length="12" expressionLanguage="COLUMN_ENGINE">
+          <formula>trim(&quot;USNAD&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="Z_USNAZ" length="12" expressionLanguage="COLUMN_ENGINE">
+          <formula>trim(&quot;USNAZ&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#ECC_ISEG">
+        <mapping xsi:type="Calculation:AttributeMapping" target="IBLNR" source="IBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZEILI" source="ZEILI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARG" source="CHARG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOBKZ" source="SOBKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSTAR" source="BSTAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KDAUF" source="KDAUF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KDPOS" source="KDPOS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KDEIN" source="KDEIN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR" source="KUNNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PLPLA" source="PLPLA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="USNAM" source="USNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT" source="AEDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="USNAZ" source="USNAZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZLDAT" source="ZLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="USNAD" source="USNAD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNI" source="XBLNI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XZAEL" source="XZAEL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XDIFF" source="XDIFF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XNZAE" source="XNZAE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XLOEK" source="XLOEK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XAMEI" source="XAMEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUCHM" source="BUCHM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XNULL" source="XNULL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE" source="MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFMG" source="ERFMG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFME" source="ERFME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MBLNR" source="MBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MJAHR" source="MJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZEILE" source="ZEILE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NBLNR" source="NBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR" source="DMBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ABCIN" source="ABCIN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_PSP_PNR" source="PS_PSP_PNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VKWRT" source="VKWRT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXVKW" source="EXVKW"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUCHW" source="BUCHW"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KWART" source="KWART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VKWRA" source="VKWRA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VKMZL" source="VKMZL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VKNZL" source="VKNZL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WRTZL" source="WRTZL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WRTBM" source="WRTBM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DIWZL" source="DIWZL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ATTYP" source="ATTYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GRUND" source="GRUND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAMAT" source="SAMAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XDISPATCH" source="XDISPATCH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_COUNTDATE" source="WSTI_COUNTDATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_COUNTTIME" source="WSTI_COUNTTIME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_FREEZEDATE" source="WSTI_FREEZEDATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_FREEZETIME" source="WSTI_FREEZETIME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_POSM" source="WSTI_POSM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_POSW" source="WSTI_POSW"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_XCALC" source="WSTI_XCALC"/>
+      </input>
+      <filter>(&quot;Z_USNAD&quot;!='ALEREMOTE' and &quot;Z_USNAD&quot;!='SBATCH' and (&quot;Z_USNAD&quot;>0)) and (&quot;Z_USNAZ&quot;!='ALEREMOTE' and &quot;Z_USNAZ&quot;!='SBATCH' and (&quot;Z_USNAZ&quot;>0))</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="WERKS"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_DIM_ORG_STRCTR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_2" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="IBLNR"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="ZEILI"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="CHARG"/>
+        <viewAttribute id="SOBKZ"/>
+        <viewAttribute id="BSTAR"/>
+        <viewAttribute id="KDAUF"/>
+        <viewAttribute id="KDPOS"/>
+        <viewAttribute id="KDEIN"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="KUNNR"/>
+        <viewAttribute id="PLPLA"/>
+        <viewAttribute id="USNAM"/>
+        <viewAttribute id="AEDAT"/>
+        <viewAttribute id="USNAZ"/>
+        <viewAttribute id="ZLDAT"/>
+        <viewAttribute id="USNAD"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="XBLNI"/>
+        <viewAttribute id="XZAEL"/>
+        <viewAttribute id="XDIFF"/>
+        <viewAttribute id="XNZAE"/>
+        <viewAttribute id="XLOEK"/>
+        <viewAttribute id="XAMEI"/>
+        <viewAttribute id="BUCHM"/>
+        <viewAttribute id="XNULL"/>
+        <viewAttribute id="MENGE"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="ERFMG"/>
+        <viewAttribute id="ERFME"/>
+        <viewAttribute id="MBLNR"/>
+        <viewAttribute id="MJAHR"/>
+        <viewAttribute id="ZEILE"/>
+        <viewAttribute id="NBLNR"/>
+        <viewAttribute id="DMBTR"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="ABCIN"/>
+        <viewAttribute id="PS_PSP_PNR"/>
+        <viewAttribute id="VKWRT"/>
+        <viewAttribute id="EXVKW"/>
+        <viewAttribute id="BUCHW"/>
+        <viewAttribute id="KWART"/>
+        <viewAttribute id="VKWRA"/>
+        <viewAttribute id="VKMZL"/>
+        <viewAttribute id="VKNZL"/>
+        <viewAttribute id="WRTZL"/>
+        <viewAttribute id="WRTBM"/>
+        <viewAttribute id="DIWZL"/>
+        <viewAttribute id="ATTYP"/>
+        <viewAttribute id="GRUND"/>
+        <viewAttribute id="SAMAT"/>
+        <viewAttribute id="XDISPATCH"/>
+        <viewAttribute id="WSTI_COUNTDATE"/>
+        <viewAttribute id="WSTI_COUNTTIME"/>
+        <viewAttribute id="WSTI_FREEZEDATE"/>
+        <viewAttribute id="WSTI_FREEZETIME"/>
+        <viewAttribute id="WSTI_POSM"/>
+        <viewAttribute id="WSTI_POSW"/>
+        <viewAttribute id="WSTI_XCALC"/>
+        <viewAttribute id="Z_CountedBy_PostingBy"/>
+        <viewAttribute id="Z_Yes_Count"/>
+        <viewAttribute id="Z_No_Count"/>
+        <viewAttribute id="Z_USNAD"/>
+        <viewAttribute id="Z_USNAZ"/>
+        <viewAttribute id="KTOKK"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Projection_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="IBLNR" source="IBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZEILI" source="ZEILI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARG" source="CHARG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOBKZ" source="SOBKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSTAR" source="BSTAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KDAUF" source="KDAUF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KDPOS" source="KDPOS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KDEIN" source="KDEIN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR" source="KUNNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PLPLA" source="PLPLA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="USNAM" source="USNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT" source="AEDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="USNAZ" source="USNAZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZLDAT" source="ZLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="USNAD" source="USNAD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNI" source="XBLNI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XZAEL" source="XZAEL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XDIFF" source="XDIFF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XNZAE" source="XNZAE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XLOEK" source="XLOEK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XAMEI" source="XAMEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUCHM" source="BUCHM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XNULL" source="XNULL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE" source="MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFMG" source="ERFMG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFME" source="ERFME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MBLNR" source="MBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MJAHR" source="MJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZEILE" source="ZEILE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NBLNR" source="NBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR" source="DMBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ABCIN" source="ABCIN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_PSP_PNR" source="PS_PSP_PNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VKWRT" source="VKWRT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXVKW" source="EXVKW"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUCHW" source="BUCHW"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KWART" source="KWART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VKWRA" source="VKWRA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VKMZL" source="VKMZL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VKNZL" source="VKNZL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WRTZL" source="WRTZL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WRTBM" source="WRTBM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DIWZL" source="DIWZL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ATTYP" source="ATTYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GRUND" source="GRUND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAMAT" source="SAMAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XDISPATCH" source="XDISPATCH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_COUNTDATE" source="WSTI_COUNTDATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_COUNTTIME" source="WSTI_COUNTTIME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_FREEZEDATE" source="WSTI_FREEZEDATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_FREEZETIME" source="WSTI_FREEZETIME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_POSM" source="WSTI_POSM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_POSW" source="WSTI_POSW"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_XCALC" source="WSTI_XCALC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_CountedBy_PostingBy" source="Z_CountedBy_PostingBy"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_Yes_Count" source="Z_Yes_Count"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_No_Count" source="Z_No_Count"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_USNAD" source="Z_USNAD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_USNAZ" source="Z_USNAZ"/>
+      </input>
+      <input node="#ECC_LFA1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KTOKK" source="KTOKK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+      </input>
+      <joinAttribute name="LIFNR"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="IBLNR"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="ZEILI"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="CHARG"/>
+        <viewAttribute id="SOBKZ"/>
+        <viewAttribute id="BSTAR"/>
+        <viewAttribute id="KDAUF"/>
+        <viewAttribute id="KDPOS"/>
+        <viewAttribute id="KDEIN"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="KUNNR"/>
+        <viewAttribute id="PLPLA"/>
+        <viewAttribute id="USNAM"/>
+        <viewAttribute id="AEDAT"/>
+        <viewAttribute id="USNAZ"/>
+        <viewAttribute id="ZLDAT"/>
+        <viewAttribute id="USNAD"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="XBLNI"/>
+        <viewAttribute id="XZAEL"/>
+        <viewAttribute id="XDIFF"/>
+        <viewAttribute id="XNZAE"/>
+        <viewAttribute id="XLOEK"/>
+        <viewAttribute id="XAMEI"/>
+        <viewAttribute id="BUCHM"/>
+        <viewAttribute id="XNULL"/>
+        <viewAttribute id="MENGE"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="ERFMG"/>
+        <viewAttribute id="ERFME"/>
+        <viewAttribute id="MBLNR"/>
+        <viewAttribute id="MJAHR"/>
+        <viewAttribute id="ZEILE"/>
+        <viewAttribute id="NBLNR"/>
+        <viewAttribute id="DMBTR"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="ABCIN"/>
+        <viewAttribute id="PS_PSP_PNR"/>
+        <viewAttribute id="VKWRT"/>
+        <viewAttribute id="EXVKW"/>
+        <viewAttribute id="BUCHW"/>
+        <viewAttribute id="KWART"/>
+        <viewAttribute id="VKWRA"/>
+        <viewAttribute id="VKMZL"/>
+        <viewAttribute id="VKNZL"/>
+        <viewAttribute id="WRTZL"/>
+        <viewAttribute id="WRTBM"/>
+        <viewAttribute id="DIWZL"/>
+        <viewAttribute id="ATTYP"/>
+        <viewAttribute id="GRUND"/>
+        <viewAttribute id="SAMAT"/>
+        <viewAttribute id="XDISPATCH"/>
+        <viewAttribute id="WSTI_COUNTDATE"/>
+        <viewAttribute id="WSTI_COUNTTIME"/>
+        <viewAttribute id="WSTI_FREEZEDATE"/>
+        <viewAttribute id="WSTI_FREEZETIME"/>
+        <viewAttribute id="WSTI_POSM"/>
+        <viewAttribute id="WSTI_POSW"/>
+        <viewAttribute id="WSTI_XCALC"/>
+        <viewAttribute id="Z_CountedBy_PostingBy"/>
+        <viewAttribute id="Z_Yes_Count"/>
+        <viewAttribute id="Z_No_Count"/>
+        <viewAttribute id="Z_USNAD"/>
+        <viewAttribute id="Z_USNAZ"/>
+        <viewAttribute id="KTOKK"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Join_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_USNAZ" source="Z_USNAZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_USNAD" source="Z_USNAD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_No_Count" source="Z_No_Count"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_Yes_Count" source="Z_Yes_Count"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_CountedBy_PostingBy" source="Z_CountedBy_PostingBy"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_XCALC" source="WSTI_XCALC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_POSW" source="WSTI_POSW"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_POSM" source="WSTI_POSM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_FREEZETIME" source="WSTI_FREEZETIME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_FREEZEDATE" source="WSTI_FREEZEDATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_COUNTTIME" source="WSTI_COUNTTIME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_COUNTDATE" source="WSTI_COUNTDATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XDISPATCH" source="XDISPATCH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAMAT" source="SAMAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GRUND" source="GRUND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ATTYP" source="ATTYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DIWZL" source="DIWZL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WRTBM" source="WRTBM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WRTZL" source="WRTZL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VKNZL" source="VKNZL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VKMZL" source="VKMZL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VKWRA" source="VKWRA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KWART" source="KWART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUCHW" source="BUCHW"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXVKW" source="EXVKW"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VKWRT" source="VKWRT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_PSP_PNR" source="PS_PSP_PNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ABCIN" source="ABCIN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR" source="DMBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NBLNR" source="NBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZEILE" source="ZEILE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MJAHR" source="MJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MBLNR" source="MBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFME" source="ERFME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFMG" source="ERFMG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE" source="MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XNULL" source="XNULL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUCHM" source="BUCHM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XAMEI" source="XAMEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XLOEK" source="XLOEK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XNZAE" source="XNZAE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XDIFF" source="XDIFF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XZAEL" source="XZAEL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNI" source="XBLNI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="USNAD" source="USNAD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZLDAT" source="ZLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="USNAZ" source="USNAZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT" source="AEDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="USNAM" source="USNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PLPLA" source="PLPLA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR" source="KUNNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KDEIN" source="KDEIN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KDPOS" source="KDPOS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KDAUF" source="KDAUF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSTAR" source="BSTAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOBKZ" source="SOBKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARG" source="CHARG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZEILI" source="ZEILI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IBLNR" source="IBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KTOKK" source="KTOKK"/>
+      </input>
+      <input node="#Projection_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+      </input>
+      <joinAttribute name="WERKS"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="IBLNR"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="ZEILI"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="CHARG"/>
+        <viewAttribute id="SOBKZ"/>
+        <viewAttribute id="BSTAR"/>
+        <viewAttribute id="KDAUF"/>
+        <viewAttribute id="KDPOS"/>
+        <viewAttribute id="KDEIN"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="KUNNR"/>
+        <viewAttribute id="PLPLA"/>
+        <viewAttribute id="USNAM"/>
+        <viewAttribute id="AEDAT"/>
+        <viewAttribute id="USNAZ"/>
+        <viewAttribute id="ZLDAT"/>
+        <viewAttribute id="USNAD"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="XBLNI"/>
+        <viewAttribute id="XZAEL"/>
+        <viewAttribute id="XDIFF"/>
+        <viewAttribute id="XNZAE"/>
+        <viewAttribute id="XLOEK"/>
+        <viewAttribute id="XAMEI"/>
+        <viewAttribute id="BUCHM"/>
+        <viewAttribute id="XNULL"/>
+        <viewAttribute id="MENGE"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="ERFMG"/>
+        <viewAttribute id="ERFME"/>
+        <viewAttribute id="MBLNR"/>
+        <viewAttribute id="MJAHR"/>
+        <viewAttribute id="ZEILE"/>
+        <viewAttribute id="NBLNR"/>
+        <viewAttribute id="DMBTR"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="ABCIN"/>
+        <viewAttribute id="PS_PSP_PNR"/>
+        <viewAttribute id="VKWRT"/>
+        <viewAttribute id="EXVKW"/>
+        <viewAttribute id="BUCHW"/>
+        <viewAttribute id="KWART"/>
+        <viewAttribute id="VKWRA"/>
+        <viewAttribute id="VKMZL"/>
+        <viewAttribute id="VKNZL"/>
+        <viewAttribute id="WRTZL"/>
+        <viewAttribute id="WRTBM"/>
+        <viewAttribute id="DIWZL"/>
+        <viewAttribute id="ATTYP"/>
+        <viewAttribute id="GRUND"/>
+        <viewAttribute id="SAMAT"/>
+        <viewAttribute id="XDISPATCH"/>
+        <viewAttribute id="WSTI_COUNTDATE"/>
+        <viewAttribute id="WSTI_COUNTTIME"/>
+        <viewAttribute id="WSTI_FREEZEDATE"/>
+        <viewAttribute id="WSTI_FREEZETIME"/>
+        <viewAttribute id="WSTI_POSM"/>
+        <viewAttribute id="WSTI_POSW"/>
+        <viewAttribute id="WSTI_XCALC"/>
+        <viewAttribute id="Z_CountedBy_PostingBy"/>
+        <viewAttribute id="Z_Yes_Count"/>
+        <viewAttribute id="Z_No_Count"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="Z_USNAD"/>
+        <viewAttribute id="Z_USNAZ"/>
+        <viewAttribute id="KTOKK"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Join_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="IBLNR" source="IBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZEILI" source="ZEILI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARG" source="CHARG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOBKZ" source="SOBKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSTAR" source="BSTAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KDAUF" source="KDAUF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KDPOS" source="KDPOS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KDEIN" source="KDEIN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR" source="KUNNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PLPLA" source="PLPLA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="USNAM" source="USNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT" source="AEDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="USNAZ" source="USNAZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZLDAT" source="ZLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="USNAD" source="USNAD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNI" source="XBLNI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XZAEL" source="XZAEL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XDIFF" source="XDIFF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XNZAE" source="XNZAE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XLOEK" source="XLOEK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XAMEI" source="XAMEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUCHM" source="BUCHM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XNULL" source="XNULL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE" source="MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFMG" source="ERFMG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFME" source="ERFME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MBLNR" source="MBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MJAHR" source="MJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZEILE" source="ZEILE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NBLNR" source="NBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR" source="DMBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ABCIN" source="ABCIN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_PSP_PNR" source="PS_PSP_PNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VKWRT" source="VKWRT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXVKW" source="EXVKW"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUCHW" source="BUCHW"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KWART" source="KWART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VKWRA" source="VKWRA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VKMZL" source="VKMZL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VKNZL" source="VKNZL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WRTZL" source="WRTZL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WRTBM" source="WRTBM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DIWZL" source="DIWZL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ATTYP" source="ATTYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GRUND" source="GRUND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAMAT" source="SAMAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XDISPATCH" source="XDISPATCH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_COUNTDATE" source="WSTI_COUNTDATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_COUNTTIME" source="WSTI_COUNTTIME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_FREEZEDATE" source="WSTI_FREEZEDATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_FREEZETIME" source="WSTI_FREEZETIME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_POSM" source="WSTI_POSM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_POSW" source="WSTI_POSW"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_XCALC" source="WSTI_XCALC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_CountedBy_PostingBy" source="Z_CountedBy_PostingBy"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_Yes_Count" source="Z_Yes_Count"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_No_Count" source="Z_No_Count"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_USNAD" source="Z_USNAD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_USNAZ" source="Z_USNAZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KTOKK" source="KTOKK"/>
+      </input>
+      <filter>(&quot;Z_Yes_Count&quot; ='1')</filter>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="Projection_3">
+    <descriptions/>
+    <attributes>
+      <attribute id="IBLNR" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Physical Inventory Document"/>
+        <keyMapping columnObjectName="Projection_3" columnName="IBLNR"/>
+      </attribute>
+      <attribute id="GJAHR" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Year"/>
+        <keyMapping columnObjectName="Projection_3" columnName="GJAHR"/>
+      </attribute>
+      <attribute id="ZEILI" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Line Number"/>
+        <keyMapping columnObjectName="Projection_3" columnName="ZEILI"/>
+      </attribute>
+      <attribute id="MATNR" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Number"/>
+        <keyMapping columnObjectName="Projection_3" columnName="MATNR"/>
+      </attribute>
+      <attribute id="BUKRS" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Company Code"/>
+        <localVariable>#Company_Code</localVariable>
+        <keyMapping columnObjectName="Projection_3" columnName="BUKRS"/>
+      </attribute>
+      <attribute id="WERKS" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Plant"/>
+        <localVariable>#Plant</localVariable>
+        <keyMapping columnObjectName="Projection_3" columnName="WERKS"/>
+      </attribute>
+      <attribute id="LGORT" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Storage Location"/>
+        <keyMapping columnObjectName="Projection_3" columnName="LGORT"/>
+      </attribute>
+      <attribute id="CHARG" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Batch Number"/>
+        <keyMapping columnObjectName="Projection_3" columnName="CHARG"/>
+      </attribute>
+      <attribute id="SOBKZ" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Special Stock Indicator"/>
+        <keyMapping columnObjectName="Projection_3" columnName="SOBKZ"/>
+      </attribute>
+      <attribute id="BSTAR" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Stock Type (Physical Inventory"/>
+        <keyMapping columnObjectName="Projection_3" columnName="BSTAR"/>
+      </attribute>
+      <attribute id="KDAUF" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Sales Order Number"/>
+        <keyMapping columnObjectName="Projection_3" columnName="KDAUF"/>
+      </attribute>
+      <attribute id="KDPOS" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Item Number in Sales Order"/>
+        <keyMapping columnObjectName="Projection_3" columnName="KDPOS"/>
+      </attribute>
+      <attribute id="KDEIN" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Delivery Schedule for Sales Order"/>
+        <keyMapping columnObjectName="Projection_3" columnName="KDEIN"/>
+      </attribute>
+      <attribute id="LIFNR" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Vendor Account Number"/>
+        <keyMapping columnObjectName="Projection_3" columnName="LIFNR"/>
+      </attribute>
+      <attribute id="KUNNR" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Account Number of Customer"/>
+        <keyMapping columnObjectName="Projection_3" columnName="KUNNR"/>
+      </attribute>
+      <attribute id="PLPLA" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Distribution of Differences"/>
+        <keyMapping columnObjectName="Projection_3" columnName="PLPLA"/>
+      </attribute>
+      <attribute id="USNAM" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Changed by"/>
+        <keyMapping columnObjectName="Projection_3" columnName="USNAM"/>
+      </attribute>
+      <attribute id="AEDAT" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Changed On"/>
+        <keyMapping columnObjectName="Projection_3" columnName="AEDAT"/>
+      </attribute>
+      <attribute id="USNAZ" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Counted By"/>
+        <keyMapping columnObjectName="Projection_3" columnName="USNAZ"/>
+      </attribute>
+      <attribute id="ZLDAT" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Date of last count"/>
+        <keyMapping columnObjectName="Projection_3" columnName="ZLDAT"/>
+      </attribute>
+      <attribute id="USNAD" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Adjustment posting made by"/>
+        <keyMapping columnObjectName="Projection_3" columnName="USNAD"/>
+      </attribute>
+      <attribute id="BUDAT" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Posting Date in the Document"/>
+        <localVariable>#Posting_Date</localVariable>
+        <keyMapping columnObjectName="Projection_3" columnName="BUDAT"/>
+      </attribute>
+      <attribute id="XBLNI" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Reference Number for Physical Inventory"/>
+        <keyMapping columnObjectName="Projection_3" columnName="XBLNI"/>
+      </attribute>
+      <attribute id="XZAEL" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Item has been counted"/>
+        <keyMapping columnObjectName="Projection_3" columnName="XZAEL"/>
+      </attribute>
+      <attribute id="XDIFF" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Difference posted"/>
+        <keyMapping columnObjectName="Projection_3" columnName="XDIFF"/>
+      </attribute>
+      <attribute id="XNZAE" order="26" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Item will be recounted"/>
+        <keyMapping columnObjectName="Projection_3" columnName="XNZAE"/>
+      </attribute>
+      <attribute id="XLOEK" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Item is Deleted (Physical Inventory)"/>
+        <keyMapping columnObjectName="Projection_3" columnName="XLOEK"/>
+      </attribute>
+      <attribute id="XAMEI" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Handling in Alternative Unit of Measure"/>
+        <keyMapping columnObjectName="Projection_3" columnName="XAMEI"/>
+      </attribute>
+      <attribute id="XNULL" order="32" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Zero count"/>
+        <keyMapping columnObjectName="Projection_3" columnName="XNULL"/>
+      </attribute>
+      <attribute id="MEINS" order="34" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Base Unit of Measure"/>
+        <keyMapping columnObjectName="Projection_3" columnName="MEINS"/>
+      </attribute>
+      <attribute id="ERFME" order="36" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Unit of entry (physical inventory)"/>
+        <keyMapping columnObjectName="Projection_3" columnName="ERFME"/>
+      </attribute>
+      <attribute id="MBLNR" order="37" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Number of Material Document"/>
+        <keyMapping columnObjectName="Projection_3" columnName="MBLNR"/>
+      </attribute>
+      <attribute id="MJAHR" order="38" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Document Year"/>
+        <keyMapping columnObjectName="Projection_3" columnName="MJAHR"/>
+      </attribute>
+      <attribute id="ZEILE" order="39" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Item in Material Document"/>
+        <keyMapping columnObjectName="Projection_3" columnName="ZEILE"/>
+      </attribute>
+      <attribute id="NBLNR" order="40" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Number of recount document"/>
+        <keyMapping columnObjectName="Projection_3" columnName="NBLNR"/>
+      </attribute>
+      <attribute id="WAERS" order="42" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Currency Key"/>
+        <keyMapping columnObjectName="Projection_3" columnName="WAERS"/>
+      </attribute>
+      <attribute id="ABCIN" order="43" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Physical inventory indicator for cycle counting"/>
+        <keyMapping columnObjectName="Projection_3" columnName="ABCIN"/>
+      </attribute>
+      <attribute id="PS_PSP_PNR" order="44" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Work Breakdown Structure Element (WBS Element)"/>
+        <keyMapping columnObjectName="Projection_3" columnName="PS_PSP_PNR"/>
+      </attribute>
+      <attribute id="KWART" order="48" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Indicates that the value-only material is to be inventoried"/>
+        <keyMapping columnObjectName="Projection_3" columnName="KWART"/>
+      </attribute>
+      <attribute id="ATTYP" order="55" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Category"/>
+        <keyMapping columnObjectName="Projection_3" columnName="ATTYP"/>
+      </attribute>
+      <attribute id="GRUND" order="56" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Reason for inventory diff."/>
+        <keyMapping columnObjectName="Projection_3" columnName="GRUND"/>
+      </attribute>
+      <attribute id="SAMAT" order="57" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cross-Plant Configurable Material"/>
+        <keyMapping columnObjectName="Projection_3" columnName="SAMAT"/>
+      </attribute>
+      <attribute id="XDISPATCH" order="58" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Distribution of Physical Inventory Differences"/>
+        <keyMapping columnObjectName="Projection_3" columnName="XDISPATCH"/>
+      </attribute>
+      <attribute id="WSTI_COUNTDATE" order="59" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Date of Count During Opening Time"/>
+        <keyMapping columnObjectName="Projection_3" columnName="WSTI_COUNTDATE"/>
+      </attribute>
+      <attribute id="WSTI_COUNTTIME" order="60" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Time of Count During Opening Time"/>
+        <keyMapping columnObjectName="Projection_3" columnName="WSTI_COUNTTIME"/>
+      </attribute>
+      <attribute id="WSTI_FREEZEDATE" order="61" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Freeze Date for Inventory Balance"/>
+        <keyMapping columnObjectName="Projection_3" columnName="WSTI_FREEZEDATE"/>
+      </attribute>
+      <attribute id="WSTI_FREEZETIME" order="62" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Freeze Time for Inventory Balance"/>
+        <keyMapping columnObjectName="Projection_3" columnName="WSTI_FREEZETIME"/>
+      </attribute>
+      <attribute id="WSTI_XCALC" order="65" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Book Inventory Calculated at Count Time"/>
+        <keyMapping columnObjectName="Projection_3" columnName="WSTI_XCALC"/>
+      </attribute>
+      <attribute id="Z_CountedBy_PostingBy" order="66" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Comp. CountedBy&amp;PostingBy"/>
+        <keyMapping columnObjectName="Projection_3" columnName="Z_CountedBy_PostingBy"/>
+      </attribute>
+      <attribute id="Z_USNAD" hidden="false" order="67" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Posted By (New)"/>
+        <keyMapping columnObjectName="Projection_3" columnName="Z_USNAD"/>
+      </attribute>
+      <attribute id="Z_USNAZ" hidden="false" order="68" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Counted By (New)"/>
+        <keyMapping columnObjectName="Projection_3" columnName="Z_USNAZ"/>
+      </attribute>
+      <attribute id="KTOKK" order="69" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Vendor account group"/>
+        <keyMapping columnObjectName="Projection_3" columnName="KTOKK"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="Z_Yes_Count" order="29" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Yes Count"/>
+        <measureMapping columnObjectName="Projection_3" columnName="Z_Yes_Count"/>
+      </measure>
+      <measure id="Z_No_Count" hidden="true" order="30" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="No Count"/>
+        <measureMapping columnObjectName="Projection_3" columnName="Z_No_Count"/>
+      </measure>
+      <measure id="BUCHM" order="31" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Book quantity immediately prior to count"/>
+        <measureMapping columnObjectName="Projection_3" columnName="BUCHM"/>
+      </measure>
+      <measure id="MENGE" order="33" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Quantity"/>
+        <measureMapping columnObjectName="Projection_3" columnName="MENGE"/>
+      </measure>
+      <measure id="ERFMG" order="35" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Quantity in unit of entry (physical inventory)"/>
+        <measureMapping columnObjectName="Projection_3" columnName="ERFMG"/>
+      </measure>
+      <measure id="DMBTR" order="41" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Difference amount in local currency"/>
+        <measureMapping columnObjectName="Projection_3" columnName="DMBTR"/>
+      </measure>
+      <measure id="VKWRT" order="45" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Value at Sales Prices Including Value-Added Tax"/>
+        <measureMapping columnObjectName="Projection_3" columnName="VKWRT"/>
+      </measure>
+      <measure id="EXVKW" order="46" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Externally Entered Sales Value in Local Currency"/>
+        <measureMapping columnObjectName="Projection_3" columnName="EXVKW"/>
+      </measure>
+      <measure id="BUCHW" order="47" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Book value based on sales prices (SP) at time of count"/>
+        <measureMapping columnObjectName="Projection_3" columnName="BUCHW"/>
+      </measure>
+      <measure id="VKWRA" order="49" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Value at sales prices excluding value-added tax"/>
+        <measureMapping columnObjectName="Projection_3" columnName="VKWRA"/>
+      </measure>
+      <measure id="VKMZL" order="50" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Sales value of inv. differences (with VAT) on count entry"/>
+        <measureMapping columnObjectName="Projection_3" columnName="VKMZL"/>
+      </measure>
+      <measure id="VKNZL" order="51" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Sales Value of Inventory Difference (w/o VAT) on Count Entry"/>
+        <measureMapping columnObjectName="Projection_3" columnName="VKNZL"/>
+      </measure>
+      <measure id="WRTZL" order="52" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Value of physical inventory count"/>
+        <measureMapping columnObjectName="Projection_3" columnName="WRTZL"/>
+      </measure>
+      <measure id="WRTBM" order="53" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Value of book quantity"/>
+        <measureMapping columnObjectName="Projection_3" columnName="WRTBM"/>
+      </measure>
+      <measure id="DIWZL" order="54" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Inventory difference value upon count entry"/>
+        <measureMapping columnObjectName="Projection_3" columnName="DIWZL"/>
+      </measure>
+      <measure id="WSTI_POSM" order="63" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Quantity to Which Book Quantity was Changed"/>
+        <measureMapping columnObjectName="Projection_3" columnName="WSTI_POSM"/>
+      </measure>
+      <measure id="WSTI_POSW" order="64" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Retail Value to Which Retail Book Value was Changed"/>
+        <measureMapping columnObjectName="Projection_3" columnName="WSTI_POSW"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="437"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="339"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

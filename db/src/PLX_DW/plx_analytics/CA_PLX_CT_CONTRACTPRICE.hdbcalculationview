@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="plx_analytics::CA_PLX_CT_CONTRACTPRICE" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+  <origin/>
+  <descriptions defaultDescription="CA_PLX_CT_CONTRACTPRICE"/>
+  <metadata changedAt="2018-09-21 15:00:39.44"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="35"/>
+  <dataSources>
+    <DataSource id="ECC_EKKO">
+      <resourceUri>ECC_EKKO</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_EKPO">
+      <resourceUri>ECC_EKPO</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="BSTYP"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#ECC_EKKO">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART" source="BSART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSTYP" source="BSTYP"/>
+      </input>
+      <filter>(&quot;EBELN&quot; >='4700000000' AND &quot;EBELN&quot;&lt;='4999999999')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="EBELN_CONTRACT"/>
+        <viewAttribute id="EBELP_CONTRACT"/>
+        <viewAttribute id="LOEKZ"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="NETPR_EKPO"/>
+        <viewAttribute id="MATNR"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#ECC_EKPO">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN_CONTRACT" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP_CONTRACT" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOEKZ" source="LOEKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETPR_EKPO" source="NETPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+      </input>
+      <filter>(&quot;EBELN_CONTRACT&quot; >='4700000000' AND &quot;EBELN_CONTRACT&quot;&lt;='4999999999') AND (not in (&quot;LOEKZ&quot;,'S','L')) AND (&quot;WERKS&quot; ='1000')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="NETPR_EKPO"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="BSTYP"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="EBELN_CONTRACT"/>
+        <viewAttribute id="EBELP_CONTRACT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Projection_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETPR_EKPO" source="NETPR_EKPO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN_CONTRACT" source="EBELN_CONTRACT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP_CONTRACT" source="EBELP_CONTRACT"/>
+      </input>
+      <input node="#Projection_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART" source="BSART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSTYP" source="BSTYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN_CONTRACT" source="EBELN"/>
+      </input>
+      <joinAttribute name="EBELN_CONTRACT"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="NETPR_EKPO"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="BSTYP"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="EBELN_CONTRACT"/>
+        <viewAttribute id="EBELP_CONTRACT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Join_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETPR_EKPO" source="NETPR_EKPO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART" source="BSART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSTYP" source="BSTYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN_CONTRACT" source="EBELN_CONTRACT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP_CONTRACT" source="EBELP_CONTRACT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:RankView" id="Contract">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="NETPR_EKPO"/>
+        <viewAttribute id="BSART"/>
+        <viewAttribute id="BSTYP"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="EBELN_CONTRACT"/>
+        <viewAttribute id="EBELP_CONTRACT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Projection_3">
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETPR_EKPO" source="NETPR_EKPO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSART" source="BSART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSTYP" source="BSTYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN_CONTRACT" source="EBELN_CONTRACT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP_CONTRACT" source="EBELP_CONTRACT"/>
+      </input>
+      <windowFunction>
+        <partitionViewAttributeName>MATNR</partitionViewAttributeName>
+        <order byViewAttributeName="EBELN_CONTRACT" direction="DESC"/>
+        <rankThreshold>
+          <value>1</value>
+        </rankThreshold>
+      </windowFunction>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="Contract">
+    <descriptions/>
+    <attributes>
+      <attribute id="WERKS" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Plant"/>
+        <keyMapping columnObjectName="Contract" columnName="WERKS"/>
+      </attribute>
+      <attribute id="BSART" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchasing Document Type"/>
+        <keyMapping columnObjectName="Contract" columnName="BSART"/>
+      </attribute>
+      <attribute id="BSTYP" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchasing Document Category"/>
+        <keyMapping columnObjectName="Contract" columnName="BSTYP"/>
+      </attribute>
+      <attribute id="MATNR" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material ID"/>
+        <keyMapping columnObjectName="Contract" columnName="MATNR"/>
+      </attribute>
+      <attribute id="EBELN_CONTRACT" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchasing Document Number (DC REP Contract)"/>
+        <keyMapping columnObjectName="Contract" columnName="EBELN_CONTRACT"/>
+      </attribute>
+      <attribute id="EBELP_CONTRACT" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Item Number of Purchasing Document(DC REP Contract)"/>
+        <keyMapping columnObjectName="Contract" columnName="EBELP_CONTRACT"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="NETPR_EKPO" order="2" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Net Price in Purchasing Document (in Document Currency)"/>
+        <measureMapping columnObjectName="Contract" columnName="NETPR_EKPO"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+    <sharedDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="437"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="437"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="341"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="263"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Contract" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="185"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape modelObjectName="Contract" modelObjectNameSpace="StarJoinViewNodeInput" modelObjectType="repository">
+        <upperLeftCorner x="250" y="250"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

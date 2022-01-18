@@ -1,0 +1,132 @@
+FUNCTION "plx_analytics::FN_SAVINGS_PREVIOUS_PRICE_DATES" ( ) 
+	RETURNS table
+	(
+	"SAP_DATE" NVARCHAR(8),
+	"ORG_ID" NVARCHAR(10),
+	 "NEW_CONTRACT_ID" NVARCHAR(19),
+	 "PRICE_EFFECTIVE_START_DATE" DATE ,
+	 "PRICE_EFFECTIVE_END_DATE" DATE ,
+	 "VENDOR_ID" NVARCHAR(10),
+	 "VENDOR_PART_NUMBER" NVARCHAR(35),
+	 "PREVIOUS_PRICE_EA" DECIMAL(18,8) ,
+	 "CURRENT_ANNUAL_USAGE" DECIMAL(12,	4) ,
+	 "BUKRS" NVARCHAR(4),
+	 "MESSAGE" NVARCHAR(60),
+	 "SURROGATE_ID" INTEGER 
+	)
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER AS
+BEGIN
+ 
+/***************************** 
+  need:
+  1:
+    determine actual previous price per invoice, based on previous price effectivity. 
+  2:
+    print error message for materials which have price overlap.
+    
+  todo:
+    assume many invoices per day; select all days between previous price ranges.
+    sap_date, prev_price_start, prev_price_end
+    
+    for each VPN, Vendor, Site, determine if prices overlap.
+    add VPN, Vendor, Site to set joining on prev_price_start, prev_price_end.
+    count prev_price for sap_date group by vendor, VPN, site.
+        expect 1 prev_price, if > 1 then print error and set price to 0.00
+    	
+ *****************************/
+ 
+
+ 
+/*
+    DECLARE i INTEGER;
+    declare lv_row_count integer;
+
+-- initialize the return table. 
+-- this is necessary to append later.
+    lt_dates =
+        select '' as price_effective_start_date,
+               '' as price_effective_end_date,
+               '' as sap_date --dummy
+        from dummy;
+
+--get start, end range from manual upload Current Price Dates
+    lt_cpd =   
+	   select distinct
+	       price_effective_start_date ,
+	       price_effective_end_date
+	   from "PLX_DW"."MANUAL_SAVINGS_PREVIOUS_PRICE";
+  
+--get row count of price date ranges
+    select count(*) 
+    into   lv_row_count
+    from   :lt_cpd;
+   
+   --loop over lt_cpd and use start, end dates to select actual date range
+   for i in 0..:lv_row_count -1 do
+   
+        --pop this range
+        ls_cpd = 
+        select "PRICE_EFFECTIVE_START_DATE" ,
+                "PRICE_EFFECTIVE_END_DATE" 
+        from :lt_cpd
+        limit 1 offset :i;        
+       
+        --fetch individual day dates for range 
+        lt_sap_dates =
+			 select 
+			 :ls_cpd.price_effective_start_date,
+			 :ls_cpd.price_effective_end_date,
+			 fc."SAP_DATE"		        
+			 from "PLX_DW"."Z_FISCAL_CALENDAR" as fc,
+			       :ls_cpd
+			 where date_sql >= :ls_cpd.price_effective_start_date
+			 and   date_sql <  :ls_cpd.price_effective_end_date
+			 order by fc."SAP_DATE";
+			 
+        --append to results 
+	        lt_dates = 
+	            SELECT *
+	            FROM :lt_sap_dates
+	
+	            UNION ALL
+	
+	            SELECT *
+	            FROM :lt_dates;
+ 
+    end for;
+
+
+    for each VPN, Vendor, Site, determine if prices overlap.
+    add VPN, Vendor, Site to set joining on prev_price_start, prev_price_end.
+    count prev_price for sap_date group by vendor, VPN, site.
+        expect 1 prev_price, if > 1 then print error and set price to 0.00
+*/
+
+
+lt_prev_prices =
+     select   
+            fc."SAP_DATE"
+           , mspp.org_id
+           , mspp.new_contract_id
+           , mspp.price_effective_start_date
+           , mspp.price_effective_end_date
+           , ltrim(mspp.vendor_id, '0') as vendor_id
+           , mspp.vendor_part_number
+           , mspp.previous_price_ea
+           , mspp.current_annual_usage
+           , mspp.bukrs
+           , mspp.message
+           , mspp.surrogate_id
+    from     "MANUAL_SAVINGS_PREVIOUS_PRICE" as mspp 
+    	   , "Z_FISCAL_CALENDAR" as fc
+	where 	fc.date_sql >= mspp.price_effective_start_date
+	and   	fc.date_sql <  mspp.price_effective_end_date
+    ;
+    
+return 
+select *
+from   :lt_prev_prices;
+
+ 
+END;

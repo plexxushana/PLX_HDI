@@ -1,0 +1,72 @@
+FUNCTION "plx_analytics::FN_BILLING_SORT" ( ) 
+	RETURNS TABLE( 
+					VBELN NVARCHAR(10),
+					POSNR  VARCHAR(6),
+					FBUDA VARCHAR(8),
+					MATNR NVARCHAR(18),
+					BUDAT VARCHAR(8),
+					WERKS VARCHAR(4)
+					/*RANK NVARCHAR*/
+				 )
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER AS
+BEGIN
+/***************************** 
+	Write your function logic
+ *****************************/
+ return 
+ /* times out
+ SELECT z.*
+ 	FROM
+ 	(
+ 		SELECT
+	 		vbeln,
+	 		posnr,
+	 		fbuda,
+	 		"ECC_EKPO".matnr,
+	 		budat,
+	 		DENSE_RANK () OVER( PARTITION BY vbeln, posnr ORDER BY budat DESC ) AS RANK
+		 FROM "ECC_VBRP"
+		 LEFT JOIN "ECC_EKPO"
+		 ON "ECC_EKPO".EBELN = "ECC_VBRP".AUBEL
+		 LEFT JOIN "ECC_RSEG"
+		 ON "ECC_RSEG".MATNR = "ECC_EKPO".MATNR 
+		 INNER JOIN "ECC_RBKP"
+		 ON "ECC_RBKP".BELNR = "ECC_RSEG".BELNR
+		 AND "ECC_RBKP".BUDAT <= "ECC_VBRP".FBUDA
+ ) as z
+ WHERE z.RANK = 1;
+ */
+ /*
+ WHERE xrank = 1;
+
+ GROUP BY vbeln, posnr, fbuda, "ECC_EKPO".matnr, budat;
+ */
+ SELECT vbeln,
+ 		posnr,
+ 		fbuda,
+ 		"ECC_EKPO".matnr,
+ 		budat,
+ 		"ECC_RSEG".werks
+ 		/*
+ 		max ( budat ) as budat
+ 		*/
+ FROM "ECC_VBRP"
+ LEFT JOIN "ECC_EKPO"
+ ON "ECC_EKPO".EBELN = "ECC_VBRP".AUBEL
+ LEFT JOIN "ECC_RSEG"
+ ON "ECC_RSEG".MATNR = "ECC_EKPO".MATNR 
+ INNER JOIN "ECC_RBKP"
+ ON "ECC_RBKP".BELNR = "ECC_RSEG".BELNR
+ AND "ECC_RBKP".BUDAT <= "ECC_VBRP".FBUDA;
+ /*
+ WHERE "ECC_RSEG".WERKS = 1000;
+ /*
+ ORDER BY vbeln DESC, posnr ASC, BUDAT DESC;
+ */
+ /*
+ GROUP BY vbeln, posnr, fbuda, "ECC_EKPO".matnr;
+ /*
+ WHERE "ECC_RBKP".BUDAT <= "ECC_VBRP".FBUDA
+ */
+END;

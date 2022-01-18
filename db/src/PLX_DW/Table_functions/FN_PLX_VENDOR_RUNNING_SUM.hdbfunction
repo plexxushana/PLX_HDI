@@ -1,0 +1,68 @@
+FUNCTION "plx_analytics::FN_PLX_VENDOR_RUNNING_SUM" (IN P_START_DATE varchar(8), 
+																P_END_DATE varchar(8), P_PERC REAL ) 
+	RETURNS "TT_VENDOR_RUNNING_SUM"
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER AS
+BEGIN
+/***************************** 
+Description: This function will use the CA_PLX_SPEND_INVOICES data model to calculate 
+the running sum and the ranking of the vendors that have spend for that period. 
+ 
+	Write your function logic
+ *****************************/
+ 
+declare spend_lifnr							varchar(10) array;
+declare spend_amount						decimal(13,2) array;
+declare arr_record_no						integer array ; 
+declare v_matnr   							nvarchar(18) := '';
+declare v_matnr1   							nvarchar(18) :=  '';
+declare v_matnr2   							nvarchar(18) :='' ;
+declare v_row_count 						integer ;
+declare v_tot_spend, v_perc_spend							decimal(13,2) := 0.00;
+declare v_totvendor_cnt	, v_top_vend					integer :=0;	
+v_row_count := 1;		
+
+
+--get the total number of records from SPEND data model so we can loop through	   
+ 	   select count (  "Z_LIFNR") 
+ 	        INTO v_row_count
+ 	        from  "plx_analytics::CA_PLX_SPEND_INVOICES" 
+ 	        where   "BUDAT"  >= P_START_DATE 	
+       	   				 and     "BUDAT" <= P_END_DATE;
+ 	   v_top_vend := round(v_row_count * P_PERC/100);
+ 
+--bind the select statement to the table variable LT_DATA	   
+ 	   LT_DATA = SELECT A."Z_LIFNR", SUM(A."Z_INV_LAMT") AS Z_INV_LAMT
+					FROM    "plx_analytics::CA_PLX_SPEND_INVOICES" as A
+       	   				where   A."BUDAT"  >= P_START_DATE 	
+       	   				 and     A."BUDAT" <= P_END_DATE
+       	   				 and    A.BUKRS != '1000'
+       	   				 GROUP BY A."Z_LIFNR"
+    	         	Order by Z_INV_LAMT DESC;
+ 	   
+--Fill arrays that will store the data . Fill them with values from the table variable above	   
+spend_lifnr := ARRAY_AGG(:LT_DATA.Z_LIFNR ORDER BY Z_INV_LAMT DESC);
+spend_amount := ARRAY_AGG(:LT_DATA.Z_INV_LAMT ORDER BY Z_INV_LAMT DESC);
+
+-- now loop through the arrays so that we can build the ranking.	        
+ 	   FOR v_row_count IN 1..CARDINALITY(:spend_lifnr) DO 
+ 	      arr_record_no[:v_row_count] 		:= v_row_count;
+ 	      --v_arr_cnt:= :v_arr_cnt + 1;
+ 	      
+ 	   END FOR;
+ 
+ --this statement is to pass the data from the array to the table for output   
+ 
+       t = unnest(:spend_lifnr, :spend_amount , :arr_record_no) as (LIFNR, VENDOR_SPEND_AMT, VENDOR_RANK);   
+ -- this statement calculates the running sum by using the ranking field VENDOR_RANK.   
+      
+       t1 = select "LIFNR", "VENDOR_SPEND_AMT", 
+               (SELECT SUM(VENDOR_SPEND_AMT)  FROM :t as T1 WHERE T1.VENDOR_RANK<=T2.VENDOR_RANK)  AS "SPEND_AMT_RUNNING_SUM", 
+                "VENDOR_RANK" , 
+              (SELECT SUM(VENDOR_SPEND_AMT)  FROM :t ) AS "SPEND_AMT_TOT" , 
+             
+                (SELECT SUM(VENDOR_SPEND_AMT)  FROM :t )*P_PERC  AS "SPEND_AMT_PERC", 
+                (SELECT MAX(VENDOR_RANK) FROM :t ) AS "VENDOR_TOT_NO" from :t AS T2  ;
+       
+     RETURN  (select "LIFNR", "VENDOR_SPEND_AMT" , "SPEND_AMT_RUNNING_SUM", "VENDOR_RANK", "SPEND_AMT_TOT", "SPEND_AMT_PERC", "VENDOR_TOT_NO"  from :t1  ) ;      
+END;

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="3.0" id="plx_dev::CV_JOB_STATS" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+<origin/>
+  <descriptions defaultDescription="CV_JOB_STATS"/>
+  <metadata changedAt="2021-05-03 15:31:58.823"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="27"/>
+  <dataSources>
+    <DataSource id="JOB_LOG">
+      <resourceUri>JOB_LOG</resourceUri>
+    </DataSource>
+  </dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1" filterExpressionLanguage="SQL">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="NAME"/>
+        <viewAttribute id="STATUS"/>
+        <viewAttribute id="STARTED_AT"/>
+        <viewAttribute id="FINISHED_AT"/>
+        <viewAttribute id="PLANNED_TIME"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="INTEGER" id="SUCCESS_COUNT" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;STATUS&quot; = 'SUCCESS' , 1, 0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="INTEGER" id="FAILED_COUNT" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;STATUS&quot; = 'ERROR' , 1, 0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="INTEGER" id="TOTAL_COUNT" expressionLanguage="COLUMN_ENGINE">
+          <formula>1</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="INTEGER" id="NOT_RUN_YET_COUNT" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;STATUS&quot; = 'SCHEDULED', 1, 0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="SCHEDULE_DATE" expressionLanguage="SQL">
+          <formula>to_date(&quot;PLANNED_TIME&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="JOB_LOG"/>
+    <filter>&quot;NAME&quot; LIKE 'plx_etl%' and NAME != 'plx_etl.Email_notification::DPagent_status'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="NAME"/>
+        <viewAttribute id="STATUS"/>
+        <viewAttribute id="STARTED_AT"/>
+        <viewAttribute id="FINISHED_AT"/>
+        <viewAttribute id="SUCCESS_COUNT"/>
+        <viewAttribute id="FAILED_COUNT"/>
+        <viewAttribute id="TOTAL_COUNT"/>
+        <viewAttribute id="NOT_RUN_YET_COUNT"/>
+        <viewAttribute id="SCHEDULE_DATE"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DECIMAL" id="TIME_TAKEN_MINS" length="16" scale="2" expressionLanguage="SQL">
+          <formula>round(seconds_between( &quot;STARTED_AT&quot; , &quot;FINISHED_AT&quot;) / 60  , 2 )</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="TIME_TAKEN_HRS" length="16" scale="2" expressionLanguage="SQL">
+          <formula>&quot;TIME_TAKEN_MINS&quot; / 60  </formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="Projection_1"/>
+    </calculationView>
+</calculationViews>
+  <logicalModel id="Projection_2">
+    <descriptions/>
+    <attributes>
+      <attribute id="NAME" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NAME"/>
+        <keyMapping columnObjectName="Projection_2" columnName="NAME"/>
+      </attribute>
+      <attribute id="STATUS" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="STATUS"/>
+        <keyMapping columnObjectName="Projection_2" columnName="STATUS"/>
+      </attribute>
+      <attribute id="STARTED_AT" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="STARTED_AT"/>
+        <keyMapping columnObjectName="Projection_2" columnName="STARTED_AT"/>
+      </attribute>
+      <attribute id="FINISHED_AT" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FINISHED_AT"/>
+        <keyMapping columnObjectName="Projection_2" columnName="FINISHED_AT"/>
+      </attribute>
+      <attribute id="SCHEDULE_DATE" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SCHEDULE_DATE"/>
+        <keyMapping columnObjectName="Projection_2" columnName="SCHEDULE_DATE"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="SUCCESS_COUNT" order="5" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="SUCCESS_COUNT"/>
+        <measureMapping columnObjectName="Projection_2" columnName="SUCCESS_COUNT"/>
+      </measure>
+      <measure id="FAILED_COUNT" order="6" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="FAILED_COUNT"/>
+        <measureMapping columnObjectName="Projection_2" columnName="FAILED_COUNT"/>
+      </measure>
+      <measure id="TOTAL_COUNT" order="7" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="TOTAL_COUNT"/>
+        <measureMapping columnObjectName="Projection_2" columnName="TOTAL_COUNT"/>
+      </measure>
+      <measure id="NOT_RUN_YET_COUNT" order="8" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="NOT_RUN_YET_COUNT"/>
+        <measureMapping columnObjectName="Projection_2" columnName="NOT_RUN_YET_COUNT"/>
+      </measure>
+      <measure id="TIME_TAKEN_MINS" order="10" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="TIME_TAKEN_MINS"/>
+        <measureMapping columnObjectName="Projection_2" columnName="TIME_TAKEN_MINS"/>
+      </measure>
+      <measure id="TIME_TAKEN_HRS" order="11" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="TIME_TAKEN_HRS"/>
+        <measureMapping columnObjectName="Projection_2" columnName="TIME_TAKEN_HRS"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+<layout>
+  <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="40" y="85"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="60" y="320"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="50" y="200"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+    </shapes>
+</layout>
+</Calculation:scenario>

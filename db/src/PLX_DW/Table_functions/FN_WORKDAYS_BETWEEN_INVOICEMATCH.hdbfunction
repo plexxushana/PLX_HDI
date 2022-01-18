@@ -1,0 +1,18 @@
+FUNCTION "plx_analytics::FN_WORKDAYS_BETWEEN_INVOICEMATCH" ( ) 
+RETURNS "Z_WORKDAYS_INVOICEMATCH"
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER AS
+BEGIN
+/***************************** 
+	Write your function logic
+ *****************************/
+ return 
+ 	select 
+ 			"DATE_SQL" AS "Z_IR_POSTING_DATE", 			
+ 	 		 workdays_between('CA',"DATE_SQL",current_date,'PLX_DW') "Z_WORKDAYS_BETWEEN",
+ 	 		 add_days("DATE_SQL",1) "Z_D0_IR_PLUS_ONEDAY",
+ 	 		 add_workdays('CA',"DATE_SQL",1,'PLX_DW') "Z_D1_IR_ADJUSTED",
+ 	 		 add_workdays('CA',"DATE_SQL",5,'PLX_DW') "Z_D5_IR_ADJUSTED"
+ from "Z_FISCAL_CALENDAR";
+ --from "_SYS_BI"."M_TIME_DIMENSION";
+END;

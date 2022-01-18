@@ -1,0 +1,860 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="plx_analytics::CA_PUR_INVOICE_SPEND_POC" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+  <origin/>
+  <descriptions defaultDescription="CA_PUR_INVOICE_SPENDPOC"/>
+  <metadata changedAt="2020-03-04 09:26:07.275"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="43"/>
+  <dataSources>
+    <DataSource id="ECC_RBKP">
+      <resourceUri>ECC_RBKP</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_RSEG">
+      <resourceUri>ECC_RSEG</resourceUri>
+    </DataSource>
+    <DataSource id="Projection_3$$$$ECC_RBKP$$">
+      <resourceUri>ECC_RBKP</resourceUri>
+    </DataSource>
+    <DataSource id="Projection_4$$$$ECC_RSEG$$">
+      <resourceUri>ECC_RSEG</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_MLAN">
+      <resourceUri>ECC_MLAN</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_EKPO">
+      <resourceUri>ECC_EKPO</resourceUri>
+    </DataSource>
+    <DataSource id="Projection_8$$$$ECC_EKPO$$">
+      <resourceUri>ECC_EKPO</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_MAKT">
+      <resourceUri>ECC_MAKT</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="BUKRS"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#ECC_RBKP">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+      </input>
+      <filter>(&quot;BLART&quot; !='KP') AND (&quot;LIFNR&quot; ='0001000005')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MWSKZ"/>
+        <viewAttribute id="GJAHR"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#ECC_RSEG">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MWSKZ" source="MWSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinOrder="OUTSIDE_IN" joinType="inner">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MWSKZ"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="BUKRS"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="SOURCE" length="20" expressionLanguage="COLUMN_ENGINE">
+          <formula>'DC to Hospital'</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#Projection_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+      </input>
+      <input node="#Projection_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MWSKZ" source="MWSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+      </input>
+      <joinAttribute name="BELNR"/>
+      <joinAttribute name="BUKRS"/>
+      <joinAttribute name="GJAHR"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="BUKRS_1"/>
+        <viewAttribute id="BUKRS_2"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Projection_3$$$$ECC_RBKP$$">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS_1" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS_2" source="BUKRS"/>
+      </input>
+      <filter>(&quot;BLART&quot; !='KP') AND (in (&quot;BUKRS&quot;,'1000'))</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_4">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="MWSKZ"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="MATNR"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Projection_4$$$$ECC_RSEG$$">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MWSKZ" source="MWSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_2" joinOrder="OUTSIDE_IN" joinType="inner">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MWSKZ"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="BUKRS"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="SOURCE" length="20" expressionLanguage="COLUMN_ENGINE">
+          <formula>'Vendor to DC'</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#Projection_3">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+      </input>
+      <input node="#Projection_4">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MWSKZ" source="MWSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+      </input>
+      <joinAttribute name="BELNR"/>
+      <joinAttribute name="GJAHR"/>
+      <joinAttribute name="BUKRS"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:RankView" id="DC_HOSP">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="MWSKZ"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="SOURCE"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Join_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MWSKZ" source="MWSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE" source="SOURCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+      </input>
+      <windowFunction>
+        <partitionViewAttributeName>MATNR</partitionViewAttributeName>
+        <order byViewAttributeName="BUDAT" direction="DESC"/>
+        <rankThreshold>
+          <value>1</value>
+        </rankThreshold>
+      </windowFunction>
+    </calculationView>
+    <calculationView xsi:type="Calculation:RankView" id="VENDOR_DC">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="MWSKZ"/>
+        <viewAttribute id="SOURCE"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Join_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MWSKZ" source="MWSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE" source="SOURCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+      </input>
+      <windowFunction>
+        <partitionViewAttributeName>MATNR</partitionViewAttributeName>
+        <order byViewAttributeName="BUDAT" direction="DESC"/>
+        <rankThreshold>
+          <value>1</value>
+        </rankThreshold>
+      </windowFunction>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_5">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="ALAND"/>
+        <viewAttribute id="TAXM1"/>
+        <viewAttribute id="TAXM2"/>
+        <viewAttribute id="TAXM3"/>
+        <viewAttribute id="TAXM4"/>
+        <viewAttribute id="TAXM5"/>
+        <viewAttribute id="TAXM6"/>
+        <viewAttribute id="TAXM7"/>
+        <viewAttribute id="TAXM8"/>
+        <viewAttribute id="TAXM9"/>
+        <viewAttribute id="TAXIM"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="SOURCE" length="20" expressionLanguage="COLUMN_ENGINE">
+          <formula>'Master Data'</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#ECC_MLAN">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALAND" source="ALAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAXM1" source="TAXM1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAXM2" source="TAXM2"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAXM3" source="TAXM3"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAXM4" source="TAXM4"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAXM5" source="TAXM5"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAXM6" source="TAXM6"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAXM7" source="TAXM7"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAXM8" source="TAXM8"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAXM9" source="TAXM9"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAXIM" source="TAXIM"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_7">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="MWSKZ_PO"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#ECC_EKPO">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MWSKZ_PO" source="MWSKZ"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_6" joinOrder="OUTSIDE_IN" joinType="inner">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="MWSKZ"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="SOURCE"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="MWSKZ_PO"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#DC_HOSP">
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MWSKZ" source="MWSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE" source="SOURCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+      </input>
+      <input node="#Projection_7">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MWSKZ_PO" source="MWSKZ_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+      </input>
+      <joinAttribute name="EBELN"/>
+      <joinAttribute name="EBELP"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_8">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="MWSKZ_PO"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Projection_8$$$$ECC_EKPO$$">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MWSKZ_PO" source="MWSKZ"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_7" joinOrder="OUTSIDE_IN" joinType="inner">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="MWSKZ"/>
+        <viewAttribute id="SOURCE"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="MWSKZ_PO"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#VENDOR_DC">
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MWSKZ" source="MWSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE" source="SOURCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+      </input>
+      <input node="#Projection_8">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MWSKZ_PO" source="MWSKZ_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+      </input>
+      <joinAttribute name="EBELN"/>
+      <joinAttribute name="EBELP"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_4" joinOrder="OUTSIDE_IN" joinType="inner">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="MWSKZ"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="MWSKZ_PO"/>
+        <viewAttribute id="MWSKZ_1"/>
+        <viewAttribute id="BELNR_1"/>
+        <viewAttribute id="BLART_1"/>
+        <viewAttribute id="LIFNR_1"/>
+        <viewAttribute id="BUZEI_1"/>
+        <viewAttribute id="BUKRS_1"/>
+        <viewAttribute id="EBELN_1"/>
+        <viewAttribute id="EBELP_1"/>
+        <viewAttribute id="MWSKZ_PO_1"/>
+        <viewAttribute id="BUDAT_1"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Join_6">
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MWSKZ" source="MWSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MWSKZ_PO" source="MWSKZ_PO"/>
+      </input>
+      <input node="#Join_7">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MWSKZ_1" source="MWSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR_1" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART_1" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR_1" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI_1" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS_1" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN_1" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP_1" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MWSKZ_PO_1" source="MWSKZ_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT_1" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+      </input>
+      <joinAttribute name="MATNR"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_3" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="TAXM1"/>
+        <viewAttribute id="TAXM2"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="MWSKZ"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="MWSKZ_PO"/>
+        <viewAttribute id="MWSKZ_1"/>
+        <viewAttribute id="BELNR_1"/>
+        <viewAttribute id="BLART_1"/>
+        <viewAttribute id="LIFNR_1"/>
+        <viewAttribute id="BUZEI_1"/>
+        <viewAttribute id="BUKRS_1"/>
+        <viewAttribute id="EBELN_1"/>
+        <viewAttribute id="EBELP_1"/>
+        <viewAttribute id="MWSKZ_PO_1"/>
+        <viewAttribute id="BUDAT_1"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Join_4">
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MWSKZ" source="MWSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MWSKZ_PO" source="MWSKZ_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MWSKZ_1" source="MWSKZ_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR_1" source="BELNR_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART_1" source="BLART_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR_1" source="LIFNR_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI_1" source="BUZEI_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS_1" source="BUKRS_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN_1" source="EBELN_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP_1" source="EBELP_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MWSKZ_PO_1" source="MWSKZ_PO_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT_1" source="BUDAT_1"/>
+      </input>
+      <input node="#Projection_5">
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAXM1" source="TAXM1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAXM2" source="TAXM2"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+      </input>
+      <joinAttribute name="MATNR"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_6">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="MAKTX"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#ECC_MAKT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTX" source="MAKTX"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_5" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="TAXM1"/>
+        <viewAttribute id="TAXM2"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="MWSKZ"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="MWSKZ_PO"/>
+        <viewAttribute id="MWSKZ_1"/>
+        <viewAttribute id="BELNR_1"/>
+        <viewAttribute id="BLART_1"/>
+        <viewAttribute id="LIFNR_1"/>
+        <viewAttribute id="BUZEI_1"/>
+        <viewAttribute id="BUKRS_1"/>
+        <viewAttribute id="EBELN_1"/>
+        <viewAttribute id="EBELP_1"/>
+        <viewAttribute id="MWSKZ_PO_1"/>
+        <viewAttribute id="BUDAT_1"/>
+        <viewAttribute id="MAKTX"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Join_3">
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAXM1" source="TAXM1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAXM2" source="TAXM2"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MWSKZ" source="MWSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MWSKZ_PO" source="MWSKZ_PO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MWSKZ_1" source="MWSKZ_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR_1" source="BELNR_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART_1" source="BLART_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR_1" source="LIFNR_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI_1" source="BUZEI_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS_1" source="BUKRS_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN_1" source="EBELN_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP_1" source="EBELP_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MWSKZ_PO_1" source="MWSKZ_PO_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT_1" source="BUDAT_1"/>
+      </input>
+      <input node="#Projection_6">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTX" source="MAKTX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+      </input>
+      <joinAttribute name="MATNR"/>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="Join_5">
+    <descriptions/>
+    <attributes>
+      <attribute id="TAXM1" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Tax Jurisdiction Code"/>
+        <keyMapping columnObjectName="Join_5" columnName="TAXM1"/>
+      </attribute>
+      <attribute id="TAXM2" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TAXM2"/>
+        <keyMapping columnObjectName="Join_5" columnName="TAXM2"/>
+      </attribute>
+      <attribute id="GJAHR" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GJAHR"/>
+        <keyMapping columnObjectName="Join_5" columnName="GJAHR"/>
+      </attribute>
+      <attribute id="BUDAT" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BUDAT"/>
+        <keyMapping columnObjectName="Join_5" columnName="BUDAT"/>
+      </attribute>
+      <attribute id="MWSKZ" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Tax on sales/purchases code"/>
+        <keyMapping columnObjectName="Join_5" columnName="MWSKZ"/>
+      </attribute>
+      <attribute id="MATNR" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Number"/>
+        <keyMapping columnObjectName="Join_5" columnName="MATNR"/>
+      </attribute>
+      <attribute id="LIFNR" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="LIFNR"/>
+        <keyMapping columnObjectName="Join_5" columnName="LIFNR"/>
+      </attribute>
+      <attribute id="BELNR" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BELNR"/>
+        <keyMapping columnObjectName="Join_5" columnName="BELNR"/>
+      </attribute>
+      <attribute id="BUKRS" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BUKRS"/>
+        <keyMapping columnObjectName="Join_5" columnName="BUKRS"/>
+      </attribute>
+      <attribute id="EBELN" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EBELN"/>
+        <keyMapping columnObjectName="Join_5" columnName="EBELN"/>
+      </attribute>
+      <attribute id="EBELP" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EBELP"/>
+        <keyMapping columnObjectName="Join_5" columnName="EBELP"/>
+      </attribute>
+      <attribute id="MWSKZ_PO" hidden="true" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MWSKZ_PO"/>
+        <keyMapping columnObjectName="Join_5" columnName="MWSKZ_PO"/>
+      </attribute>
+      <attribute id="MWSKZ_1" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Tax on sales/purchases code"/>
+        <keyMapping columnObjectName="Join_5" columnName="MWSKZ_1"/>
+      </attribute>
+      <attribute id="BELNR_1" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BELNR"/>
+        <keyMapping columnObjectName="Join_5" columnName="BELNR_1"/>
+      </attribute>
+      <attribute id="LIFNR_1" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="LIFNR"/>
+        <keyMapping columnObjectName="Join_5" columnName="LIFNR_1"/>
+      </attribute>
+      <attribute id="BUKRS_1" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BUKRS"/>
+        <keyMapping columnObjectName="Join_5" columnName="BUKRS_1"/>
+      </attribute>
+      <attribute id="EBELN_1" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EBELN_1"/>
+        <keyMapping columnObjectName="Join_5" columnName="EBELN_1"/>
+      </attribute>
+      <attribute id="EBELP_1" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EBELP_1"/>
+        <keyMapping columnObjectName="Join_5" columnName="EBELP_1"/>
+      </attribute>
+      <attribute id="MWSKZ_PO_1" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MWSKZ_PO"/>
+        <keyMapping columnObjectName="Join_5" columnName="MWSKZ_PO_1"/>
+      </attribute>
+      <attribute id="BUDAT_1" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Inv Date ( Vendor - DC ) "/>
+        <keyMapping columnObjectName="Join_5" columnName="BUDAT_1"/>
+      </attribute>
+      <attribute id="MAKTX" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Description (Short Text)"/>
+        <keyMapping columnObjectName="Join_5" columnName="MAKTX"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes>
+      <calculatedAttribute id="TAXM1_DESCRIPTION" hidden="false" order="23" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Tax Jurisdiction Description"/>
+        <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="10">
+          <formula>if(TRIM(&quot;TAXM1&quot;)='I3', 'Taxable', if(TRIM(&quot;TAXM1&quot;)='I4', 'Taxable', if(TRIM(&quot;TAXM1&quot;)='R1', 'Taxable', if(TRIM(&quot;TAXM1&quot;)='R3', 'Taxable', if(TRIM(&quot;TAXM1&quot;)='1', 'Taxable', if(TRIM(&quot;TAXM1&quot;)='I1', 'GST Only',   if(TRIM(&quot;TAXM1&quot;)='R2', 'GST Only',  if(TRIM(&quot;TAXM1&quot;)='2', 'GST Only',  if(TRIM(&quot;TAXM1&quot;)='I0', 'Exempt',  if(TRIM(&quot;TAXM1&quot;)='0', 'Exempt', ''))))))))))</formula>
+        </keyCalculation>
+      </calculatedAttribute>
+      <calculatedAttribute id="MWSKZ_DESCRIPTION" hidden="false" order="24" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Tax Description Invoice (DC -Hospitals)"/>
+        <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="10">
+          <formula>if(TRIM(&quot;MWSKZ&quot;)='I3', 'Taxable', if(TRIM(&quot;MWSKZ&quot;)='I4', 'Taxable', if(TRIM(&quot;MWSKZ&quot;)='R1', 'Taxable', if(TRIM(&quot;MWSKZ&quot;)='R3', 'Taxable', if(TRIM(&quot;MWSKZ&quot;)='1', 'Taxable', if(TRIM(&quot;MWSKZ&quot;)='I1', 'GST Only',   if(TRIM(&quot;MWSKZ&quot;)='R2', 'GST Only',  if(TRIM(&quot;MWSKZ&quot;)='2', 'GST Only',  if(TRIM(&quot;MWSKZ&quot;)='I0', 'Exempt',  if(TRIM(&quot;MWSKZ&quot;)='0', 'Exempt', ''))))))))))</formula>
+        </keyCalculation>
+      </calculatedAttribute>
+      <calculatedAttribute id="MWSKZ1_DESCRIPTION" hidden="false" order="25" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Tax Description Invoice (Vendor - DC)"/>
+        <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="10">
+          <formula>if(TRIM(&quot;MWSKZ_1&quot;)='I3', 'Taxable', if(TRIM(&quot;MWSKZ_1&quot;)='I4', 'Taxable', if(TRIM(&quot;MWSKZ_1&quot;)='R1', 'Taxable', if(TRIM(&quot;MWSKZ_1&quot;)='R3', 'Taxable', if(TRIM(&quot;MWSKZ_1&quot;)='1', 'Taxable', if(TRIM(&quot;MWSKZ_1&quot;)='I1', 'GST Only',   if(TRIM(&quot;MWSKZ_1&quot;)='R2', 'GST Only',  if(TRIM(&quot;MWSKZ_1&quot;)='2', 'GST Only',  if(TRIM(&quot;MWSKZ_1&quot;)='I0', 'Exempt',  if(TRIM(&quot;MWSKZ_1&quot;)='0', 'Exempt', ''))))))))))</formula>
+        </keyCalculation>
+      </calculatedAttribute>
+      <calculatedAttribute id="MWSKZPO1_DESCRIPTION" hidden="false" order="26" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Tax Description (PO DC- Vendor)"/>
+        <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="10">
+          <formula>if(TRIM(&quot;MWSKZ_PO_1&quot;)='I3', 'Taxable', if(TRIM(&quot;MWSKZ_PO_1&quot;)='I4', 'Taxable', if(TRIM(&quot;MWSKZ_PO_1&quot;)='R1', 'Taxable', if(TRIM(&quot;MWSKZ_PO_1&quot;)='R3', 'Taxable', if(TRIM(&quot;MWSKZ_PO_1&quot;)='1', 'Taxable', if(TRIM(&quot;MWSKZ_PO_1&quot;)='I1', 'GST Only',   if(TRIM(&quot;MWSKZ_PO_1&quot;)='R2', 'GST Only',  if(TRIM(&quot;MWSKZ_PO_1&quot;)='2', 'GST Only',  if(TRIM(&quot;MWSKZ_PO_1&quot;)='I0', 'Exempt',  if(TRIM(&quot;MWSKZ_PO_1&quot;)='0', 'Exempt', ''))))))))))</formula>
+        </keyCalculation>
+      </calculatedAttribute>
+      <calculatedAttribute id="COMPARISON_TAX_ALL" hidden="false" order="27" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Comparison Tax All"/>
+        <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="20">
+          <formula>if(&quot;TAXM1_DESCRIPTION&quot;=&quot;MWSKZ_DESCRIPTION&quot; and &quot;TAXM1_DESCRIPTION&quot;=&quot;MWSKZ1_DESCRIPTION&quot; and &quot;TAXM1_DESCRIPTION&quot;=&quot;MWSKZPO1_DESCRIPTION&quot;, 'Match', 'noMatch')</formula>
+        </keyCalculation>
+      </calculatedAttribute>
+      <calculatedAttribute id="Comparison_tax_PO_Vendor_Invoice" hidden="false" order="28" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Comparion tax (PO and Vendor Invoice)"/>
+        <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="20">
+          <formula>IF(&quot;MWSKZ1_DESCRIPTION&quot;=&quot;MWSKZPO1_DESCRIPTION&quot;, 'TRUE','FALSE')</formula>
+        </keyCalculation>
+      </calculatedAttribute>
+      <calculatedAttribute id="Comparison_tax_PlX_Billing_Vendor_Invoice" hidden="false" order="29" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Comparion tax (PlX Billing and  Vendor Invoice)"/>
+        <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="20">
+          <formula>if( &quot;TAXM1_DESCRIPTION&quot;=&quot;MWSKZ_DESCRIPTION&quot;, 'TRUE', 'FALSE')</formula>
+        </keyCalculation>
+      </calculatedAttribute>
+    </calculatedAttributes>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures>
+      <measure id="CNT_BELNR" hidden="false" order="1" aggregationType="sum" measureType="simple" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+        <descriptions defaultDescription="CNT_BELNR"/>
+        <formula>1</formula>
+      </measure>
+    </calculatedMeasures>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="327" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="723"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="723"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="627"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="330" y="723"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_4" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="484" y="723"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="407" y="627"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="DC_HOSP" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="549"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="VENDOR_DC" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="407" y="549"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_5" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="482" y="357"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_7" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="549"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_6" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="453"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_8" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="561" y="549"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_7" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="407" y="453"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_4" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="328" y="357"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="404" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_6" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="250" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_5" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="327" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

@@ -1,0 +1,176 @@
+PROCEDURE "plx_etl::SP_COEP_DELTA" ( 
+    
+   out t_out "TT_COEP"
+    
+)
+   LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+	READS SQL DATA AS
+
+BEGIN
+   /*************************************
+       build where clause with timestamp for COEP.
+       
+       our where clause will fetch last timestamp to current timestamp
+       for each company code.
+       
+       COEP timestamp is 
+       seconds since 1.1.1990 0:00 Uhr Greenwich Meantime multiplied by 10000
+   *************************************/
+   declare where_clause     varchar(3000) := '' ;   
+   declare lv_bukrs	        varchar(4)    := '';
+   declare lv_start_time	decimal(16)	  := 0;
+   declare lv_end_time		decimal(16)	  := 0;
+   declare lv_row_count     integer;
+   declare i			    integer;
+   declare temp_coep        "TT_COEP";
+   declare lv_filter_string nvarchar(5000);
+   
+   -- select company codes
+   -- why?  we use company codes as a partition criteria 
+   -- in the fetch statments
+	ccodes_list = 
+		select distinct bukrs 
+		from "CCODE_MEMBER";
+   
+   -- store dataset size in row_count variable
+	SELECT COUNT(bukrs)
+	INTO lv_row_count
+	FROM :ccodes_list;
+	
+   -- select last timestamp from local coep
+  	SELECT max( timestmp ) 
+  	into lv_start_time
+  	FROM "ECC_COEP";
+   
+   
+ /* 
+    -- select last timestamp from remote coep
+    -- this statement actually sends 'select * from coep where mandt' to ECC.  
+ 	-- unusable!!
+  	SELECT max( timestmp ) 
+  	into lv_end_time
+  	FROM "PLX_DW"."V_ECC_COEP";
+*/
+
+	-- calculate our ending timestamp (now) as seconds from 1990/01/01 0:00 
+	--(to set upper boundry as coep type timestmp)
+	select 
+	nano100_between('1990-01-01', current_timestamp) / 1000
+	into lv_end_time
+	from "SYS::DUMMY";
+
+	FOR i IN 0 .. :lv_row_count-1 DO
+	
+	   -- walk through the company codes
+	   -- one at a time.  This is supplied in the where below.
+		SELECT "BUKRS"
+		INTO lv_bukrs
+		FROM :ccodes_list
+		LIMIT 1 OFFSET :i; -- notice OFFSET indexes at 0, not 1
+		
+		
+    lv_filter_string = 'BUKRS = (''' || lv_bukrs ||
+		               ''') AND TIMESTMP >= ''' || lv_start_time || ''' AND TIMESTMP <= '''  || lv_end_time ||'''' ;
+		               
+	  t_coep1 = apply_filter(V_ECC_COEP, :lv_filter_string);	
+
+    -- here we fetch the whole table one chunk at a time.
+	-- The time range and single company code 
+	-- are pushed down to ECC as part of the where clause.
+		temp_coep =
+		select 
+		 "KOKRS",
+		 "BELNR" 	,
+		 "BUZEI" 	,
+		 "PERIO" 	,
+		 "WTGBTR" 	,
+		 "WOGBTR" 	,
+		 "WKGBTR" 	,
+		 "WKFBTR" 	,
+		 "PAGBTR" 	,
+		 "PAFBTR" 	,
+		 "MEGBTR" 	,
+		 "MEFBTR" 	,
+		 "MBGBTR" 	,
+		 "MBFBTR" 	,
+		 "LEDNR" 	,
+		 "OBJNR" 	,
+		 "GJAHR" 	,
+		 "WRTTP" 	,
+		 "VERSN" 	,
+		 "KSTAR" 	,
+		 "HRKFT" 	,
+		 "VRGNG" 	,
+		 "PAROB" 	,
+		 "PAROB1" 	,
+		 "USPOB" 	,
+		 "VBUND" 	,
+		 "PARGB" 	,
+		 "BEKNZ" 	,
+		 "TWAER" 	,
+		 "OWAER" 	,
+		 "MEINH" 	,
+		 "MEINB" 	,
+		 "MVFLG" 	,
+		 "SGTXT" 	,
+		 "REFBZ" 	,
+		 "ZLENR" 	,
+		 "BW_REFBZ" 	,
+		 "GKONT" 	,
+		 "GKOAR" 	,
+		 "WERKS" 	,
+		 "MATNR" 	,
+		 "RBEST" 	,
+		 "EBELN" 	,
+		 "EBELP" 	,
+		 "ZEKKN" 	,
+		 "ERLKZ" 	,
+		 "PERNR" 	,
+		 "BTRKL" 	,
+		 "OBJNR_N1" 	,
+		 "OBJNR_N2" 	,
+		 "OBJNR_N3" 	,
+		 "PAOBJNR" 	,
+		 "BELTP" 	,
+		 "BUKRS" 	,
+		 "GSBER" 	,
+		 "FKBER" 	,
+		 "SCOPE" 	,
+		 "LOGSYSO" 	,
+		 "PKSTAR" 	,
+		 "PBUKRS" 	,
+		 "PFKBER" 	,
+		 "PSCOPE" 	,
+		 "LOGSYSP" 	,
+		 "DABRZ" 	,
+		 "BWSTRAT" 	,
+		 "OBJNR_HK" 	,
+		 "TIMESTMP" 	,
+		 "QMNUM" 	,
+		 "GEBER" 	,
+		 "PGEBER" 	,
+		 "GRANT_NBR" 	,
+		 "PGRANT_NBR" 	,
+		 "REFBZ_FI" 	,
+		 "SEGMENT" 	,
+		 "PSEGMENT" 	,
+		 "BUDGET_PD" 	,
+		 "PBUDGET_PD" 	
+		
+		from :t_coep1 ;
+		
+	/*	"V_ECC_COEP"
+		where	bukrs     = :lv_bukrs
+		and 	timestmp >= :lv_start_time
+		and 	timestmp <= :lv_end_time;
+	*/	
+		-- append each fetched chunk to our 
+		-- output dataset 
+		t_out = 
+		select * from :temp_coep
+		union all
+		select * from :t_out;
+	END FOR;
+    
+END;

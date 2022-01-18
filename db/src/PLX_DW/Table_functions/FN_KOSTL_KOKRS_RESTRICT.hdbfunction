@@ -1,0 +1,443 @@
+FUNCTION "plx_analytics::FN_KOSTL_KOKRS_RESTRICT" (
+		--ControllingArea NVARCHAR(12),
+		--Group_Root_Node NVARCHAR(24)
+	) 
+ 	RETURNS table(
+ 		CC1 NVARCHAR(40),
+ 		NODE NVARCHAR(40),
+ 		
+		KOKRS NVARCHAR(4)
+	)
+
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER AS
+BEGIN
+
+DECLARE NUM int := 0;
+DECLARE HIAUTHCOUNT int := 0;
+DECLARE CCAUTHCOUNT int := 0;
+DECLARE LEV int := 1;
+declare STCLS nvarchar(4) := '0101';
+
+BEGIN
+
+
+--Scenario 1: controlling area cost center restrictions - J_ASTA (RETRIEVE FROM SETLEAF)
+--Scenario 2: controlling area cost center hierarchy restrictions - OCHEN (RETRIEVE FROM RESTRICTION, HIERARCHY FROM SETNODE, SETLEAF)
+--Scenario 3: controlling area cost center* restrictions - JSTOPCIATI (RETRIEVE FROM SETLEAF)
+--Scenario 4: controlling area cost center hierarchy* restrictions (RETRIEVE NODES FROM SETNODE, SETLEAF)
+/*inacase for a group node, there is no subgroup, then it will not be in SETNODE, but only in SETLEAF*/
+--Scenario 5: no restrictions - Current User
+
+	-- Get all hierarchy auths based on username
+	LT_USER =
+		SELECT 
+	 			CURRENT_USER AS CURR_USER,
+	 	 		SESSION_USER AS SESS_USER FROM "SYS::DUMMY";
+	LT_HIAUTH = 
+			SELECT trim(agr.uname) as uname,
+				   SUBSTR (low, 7) as node,
+				   SUBSTR (low, 3,4) as kokrs
+			FROM ECC_AGR_USERS as agr
+			INNER JOIN :LT_USER as user -- comment here
+			ON (trim(agr.uname) = trim(user.SESS_USER)) -- comment here
+			INNER JOIN ECC_AGR_1251 as agr_1251
+			ON (trim(agr.agr_name) = trim(agr_1251.agr_name))
+			WHERE trim(agr_1251.OBJECT) = 'K_CCA' AND trim(agr_1251.FIELD) = 'RESPAREA'
+			AND trim(substring (agr_1251.LOW,1,2)) = 'HI';
+			--AND trim(uname) = 'ALO';
+			--AND trim(uname) = 'JSTOPCIATI';
+			--AND trim(uname) = 'OCHEN';
+			--AND trim(uname) = 'J_ASTA';
+			--AND trim(uname) = 'ACHACKO';
+	HIAUTHCOUNT = 0;		
+	SELECT COUNT(*) INTO HIAUTHCOUNT FROM :LT_HIAUTH;		
+	-- Get all cc auths based on username
+	LT_CCAUTH = 
+			SELECT trim(agr.uname) as uname,
+				   trim(SUBSTR (low, 7)) as cc,
+				   SUBSTR (low, 3,4) as kokrs
+			FROM ECC_AGR_USERS as agr
+			INNER JOIN :LT_USER as user -- comment here
+			ON (trim(agr.uname) = trim(user.SESS_USER)) -- comment here
+			INNER JOIN ECC_AGR_1251 as agr_1251
+			ON (trim(agr.agr_name) = trim(agr_1251.agr_name))
+			WHERE trim(agr_1251.OBJECT) = 'K_CCA' AND trim(agr_1251.FIELD) = 'RESPAREA'
+			AND trim(substring (agr_1251.LOW,1,2)) = 'KS';
+			--AND trim(uname) = 'ALO';
+			--AND trim(uname) = 'JSTOPCIATI';
+			--AND trim(uname) = 'OCHEN';
+			--AND trim(uname) = 'J_ASTA';
+			--AND trim(uname) = 'ACHACKO';
+
+	CCAUTHCOUNT = 0;
+	SELECT COUNT(*) INTO CCAUTHCOUNT FROM :LT_CCAUTH;
+	 -- check if no auths exist for the user 
+	/*
+	 if :HIAUTHCOUNT = 0 AND :CCAUTHCOUNT = 0 then
+	        -- SELECT SETNAME AND SUBSETNAME FROM SETNODE WHERE SETCLASS EQ 0101
+	        -- SELECT DISTINCT SETNAME FROM SETLEAF WHERE SETCLASS EQ 0101
+	 --output LT_SETNODE (Scenario 5)
+	 
+	 LT_SETNODE = 
+		SELECT	NULL as rootnode,
+    	trim(setname) as node,
+    	trim(subclass) as kokrs, 
+    	1 AS LEVEL
+	    from ECC_SETNODE as root
+	    WHERE root.setclass = :STCLS;
+	    
+	    LT_SETNODE_TMP = 
+			SELECT	NULL as rootnode,
+	    	trim(subsetname) as node,
+	    	trim(subclass) as kokrs,
+	    	1 AS LEVEL
+	    from ECC_SETNODE as root
+	    WHERE root.setclass = :STCLS;
+	    
+	    LT_SETNODE_TMP2 = 
+			SELECT	DISTINCT
+			NULL as rootnode,
+	    	trim(setname) as node,
+	    	trim(subclass) as kokrs,
+	    	1 AS LEVEL
+	    from ECC_SETLEAF as root
+	    WHERE root.setclass = :STCLS;
+	    
+	    LT_SETNODE = 
+	    	SELECT rootnode,
+	    		node,
+    			kokrs,
+    			NULL AS LEVEL
+    			FROM :LT_SETNODE
+    			
+    			UNION
+			SELECT rootnode,
+	    		node,
+    			kokrs,
+    			NULL AS LEVEL
+    			FROM :LT_SETNODE_TMP
+    			UNION
+    		SELECT rootnode,
+	    		node,
+    			kokrs,
+    			NULL AS LEVEL
+    			FROM :LT_SETNODE_TMP2
+    			;
+
+	 ELSE
+	 */
+	-- check for wild card in cc auth or hi auth and obtain controlling area
+ 	LT_ALLNODES = 
+ 		SELECT kokrs
+ 		FROM :LT_HIAUTH
+ 		WHERE :LT_HIAUTH.node = '*'
+ 		UNION
+ 		SELECT kokrs
+ 		FROM :LT_CCAUTH
+ 		WHERE :LT_CCAUTH.cc = '*';
+ 	NUM = 0;
+ 	SELECT COUNT (*) INTO NUM FROM :LT_ALLNODES;
+ 	--IF :NUM > 0 THEN --LAST EDIT
+ 	-- get all nodes for controlling area with wild card
+ 	--output LT_NODES_KOKRS (SCENARIO 3 and SCENARIO 4)
+ 	
+ 			LT_NODES_KOKRS = 
+				SELECT	NULL as rootnode,
+		    	trim(setname) as node,
+		    	kokrs,
+		    	1 AS LEVEL
+		    from :LT_ALLNODES
+		    JOIN ECC_SETNODE as root
+		    on root.subclass = :LT_ALLNODES.kokrs 
+		    WHERE root.setclass = :STCLS;
+		    
+		    LT_NODES_KOKRS2 = 
+				SELECT	NULL as rootnode,
+		    	trim(subsetname) as node,
+		    	kokrs,
+		    	1 AS LEVEL
+		    from :LT_ALLNODES
+		    JOIN ECC_SETNODE as root
+		    on root.subclass = :LT_ALLNODES.kokrs 
+		    WHERE root.setclass = :STCLS;
+		    
+		    LT_NODES_KOKRS3 = 
+			SELECT	DISTINCT
+			NULL as rootnode,
+	    	trim(setname) as node,
+	    	trim(subclass) as kokrs,
+	    	1 AS LEVEL
+	    from :LT_ALLNODES
+		    JOIN ECC_SETLEAF as root
+		    on root.subclass = :LT_ALLNODES.kokrs 
+	    WHERE root.setclass = :STCLS;
+		    
+		    LT_SETNODE = 
+		    	SELECT rootnode,
+		    		node,
+	    			kokrs,
+	    			NULL AS LEVEL
+	    			FROM :LT_NODES_KOKRS
+	    			
+	    			UNION
+    			SELECT rootnode,
+		    		node,
+	    			kokrs,
+	    			NULL AS LEVEL
+	    			FROM :LT_NODES_KOKRS2
+	    			UNION
+    			SELECT rootnode,
+		    		node,
+	    			kokrs,
+	    			NULL AS LEVEL
+	    			FROM :LT_NODES_KOKRS3
+	    			;
+ 	--END IF; LAST EDIT
+	--	 END IF;
+	-- get rootnode from hi auth
+	 LT_HI_NODES =
+		SELECT	trim(node) as rootnode,
+		    	trim(node) as node,
+		    	kokrs,
+		    	1 AS LEVEL
+		    from :LT_HIAUTH
+		    WHERE trim(:LT_HIAUTH.node) != '*';
+
+/*OB    LT_CC_NODES = 
+	SELECT distinct	
+	            trim(cc) as kostl,  --OB
+		    	trim(subnode.SETNAME) as node,
+		    	kokrs,
+		    	1 AS LEVEL
+		    from :LT_CCAUTH as cc
+		    inner join ECC_SETLEAF as subnode 
+			    --ON (trim(subset.SETNAME) = root.node
+			    ON (cc.cc >= trim(subnode.valfrom)
+			    AND cc.cc <= trim(subnode.valto)
+			    AND trim(subnode.SUBCLASS) = cc.kokrs)
+			    WHERE trim(cc.cc) != '*';
+OB*/
+--NEW OB--wHEN the CC auth is KS1100* then all CC are in ECC_CSKT for 1100
+   LT_CC_NODES_OB = 
+	SELECT distinct	
+	            costkt.KOSTL as kostl,  --OB
+		    	'ALL' as node,
+		    	cc.kokrs
+		    from :LT_CCAUTH as cc
+		    inner join ECC_CSKT as costkt 
+			    ON  trim(costkt.KOKRS) = cc.kokrs
+			    WHERE trim(cc.cc) = '*';
+
+	-- end if; "last edit	
+	 
+	 WHILE	1 = 1 do
+			LT_HI_NODES_TMP = 
+		    SELECT 
+			    rootnode, 
+			    trim(subset.SUBSETNAME) AS node, 
+			    kokrs,
+			   -- NULL AS COST_ELEMENT, 
+			    :LEV + 1 AS LEVEL
+			   -- :ControllingArea AS ControllingArea
+		    FROM :LT_HI_NODES as root 
+			    inner join ECC_SETNODE as subset 
+			    ON (trim(subset.SETNAME) = root.node
+			    AND trim(subset.SUBCLASS) = root.kokrs)
+			    --inner join ECC_SETLEAF as leafset -- edit
+			    --ON (trim(leafset.SETNAME) = root.node  -- edit
+			    --AND trim(leafset.SETNAME) != trim(subset.SETNAME)
+			    --AND trim(leafset.SUBCLASS) = root.kokrs)  -- edit
+				WHERE root.LEVEL = :LEV;
+		NUM = 0;
+	    SELECT COUNT(*) INTO NUM FROM :LT_HI_NODES_TMP;
+	
+	    if :NUM = 0 then
+	        break;
+	    end if;
+-- output LT_HI_NODES (SCENARIO 2) 
+	    LT_HI_NODES =
+		    SELECT rootnode,
+		    	   node,
+		    	   kokrs,
+		    	   level
+		    from :LT_HI_NODES
+	        
+	        UNION
+		    
+		    SELECT rootnode,
+		    	   node,
+		    	   kokrs,
+		    	   level
+		    from :LT_HI_NODES_TMP;
+	
+      LEV := :LEV + 1;
+	--BREAK ;
+	end while;
+	
+
+	LT_HI_NODES_TMP2 = 
+		    SELECT 
+			    rootnode, 
+			    trim(subset.SETNAME) AS node, 
+			    kokrs,
+			   -- NULL AS COST_ELEMENT, 
+			    1 AS LEVEL
+			   -- :ControllingArea AS ControllingArea
+		    FROM :LT_HI_NODES as root 
+			    inner join ECC_SETLEAF as subset 
+			    ON (trim(subset.SETNAME) = root.node
+			    AND trim(subset.SUBCLASS) = root.kokrs);
+			    --inner join ECC_SETLEAF as leafset -- edit
+			    --ON (trim(leafset.SETNAME) = root.node  -- edit
+			    --AND trim(leafset.SETNAME) != trim(subset.SETNAME)
+			    --AND trim(leafset.SUBCLASS) = root.kokrs)  -- edit
+				--WHERE root.LEVEL = :LEV;
+	
+	-- output LT_CC_NODES (SCENARIO 1)
+	LT_CC_NODES = 
+	SELECT distinct	
+	            trim(cc) as kostl,  --OB
+		    	trim(subnode.SETNAME) as node,
+		    	kokrs,
+		    	1 AS LEVEL
+		    from :LT_CCAUTH as cc
+		    inner join ECC_SETLEAF as subnode 
+			    --ON (trim(subset.SETNAME) = root.node
+			    ON (cc.cc >= trim(subnode.valfrom)
+			    AND cc.cc <= trim(subnode.valto)
+			    AND trim(subnode.SUBCLASS) = cc.kokrs);
+	LEV = 1;
+	WHILE	1 = 1 do
+			LT_CC_NODES_TMP = 
+		    SELECT 
+			    kostl, --OB
+			    trim(subnode.SETNAME) AS node, 
+			    kokrs,
+			   -- NULL AS COST_ELEMENT, 
+			    :LEV + 1 AS LEVEL
+			   -- :ControllingArea AS ControllingArea
+		    FROM :LT_CC_NODES as cc
+			    inner join ECC_SETNODE as subnode 
+			    ON (trim(cc.node) = trim(subnode.subsetname)
+			   -- ON (cc.kostl >= trim(subnode.valfrom)
+			   -- AND cc.kostl <= trim(subnode.valto)
+			    AND trim(subnode.SUBCLASS) = cc.kokrs)
+				WHERE cc.LEVEL = :LEV;
+
+	    SELECT COUNT(*) INTO NUM FROM :LT_CC_NODES_TMP;
+	
+	    if :NUM = 0 then
+	        break;
+	    end if;
+
+	    LT_CC_NODES =
+		    SELECT DISTINCT 
+		           kostl,  --OB
+		    	   node,
+		    	   kokrs,
+		    	   level
+		    from :LT_CC_NODES
+	        
+	        UNION
+		    
+		    SELECT DISTINCT 
+		           kostl,  --OB
+		    	   node,
+		    	   kokrs,
+		    	   level
+		    from :LT_CC_NODES_TMP;
+	
+      LEV := :LEV + 1;
+	--BREAK ;
+	end while;
+	
+	 if :HIAUTHCOUNT = 0 AND :CCAUTHCOUNT = 0 then
+	        -- SELECT SETNAME AND SUBSETNAME FROM SETNODE WHERE SETCLASS EQ 0101
+	        -- SELECT DISTINCT SETNAME FROM SETLEAF WHERE SETCLASS EQ 0101
+	 --output LT_SETNODE (Scenario 5)
+	 
+	 LT_SETNODE = 
+		SELECT	NULL as rootnode,
+    	trim(setname) as node,
+    	trim(subclass) as kokrs, 
+    	1 AS LEVEL
+	    from ECC_SETNODE as root
+	    WHERE root.setclass = :STCLS;
+	    
+	    LT_SETNODE_TMP = 
+			SELECT	NULL as rootnode,
+	    	trim(subsetname) as node,
+	    	trim(subclass) as kokrs,
+	    	1 AS LEVEL
+	    from ECC_SETNODE as root
+	    WHERE root.setclass = :STCLS;
+	    
+	    LT_SETNODE_TMP2 = 
+			SELECT	DISTINCT
+			NULL as rootnode,
+	    	trim(setname) as node,
+	    	trim(subclass) as kokrs,
+	    	1 AS LEVEL
+	    from ECC_SETLEAF as root
+	    WHERE root.setclass = :STCLS;
+	    
+	    LT_SETNODE = 
+	    	SELECT rootnode,
+	    		node,
+    			kokrs,
+    			NULL AS LEVEL
+    			FROM :LT_SETNODE
+    			
+    			UNION
+			SELECT rootnode,
+	    		node,
+    			kokrs,
+    			NULL AS LEVEL
+    			FROM :LT_SETNODE_TMP
+    			UNION
+    		SELECT rootnode,
+	    		node,
+    			kokrs,
+    			NULL AS LEVEL
+    			FROM :LT_SETNODE_TMP2
+    			;
+		end if;
+
+		var_out =
+/*			SELECT DISTINCT
+			       rootnode AS CC1,  --OB
+		    	   node,
+		    	   kokrs
+		    	   --level
+		    from :LT_SETNODE
+		    UNION	
+		    SELECT DISTINCT
+		           rootnode AS CC1,  --OB
+		    	   node,
+		    	   kokrs
+		    	  -- level
+		    from :LT_HI_NODES  
+		    UNION
+
+*/		    
+		    SELECT DISTINCT
+		           KOSTL AS CC1, --OB
+		    	   node,
+		    	   kokrs
+		    	  -- level
+		    from :LT_CC_NODES_OB;  
+		    		    
+
+END;
+
+RETURN
+--SELECT * FROM :VAR_OUT;
+select 
+	CC1 ,
+ 	trim(node) as NODE
+, 	trim(kokrs) as KOKRS
+from :var_out;
+
+
+end;

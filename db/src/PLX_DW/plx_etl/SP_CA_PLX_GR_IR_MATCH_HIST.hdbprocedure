@@ -1,0 +1,382 @@
+PROCEDURE "plx_etl::SP_CA_PLX_GR_IR_MATCH_HIST" (
+	--out t_out "ZECC_EKBE_GRIR"
+ ) 
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER AS
+   
+"VAR_GJAHR" VARCHAR(4);
+"VAR_BELNR" NVARCHAR(10);
+"VAR_BUZEI" VARCHAR(4);
+ 
+BEGIN SEQUENTIAL EXECUTION
+DECLARE lv_date NVARCHAR(8) := REPLACE(ADD_DAYS(CURRENT_DATE, 0), '-', '');
+
+DECLARE CURSOR c_po FOR 
+ SELECT DISTINCT "ECC_EKBE"."EBELN", 
+ "EBELP"
+ FROM "ECC_EKBE"
+ JOIN "ECC_EKKO"
+ ON rtrim("ECC_EKKO"."EBELN") = rtrim("ECC_EKBE"."EBELN")
+ WHERE ( "BEWTP" = 'Q'
+ OR "BEWTP" = 'E' ) 
+ AND "ECC_EKKO"."EBELN" not in
+ ( SELECT DISTINCT "ECC_EKBE"."EBELN"
+ FROM "ECC_EKBE" as "A"
+ JOIN "ECC_EKKO" as "B"
+ ON "A"."EBELN" =  "B"."EBELN");
+
+/*
+ SELECT DISTINCT "ECC_EKBE"."EBELN", 
+ "EBELP"
+ FROM "ECC_EKBE"
+ JOIN "ECC_EKKO"
+ ON rtrim("ECC_EKKO"."EBELN") = rtrim("ECC_EKBE"."EBELN")
+ INNER JOIN "HANA_CNTRL_ZEKBE_GRIR"
+ ON "ECC_EKBE"."CPUDT" >= "HANA_CNTRL_ZEKBE_GRIR"."CPUDT"
+ WHERE ( "BEWTP" = 'Q'
+ OR "BEWTP" = 'E' ) 
+ */
+
+ 
+ DECLARE CURSOR c_gr FOR
+ SELECT *
+ FROM "ZECC_EKBE_GRIR_TEMP"
+ WHERE "BEWTP" = 'E'
+ AND BELNR_CNCL = N'          '
+ ORDER BY "CPUDT_GR" ASC, "CPUTM_GR" ASC;
+ 
+ DECLARE CURSOR c_ir FOR
+ SELECT *
+ FROM "ZECC_EKBE_GRIR_TEMP"
+ WHERE "BEWTP" = 'Q'
+ AND BELNR_CNCL = N'          '
+ ORDER BY "CPUDT_IR" ASC, "CPUTM_IR" ASC;
+ 
+  DECLARE CURSOR c_gr_cancel FOR
+ SELECT *
+ FROM "ZECC_EKBE_GRIR_TEMP2";
+ 
+ --DELETE FROM "ZECC_EKBE_GRIR"; "ac
+ 
+ FOR c1 as c_po DO SEQUENTIAL EXECUTION
+  
+ /* For this PO and Item, loop through all GR and IR */
+ 
+ DELETE FROM "ZECC_EKBE_GRIR_TEMP";
+ 
+ /* this is to find out last PO that worked */
+
+ COMMIT WORK;
+
+INSERT INTO "ZECC_EKBE_GRIR_TEMP"
+ SELECT DISTINCT "EBELN", 
+ "EBELP",
+ "BEWTP",
+ "GJAHR" as "GJAHR_GR",
+  "BELNR" as "BELNR_GR",
+ "BUZEI" as "BUZEI_GR",
+ '    ' as "GJAHR_IR",
+ N'          ' as  "BELNR_IR",
+  '    ' as "BUZEI_IR",
+    '    ' as "GJAHR_CNCL",
+ N'          ' as "BELNR_CNCL",
+  '    ' as "BUZEI_CNCL",
+ MAX("WRBTR") as "WRBTR_GR",
+ "SHKZG" as "SHKZG_GR",
+ "CPUDT" as  "CPUDT_GR",
+ "CPUTM" as "CPUTM_GR",
+ 0.0 as "WRBTR_IR",
+ ' ' as "SHKZG_IR",
+ '        ' as  "CPUDT_IR",
+ '      ' as CPUTM_IR
+ FROM "ECC_EKBE"
+ WHERE "BEWTP" = 'E'
+ AND "EBELN" = c1.ebeln 
+ AND "EBELP" = c1.ebelp
+ GROUP BY "EBELN", 
+ "EBELP",
+ "BEWTP",
+ "GJAHR",
+  "BELNR",
+ "BUZEI",
+ "SHKZG",
+ "CPUDT",
+ "CPUTM"
+ ORDER BY "CPUDT" ASC, "CPUTM" ASC; 
+ 
+ INSERT INTO "ZECC_EKBE_GRIR_TEMP"
+  SELECT DISTINCT "EBELN", 
+ "EBELP",
+ "BEWTP",
+ '    ' as "GJAHR_GR",
+ N'          ' as "BELNR_GR",
+  '    ' as "BUZEI_GR",
+ "GJAHR" as "GJAHR_IR",
+  "BELNR" as "BELNR_IR",
+ "BUZEI" as "BUZEI_IR",
+    '    ' as "GJAHR_CNCL",
+ N'          ' as "BELNR_CNCL",
+  '    ' as "BUZEI_CNCL",
+ 0.0 as "WRBTR_GR",
+ ' ' as "SHKZG_GR",
+ '        ' as  "CPUDT_GR",
+ '      ' as "CPUTM_GR",
+ MAX("WRBTR") as "WRBTR_IR",
+ "SHKZG" as "SHKZG_IR",
+ "CPUDT" as  "CPUDT_IR",
+ "CPUTM" as "CPUTM_IR"
+ FROM "ECC_EKBE"
+ WHERE "BEWTP" = 'Q'
+ AND "EBELN" = c1.ebeln 
+ AND "EBELP" = c1.ebelp
+  GROUP BY "EBELN", 
+ "EBELP",
+ "BEWTP",
+ "GJAHR",
+  "BELNR",
+ "BUZEI",
+ "SHKZG",
+ "CPUDT",
+ "CPUTM"
+ ORDER BY "CPUDT" ASC, "CPUTM" ASC;
+
+
+ /*
+INSERT INTO "ZECC_EKBE_GRIR_TEMP"
+ SELECT DISTINCT "EBELN", 
+ "EBELP",
+ "BEWTP",
+ '    ' as "GJAHR_GR",
+ N'          ' as "BELNR_GR",
+  '    ' as "BUZEI_GR",
+ "GJAHR" as "GJAHR_IR",
+  "BELNR" as "BELNR_IR",
+ "BUZEI" as "BUZEI_IR",
+    '    ' as "GJAHR_CNCL",
+ N'          ' as "BELNR_CNCL",
+  '    ' as "BUZEI_CNCL",
+ 0.0 as "WRBTR_GR",
+ ' ' as "SHKZG_GR",
+ '        ' as  "CPUDT_GR",
+ '      ' as "CPUTM_GR",
+ "WRBTR" as "WRBTR_IR",
+ "SHKZG" as "SHKZG_IR",
+ "CPUDT" as  "CPUDT_IR",
+ "CPUTM" as "CPUTM_IR"
+ FROM "ECC_EKBE"
+ WHERE "BEWTP" = 'Q'
+ AND "EBELN" = c1.ebeln 
+ AND "EBELP" = c1.ebelp
+ ORDER BY "CPUDT" ASC, "CPUTM" ASC;
+ */
+ COMMIT WORK;
+
+ 
+    FOR c2 as c_gr DO SEQUENTIAL EXECUTION
+    /* Check duplicates to cancel */
+    
+    DELETE FROM "ZECC_EKBE_GRIR_TEMP2";
+    
+    COMMIT WORK;
+    
+    INSERT INTO "ZECC_EKBE_GRIR_TEMP2"
+    SELECT *
+    FROM "ZECC_EKBE_GRIR_TEMP"
+    WHERE ( "GJAHR_GR" != c2.GJAHR_GR
+    OR "BELNR_GR" != c2.BELNR_GR
+    OR "BUZEI_GR" != c2.BUZEI_GR )
+    AND WRBTR_GR = c2.WRBTR_GR
+    AND SHKZG_GR != c2.SHKZG_GR
+    AND BELNR_CNCL = N'          '
+    AND "BEWTP" = c2.BEWTP
+    ORDER BY "CPUDT_GR" ASC, "CPUTM_GR" ASC
+    LIMIT  1;
+    
+    COMMIT WORK;
+    
+    /* now start temp cursor and assign cancel */
+    FOR c3 as c_gr_cancel DO SEQUENTIAL EXECUTION
+    
+    /*
+        UPDATE "ZECC_EKBE_GRIR_TEMP"
+        SET "GJAHR_CNCL" = c3.GJAHR_GR,
+         "BELNR_CNCL" = c3.BELNR_GR,
+         "BUZEI_CNCL" = c3.BUZEI_GR
+         WHERE "GJAHR_GR" = c2.GJAHR_GR
+        AND "BELNR_GR" = c2.BELNR_GR
+        AND "BUZEI_GR" = c2.BUZEI_GR;
+        */
+        
+        UPDATE "ZECC_EKBE_GRIR_TEMP"
+        SET "GJAHR_CNCL" = c2.GJAHR_GR,
+         "BELNR_CNCL" = c2.BELNR_GR,
+         "BUZEI_CNCL" = c2.BUZEI_GR
+         WHERE "GJAHR_GR" = c3.GJAHR_GR
+        AND "BELNR_GR" = c3.BELNR_GR
+        AND "BUZEI_GR" = c3.BUZEI_GR;
+
+        COMMIT WORK;
+        
+    END FOR;
+ 
+
+    END FOR; 
+    
+    
+    FOR c4 as c_ir DO SEQUENTIAL EXECUTION
+    /* Check duplicates to cancel. Must check during this loop that current isn't cancelled */
+    
+    
+    DELETE FROM "ZECC_EKBE_GRIR_TEMP2";
+    
+    COMMIT WORK;
+    
+    INSERT INTO "ZECC_EKBE_GRIR_TEMP2"
+    SELECT *
+    FROM "ZECC_EKBE_GRIR_TEMP"
+    WHERE ( "GJAHR_IR" != c4.GJAHR_IR
+    OR "BELNR_IR" != c4.BELNR_IR
+    OR "BUZEI_IR" != c4.BUZEI_IR )
+    AND WRBTR_IR = c4.WRBTR_IR
+    AND SHKZG_IR != c4.SHKZG_IR
+    AND BELNR_CNCL = N'          '
+    AND "BEWTP" = c4.BEWTP
+    ORDER BY "CPUDT_IR" ASC, "CPUTM_IR" ASC
+    LIMIT  1;
+    
+    COMMIT WORK;
+    
+    /* now start temp cursor and assign cancel */
+    FOR c5 as c_gr_cancel DO SEQUENTIAL EXECUTION
+    
+    /*
+        UPDATE "ZECC_EKBE_GRIR_TEMP"
+        SET "GJAHR_CNCL" = c5.GJAHR_IR,
+         "BELNR_CNCL" = c5.BELNR_IR,
+         "BUZEI_CNCL" = c5.BUZEI_IR
+         WHERE "GJAHR_IR" = c4.GJAHR_IR
+        AND "BELNR_IR" = c4.BELNR_IR
+        AND "BUZEI_IR" = c4.BUZEI_IR;
+        
+        */
+        UPDATE "ZECC_EKBE_GRIR_TEMP"
+        SET "GJAHR_CNCL" = c4.GJAHR_IR,
+         "BELNR_CNCL" = c4.BELNR_IR,
+         "BUZEI_CNCL" = c4.BUZEI_IR
+         WHERE "GJAHR_IR" = c5.GJAHR_IR
+        AND "BELNR_IR" = c5.BELNR_IR
+        AND "BUZEI_IR" = c5.BUZEI_IR;
+        
+        COMMIT WORK;
+        
+        
+    
+    END FOR;
+ 
+
+    END FOR; 
+    
+    /* Now that all cancellation is done, time to do matching */
+    
+    FOR c2 as c_gr DO SEQUENTIAL EXECUTION
+    
+        DELETE FROM "ZECC_EKBE_GRIR_TEMP2";
+        
+        COMMIT WORK;
+        
+        INSERT INTO "ZECC_EKBE_GRIR_TEMP2"
+        SELECT *
+        FROM "ZECC_EKBE_GRIR_TEMP"
+        WHERE ( "GJAHR_GR" != c2.GJAHR_GR
+        OR "BELNR_GR" != c2.BELNR_GR
+        OR "BUZEI_GR" != c2.BUZEI_GR )
+        --AND WRBTR_IR = c2.WRBTR_GR
+        AND SHKZG_IR = c2.SHKZG_GR
+        AND BELNR_CNCL = N'          '
+        AND "BEWTP" != c2.BEWTP
+        ORDER BY "CPUDT_GR" ASC, "CPUTM_GR" ASC
+        LIMIT  1;
+        
+        COMMIT WORK;
+        
+            
+        FOR c3 as c_gr_cancel DO SEQUENTIAL EXECUTION
+
+            
+            UPDATE "ZECC_EKBE_GRIR_TEMP"
+            SET "GJAHR_IR" = c3.GJAHR_IR,
+             "BELNR_IR" = c3.BELNR_IR,
+             "BUZEI_IR" = c3.BUZEI_IR
+             WHERE "GJAHR_GR" = c2.GJAHR_GR
+            AND "BELNR_GR" = c2.BELNR_GR
+            AND "BUZEI_GR" = c2.BUZEI_GR;
+            
+            DELETE FROM "ZECC_EKBE_GRIR_TEMP"
+             WHERE "GJAHR_IR" = c3.GJAHR_IR
+             AND "BELNR_IR" = c3.BELNR_IR
+             AND "BUZEI_IR" = c3.BUZEI_IR
+             AND "GJAHR_GR" = '    '
+            AND "BELNR_GR" =   N'          '
+            AND "BUZEI_GR" = '    ';
+    
+            COMMIT WORK;
+            
+
+        END FOR;
+        
+        
+    
+    END FOR;
+    
+    UPSERT "ZECC_EKBE_GRIR"
+    --t_out =
+    --SELECT DISTINCT	"EBELN",
+    --	"EBELP",
+    --	"GJAHR_GR",
+    --	"BELNR_GR",
+    --	"BUZEI_GR",
+    --	"GJAHR_IR",
+    --	"BELNR_IR",
+    --	"BUZEI_IR",
+    --	"GJAHR_CNCL",
+    --	"BELNR_CNCL",
+    --	"BUZEI_CNCL"
+    --	FROM "ZECC_EKBE_GRIR_TEMP";
+    SELECT DISTINCT	"ZECC_EKBE_GRIR_TEMP"."EBELN",
+    	"ZECC_EKBE_GRIR_TEMP"."EBELP",
+    	"GJAHR_GR",
+    	"BELNR_GR",
+    	"BUZEI_GR",
+    	"GJAHR_IR",
+    	"BELNR_IR",
+    	"BUZEI_IR",
+    	"GJAHR_CNCL",
+    	"BELNR_CNCL",
+    	"BUZEI_CNCL",
+    	"GR"."BUDAT" as "BUDAT_GR",
+    	"GR"."CPUDT" as "CPUDT_GR",
+    	"IR"."BUDAT" as "BUDAT_IR",
+    	"IR"."CPUDT" as "CPUDT_IR",
+        CONCAT('00', "BUZEI_IR") as "BUZEI_IR_JOIN",
+        CONCAT("BELNR_IR", CONCAT("GJAHR_IR", '      ')) as "AWKEY_IR"
+    	FROM "ZECC_EKBE_GRIR_TEMP"
+        left outer join "ECC_EKBE" as "GR"
+         on "GR"."GJAHR" = "GJAHR_GR"
+         and "GR"."BELNR" = "BELNR_GR"
+         and "GR"."BUZEI" = "BUZEI_GR"
+         left outer join "ECC_EKBE" AS "IR"
+         on "IR"."GJAHR" = "GJAHR_IR"
+         and "IR"."BELNR" = "BELNR_IR"
+         and "IR"."BUZEI" = "BUZEI_IR";
+
+     
+     COMMIT WORK;
+
+END FOR;
+
+UPDATE  "HANA_CNTRL_ZEKBE_GRIR"
+SET CPUDT =:lv_date;
+ 
+COMMIT WORK;
+
+END

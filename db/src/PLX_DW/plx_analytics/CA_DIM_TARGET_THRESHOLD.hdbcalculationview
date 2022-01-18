@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="3.0" id="plx_analytics::CA_DIM_TARGET_THRESHOLD" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection" xscCompatibilityMode="true">
+<origin/>
+  <descriptions defaultDescription="CA_PLX_TARGET_THRESHOLD"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="33"/>
+  <dataSources>
+    <DataSource id="MANUAL_METRIC_DESCRIPTIONS">
+      <resourceUri>MANUAL_METRIC_DESCRIPTIONS</resourceUri>
+    </DataSource>
+    <DataSource id="MANUAL_PERFMGMT_TARGETTHRESHOLD">
+      <resourceUri>MANUAL_PERFMGMT_TARGETTHRESHOLD</resourceUri>
+    </DataSource>
+  </dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="METRIC_TEXTS">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="METRIC_ID"/>
+        <viewAttribute id="METRIC_NAME"/>
+        <viewAttribute id="DESCRIPTION"/>
+        <viewAttribute id="IMPORTANCE"/>
+        <viewAttribute id="METRIC_GROUP"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="MANUAL_METRIC_DESCRIPTIONS"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="TARGET_THRESHOLD">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="TARGET"/>
+        <viewAttribute id="THRESHOLD"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="METRIC_ID"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="MANUAL_PERFMGMT_TARGETTHRESHOLD"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinType="inner">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="TARGET"/>
+        <viewAttribute id="THRESHOLD"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="METRIC_NAME"/>
+        <viewAttribute id="DESCRIPTION"/>
+        <viewAttribute id="IMPORTANCE"/>
+        <viewAttribute id="METRIC_GROUP"/>
+        <viewAttribute id="METRIC_ID"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="METRIC_TEXTS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="METRIC_NAME" source="METRIC_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DESCRIPTION" source="DESCRIPTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IMPORTANCE" source="IMPORTANCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="METRIC_GROUP" source="METRIC_GROUP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="METRIC_ID" source="METRIC_ID"/>
+      </input>
+      <input node="TARGET_THRESHOLD">
+        <mapping xsi:type="Calculation:AttributeMapping" target="TARGET" source="TARGET"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="THRESHOLD" source="THRESHOLD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="METRIC_ID" source="METRIC_ID"/>
+      </input>
+    <joinAttribute name="METRIC_ID"/>
+  </calculationView>
+</calculationViews>
+  <logicalModel id="Join_1">
+    <descriptions/>
+    <attributes>
+      <attribute id="TARGET" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Target"/>
+        <keyMapping columnObjectName="Join_1" columnName="TARGET"/>
+      </attribute>
+      <attribute id="THRESHOLD" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Threshold"/>
+        <keyMapping columnObjectName="Join_1" columnName="THRESHOLD"/>
+      </attribute>
+      <attribute id="ZFISCAL_YEAR" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Year"/>
+        <keyMapping columnObjectName="Join_1" columnName="ZFISCAL_YEAR"/>
+      </attribute>
+      <attribute id="ZFISCAL_PERIOD" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Period"/>
+        <keyMapping columnObjectName="Join_1" columnName="ZFISCAL_PERIOD"/>
+      </attribute>
+      <attribute id="ZFISCAL_QUARTER" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Quarter"/>
+        <keyMapping columnObjectName="Join_1" columnName="ZFISCAL_QUARTER"/>
+      </attribute>
+      <attribute id="MEMBER" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Member ID"/>
+        <keyMapping columnObjectName="Join_1" columnName="MEMBER"/>
+      </attribute>
+      <attribute id="METRIC_NAME" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="Join_1" columnName="METRIC_NAME"/>
+      </attribute>
+      <attribute id="DESCRIPTION" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="Join_1" columnName="DESCRIPTION"/>
+      </attribute>
+      <attribute id="IMPORTANCE" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="Join_1" columnName="IMPORTANCE"/>
+      </attribute>
+      <attribute id="METRIC_GROUP" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="METRIC_GROUP"/>
+        <keyMapping columnObjectName="Join_1" columnName="METRIC_GROUP"/>
+      </attribute>
+      <attribute id="METRIC_ID" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="Join_1" columnName="METRIC_ID"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+<layout>
+  <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="METRIC_TEXTS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="TARGET_THRESHOLD" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    
+    <shape modelObjectName="METRIC_TEXTS" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="TARGET_THRESHOLD" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

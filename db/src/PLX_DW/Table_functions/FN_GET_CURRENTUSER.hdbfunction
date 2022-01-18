@@ -1,0 +1,24 @@
+FUNCTION "plx_analytics::FN_GET_CURRENTUSER" ( )
+RETURNS table(
+ 	CURR_USER NVARCHAR(40),
+	SESS_USER NVARCHAR(40)
+	)
+	--RETURNS return_table_type
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER AS
+BEGIN
+/***************************** 
+	Write your function logic
+ *****************************/
+  var_out = SELECT 
+ 			CURRENT_USER AS CURR_USER,
+ 	 		SESSION_USER AS SESS_USER FROM "SYS::DUMMY";
+ 	 
+RETURN 
+
+--SELECT * FROM :VAR_OUT;
+select 
+ 	trim(CURR_USER) as CURR_USER
+,	trim(SESS_USER) as SESS_USER
+from :var_out;
+END;

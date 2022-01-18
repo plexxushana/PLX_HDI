@@ -1,0 +1,126 @@
+PROCEDURE "plx_etl::SP_PIVOT_DGM_METRICS"(
+		OUT t_out "Z_DGM_HIST1"
+	)
+	SQL SECURITY INVOKER
+	READS SQL DATA
+AS
+BEGIN
+	DECLARE v_changedon TIMESTAMP;
+	DECLARE v_changedby NVARCHAR(30);
+
+/**
+
+gathers all the dqm metrics from upload table / data models
+and derives the average for a Data Quality Index measure, defaulting for 
+the current reporting year/quarter.
+
+NOTE: see table "PLX_DW"."MANUAL_METRIC_DESCRIPTIONS" for explanations of 
+the metric IDs.
+
+**/
+
+t_crnt_qrtr = 
+SELECT TOP 1
+	 	*
+FROM 	"plx_analytics::CA_DIM_FISC_CAL"
+WHERE 	SAP_DATE = add_months(current_date, -1);
+
+/**					  to_dats(current_date); */
+			
+v_changedon := now();
+v_changedby := user();
+	
+-- most metrics for DGM are covered in CA_MD_METRICS_FOR_HISTORY, except
+-- for 'percent of orders without errors', % of Purchase Order Acknowledgements lines with no Pricing exceptions.
+-- Including this and GHX with CA_MD_METRICS_FOR_HISTORY breaks the other CA_MD_METRICS_FOR_HISTORY numbers.
+-- union them together here.
+	
+	--"_SYS_BIC"."plx_analytics/CA_MD_METRICS_FOR_HISTORY" 
+t_dgm = 
+select 	metric_id
+	    , measure
+	    , :T_CRNT_QRTR.ZFISCAL_YEAR
+	    , :T_CRNT_QRTR.ZFISCAL_QUARTER
+from 	"plx_analytics::CA_MD_METRICS_FOR_HISTORY",
+		:T_CRNT_QRTR
+	union
+	--"_SYS_BIC"."plx_analytics/CA_MD_METRICS_FOR_HISTORY_TIME"
+select 	m_time.metric_id
+	    , m_time.measure
+	    , m_time.ZFISCAL_YEAR
+	    , m_time.ZFISCAL_QUARTER
+from 	"plx_analytics::CA_MD_METRICS_FOR_HISTORY_TIME" m_time,
+		:t_crnt_qrtr
+where	m_time.zfiscal_year = :t_crnt_qrtr.zfiscal_year
+and		m_time.zfiscal_quarter = :t_crnt_qrtr.zfiscal_quarter
+;
+
+--calculate vmqi - vendor master quality index
+t_qi_values = 
+select   'VMQI' as metric_id
+		, avg(:t_dgm.measure) as measure
+from 	:t_dgm
+where 	:t_dgm.metric_id in ('UVM', 'VMCD')
+	union 
+--calculate mmqi - material master quality index
+select   'MMQI' as metric_id
+		, avg(:t_dgm.measure) as measure
+from 	:t_dgm
+where 	:t_dgm.metric_id in ('MMCD', 'CMMD', 'UMM', 'OPWOE')
+	union
+--calculate cpqi - contract PIR quality index
+select   'CPQI' as metric_id
+		, avg(:t_dgm.measure) as measure
+from 	:t_dgm
+where 	:t_dgm.metric_id in ('MS', 'SLUOM', 'GHXP', 'MIL')
+	union
+--get uploaded ARQI from table
+select	  metric_id
+		, measure
+from	"MANUAL_DGM_HISTORY" hst
+	    , :t_crnt_qrtr
+where	hst.metric_id		= 'ARQI'
+and		hst.zfiscal_year 	= :t_crnt_qrtr.zfiscal_year
+and		hst.zfiscal_quarter = :t_crnt_qrtr.zfiscal_quarter
+;
+		
+--get average of MMQI, VMQI, CPQI, ARQI to make Data Quality Index
+t_dqi =
+select 	'DQI' as metric_id
+		, avg(measure) as measure 
+from	:t_qi_values;
+		
+--ouput all measures & IDs
+t_output =		
+		-- all MD models + 'orders w/o errors'
+select 	:t_dgm.metric_id
+		,:t_dgm.measure
+	    , :t_crnt_qrtr.zfiscal_year
+	    , :t_crnt_qrtr.zfiscal_quarter
+from 	:t_dgm,	
+		:t_crnt_qrtr
+	union	-- material management quality index (includes 'orders w/o errors')
+select 	:t_qi_values.metric_id
+		,:t_qi_values.measure
+	    , :t_crnt_qrtr.zfiscal_year
+	    , :t_crnt_qrtr.zfiscal_quarter
+from 	:t_qi_values,	
+		:t_crnt_qrtr	
+	union	-- data quality index (average of vendor, material, order indexes)
+select 	:t_dqi.metric_id
+		,:t_dqi.measure
+	    , :t_crnt_qrtr.zfiscal_year
+	    , :t_crnt_qrtr.zfiscal_quarter
+from 	:t_dqi,	
+		:t_crnt_qrtr
+		;
+
+--format output & add timestamp & user
+T_OUT = SELECT 	:t_output.METRIC_ID
+               , :t_output.ZFISCAL_YEAR
+               , :t_output.ZFISCAL_QUARTER
+               , :t_output.MEASURE               
+               , NOW() AS CHANGED_ON
+               , USER() AS CHANGED_BY 
+         FROM :t_output;
+END;

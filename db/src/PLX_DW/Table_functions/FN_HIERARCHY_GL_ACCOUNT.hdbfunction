@@ -1,0 +1,285 @@
+ FUNCTION "plx_analytics::FN_HIERARCHY_GL_ACCOUNT" ( 
+		CHART_OF_ACCOUNTS NVARCHAR(12),
+		Group_Root_Node NVARCHAR(24)
+) 
+ 	RETURNS table(
+		 CHART_OF_ACCOUNTS NVARCHAR(4)
+		, LEVEL	INTEGER
+		,  PARENT nvarchar(24)
+		, CHILD NVARCHAR(24)
+		--, COST_ELEMENT NVARCHAR(24)
+	)
+
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER AS
+BEGIN
+
+/* Compute the Cost Element Standard Hierarchy */
+
+DECLARE NUM int := 0; 
+DECLARE LEV int := 1;
+declare STCLS nvarchar(4) := '0109';
+
+BEGIN
+
+	/*In case Group_Root_Node is empty, retrieve only leaf(Cost element) node from SETLEAF table*/
+
+	if :Group_Root_Node = '' then
+
+	LT_CE_TMP = 
+	SELECT NULL AS PARENT, 
+		   NULL AS CHILD, 
+		   VALOPTION AS VALOPTION, 
+		   VALFROM as VALFROM, 
+		   VALTO as VALTO, 
+		   1 AS LEVEL, 
+		   :CHART_OF_ACCOUNTS AS CHART_OF_ACCOUNTS	
+	FROM "ECC_SETLEAF"
+	WHERE SETCLASS = :STCLS 
+	AND	  trim(SUBCLASS)  = :CHART_OF_ACCOUNTS;
+
+	var_out = 
+	SELECT PARENT, 
+		   --CHILD, 
+		   --VALFROM AS COST_ELEMENT, 
+		   VALFROM as CHILD,
+		   LEVEL, 
+		   CHART_OF_ACCOUNTS
+	FROM :LT_CE_TMP;
+
+	LT_CE_TMP2 = 
+	SELECT NULL AS PARENT, 
+		   -- CE.CHILD AS CHILD, 
+		   CSKU.SAKNR AS CHILD, 
+		   CE.LEVEL AS LEVEL, 
+		   :CHART_OF_ACCOUNTS AS CHART_OF_ACCOUNTS
+	FROM :LT_CE_TMP as CE 
+	inner join "ECC_SKAT" as CSKU 
+	ON (CSKU.SAKNR >= CE.VALFROM 
+	and CSKU.SAKNR <= CE.VALTO)
+	WHERE trim(CSKU.KTOPL)  = :CHART_OF_ACCOUNTS;
+
+	var_out = 
+	SELECT  PARENT, 
+			CHILD, 
+			--COST_ELEMENT, 
+			LEVEL, 
+			CHART_OF_ACCOUNTS 
+	  from :var_out
+	UNION
+	SELECT  PARENT, 
+			CHILD, 
+			--COST_ELEMENT, 
+			LEVEL, 
+			CHART_OF_ACCOUNTS 
+	  from :LT_CE_TMP2;
+
+	/*If Group_Root_Node is empty, empty cost element should also be considered*/
+
+	LT_CE_TMP_2 = 
+		SELECT DISTINCT NULL AS PARENT, 
+				    	--NULL AS CHILD, 
+				    	--'' AS COST_ELEMENT, 
+				    	'' as child,
+				    	1 AS LEVEL, 
+				    	:CHART_OF_ACCOUNTS AS CHART_OF_ACCOUNTS
+		FROM "ECC_SETLEAF"
+		WHERE SETCLASS = :STCLS
+		and   trim(SUBCLASS)  = :CHART_OF_ACCOUNTS;
+
+	var_out = 
+		SELECT PARENT, 
+			   CHILD, 
+			   --COST_ELEMENT, 
+			   LEVEL, 
+			   CHART_OF_ACCOUNTS 
+		 from :var_out
+	UNION
+		SELECT  PARENT, 
+		    	CHILD, 
+		    	--COST_ELEMENT, 
+		    	LEVEL, 
+		    	CHART_OF_ACCOUNTS 
+		   from :LT_CE_TMP_2;
+
+	/*Retrieve all hierarchy groups and the cost center from both SETNODE and SETLEAF, incase Group_Root_Node is not empty*/
+
+	else
+
+	LT_ROOT = 
+		SELECT DISTINCT NULL AS PARENT, 
+						trim(SETNAME) AS CHILD, 
+						--NULL AS COST_ELEMENT, 
+						1 AS LEVEL, 
+						:CHART_OF_ACCOUNTS AS CHART_OF_ACCOUNTS
+		FROM "ECC_SETNODE"
+		WHERE SETCLASS = :STCLS
+		and   trim(SUBCLASS)  = :CHART_OF_ACCOUNTS 
+		and   trim(SETNAME)  = :Group_Root_Node;
+
+	/*inacase for a group node, there is no subgroup, then it will not be in SETNODE, but only in SETLEAF*/
+
+	LT_ROOT2 = 
+		SELECT DISTINCT NULL AS PARENT, 
+						trim(SETNAME) AS CHILD, 
+						--NULL AS COST_ELEMENT, 
+						1 AS LEVEL, 
+						:CHART_OF_ACCOUNTS AS CHART_OF_ACCOUNTS
+		FROM "ECC_SETLEAF"
+		WHERE SETCLASS = :STCLS 
+		and   trim(SUBCLASS)  = :CHART_OF_ACCOUNTS 
+		and   trim(SETNAME)  = :Group_Root_Node;
+
+	LT_HIERARCHY = 
+		SELECT PARENT, 
+			   CHILD, 
+			  -- COST_ELEMENT, 
+			   LEVEL, 
+			   CHART_OF_ACCOUNTS from :LT_ROOT
+
+		UNION
+
+		SELECT  PARENT, 
+				CHILD, 
+				--COST_ELEMENT, 
+				LEVEL, 
+				CHART_OF_ACCOUNTS from :LT_ROOT2;
+
+	while 1 = 1 do
+
+		LT_HIERARCHY_TMP = 
+		    SELECT 
+			    part.SETNAME AS PARENT, 
+			    trim(part.SUBSETNAME) AS CHILD, 
+			   -- NULL AS COST_ELEMENT, 
+			    :LEV + 1 AS LEVEL, 
+			    :CHART_OF_ACCOUNTS AS CHART_OF_ACCOUNTS
+		    FROM :LT_HIERARCHY as main 
+			    inner join "ECC_SETNODE" as part 
+			    ON (main.CHILD = part.SETNAME)
+		
+		    WHERE part.SETCLASS = :STCLS
+			    and   trim(part.SUBCLASS)  = :CHART_OF_ACCOUNTS 
+			    and   main.LEVEL = :LEV;
+
+	    SELECT COUNT(*) INTO NUM FROM :LT_HIERARCHY_TMP;
+	
+	    if :NUM = 0 then
+	        break;
+	    end if;
+
+	    LT_HIERARCHY =
+		    SELECT PARENT,
+			    CHILD,
+		--	    COST_ELEMENT,
+			    LEVEL,
+			    CHART_OF_ACCOUNTS
+		    from :LT_HIERARCHY
+	        
+	        UNION
+		    
+		    SELECT PARENT,
+			    CHILD,
+		--	    COST_ELEMENT,
+			    LEVEL,
+			    CHART_OF_ACCOUNTS
+		    from :LT_HIERARCHY_TMP;
+	
+	    LEV := :LEV + 1;
+
+	end while;
+
+	LT_CE_TMP =
+	  	SELECT
+		  	CE.SETNAME AS PARENT,
+		  	NULL AS CHILD,
+		  	CE.VALOPTION AS VALOPTION,
+		  	CE.VALFROM as VALFROM,
+		  	CE.VALTO as VALTO,
+		  	CC_gr.LEVEL + 1 AS LEVEL,
+		  	:CHART_OF_ACCOUNTS AS CHART_OF_ACCOUNTS
+		FROM :LT_HIERARCHY as CC_gr
+	  	inner join "ECC_SETLEAF" as CE
+	  	ON (CC_gr.CHILD 	= CE.SETNAME)
+		WHERE CE.SETCLASS 		= :STCLS
+	  	and trim(CE.SUBCLASS) 		= :CHART_OF_ACCOUNTS;
+
+
+	LT_CE =
+		  SELECT PARENT,
+		        -- CHILD,
+		        -- VALFROM AS COST_ELEMENT,
+		        valfrom as child,
+		         LEVEL,
+		         CHART_OF_ACCOUNTS
+			FROM :LT_CE_TMP;
+
+	LT_CE_TMP2 =
+	  SELECT
+		  CE.PARENT AS PARENT,
+		 -- CE.CHILD AS CHILD,
+		 -- CSKU.KSTAR AS COST_ELEMENT,
+		 csku.SAKNR as child,
+		  CE.LEVEL AS LEVEL,
+		  :CHART_OF_ACCOUNTS AS CHART_OF_ACCOUNTS
+	  FROM
+		  :LT_CE_TMP as CE
+		  inner join "ECC_SKAT" as CSKU
+		  ON (CSKU.SAKNR >= CE.VALFROM
+	      and CSKU.SAKNR <= CE.VALTO)
+	  WHERE trim(CSKU.KTOPL)  = :CHART_OF_ACCOUNTS;
+	
+	LT_CE =
+		SELECT
+			PARENT,
+			CHILD,
+		--	COST_ELEMENT,
+			LEVEL,
+			CHART_OF_ACCOUNTS
+		from :LT_CE
+	
+		UNION
+	
+		SELECT
+			  PARENT,
+			  CHILD,
+		--	  COST_ELEMENT,
+			  LEVEL,
+			  CHART_OF_ACCOUNTS
+		from :LT_CE_TMP2;
+	
+		var_out =
+		  SELECT
+			  PARENT,
+			  CHILD,
+		--	  COST_ELEMENT,
+			  LEVEL,
+			  CHART_OF_ACCOUNTS
+		  from :LT_HIERARCHY
+	
+	    UNION
+	
+			SELECT
+			  PARENT,
+			  CHILD,
+		--	  COST_ELEMENT,
+			  LEVEL,
+			  CHART_OF_ACCOUNTS
+		  from :LT_CE;
+
+	end if;
+
+END;
+
+RETURN 
+
+--SELECT * FROM :VAR_OUT;
+select 
+ 	trim(CHART_OF_ACCOUNTS) as chart_of_accounts
+, 	LEVEL	
+,	parent
+,	trim(child) as child
+from :var_out;
+
+
+end;

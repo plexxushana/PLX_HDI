@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="3.0" id="plx_analytics::CA_DIM_SKF" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection" xscCompatibilityMode="true">
+<origin/>
+  <descriptions defaultDescription="CA_DIM_SKF"/>
+  <metadata changedAt="2020-10-01 11:27:07.981"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="34"/>
+  <dataSources>
+    <DataSource id="ECC_TKA03">
+      <resourceUri>ECC_TKA03</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_TKT03">
+      <resourceUri>ECC_TKT03</resourceUri>
+    </DataSource>
+  </dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="STAGR"/>
+        <viewAttribute id="MSEHI"/>
+        <viewAttribute id="GRTYP"/>
+        <viewAttribute id="HKTYP"/>
+        <viewAttribute id="STRUCT"/>
+        <viewAttribute id="KENNZ"/>
+        <viewAttribute id="W_FLAG"/>
+        <viewAttribute id="M_PLAN"/>
+        <viewAttribute id="M_IST"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="ECC_TKA03"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="SPRAS"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="STAGR"/>
+        <viewAttribute id="BEZEI"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="ECC_TKT03"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinType="leftOuter">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="STAGR"/>
+        <viewAttribute id="MSEHI"/>
+        <viewAttribute id="GRTYP"/>
+        <viewAttribute id="HKTYP"/>
+        <viewAttribute id="STRUCT"/>
+        <viewAttribute id="KENNZ"/>
+        <viewAttribute id="W_FLAG"/>
+        <viewAttribute id="M_PLAN"/>
+        <viewAttribute id="M_IST"/>
+        <viewAttribute id="BEZEI"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="Projection_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STAGR" source="STAGR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MSEHI" source="MSEHI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GRTYP" source="GRTYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HKTYP" source="HKTYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STRUCT" source="STRUCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KENNZ" source="KENNZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="W_FLAG" source="W_FLAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="M_PLAN" source="M_PLAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="M_IST" source="M_IST"/>
+      </input>
+      <input node="Projection_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEZEI" source="BEZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STAGR" source="STAGR"/>
+      </input>
+    <joinAttribute name="KOKRS"/>
+    <joinAttribute name="STAGR"/>
+  </calculationView>
+</calculationViews>
+  <logicalModel id="Join_1">
+    <descriptions/>
+    <attributes>
+      <attribute id="KOKRS" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Controlling Area"/>
+        <keyMapping columnObjectName="Join_1" columnName="KOKRS"/>
+      </attribute>
+      <attribute id="STAGR" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Statistical key figure"/>
+        <keyMapping columnObjectName="Join_1" columnName="STAGR"/>
+      </attribute>
+      <attribute id="MSEHI" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Unit for statistical key figure"/>
+        <keyMapping columnObjectName="Join_1" columnName="MSEHI"/>
+      </attribute>
+      <attribute id="GRTYP" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Statistical Key Figure Category"/>
+        <keyMapping columnObjectName="Join_1" columnName="GRTYP"/>
+      </attribute>
+      <attribute id="HKTYP" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Flag if indicator is derived from LIS or set manually"/>
+        <keyMapping columnObjectName="Join_1" columnName="HKTYP"/>
+      </attribute>
+      <attribute id="STRUCT" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Generated DDIC table for LIS, conditions, messages"/>
+        <keyMapping columnObjectName="Join_1" columnName="STRUCT"/>
+      </attribute>
+      <attribute id="KENNZ" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Key Figure from LIS"/>
+        <keyMapping columnObjectName="Join_1" columnName="KENNZ"/>
+      </attribute>
+      <attribute id="W_FLAG" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Indicator if statistical ratio describes a currency"/>
+        <keyMapping columnObjectName="Join_1" columnName="W_FLAG"/>
+      </attribute>
+      <attribute id="M_PLAN" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Process planned values"/>
+        <keyMapping columnObjectName="Join_1" columnName="M_PLAN"/>
+      </attribute>
+      <attribute id="M_IST" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Actual value processing"/>
+        <keyMapping columnObjectName="Join_1" columnName="M_IST"/>
+      </attribute>
+      <attribute id="BEZEI" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Long Text"/>
+        <keyMapping columnObjectName="Join_1" columnName="BEZEI"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+<layout>
+  <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    
+    <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

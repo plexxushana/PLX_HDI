@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="plx_analytics::CA_MD_METRICS_FOR_HISTORY_TIME" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+  <descriptions defaultDescription="CA_MD_METRICS_FOR_HISTORY_TIME"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="47"/>
+  <dataSources>
+    <DataSource id="CA_MD_ORDERS_WO_ERRORS">
+      <resourceUri>plx_analytics::CA_MD_ORDERS_WO_ERRORS</resourceUri>
+    </DataSource>
+    <DataSource id="CA_PUR_GHX">
+      <resourceUri>plx_analytics::CA_PUR_GHX</resourceUri>
+    </DataSource>
+    <DataSource id="CA_DIM_SLA_AT_TARGET">
+      <resourceUri>plx_analytics::CA_DIM_SLA_AT_TARGET</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="OPWOE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MEASURE"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="VARCHAR" id="METRIC_ID" length="5" expressionLanguage="COLUMN_ENGINE">
+          <formula>'OPWOE'</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CA_MD_ORDERS_WO_ERRORS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEASURE" source="PERCENT_ORDERS_NO_ERRORS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="GHXP">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MEASURE"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="VARCHAR" id="METRIC_ID" length="5" expressionLanguage="COLUMN_ENGINE">
+          <formula>'GHXP'</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CA_PUR_GHX">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEASURE" source="PERCENT_NO_PRICE_ERRORS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="MIL_AVERAGE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="MEASURE"/>
+        <viewAttribute id="METRIC_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_DIM_SLA_AT_TARGET">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEASURE" source="METRIC_PERCENTAGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="METRIC_ID" source="METRIC_ID"/>
+      </input>
+      <filter>(&quot;METRIC_ID&quot; ='MIL')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:UnionView" id="Union_1">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MEASURE"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="METRIC_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input emptyUnionBehavior="NO_ROW" node="#OPWOE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEASURE" source="MEASURE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="METRIC_ID" source="METRIC_ID"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#GHXP">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEASURE" source="MEASURE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="METRIC_ID" source="METRIC_ID"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#MIL_AVERAGE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEASURE" source="MEASURE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="METRIC_ID" source="METRIC_ID"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="Union_1">
+    <descriptions/>
+    <attributes>
+      <attribute id="ZFISCAL_YEAR" key="true" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZFISCAL_YEAR"/>
+        <keyMapping columnObjectName="Union_1" columnName="ZFISCAL_YEAR"/>
+      </attribute>
+      <attribute id="ZFISCAL_QUARTER" key="true" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZFISCAL_QUARTER"/>
+        <keyMapping columnObjectName="Union_1" columnName="ZFISCAL_QUARTER"/>
+      </attribute>
+      <attribute id="METRIC_ID" key="true" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="METRIC_ID"/>
+        <keyMapping columnObjectName="Union_1" columnName="METRIC_ID"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="MEASURE" order="1" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="MEASURE"/>
+        <measureMapping columnObjectName="Union_1" columnName="MEASURE"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="176" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="OPWOE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="299"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="GHXP" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="299"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="MIL_AVERAGE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="330" y="299"/>
+        <rectangleSize height="81" width="165"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Union_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

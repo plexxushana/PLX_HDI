@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="3.0" id="plx_analytics::CA_PUR_GHX" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+<origin/>
+  <descriptions defaultDescription="GHX Report"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="40"/>
+  <dataSources>
+    <DataSource id="GHX_EXCEPTION">
+      <resourceUri>GHX_EXCEPTION</resourceUri>
+    </DataSource>
+    <DataSource id="GHX_POA">
+      <resourceUri>GHX_POA</resourceUri>
+    </DataSource>
+    <DataSource id="CA_DIM_FISC_CAL">
+      <resourceUri>plx_analytics::CA_DIM_FISC_CAL</resourceUri>
+    </DataSource>
+  </dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="EXCEPTTIONS">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="PO_NUM"/>
+        <viewAttribute id="PO_DATE"/>
+        <viewAttribute id="PO_UOM"/>
+        <viewAttribute id="BUYER_ID"/>
+        <viewAttribute id="ORDER_QTY"/>
+        <viewAttribute id="BORG_NAME"/>
+        <viewAttribute id="SUBMITTED"/>
+        <viewAttribute id="PO_PART_DESCRIPTION"/>
+        <viewAttribute id="LINE_STATUS"/>
+        <viewAttribute id="UNIT_PRICE"/>
+        <viewAttribute id="ALPHA_LINE_NUM"/>
+        <viewAttribute id="SUPPLIER_NAME"/>
+        <viewAttribute id="CONTRACT_PRICE"/>
+        <viewAttribute id="DISCREPANCY_DESC"/>
+        <viewAttribute id="PO_SUPPLIER_PART_NUM"/>
+        <viewAttribute id="CONFIRMED"/>
+        <viewAttribute id="CONFIRMATION_NUM"/>
+        <viewAttribute id="BUYER_PART_NUM"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="FORMATTED_LINE_NUM" length="5" expressionLanguage="COLUMN_ENGINE">
+          <formula>LPAD(TRIM(&quot;ALPHA_LINE_NUM&quot;), 5, '0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="TINYINT" id="COUNT_GHX_EXCEPTIONS" expressionLanguage="COLUMN_ENGINE">
+          <formula>1</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="TINYINT" id="IS_PRICE_ERROR" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(MATCH(LOWER(&quot;DISCREPANCY_DESC&quot;), 'price'), 1, 0)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="GHX_EXCEPTION"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="POA">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="ASN_VENDOR"/>
+        <viewAttribute id="BUYER_ID"/>
+        <viewAttribute id="CONFIRMATION_NUM"/>
+        <viewAttribute id="FACILITY_NAME"/>
+        <viewAttribute id="LATEST_RESPONSE"/>
+        <viewAttribute id="ORDER_STATUS"/>
+        <viewAttribute id="PO_COST"/>
+        <viewAttribute id="PO_NUM"/>
+        <viewAttribute id="TIME_PO_RECEIVED"/>
+        <viewAttribute id="TIME_PO_SENT"/>
+        <viewAttribute id="VENDOR"/>
+        <viewAttribute id="HOSP"/>
+        <viewAttribute id="TOTAL_LINES"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="GHX_POA"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="GHX" joinType="leftOuter">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="PO_DATE"/>
+        <viewAttribute id="PO_UOM"/>
+        <viewAttribute id="ORDER_QTY"/>
+        <viewAttribute id="BORG_NAME"/>
+        <viewAttribute id="SUBMITTED"/>
+        <viewAttribute id="PO_PART_DESCRIPTION"/>
+        <viewAttribute id="LINE_STATUS"/>
+        <viewAttribute id="UNIT_PRICE"/>
+        <viewAttribute id="ALPHA_LINE_NUM"/>
+        <viewAttribute id="SUPPLIER_NAME"/>
+        <viewAttribute id="CONTRACT_PRICE"/>
+        <viewAttribute id="DISCREPANCY_DESC"/>
+        <viewAttribute id="PO_SUPPLIER_PART_NUM"/>
+        <viewAttribute id="CONFIRMED"/>
+        <viewAttribute id="BUYER_PART_NUM"/>
+        <viewAttribute id="ASN_VENDOR"/>
+        <viewAttribute id="FACILITY_NAME"/>
+        <viewAttribute id="LATEST_RESPONSE"/>
+        <viewAttribute id="ORDER_STATUS"/>
+        <viewAttribute id="PO_COST"/>
+        <viewAttribute id="TIME_PO_RECEIVED"/>
+        <viewAttribute id="TIME_PO_SENT"/>
+        <viewAttribute id="VENDOR"/>
+        <viewAttribute id="HOSP"/>
+        <viewAttribute id="FORMATTED_LINE_NUM"/>
+        <viewAttribute id="COUNT_GHX_LINES"/>
+        <viewAttribute id="IS_PRICE_ERROR"/>
+        <viewAttribute id="TOTAL_LINES"/>
+        <viewAttribute id="CONFIRMATION_NUM"/>
+        <viewAttribute id="BUYER_ID"/>
+        <viewAttribute id="PO_NUM"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="POA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ASN_VENDOR" source="ASN_VENDOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FACILITY_NAME" source="FACILITY_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LATEST_RESPONSE" source="LATEST_RESPONSE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORDER_STATUS" source="ORDER_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_COST" source="PO_COST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIME_PO_RECEIVED" source="TIME_PO_RECEIVED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIME_PO_SENT" source="TIME_PO_SENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VENDOR" source="VENDOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HOSP" source="HOSP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_LINES" source="TOTAL_LINES"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONFIRMATION_NUM" source="CONFIRMATION_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUYER_ID" source="BUYER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_NUM" source="PO_NUM"/>
+      </input>
+      <input node="EXCEPTTIONS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_DATE" source="PO_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_UOM" source="PO_UOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORDER_QTY" source="ORDER_QTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BORG_NAME" source="BORG_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBMITTED" source="SUBMITTED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_PART_DESCRIPTION" source="PO_PART_DESCRIPTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LINE_STATUS" source="LINE_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UNIT_PRICE" source="UNIT_PRICE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALPHA_LINE_NUM" source="ALPHA_LINE_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUPPLIER_NAME" source="SUPPLIER_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_PRICE" source="CONTRACT_PRICE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCREPANCY_DESC" source="DISCREPANCY_DESC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_SUPPLIER_PART_NUM" source="PO_SUPPLIER_PART_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONFIRMED" source="CONFIRMED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUYER_PART_NUM" source="BUYER_PART_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FORMATTED_LINE_NUM" source="FORMATTED_LINE_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COUNT_GHX_LINES" source="COUNT_GHX_EXCEPTIONS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_PRICE_ERROR" source="IS_PRICE_ERROR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_NUM" source="PO_NUM"/>
+      </input>
+    <joinAttribute name="PO_NUM"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2" joinType="inner">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="PO_DATE"/>
+        <viewAttribute id="PO_UOM"/>
+        <viewAttribute id="ORDER_QTY"/>
+        <viewAttribute id="BORG_NAME"/>
+        <viewAttribute id="SUBMITTED"/>
+        <viewAttribute id="PO_PART_DESCRIPTION"/>
+        <viewAttribute id="LINE_STATUS"/>
+        <viewAttribute id="UNIT_PRICE"/>
+        <viewAttribute id="ALPHA_LINE_NUM"/>
+        <viewAttribute id="SUPPLIER_NAME"/>
+        <viewAttribute id="CONTRACT_PRICE"/>
+        <viewAttribute id="DISCREPANCY_DESC"/>
+        <viewAttribute id="PO_SUPPLIER_PART_NUM"/>
+        <viewAttribute id="CONFIRMED"/>
+        <viewAttribute id="BUYER_PART_NUM"/>
+        <viewAttribute id="ASN_VENDOR"/>
+        <viewAttribute id="FACILITY_NAME"/>
+        <viewAttribute id="LATEST_RESPONSE"/>
+        <viewAttribute id="ORDER_STATUS"/>
+        <viewAttribute id="PO_COST"/>
+        <viewAttribute id="TIME_PO_RECEIVED"/>
+        <viewAttribute id="TIME_PO_SENT"/>
+        <viewAttribute id="VENDOR"/>
+        <viewAttribute id="HOSP"/>
+        <viewAttribute id="FORMATTED_LINE_NUM"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_YEAR_QUARTER"/>
+        <viewAttribute id="COUNT_GHX_LINES"/>
+        <viewAttribute id="IS_PRICE_ERROR"/>
+        <viewAttribute id="TOTAL_LINES"/>
+        <viewAttribute id="CONFIRMATION_NUM"/>
+        <viewAttribute id="BUYER_ID"/>
+        <viewAttribute id="PO_NUM"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="GHX">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_DATE" source="PO_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_UOM" source="PO_UOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORDER_QTY" source="ORDER_QTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BORG_NAME" source="BORG_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBMITTED" source="SUBMITTED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_PART_DESCRIPTION" source="PO_PART_DESCRIPTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LINE_STATUS" source="LINE_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UNIT_PRICE" source="UNIT_PRICE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALPHA_LINE_NUM" source="ALPHA_LINE_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUPPLIER_NAME" source="SUPPLIER_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_PRICE" source="CONTRACT_PRICE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCREPANCY_DESC" source="DISCREPANCY_DESC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_SUPPLIER_PART_NUM" source="PO_SUPPLIER_PART_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONFIRMED" source="CONFIRMED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUYER_PART_NUM" source="BUYER_PART_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ASN_VENDOR" source="ASN_VENDOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FACILITY_NAME" source="FACILITY_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LATEST_RESPONSE" source="LATEST_RESPONSE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORDER_STATUS" source="ORDER_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_COST" source="PO_COST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIME_PO_RECEIVED" source="TIME_PO_RECEIVED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIME_PO_SENT" source="TIME_PO_SENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VENDOR" source="VENDOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HOSP" source="HOSP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FORMATTED_LINE_NUM" source="FORMATTED_LINE_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COUNT_GHX_LINES" source="COUNT_GHX_LINES"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_PRICE_ERROR" source="IS_PRICE_ERROR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_LINES" source="TOTAL_LINES"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONFIRMATION_NUM" source="CONFIRMATION_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUYER_ID" source="BUYER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_NUM" source="PO_NUM"/>
+      </input>
+      <input node="CA_DIM_FISC_CAL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_QUARTER" source="ZFISCAL_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR_QUARTER" source="ZFISCAL_YEAR_QUARTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PO_DATE" source="SAP_DATE"/>
+      </input>
+    <joinAttribute name="PO_DATE"/>
+  </calculationView>
+</calculationViews>
+  <logicalModel id="Join_2">
+    <descriptions/>
+    <attributes>
+      <attribute id="FORMATTED_LINE_NUM" key="true" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PO Line Number"/>
+        <keyMapping columnObjectName="Join_2" columnName="FORMATTED_LINE_NUM"/>
+      </attribute>
+      <attribute id="PO_DATE" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchase Order Date"/>
+        <keyMapping columnObjectName="Join_2" columnName="PO_DATE"/>
+      </attribute>
+      <attribute id="PO_UOM" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Unit Of Measure"/>
+        <keyMapping columnObjectName="Join_2" columnName="PO_UOM"/>
+      </attribute>
+      <attribute id="ORDER_QTY" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Order Quantity"/>
+        <keyMapping columnObjectName="Join_2" columnName="ORDER_QTY"/>
+      </attribute>
+      <attribute id="BORG_NAME" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Business Org Name"/>
+        <keyMapping columnObjectName="Join_2" columnName="BORG_NAME"/>
+      </attribute>
+      <attribute id="SUBMITTED" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Submitted"/>
+        <keyMapping columnObjectName="Join_2" columnName="SUBMITTED"/>
+      </attribute>
+      <attribute id="PO_PART_DESCRIPTION" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PO Part Description"/>
+        <keyMapping columnObjectName="Join_2" columnName="PO_PART_DESCRIPTION"/>
+      </attribute>
+      <attribute id="LINE_STATUS" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Line Status"/>
+        <keyMapping columnObjectName="Join_2" columnName="LINE_STATUS"/>
+      </attribute>
+      <attribute id="UNIT_PRICE" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Unit Price"/>
+        <keyMapping columnObjectName="Join_2" columnName="UNIT_PRICE"/>
+      </attribute>
+      <attribute id="ALPHA_LINE_NUM" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Alpha Line Number"/>
+        <keyMapping columnObjectName="Join_2" columnName="ALPHA_LINE_NUM"/>
+      </attribute>
+      <attribute id="SUPPLIER_NAME" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Supplier Name"/>
+        <keyMapping columnObjectName="Join_2" columnName="SUPPLIER_NAME"/>
+      </attribute>
+      <attribute id="CONTRACT_PRICE" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Contract Price"/>
+        <keyMapping columnObjectName="Join_2" columnName="CONTRACT_PRICE"/>
+      </attribute>
+      <attribute id="DISCREPANCY_DESC" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Discrepancy Description"/>
+        <keyMapping columnObjectName="Join_2" columnName="DISCREPANCY_DESC"/>
+      </attribute>
+      <attribute id="PO_SUPPLIER_PART_NUM" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription=" PO Supplier Part"/>
+        <keyMapping columnObjectName="Join_2" columnName="PO_SUPPLIER_PART_NUM"/>
+      </attribute>
+      <attribute id="CONFIRMED" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription=" Confirmed"/>
+        <keyMapping columnObjectName="Join_2" columnName="CONFIRMED"/>
+      </attribute>
+      <attribute id="BUYER_PART_NUM" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Buyer Part Number"/>
+        <keyMapping columnObjectName="Join_2" columnName="BUYER_PART_NUM"/>
+      </attribute>
+      <attribute id="ASN_VENDOR" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ASN Vendor"/>
+        <keyMapping columnObjectName="Join_2" columnName="ASN_VENDOR"/>
+      </attribute>
+      <attribute id="FACILITY_NAME" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Facility Name"/>
+        <keyMapping columnObjectName="Join_2" columnName="FACILITY_NAME"/>
+      </attribute>
+      <attribute id="LATEST_RESPONSE" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Latest Response Time"/>
+        <keyMapping columnObjectName="Join_2" columnName="LATEST_RESPONSE"/>
+      </attribute>
+      <attribute id="ORDER_STATUS" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Order Status"/>
+        <keyMapping columnObjectName="Join_2" columnName="ORDER_STATUS"/>
+      </attribute>
+      <attribute id="PO_COST" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PO Cost"/>
+        <keyMapping columnObjectName="Join_2" columnName="PO_COST"/>
+      </attribute>
+      <attribute id="TIME_PO_RECEIVED" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Time PO Received"/>
+        <keyMapping columnObjectName="Join_2" columnName="TIME_PO_RECEIVED"/>
+      </attribute>
+      <attribute id="TIME_PO_SENT" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Time PO Sent"/>
+        <keyMapping columnObjectName="Join_2" columnName="TIME_PO_SENT"/>
+      </attribute>
+      <attribute id="VENDOR" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Vendor"/>
+        <keyMapping columnObjectName="Join_2" columnName="VENDOR"/>
+      </attribute>
+      <attribute id="HOSP" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Hospital"/>
+        <keyMapping columnObjectName="Join_2" columnName="HOSP"/>
+      </attribute>
+      <attribute id="ZFISCAL_QUARTER" order="26" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Quarter"/>
+        <keyMapping columnObjectName="Join_2" columnName="ZFISCAL_QUARTER"/>
+      </attribute>
+      <attribute id="ZFISCAL_PERIOD" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Period"/>
+        <keyMapping columnObjectName="Join_2" columnName="ZFISCAL_PERIOD"/>
+      </attribute>
+      <attribute id="ZFISCAL_YEAR" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Year"/>
+        <keyMapping columnObjectName="Join_2" columnName="ZFISCAL_YEAR"/>
+      </attribute>
+      <attribute id="ZFISCAL_YEAR_QUARTER" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Year / Qtr"/>
+        <keyMapping columnObjectName="Join_2" columnName="ZFISCAL_YEAR_QUARTER"/>
+      </attribute>
+      <attribute id="CONFIRMATION_NUM" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONFIRMATION_NUM"/>
+        <keyMapping columnObjectName="Join_2" columnName="CONFIRMATION_NUM"/>
+      </attribute>
+      <attribute id="BUYER_ID" order="31" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BUYER_ID"/>
+        <keyMapping columnObjectName="Join_2" columnName="BUYER_ID"/>
+      </attribute>
+      <attribute id="PO_NUM" order="37" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PO_NUM"/>
+        <keyMapping columnObjectName="Join_2" columnName="PO_NUM"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="COUNT_GHX_LINES" order="32" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="COUNT_GHX_LINES"/>
+        <measureMapping columnObjectName="Join_2" columnName="COUNT_GHX_LINES"/>
+      </measure>
+      <measure id="IS_PRICE_ERROR" order="33" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="IS_PRICE_ERROR"/>
+        <measureMapping columnObjectName="Join_2" columnName="IS_PRICE_ERROR"/>
+      </measure>
+      <measure id="TOTAL_LINES" order="35" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total Lines"/>
+        <measureMapping columnObjectName="Join_2" columnName="TOTAL_LINES"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures>
+      <measure id="PERCENT_PRICE_ERRORS" hidden="false" order="34" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="12" scale="10">
+        <descriptions defaultDescription="PERCENT_PRICE_ERRORS"/>
+        <formula>&quot;IS_PRICE_ERROR&quot;/&quot;TOTAL_LINES&quot;</formula>
+      </measure>
+      <measure id="PERCENT_NO_PRICE_ERRORS" hidden="false" order="36" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="12" scale="10">
+        <descriptions defaultDescription="PERCENT_NO_PRICE_ERRORS"/>
+        <formula>1 - &quot;PERCENT_PRICE_ERRORS&quot;</formula>
+      </measure>
+    </calculatedMeasures>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+<layout>
+  <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="176" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="EXCEPTTIONS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="150" y="387"/>
+        <rectangleSize height="30" width="140"/>
+      </shape>
+      <shape expanded="true" modelObjectName="POA" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="-20" y="387"/>
+        <rectangleSize height="30" width="140"/>
+      </shape>
+      <shape expanded="true" modelObjectName="GHX" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    <shape modelObjectName="POA" modelObjectNameSpace="GHX" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="EXCEPTTIONS" modelObjectNameSpace="GHX" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    
+    <shape modelObjectName="GHX" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="plx_analytics::CA_DIM_FISC_CAL" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

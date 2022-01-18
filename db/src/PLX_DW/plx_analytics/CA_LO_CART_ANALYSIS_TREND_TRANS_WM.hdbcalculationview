@@ -1,0 +1,1710 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="3.0" id="plx_analytics::CA_LO_CART_ANALYSIS_TREND_TRANS_WM" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+<origin/>
+  <descriptions defaultDescription="CA_LO_CART_ANALYSIS_TREND"/>
+  <metadata changedAt="2021-03-09 13:22:10.598"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="47"/>
+  <dataSources>
+    <DataSource id="ECC_MKPF">
+      <resourceUri>ECC_MKPF</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_MSEG">
+      <resourceUri>ECC_MSEG</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_ZTLO_CARTPROFILE">
+      <resourceUri>ECC_ZTLO_CARTPROFILE</resourceUri>
+    </DataSource>
+    <DataSource id="Copy_2_Of_Projection_3$$$$ECC_MSEG$$">
+      <resourceUri>ECC_MSEG</resourceUri>
+    </DataSource>
+    <DataSource id="CopyOfProjection_5$$$$ECC_ZTLO_CARTPROFILE$$">
+      <resourceUri>ECC_ZTLO_CARTPROFILE</resourceUri>
+    </DataSource>
+    <DataSource id="CA_DIM_FISC_CAL">
+      <resourceUri>plx_analytics::CA_DIM_FISC_CAL</resourceUri>
+    </DataSource>
+    <DataSource id="CA_DIM_CART_MASTER">
+      <resourceUri>plx_analytics::CA_DIM_CART_MASTER</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_MARM">
+      <resourceUri>ECC_MARM</resourceUri>
+    </DataSource>
+  </dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2" filterExpressionLanguage="COLUMN_ENGINE">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="MBLNR"/>
+        <viewAttribute id="MJAHR"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="CPUTM"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="ECC_MKPF"/>
+    <filter>(&quot;MJAHR&quot; &gt;='2019')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="CopyOfProjection_3" filterExpressionLanguage="COLUMN_ENGINE">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="MBLNR"/>
+        <viewAttribute id="MJAHR"/>
+        <viewAttribute id="ZEILE"/>
+        <viewAttribute id="BWART"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="CHARG"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="MENGE"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="WEMPF"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="AUFNR"/>
+        <viewAttribute id="WAERS"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DECIMAL" id="z_quantity" length="13" scale="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(IN(&quot;BWART&quot;,  '102',  '122',  '262', '312', '202', '162', '302'), (-1)*&quot;MENGE&quot;, &quot;MENGE&quot;) </formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="INTEGER" id="Z_COUNTER" expressionLanguage="COLUMN_ENGINE">
+          <formula>1</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="ECC_MSEG"/>
+    <filter>(&quot;MJAHR&quot; &gt;='2019') AND (in (&quot;BWART&quot;,'101','102','121','122','261','262','311','312','201','202','161','162','123','301','302'))</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_5">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="CART_LI_PLATE"/>
+        <viewAttribute id="STATUS"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="MAT_PRICE"/>
+        <viewAttribute id="PROF_UOM"/>
+        <viewAttribute id="PROF_ROP"/>
+        <viewAttribute id="PROF_MAXQTY"/>
+        <viewAttribute id="PROF_RNDVAL"/>
+        <viewAttribute id="NETPR"/>
+        <viewAttribute id="PIRPR"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="ROUND_VALUE"/>
+        <viewAttribute id="DTLASTSCAN"/>
+        <viewAttribute id="MAX_QTY"/>
+        <viewAttribute id="INT_SUP_LOC"/>
+        <viewAttribute id="MFRPN"/>
+        <viewAttribute id="IDNLF"/>
+        <viewAttribute id="PEINH"/>
+        <viewAttribute id="OPUCONV"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="ECC_ZTLO_CARTPROFILE"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_4" joinType="inner">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="MBLNR"/>
+        <viewAttribute id="MJAHR"/>
+        <viewAttribute id="ZEILE"/>
+        <viewAttribute id="BWART"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="CHARG"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="MENGE"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="AUFNR"/>
+        <viewAttribute id="z_quantity"/>
+        <viewAttribute id="Z_COUNTER"/>
+        <viewAttribute id="CART_LI_PLATE"/>
+        <viewAttribute id="STATUS"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="ROUND_VALUE"/>
+        <viewAttribute id="DTLASTSCAN"/>
+        <viewAttribute id="MAX_QTY"/>
+        <viewAttribute id="PROF_MAXQTY"/>
+        <viewAttribute id="INT_SUP_LOC"/>
+        <viewAttribute id="NETPR"/>
+        <viewAttribute id="MFRPN"/>
+        <viewAttribute id="IDNLF"/>
+        <viewAttribute id="PEINH"/>
+        <viewAttribute id="PROF_UOM"/>
+        <viewAttribute id="OPUCONV"/>
+        <viewAttribute id="PROF_ROP"/>
+        <viewAttribute id="PROF_RNDVAL"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="NEW_CART_LI_PLATE" length="20" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;CART_LI_PLATE&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="CopyOfProjection_3">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MBLNR" source="MBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MJAHR" source="MJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZEILE" source="ZEILE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BWART" source="BWART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARG" source="CHARG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE" source="MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUFNR" source="AUFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="z_quantity" source="z_quantity"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_COUNTER" source="Z_COUNTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+      </input>
+      <input node="Projection_5">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CART_LI_PLATE" source="CART_LI_PLATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS" source="STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROUND_VALUE" source="ROUND_VALUE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DTLASTSCAN" source="DTLASTSCAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAX_QTY" source="MAX_QTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROF_MAXQTY" source="PROF_MAXQTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INT_SUP_LOC" source="INT_SUP_LOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETPR" source="NETPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRPN" source="MFRPN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IDNLF" source="IDNLF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PEINH" source="PEINH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROF_UOM" source="PROF_UOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OPUCONV" source="OPUCONV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROF_ROP" source="PROF_ROP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROF_RNDVAL" source="PROF_RNDVAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+      </input>
+    <joinAttribute name="WERKS"/>
+    <joinAttribute name="MATNR"/>
+    <joinAttribute name="LGORT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Copy_2_Of_Projection_3" filterExpressionLanguage="COLUMN_ENGINE">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="MBLNR"/>
+        <viewAttribute id="MJAHR"/>
+        <viewAttribute id="ZEILE"/>
+        <viewAttribute id="BWART"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="CHARG"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="MENGE"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="WEMPF"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="AUFNR"/>
+        <viewAttribute id="WAERS"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DECIMAL" id="z_quantity" length="13" scale="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(IN(&quot;BWART&quot;,  '102',  '122',  '262', '312', '202', '162', '302'), (-1)*&quot;MENGE&quot;, &quot;MENGE&quot;) </formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="INTEGER" id="Z_COUNTER" expressionLanguage="COLUMN_ENGINE">
+          <formula>1</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="Copy_2_Of_Projection_3$$$$ECC_MSEG$$"/>
+    <filter>(&quot;MJAHR&quot; &gt;='2019') AND (in (&quot;BWART&quot;,'101','102','121','122','261','262','311','312','201','202','161','162','123','301','302'))</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="CopyOfProjection_5">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="CART_LI_PLATE"/>
+        <viewAttribute id="STATUS"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="MAT_PRICE"/>
+        <viewAttribute id="PROF_UOM"/>
+        <viewAttribute id="PROF_ROP"/>
+        <viewAttribute id="PROF_MAXQTY"/>
+        <viewAttribute id="PROF_RNDVAL"/>
+        <viewAttribute id="NETPR"/>
+        <viewAttribute id="PIRPR"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="ROUND_VALUE"/>
+        <viewAttribute id="DTLASTSCAN"/>
+        <viewAttribute id="MAX_QTY"/>
+        <viewAttribute id="INT_SUP_LOC"/>
+        <viewAttribute id="MFRPN"/>
+        <viewAttribute id="IDNLF"/>
+        <viewAttribute id="PEINH"/>
+        <viewAttribute id="OPUCONV"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="CopyOfProjection_5$$$$ECC_ZTLO_CARTPROFILE$$"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_5" joinType="inner">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="MBLNR"/>
+        <viewAttribute id="MJAHR"/>
+        <viewAttribute id="ZEILE"/>
+        <viewAttribute id="BWART"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="CHARG"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="MENGE"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="WEMPF"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="AUFNR"/>
+        <viewAttribute id="z_quantity"/>
+        <viewAttribute id="Z_COUNTER"/>
+        <viewAttribute id="STATUS"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="ROUND_VALUE"/>
+        <viewAttribute id="DTLASTSCAN"/>
+        <viewAttribute id="MAX_QTY"/>
+        <viewAttribute id="PROF_MAXQTY"/>
+        <viewAttribute id="INT_SUP_LOC"/>
+        <viewAttribute id="NETPR"/>
+        <viewAttribute id="MFRPN"/>
+        <viewAttribute id="IDNLF"/>
+        <viewAttribute id="PEINH"/>
+        <viewAttribute id="PROF_UOM"/>
+        <viewAttribute id="OPUCONV"/>
+        <viewAttribute id="PROF_ROP"/>
+        <viewAttribute id="PROF_RNDVAL"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="NEW_LGORT" length="4" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;LGORT&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="Copy_2_Of_Projection_3">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MBLNR" source="MBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MJAHR" source="MJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZEILE" source="ZEILE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BWART" source="BWART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARG" source="CHARG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE" source="MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WEMPF" source="WEMPF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUFNR" source="AUFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="z_quantity" source="z_quantity"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_COUNTER" source="Z_COUNTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+      </input>
+      <input node="CopyOfProjection_5">
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS" source="STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROUND_VALUE" source="ROUND_VALUE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DTLASTSCAN" source="DTLASTSCAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAX_QTY" source="MAX_QTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROF_MAXQTY" source="PROF_MAXQTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INT_SUP_LOC" source="INT_SUP_LOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETPR" source="NETPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRPN" source="MFRPN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IDNLF" source="IDNLF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PEINH" source="PEINH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROF_UOM" source="PROF_UOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OPUCONV" source="OPUCONV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROF_ROP" source="PROF_ROP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROF_RNDVAL" source="PROF_RNDVAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WEMPF" source="CART_LI_PLATE"/>
+      </input>
+    <joinAttribute name="WERKS"/>
+    <joinAttribute name="MATNR"/>
+    <joinAttribute name="WEMPF"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:UnionView" id="Union_1">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="MBLNR"/>
+        <viewAttribute id="MJAHR"/>
+        <viewAttribute id="ZEILE"/>
+        <viewAttribute id="BWART"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="CHARG"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="MENGE"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="AUFNR"/>
+        <viewAttribute id="z_quantity"/>
+        <viewAttribute id="Z_COUNTER"/>
+        <viewAttribute id="STATUS"/>
+        <viewAttribute id="CART_LI_PLATE"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="ROUND_VALUE"/>
+        <viewAttribute id="DTLASTSCAN"/>
+        <viewAttribute id="MAX_QTY"/>
+        <viewAttribute id="PROF_MAXQTY"/>
+        <viewAttribute id="INT_SUP_LOC"/>
+        <viewAttribute id="NETPR"/>
+        <viewAttribute id="MFRPN"/>
+        <viewAttribute id="IDNLF"/>
+        <viewAttribute id="PEINH"/>
+        <viewAttribute id="PROF_UOM"/>
+        <viewAttribute id="OPUCONV"/>
+        <viewAttribute id="PROF_ROP"/>
+        <viewAttribute id="PROF_RNDVAL"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input emptyUnionBehavior="NO_ROW" node="Join_4">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MBLNR" source="MBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MJAHR" source="MJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZEILE" source="ZEILE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BWART" source="BWART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARG" source="CHARG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE" source="MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUFNR" source="AUFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="z_quantity" source="z_quantity"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_COUNTER" source="Z_COUNTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS" source="STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CART_LI_PLATE" source="NEW_CART_LI_PLATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROUND_VALUE" source="ROUND_VALUE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DTLASTSCAN" source="DTLASTSCAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAX_QTY" source="MAX_QTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROF_MAXQTY" source="PROF_MAXQTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INT_SUP_LOC" source="INT_SUP_LOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETPR" source="NETPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRPN" source="MFRPN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IDNLF" source="IDNLF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PEINH" source="PEINH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROF_UOM" source="PROF_UOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OPUCONV" source="OPUCONV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROF_ROP" source="PROF_ROP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROF_RNDVAL" source="PROF_RNDVAL"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="Join_5">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MBLNR" source="MBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MJAHR" source="MJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZEILE" source="ZEILE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BWART" source="BWART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="NEW_LGORT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARG" source="CHARG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE" source="MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUFNR" source="AUFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="z_quantity" source="z_quantity"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_COUNTER" source="Z_COUNTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS" source="STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CART_LI_PLATE" source="WEMPF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROUND_VALUE" source="ROUND_VALUE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DTLASTSCAN" source="DTLASTSCAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAX_QTY" source="MAX_QTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROF_MAXQTY" source="PROF_MAXQTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INT_SUP_LOC" source="INT_SUP_LOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETPR" source="NETPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRPN" source="MFRPN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IDNLF" source="IDNLF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PEINH" source="PEINH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROF_UOM" source="PROF_UOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OPUCONV" source="OPUCONV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROF_ROP" source="PROF_ROP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROF_RNDVAL" source="PROF_RNDVAL"/>
+      </input>
+    </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinType="inner">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="MBLNR"/>
+        <viewAttribute id="MJAHR"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="CPUTM"/>
+        <viewAttribute id="ZEILE"/>
+        <viewAttribute id="BWART"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="CHARG"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="MENGE"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="AUFNR"/>
+        <viewAttribute id="z_quantity"/>
+        <viewAttribute id="Z_COUNTER"/>
+        <viewAttribute id="STATUS"/>
+        <viewAttribute id="CART_LI_PLATE"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="ROUND_VALUE"/>
+        <viewAttribute id="DTLASTSCAN"/>
+        <viewAttribute id="MAX_QTY"/>
+        <viewAttribute id="PROF_MAXQTY"/>
+        <viewAttribute id="INT_SUP_LOC"/>
+        <viewAttribute id="NETPR"/>
+        <viewAttribute id="MFRPN"/>
+        <viewAttribute id="IDNLF"/>
+        <viewAttribute id="PEINH"/>
+        <viewAttribute id="PROF_UOM"/>
+        <viewAttribute id="OPUCONV"/>
+        <viewAttribute id="PROF_ROP"/>
+        <viewAttribute id="PROF_RNDVAL"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DECIMAL" id="Z_QTY_PROFUOM" length="13" scale="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;z_quantity&quot;*int(&quot;PROF_MAXQTY&quot;)/INT(&quot;MAX_QTY&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="Projection_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MBLNR" source="MBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MJAHR" source="MJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT" source="CPUDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUTM" source="CPUTM"/>
+      </input>
+      <input node="Union_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZEILE" source="ZEILE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BWART" source="BWART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARG" source="CHARG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE" source="MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUFNR" source="AUFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="z_quantity" source="z_quantity"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_COUNTER" source="Z_COUNTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS" source="STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CART_LI_PLATE" source="CART_LI_PLATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROUND_VALUE" source="ROUND_VALUE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DTLASTSCAN" source="DTLASTSCAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAX_QTY" source="MAX_QTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROF_MAXQTY" source="PROF_MAXQTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INT_SUP_LOC" source="INT_SUP_LOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETPR" source="NETPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRPN" source="MFRPN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IDNLF" source="IDNLF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PEINH" source="PEINH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROF_UOM" source="PROF_UOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OPUCONV" source="OPUCONV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROF_ROP" source="PROF_ROP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROF_RNDVAL" source="PROF_RNDVAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MBLNR" source="MBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MJAHR" source="MJAHR"/>
+      </input>
+    <joinAttribute name="MBLNR"/>
+    <joinAttribute name="MJAHR"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_4">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="SAP_DATE"/>
+        <viewAttribute id="FISCAL_YEAR"/>
+        <viewAttribute id="FISCAL_PERIOD"/>
+        <viewAttribute id="DATE_SQL"/>
+        <viewAttribute id="ZFISCAL_YEAR"/>
+        <viewAttribute id="ZFISCAL_PERIOD"/>
+        <viewAttribute id="ZFISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_YEAR_QUARTER"/>
+        <viewAttribute id="FISCAL_QUARTER"/>
+        <viewAttribute id="ZFISCAL_MONTH"/>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="CA_DIM_FISC_CAL"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_3" joinType="inner">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="DATE_SQL"/>
+        <viewAttribute id="MBLNR"/>
+        <viewAttribute id="MJAHR"/>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="CPUTM"/>
+        <viewAttribute id="ZEILE"/>
+        <viewAttribute id="BWART"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="CHARG"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="MENGE"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="AUFNR"/>
+        <viewAttribute id="z_quantity"/>
+        <viewAttribute id="Z_COUNTER"/>
+        <viewAttribute id="STATUS"/>
+        <viewAttribute id="CART_LI_PLATE"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="ROUND_VALUE"/>
+        <viewAttribute id="DTLASTSCAN"/>
+        <viewAttribute id="MAX_QTY"/>
+        <viewAttribute id="PROF_MAXQTY"/>
+        <viewAttribute id="Z_QTY_PROFUOM"/>
+        <viewAttribute id="INT_SUP_LOC"/>
+        <viewAttribute id="NETPR"/>
+        <viewAttribute id="MFRPN"/>
+        <viewAttribute id="IDNLF"/>
+        <viewAttribute id="PEINH"/>
+        <viewAttribute id="PROF_UOM"/>
+        <viewAttribute id="OPUCONV"/>
+        <viewAttribute id="PROF_ROP"/>
+        <viewAttribute id="PROF_RNDVAL"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="Join_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MBLNR" source="MBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MJAHR" source="MJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT" source="CPUDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUTM" source="CPUTM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZEILE" source="ZEILE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BWART" source="BWART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARG" source="CHARG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE" source="MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUFNR" source="AUFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="z_quantity" source="z_quantity"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_COUNTER" source="Z_COUNTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS" source="STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CART_LI_PLATE" source="CART_LI_PLATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROUND_VALUE" source="ROUND_VALUE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DTLASTSCAN" source="DTLASTSCAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAX_QTY" source="MAX_QTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROF_MAXQTY" source="PROF_MAXQTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_QTY_PROFUOM" source="Z_QTY_PROFUOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INT_SUP_LOC" source="INT_SUP_LOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETPR" source="NETPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRPN" source="MFRPN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IDNLF" source="IDNLF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PEINH" source="PEINH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROF_UOM" source="PROF_UOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OPUCONV" source="OPUCONV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROF_ROP" source="PROF_ROP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROF_RNDVAL" source="PROF_RNDVAL"/>
+      </input>
+      <input node="Projection_4">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCALENDAR_YEAR" source="ZCALENDAR_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATE_SQL" source="DATE_SQL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="SAP_DATE"/>
+      </input>
+    <joinAttribute name="BUDAT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="CART_LI_PLATE"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="CART_TYPE"/>
+        <viewAttribute id="DEPT"/>
+        <viewAttribute id="COST_CEN"/>
+        <viewAttribute id="STATUS"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="CA_DIM_CART_MASTER"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2" joinType="inner">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="DATE_SQL"/>
+        <viewAttribute id="MBLNR"/>
+        <viewAttribute id="MJAHR"/>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="CPUTM"/>
+        <viewAttribute id="ZEILE"/>
+        <viewAttribute id="BWART"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="CHARG"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="MENGE"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="AUFNR"/>
+        <viewAttribute id="z_quantity"/>
+        <viewAttribute id="Z_COUNTER"/>
+        <viewAttribute id="STATUS"/>
+        <viewAttribute id="CART_LI_PLATE"/>
+        <viewAttribute id="DEPT"/>
+        <viewAttribute id="COST_CEN"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="ROUND_VALUE"/>
+        <viewAttribute id="DTLASTSCAN"/>
+        <viewAttribute id="MAX_QTY"/>
+        <viewAttribute id="PROF_MAXQTY"/>
+        <viewAttribute id="Z_QTY_PROFUOM"/>
+        <viewAttribute id="INT_SUP_LOC"/>
+        <viewAttribute id="NETPR"/>
+        <viewAttribute id="MFRPN"/>
+        <viewAttribute id="IDNLF"/>
+        <viewAttribute id="PEINH"/>
+        <viewAttribute id="PROF_UOM"/>
+        <viewAttribute id="OPUCONV"/>
+        <viewAttribute id="PROF_ROP"/>
+        <viewAttribute id="PROF_RNDVAL"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ACTUAL_PERIOD" length="6" expressionLanguage="SQL">
+          <formula>LEFT(&quot;BUDAT&quot;,6)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CURRENT_PERIOD" length="7" expressionLanguage="SQL">
+          <formula>LEFT(add_months(CURRENT_DATE, -1),7)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="PERIOD12" length="6" expressionLanguage="COLUMN_ENGINE">
+          <formula>LEFTSTR(&quot;CURRENT_PERIOD&quot;,4)+RIGHTSTR(&quot;CURRENT_PERIOD&quot;,2)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="FIRST_PERIOD" length="7" expressionLanguage="SQL">
+          <formula>LEFT(add_months(CURRENT_DATE, -12),7)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="PERIOD1" length="6" expressionLanguage="COLUMN_ENGINE">
+          <formula>LEFTSTR(&quot;FIRST_PERIOD&quot;,4)+RIGHTSTR(&quot;FIRST_PERIOD&quot;,2)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IN_PERIOD" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(LEFTSTR(&quot;BUDAT&quot;,6)  &gt;= &quot;PERIOD1&quot; AND LEFTSTR(&quot;BUDAT&quot;,6)  &lt;= &quot;PERIOD12&quot; , 'Y', 'N')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="SECOND_PERIOD" length="7" expressionLanguage="SQL">
+          <formula>LEFT(add_months(CURRENT_DATE, -11),7)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="QTY_PERIOD1" length="5" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(LEFTSTR(&quot;BUDAT&quot;,6) = LEFTSTR(&quot;FIRST_PERIOD&quot;,4)+RIGHTSTR(&quot;FIRST_PERIOD&quot;,2), &quot;Z_QTY_PROFUOM&quot;, 0)
+</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="QTY_PERIOD2" length="5" scale="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(LEFTSTR(&quot;BUDAT&quot;,6) = LEFTSTR(&quot;SECOND_PERIOD&quot;,4)+RIGHTSTR(&quot;SECOND_PERIOD&quot;,2), &quot;Z_QTY_PROFUOM&quot;, 0)
+
+</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="QTY_PERIOD8" length="5" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(LEFTSTR(&quot;BUDAT&quot;,6) = LEFTSTR(&quot;08TH_PERIOD&quot;,4)+RIGHTSTR(&quot;08TH_PERIOD&quot;,2), &quot;Z_QTY_PROFUOM&quot;, 0)
+</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="THIRD_PERIOD" length="7" expressionLanguage="SQL">
+          <formula>LEFT(add_months(CURRENT_DATE, -10),7)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="04TH_PERIOD" length="7" expressionLanguage="SQL">
+          <formula>LEFT(add_months(CURRENT_DATE, -9),7)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="05TH_PERIOD" length="7" expressionLanguage="SQL">
+          <formula>LEFT(add_months(CURRENT_DATE, -8),7)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="06TH_PERIOD" length="7" expressionLanguage="SQL">
+          <formula>LEFT(add_months(CURRENT_DATE, -7),7)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="07TH_PERIOD" length="7" expressionLanguage="SQL">
+          <formula>LEFT(add_months(CURRENT_DATE, -6),7)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="08TH_PERIOD" length="7" expressionLanguage="SQL">
+          <formula>LEFT(add_months(CURRENT_DATE, -5),7)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="09TH_PERIOD" length="7" expressionLanguage="SQL">
+          <formula>LEFT(add_months(CURRENT_DATE, -4),7)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="10TH_PERIOD" length="7" expressionLanguage="SQL">
+          <formula>LEFT(add_months(CURRENT_DATE, -3),7)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="11TH_PERIOD" length="7" expressionLanguage="SQL">
+          <formula>LEFT(add_months(CURRENT_DATE, -2),7)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="12TH_PERIOD" length="7" expressionLanguage="SQL">
+          <formula>LEFT(add_months(CURRENT_DATE, -1),7)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="QTY_PERIOD3" length="5" scale="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(LEFTSTR(&quot;BUDAT&quot;,6) = LEFTSTR(&quot;THIRD_PERIOD&quot;,4)+RIGHTSTR(&quot;THIRD_PERIOD&quot;,2), &quot;Z_QTY_PROFUOM&quot;, 0)
+
+</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="QTY_PERIOD4" length="5" scale="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(LEFTSTR(&quot;BUDAT&quot;,6) = LEFTSTR(&quot;04TH_PERIOD&quot;,4)+RIGHTSTR(&quot;04TH_PERIOD&quot;,2), &quot;Z_QTY_PROFUOM&quot;, 0)
+
+</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="QTY_PERIOD5" length="5" scale="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(LEFTSTR(&quot;BUDAT&quot;,6) = LEFTSTR(&quot;05TH_PERIOD&quot;,4)+RIGHTSTR(&quot;05TH_PERIOD&quot;,2), &quot;Z_QTY_PROFUOM&quot;, 0)
+
+</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="QTY_PERIOD6" length="5" scale="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(LEFTSTR(&quot;BUDAT&quot;,6) = LEFTSTR(&quot;06TH_PERIOD&quot;,4)+RIGHTSTR(&quot;06TH_PERIOD&quot;,2), &quot;Z_QTY_PROFUOM&quot;, 0)
+
+</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="QTY_PERIOD7" length="5" scale="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(LEFTSTR(&quot;BUDAT&quot;,6) = LEFTSTR(&quot;07TH_PERIOD&quot;,4)+RIGHTSTR(&quot;07TH_PERIOD&quot;,2), &quot;Z_QTY_PROFUOM&quot;, 0)
+
+</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="QTY_PERIOD9" length="5" scale="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(LEFTSTR(&quot;BUDAT&quot;,6) = LEFTSTR(&quot;09TH_PERIOD&quot;,4)+RIGHTSTR(&quot;09TH_PERIOD&quot;,2), &quot;Z_QTY_PROFUOM&quot;, 0)
+
+</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="QTY_PERIOD10" length="5" scale="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(LEFTSTR(&quot;BUDAT&quot;,6) = LEFTSTR(&quot;10TH_PERIOD&quot;,4)+RIGHTSTR(&quot;10TH_PERIOD&quot;,2), &quot;Z_QTY_PROFUOM&quot;, 0)
+
+</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="QTY_PERIOD11" length="5" scale="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(LEFTSTR(&quot;BUDAT&quot;,6) = LEFTSTR(&quot;11TH_PERIOD&quot;,4)+RIGHTSTR(&quot;11TH_PERIOD&quot;,2), &quot;Z_QTY_PROFUOM&quot;, 0)
+
+</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="QTY_PERIOD12" length="13" scale="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(LEFTSTR(&quot;BUDAT&quot;,6) = LEFTSTR(&quot;12TH_PERIOD&quot;,4)+RIGHTSTR(&quot;12TH_PERIOD&quot;,2), &quot;Z_QTY_PROFUOM&quot;, 0)
+</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CALENDAR_YEAR" length="4" expressionLanguage="SQL">
+          <formula>LEFT(add_months(CURRENT_DATE, -1),4)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CALENDAR_MONTH" length="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>RIGHTSTR(&quot;CURRENT_PERIOD&quot;,2)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="Join_3">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCALENDAR_YEAR" source="ZCALENDAR_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATE_SQL" source="DATE_SQL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MBLNR" source="MBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MJAHR" source="MJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT" source="CPUDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUTM" source="CPUTM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZEILE" source="ZEILE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BWART" source="BWART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARG" source="CHARG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE" source="MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUFNR" source="AUFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="z_quantity" source="z_quantity"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_COUNTER" source="Z_COUNTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS" source="STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CART_LI_PLATE" source="CART_LI_PLATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROUND_VALUE" source="ROUND_VALUE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DTLASTSCAN" source="DTLASTSCAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAX_QTY" source="MAX_QTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROF_MAXQTY" source="PROF_MAXQTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_QTY_PROFUOM" source="Z_QTY_PROFUOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INT_SUP_LOC" source="INT_SUP_LOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETPR" source="NETPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRPN" source="MFRPN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IDNLF" source="IDNLF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PEINH" source="PEINH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROF_UOM" source="PROF_UOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OPUCONV" source="OPUCONV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROF_ROP" source="PROF_ROP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROF_RNDVAL" source="PROF_RNDVAL"/>
+      </input>
+      <input node="Projection_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEPT" source="DEPT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_CEN" source="COST_CEN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CART_LI_PLATE" source="CART_LI_PLATE"/>
+      </input>
+    <joinAttribute name="WERKS"/>
+    <joinAttribute name="LGORT"/>
+    <joinAttribute name="CART_LI_PLATE"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="MEINH"/>
+        <viewAttribute id="UMREZ"/>
+        <viewAttribute id="UMREN"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="ECC_MARM"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_6" joinType="leftOuter">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="DATE_SQL"/>
+        <viewAttribute id="MBLNR"/>
+        <viewAttribute id="MJAHR"/>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="CPUTM"/>
+        <viewAttribute id="ZEILE"/>
+        <viewAttribute id="BWART"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="CHARG"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="MENGE"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="AUFNR"/>
+        <viewAttribute id="z_quantity"/>
+        <viewAttribute id="Z_COUNTER"/>
+        <viewAttribute id="STATUS"/>
+        <viewAttribute id="CART_LI_PLATE"/>
+        <viewAttribute id="DEPT"/>
+        <viewAttribute id="COST_CEN"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="ROUND_VALUE"/>
+        <viewAttribute id="DTLASTSCAN"/>
+        <viewAttribute id="MAX_QTY"/>
+        <viewAttribute id="PROF_MAXQTY"/>
+        <viewAttribute id="Z_QTY_PROFUOM"/>
+        <viewAttribute id="INT_SUP_LOC"/>
+        <viewAttribute id="NETPR"/>
+        <viewAttribute id="MFRPN"/>
+        <viewAttribute id="IDNLF"/>
+        <viewAttribute id="ACTUAL_PERIOD"/>
+        <viewAttribute id="CURRENT_PERIOD"/>
+        <viewAttribute id="PERIOD12"/>
+        <viewAttribute id="FIRST_PERIOD"/>
+        <viewAttribute id="PERIOD1"/>
+        <viewAttribute id="IN_PERIOD"/>
+        <viewAttribute id="SECOND_PERIOD"/>
+        <viewAttribute id="QTY_PERIOD1"/>
+        <viewAttribute id="QTY_PERIOD2"/>
+        <viewAttribute id="QTY_PERIOD8"/>
+        <viewAttribute id="THIRD_PERIOD"/>
+        <viewAttribute id="04TH_PERIOD"/>
+        <viewAttribute id="05TH_PERIOD"/>
+        <viewAttribute id="06TH_PERIOD"/>
+        <viewAttribute id="07TH_PERIOD"/>
+        <viewAttribute id="08TH_PERIOD"/>
+        <viewAttribute id="09TH_PERIOD"/>
+        <viewAttribute id="10TH_PERIOD"/>
+        <viewAttribute id="11TH_PERIOD"/>
+        <viewAttribute id="12TH_PERIOD"/>
+        <viewAttribute id="QTY_PERIOD3"/>
+        <viewAttribute id="QTY_PERIOD4"/>
+        <viewAttribute id="QTY_PERIOD5"/>
+        <viewAttribute id="QTY_PERIOD6"/>
+        <viewAttribute id="QTY_PERIOD7"/>
+        <viewAttribute id="QTY_PERIOD9"/>
+        <viewAttribute id="QTY_PERIOD10"/>
+        <viewAttribute id="QTY_PERIOD11"/>
+        <viewAttribute id="QTY_PERIOD12"/>
+        <viewAttribute id="CALENDAR_YEAR"/>
+        <viewAttribute id="CALENDAR_MONTH"/>
+        <viewAttribute id="PEINH"/>
+        <viewAttribute id="UMREZ"/>
+        <viewAttribute id="UMREN"/>
+        <viewAttribute id="OPUCONV"/>
+        <viewAttribute id="PROF_ROP"/>
+        <viewAttribute id="PROF_RNDVAL"/>
+      <viewAttribute hidden="true" id="JOIN$PROF_UOM$MEINH"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DECIMAL" id="Z_CONTRACT_PRICE" length="13" scale="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;OPUCONV&quot;=0, 0, (&quot;NETPR&quot;/&quot;PEINH&quot;)*(&quot;UMREZ&quot;/&quot;UMREN&quot;)/&quot;OPUCONV&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_1" expressionLanguage="SQL">
+          <formula>add_days(CURRENT_DATE, (-7)*13 + ( 6 - WEEKDAY(CURRENT_DATE)))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_12" expressionLanguage="SQL">
+          <formula>add_days(&quot;CC_1&quot;,83)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="QTY_PERIOD1_W" length="5" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(daydate(&quot;BUDAT&quot;) &gt;= &quot;CC_1&quot; AND daydate(&quot;BUDAT&quot;)&lt;= ADDDAYS(&quot;CC_1&quot;,6) , &quot;Z_QTY_PROFUOM&quot;,  0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="QTY_PERIOD2_W" length="5" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(daydate(&quot;BUDAT&quot;) &gt;= adddays(&quot;CC_1&quot;,7) AND daydate(&quot;BUDAT&quot;)
+&lt;= adddays(&quot;CC_1&quot;,13) , &quot;Z_QTY_PROFUOM&quot;,  0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="QTY_PERIOD3_W" length="5" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(daydate(&quot;BUDAT&quot;) &gt;= adddays(&quot;CC_1&quot;,14) AND daydate(&quot;BUDAT&quot;)
+&lt;= adddays(&quot;CC_1&quot;,20) , &quot;Z_QTY_PROFUOM&quot;,  0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="QTY_PERIOD4_W" length="5" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(daydate(&quot;BUDAT&quot;) &gt;= adddays(&quot;CC_1&quot;,21) AND daydate(&quot;BUDAT&quot;)
+&lt;= adddays(&quot;CC_1&quot;,27) , &quot;Z_QTY_PROFUOM&quot;,  0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="QTY_PERIOD5_W" length="5" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(daydate(&quot;BUDAT&quot;) &gt;= adddays(&quot;CC_1&quot;,28) AND daydate(&quot;BUDAT&quot;)
+&lt;= adddays(&quot;CC_1&quot;,34) , &quot;Z_QTY_PROFUOM&quot;,  0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="QTY_PERIOD6_W" length="5" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(daydate(&quot;BUDAT&quot;) &gt;= adddays(&quot;CC_1&quot;,35) AND daydate(&quot;BUDAT&quot;)
+&lt;= adddays(&quot;CC_1&quot;,41) , &quot;Z_QTY_PROFUOM&quot;,  0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="QTY_PERIOD7_W" length="5" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(daydate(&quot;BUDAT&quot;) &gt;= adddays(&quot;CC_1&quot;,42) AND daydate(&quot;BUDAT&quot;)
+&lt;= adddays(&quot;CC_1&quot;,48) , &quot;Z_QTY_PROFUOM&quot;,  0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="QTY_PERIOD8_W" length="5" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(daydate(&quot;BUDAT&quot;) &gt;= adddays(&quot;CC_1&quot;,49) AND daydate(&quot;BUDAT&quot;)
+&lt;= adddays(&quot;CC_1&quot;,55) , &quot;Z_QTY_PROFUOM&quot;,  0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="QTY_PERIOD9_W" length="5" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(daydate(&quot;BUDAT&quot;) &gt;= adddays(&quot;CC_1&quot;,56) AND daydate(&quot;BUDAT&quot;)
+&lt;= adddays(&quot;CC_1&quot;,62) , &quot;Z_QTY_PROFUOM&quot;,  0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="QTY_PERIOD10_W" length="5" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(daydate(&quot;BUDAT&quot;) &gt;= adddays(&quot;CC_1&quot;,63) AND daydate(&quot;BUDAT&quot;)
+&lt;= adddays(&quot;CC_1&quot;,69) , &quot;Z_QTY_PROFUOM&quot;,  0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="QTY_PERIOD11_W" length="5" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(daydate(&quot;BUDAT&quot;) &gt;= adddays(&quot;CC_1&quot;,70) AND daydate(&quot;BUDAT&quot;)
+&lt;= adddays(&quot;CC_1&quot;,76) , &quot;Z_QTY_PROFUOM&quot;,  0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="QTY_PERIOD12_W" length="5" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(daydate(&quot;BUDAT&quot;) &gt;= adddays(&quot;CC_1&quot;,77) AND daydate(&quot;BUDAT&quot;)
+&lt;= adddays(&quot;CC_1&quot;,83) , &quot;Z_QTY_PROFUOM&quot;,  0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IN_PERIOD_W" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(daydate(&quot;BUDAT&quot;)  &gt;= &quot;CC_1&quot; AND daydate(&quot;BUDAT&quot;)  &lt;= &quot;CC_12&quot; , 'Y', 'N')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="Join_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCAL_MONTH" source="ZCAL_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZCALENDAR_YEAR" source="ZCALENDAR_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATE_SQL" source="DATE_SQL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MBLNR" source="MBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MJAHR" source="MJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT" source="CPUDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUTM" source="CPUTM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZEILE" source="ZEILE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BWART" source="BWART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARG" source="CHARG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE" source="MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUFNR" source="AUFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="z_quantity" source="z_quantity"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_COUNTER" source="Z_COUNTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS" source="STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CART_LI_PLATE" source="CART_LI_PLATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEPT" source="DEPT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_CEN" source="COST_CEN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROUND_VALUE" source="ROUND_VALUE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DTLASTSCAN" source="DTLASTSCAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAX_QTY" source="MAX_QTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROF_MAXQTY" source="PROF_MAXQTY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_QTY_PROFUOM" source="Z_QTY_PROFUOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INT_SUP_LOC" source="INT_SUP_LOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETPR" source="NETPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRPN" source="MFRPN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IDNLF" source="IDNLF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_PERIOD" source="ACTUAL_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRENT_PERIOD" source="CURRENT_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERIOD12" source="PERIOD12"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIRST_PERIOD" source="FIRST_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERIOD1" source="PERIOD1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IN_PERIOD" source="IN_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SECOND_PERIOD" source="SECOND_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="QTY_PERIOD1" source="QTY_PERIOD1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="QTY_PERIOD2" source="QTY_PERIOD2"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="QTY_PERIOD8" source="QTY_PERIOD8"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="THIRD_PERIOD" source="THIRD_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="04TH_PERIOD" source="04TH_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="05TH_PERIOD" source="05TH_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="06TH_PERIOD" source="06TH_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="07TH_PERIOD" source="07TH_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="08TH_PERIOD" source="08TH_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="09TH_PERIOD" source="09TH_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="10TH_PERIOD" source="10TH_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="11TH_PERIOD" source="11TH_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="12TH_PERIOD" source="12TH_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="QTY_PERIOD3" source="QTY_PERIOD3"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="QTY_PERIOD4" source="QTY_PERIOD4"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="QTY_PERIOD5" source="QTY_PERIOD5"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="QTY_PERIOD6" source="QTY_PERIOD6"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="QTY_PERIOD7" source="QTY_PERIOD7"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="QTY_PERIOD9" source="QTY_PERIOD9"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="QTY_PERIOD10" source="QTY_PERIOD10"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="QTY_PERIOD11" source="QTY_PERIOD11"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="QTY_PERIOD12" source="QTY_PERIOD12"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CALENDAR_YEAR" source="CALENDAR_YEAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CALENDAR_MONTH" source="CALENDAR_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PEINH" source="PEINH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OPUCONV" source="OPUCONV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROF_ROP" source="PROF_ROP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROF_RNDVAL" source="PROF_RNDVAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PROF_UOM$MEINH" source="PROF_UOM"/>
+      </input>
+      <input node="Projection_3">
+        <mapping xsi:type="Calculation:AttributeMapping" target="UMREZ" source="UMREZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UMREN" source="UMREN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PROF_UOM$MEINH" source="MEINH"/>
+      </input>
+    <joinAttribute name="MATNR"/>
+    <joinAttribute name="JOIN$PROF_UOM$MEINH"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="ZCAL_MONTH"/>
+        <viewAttribute id="ZCALENDAR_YEAR"/>
+        <viewAttribute id="DATE_SQL"/>
+        <viewAttribute id="MBLNR"/>
+        <viewAttribute id="MJAHR"/>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="CPUTM"/>
+        <viewAttribute id="ZEILE"/>
+        <viewAttribute id="BWART"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="CHARG"/>
+        <viewAttribute id="LIFNR"/>
+        <viewAttribute id="MENGE"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="AUFNR"/>
+        <viewAttribute aggregationType="sum" id="z_quantity"/>
+        <viewAttribute aggregationType="sum" id="Z_COUNTER"/>
+        <viewAttribute id="STATUS"/>
+        <viewAttribute id="CART_LI_PLATE"/>
+        <viewAttribute id="DEPT"/>
+        <viewAttribute id="COST_CEN"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="ROUND_VALUE"/>
+        <viewAttribute id="DTLASTSCAN"/>
+        <viewAttribute id="MAX_QTY"/>
+        <viewAttribute id="PROF_MAXQTY"/>
+        <viewAttribute aggregationType="sum" id="Z_QTY_PROFUOM"/>
+        <viewAttribute id="INT_SUP_LOC"/>
+        <viewAttribute id="MFRPN"/>
+        <viewAttribute id="IDNLF"/>
+        <viewAttribute id="ACTUAL_PERIOD"/>
+        <viewAttribute id="CURRENT_PERIOD"/>
+        <viewAttribute id="PERIOD12"/>
+        <viewAttribute id="FIRST_PERIOD"/>
+        <viewAttribute id="PERIOD1"/>
+        <viewAttribute id="IN_PERIOD"/>
+        <viewAttribute id="SECOND_PERIOD"/>
+        <viewAttribute aggregationType="sum" id="QTY_PERIOD1"/>
+        <viewAttribute aggregationType="sum" id="QTY_PERIOD2"/>
+        <viewAttribute aggregationType="sum" id="QTY_PERIOD8"/>
+        <viewAttribute id="THIRD_PERIOD"/>
+        <viewAttribute id="04TH_PERIOD"/>
+        <viewAttribute id="05TH_PERIOD"/>
+        <viewAttribute id="06TH_PERIOD"/>
+        <viewAttribute id="07TH_PERIOD"/>
+        <viewAttribute id="08TH_PERIOD"/>
+        <viewAttribute id="09TH_PERIOD"/>
+        <viewAttribute id="10TH_PERIOD"/>
+        <viewAttribute id="11TH_PERIOD"/>
+        <viewAttribute id="12TH_PERIOD"/>
+        <viewAttribute aggregationType="sum" id="QTY_PERIOD3"/>
+        <viewAttribute aggregationType="sum" id="QTY_PERIOD4"/>
+        <viewAttribute aggregationType="sum" id="QTY_PERIOD5"/>
+        <viewAttribute aggregationType="sum" id="QTY_PERIOD6"/>
+        <viewAttribute aggregationType="sum" id="QTY_PERIOD7"/>
+        <viewAttribute aggregationType="sum" id="QTY_PERIOD9"/>
+        <viewAttribute aggregationType="sum" id="QTY_PERIOD10"/>
+        <viewAttribute aggregationType="sum" id="QTY_PERIOD11"/>
+        <viewAttribute aggregationType="sum" id="QTY_PERIOD12"/>
+        <viewAttribute id="CALENDAR_YEAR"/>
+        <viewAttribute id="CALENDAR_MONTH"/>
+        <viewAttribute id="PEINH"/>
+        <viewAttribute id="UMREZ"/>
+        <viewAttribute id="UMREN"/>
+        <viewAttribute id="OPUCONV"/>
+        <viewAttribute id="Z_CONTRACT_PRICE"/>
+        <viewAttribute id="PROF_ROP"/>
+        <viewAttribute id="PROF_RNDVAL"/>
+        <viewAttribute id="CC_1"/>
+        <viewAttribute id="CC_12"/>
+        <viewAttribute id="QTY_PERIOD1_W"/>
+        <viewAttribute id="QTY_PERIOD2_W"/>
+        <viewAttribute id="QTY_PERIOD3_W"/>
+        <viewAttribute id="QTY_PERIOD4_W"/>
+        <viewAttribute id="QTY_PERIOD5_W"/>
+        <viewAttribute id="QTY_PERIOD6_W"/>
+        <viewAttribute id="QTY_PERIOD7_W"/>
+        <viewAttribute id="QTY_PERIOD8_W"/>
+        <viewAttribute id="QTY_PERIOD9_W"/>
+        <viewAttribute id="QTY_PERIOD10_W"/>
+        <viewAttribute id="QTY_PERIOD11_W"/>
+        <viewAttribute id="QTY_PERIOD12_W"/>
+        <viewAttribute id="IN_PERIOD_W"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+      <input node="Join_6"/>
+    </calculationView>
+</calculationViews>
+  <logicalModel id="Aggregation_1">
+    <descriptions/>
+    <attributes>
+      <attribute id="BUDAT" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Posting Date in the Document"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="BUDAT"/>
+      </attribute>
+      <attribute id="ZCAL_MONTH" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Calendar Month"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="ZCAL_MONTH"/>
+      </attribute>
+      <attribute id="ZCALENDAR_YEAR" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Calendar Yr"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="ZCALENDAR_YEAR"/>
+      </attribute>
+      <attribute id="DATE_SQL" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DATE_SQL"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="DATE_SQL"/>
+      </attribute>
+      <attribute id="MBLNR" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Number of Material Document"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="MBLNR"/>
+      </attribute>
+      <attribute id="MJAHR" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Document Year"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="MJAHR"/>
+      </attribute>
+      <attribute id="CPUDT" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Day On Which Accounting Document Was Entered"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="CPUDT"/>
+      </attribute>
+      <attribute id="CPUTM" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Time of Entry"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="CPUTM"/>
+      </attribute>
+      <attribute id="ZEILE" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Item in Material Document"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="ZEILE"/>
+      </attribute>
+      <attribute id="BWART" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Movement Type (Inventory Management)"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="BWART"/>
+      </attribute>
+      <attribute id="WERKS" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Plant"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="WERKS"/>
+      </attribute>
+      <attribute id="MATNR" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Number"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="MATNR"/>
+      </attribute>
+      <attribute id="LGORT" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Storage Location"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="LGORT"/>
+      </attribute>
+      <attribute id="CHARG" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Batch Number"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="CHARG"/>
+      </attribute>
+      <attribute id="LIFNR" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Vendor Account Number"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="LIFNR"/>
+      </attribute>
+      <attribute id="MEINS" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Base Unit of Measure"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="MEINS"/>
+      </attribute>
+      <attribute id="BUKRS" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Company Code"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="BUKRS"/>
+      </attribute>
+      <attribute id="KOKRS" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Controlling Area"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="KOKRS"/>
+      </attribute>
+      <attribute id="KOSTL" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cost Center"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="KOSTL"/>
+      </attribute>
+      <attribute id="AUFNR" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="AUFNR"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="AUFNR"/>
+      </attribute>
+      <attribute id="STATUS" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cart Profile Status"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="STATUS"/>
+      </attribute>
+      <attribute id="CART_LI_PLATE" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CART_LI_PLATE"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="CART_LI_PLATE"/>
+      </attribute>
+      <attribute id="DEPT" order="26" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cart Header - Department"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="DEPT"/>
+      </attribute>
+      <attribute id="COST_CEN" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cost Center"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="COST_CEN"/>
+      </attribute>
+      <attribute id="WAERS" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Currency Key"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="WAERS"/>
+      </attribute>
+      <attribute id="DTLASTSCAN" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Date Last Scan"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="DTLASTSCAN"/>
+      </attribute>
+      <attribute id="MAX_QTY" order="31" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Maximum Quantity"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="MAX_QTY"/>
+      </attribute>
+      <attribute id="PROF_MAXQTY" order="32" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Maximum quantity in Profile Unit of Measure"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="PROF_MAXQTY"/>
+      </attribute>
+      <attribute id="INT_SUP_LOC" order="34" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Internal Supplier Location"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="INT_SUP_LOC"/>
+      </attribute>
+      <attribute id="MFRPN" order="35" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Manufacturer Part Number"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="MFRPN"/>
+      </attribute>
+      <attribute id="IDNLF" order="36" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Number Used by Vendor"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="IDNLF"/>
+      </attribute>
+      <attribute id="ACTUAL_PERIOD" order="37" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACTUAL_PERIOD"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="ACTUAL_PERIOD"/>
+      </attribute>
+      <attribute id="CURRENT_PERIOD" order="38" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="CURRENT_PERIOD"/>
+      </attribute>
+      <attribute id="PERIOD12" order="39" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PERIOD12"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="PERIOD12"/>
+      </attribute>
+      <attribute id="FIRST_PERIOD" order="40" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FIRST_PERIOD"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="FIRST_PERIOD"/>
+      </attribute>
+      <attribute id="PERIOD1" order="41" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PERIOD1"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="PERIOD1"/>
+      </attribute>
+      <attribute id="IN_PERIOD" order="42" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IN_PERIOD"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="IN_PERIOD"/>
+      </attribute>
+      <attribute id="SECOND_PERIOD" order="43" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SECOND_PERIOD"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="SECOND_PERIOD"/>
+      </attribute>
+      <attribute id="THIRD_PERIOD" order="47" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="THIRD_PERIOD"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="THIRD_PERIOD"/>
+      </attribute>
+      <attribute id="04TH_PERIOD" order="48" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="04TH_PERIOD"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="04TH_PERIOD"/>
+      </attribute>
+      <attribute id="05TH_PERIOD" order="49" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="05TH_PERIOD"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="05TH_PERIOD"/>
+      </attribute>
+      <attribute id="06TH_PERIOD" order="50" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="06TH_PERIOD"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="06TH_PERIOD"/>
+      </attribute>
+      <attribute id="07TH_PERIOD" order="51" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="07TH_PERIOD"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="07TH_PERIOD"/>
+      </attribute>
+      <attribute id="08TH_PERIOD" order="52" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="08TH_PERIOD"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="08TH_PERIOD"/>
+      </attribute>
+      <attribute id="09TH_PERIOD" order="53" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="09TH_PERIOD"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="09TH_PERIOD"/>
+      </attribute>
+      <attribute id="10TH_PERIOD" order="54" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="10TH_PERIOD"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="10TH_PERIOD"/>
+      </attribute>
+      <attribute id="11TH_PERIOD" order="55" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="11TH_PERIOD"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="11TH_PERIOD"/>
+      </attribute>
+      <attribute id="12TH_PERIOD" order="56" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="12TH_PERIOD"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="12TH_PERIOD"/>
+      </attribute>
+      <attribute id="CALENDAR_YEAR" order="66" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="CALENDAR_YEAR"/>
+      </attribute>
+      <attribute id="CALENDAR_MONTH" order="67" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="CALENDAR_MONTH"/>
+      </attribute>
+      <attribute id="Z_CONTRACT_PRICE" order="72" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="Z_CONTRACT_PRICE"/>
+      </attribute>
+      <attribute id="CC_1" order="75" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="CC_1"/>
+      </attribute>
+      <attribute id="CC_12" order="76" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="CC_12"/>
+      </attribute>
+      <attribute id="QTY_PERIOD1_W" order="77" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="QTY_PERIOD1_W"/>
+      </attribute>
+      <attribute id="QTY_PERIOD2_W" order="78" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="QTY_PERIOD2_W"/>
+      </attribute>
+      <attribute id="QTY_PERIOD3_W" order="79" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="QTY_PERIOD3_W"/>
+      </attribute>
+      <attribute id="QTY_PERIOD4_W" order="80" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="QTY_PERIOD4_W"/>
+      </attribute>
+      <attribute id="QTY_PERIOD5_W" order="81" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="QTY_PERIOD5_W"/>
+      </attribute>
+      <attribute id="QTY_PERIOD6_W" order="82" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="QTY_PERIOD6_W"/>
+      </attribute>
+      <attribute id="QTY_PERIOD7_W" order="83" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="QTY_PERIOD7_W"/>
+      </attribute>
+      <attribute id="QTY_PERIOD8_W" order="84" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="QTY_PERIOD8_W"/>
+      </attribute>
+      <attribute id="QTY_PERIOD9_W" order="85" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="QTY_PERIOD9_W"/>
+      </attribute>
+      <attribute id="QTY_PERIOD10_W" order="86" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="QTY_PERIOD10_W"/>
+      </attribute>
+      <attribute id="QTY_PERIOD11_W" order="87" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="QTY_PERIOD11_W"/>
+      </attribute>
+      <attribute id="QTY_PERIOD12_W" order="88" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="QTY_PERIOD12_W"/>
+      </attribute>
+      <attribute id="IN_PERIOD_W" order="89" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="IN_PERIOD_W"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="MENGE" order="16" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Quantity"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="MENGE"/>
+      </measure>
+      <measure id="z_quantity" order="22" aggregationType="sum" measureType="simple">
+        <descriptions/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="z_quantity"/>
+      </measure>
+      <measure id="Z_COUNTER" order="23" aggregationType="sum" measureType="simple">
+        <descriptions/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="Z_COUNTER"/>
+      </measure>
+      <measure id="ROUND_VALUE" order="29" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Rounding value in Base unit of measure"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="ROUND_VALUE"/>
+      </measure>
+      <measure id="Z_QTY_PROFUOM" order="33" aggregationType="sum" measureType="simple">
+        <descriptions/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="Z_QTY_PROFUOM"/>
+      </measure>
+      <measure id="QTY_PERIOD1" order="44" aggregationType="sum" measureType="simple">
+        <descriptions/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="QTY_PERIOD1"/>
+      </measure>
+      <measure id="QTY_PERIOD2" order="45" aggregationType="sum" measureType="simple">
+        <descriptions/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="QTY_PERIOD2"/>
+      </measure>
+      <measure id="QTY_PERIOD8" order="46" aggregationType="sum" measureType="simple">
+        <descriptions/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="QTY_PERIOD8"/>
+      </measure>
+      <measure id="QTY_PERIOD3" order="57" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="QTY_PERIOD3"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="QTY_PERIOD3"/>
+      </measure>
+      <measure id="QTY_PERIOD4" order="58" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="QTY_PERIOD4"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="QTY_PERIOD4"/>
+      </measure>
+      <measure id="QTY_PERIOD5" order="59" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="QTY_PERIOD5"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="QTY_PERIOD5"/>
+      </measure>
+      <measure id="QTY_PERIOD6" order="60" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="QTY_PERIOD6"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="QTY_PERIOD6"/>
+      </measure>
+      <measure id="QTY_PERIOD7" order="61" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="QTY_PERIOD7"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="QTY_PERIOD7"/>
+      </measure>
+      <measure id="QTY_PERIOD9" order="62" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="QTY_PERIOD9"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="QTY_PERIOD9"/>
+      </measure>
+      <measure id="QTY_PERIOD10" order="63" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="QTY_PERIOD10"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="QTY_PERIOD10"/>
+      </measure>
+      <measure id="QTY_PERIOD11" order="64" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="QTY_PERIOD11"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="QTY_PERIOD11"/>
+      </measure>
+      <measure id="QTY_PERIOD12" order="65" aggregationType="sum" measureType="simple">
+        <descriptions/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="QTY_PERIOD12"/>
+      </measure>
+      <measure id="PEINH" order="68" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Price Unit"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="PEINH"/>
+      </measure>
+      <measure id="UMREZ" order="69" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="UMREZ"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="UMREZ"/>
+      </measure>
+      <measure id="UMREN" order="70" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="UMREN"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="UMREN"/>
+      </measure>
+      <measure id="OPUCONV" order="71" aggregationType="sum" measureType="simple">
+        <descriptions/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="OPUCONV"/>
+      </measure>
+      <measure id="PROF_ROP" order="73" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="PROF_ROP"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="PROF_ROP"/>
+      </measure>
+      <measure id="PROF_RNDVAL" order="74" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="PROF_RNDVAL"/>
+        <measureMapping columnObjectName="Aggregation_1" columnName="PROF_RNDVAL"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+<layout>
+  <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="243" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="95" y="627"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="CopyOfProjection_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="839"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_5" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="839"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_4" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="743"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    <shape modelObjectName="CopyOfProjection_3" modelObjectNameSpace="Join_4" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_5" modelObjectNameSpace="Join_4" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="Copy_2_Of_Projection_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="330" y="839"/>
+        <rectangleSize height="125" width="140"/>
+      </shape>
+      <shape expanded="false" modelObjectName="CopyOfProjection_5" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="484" y="839"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_5" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="330" y="743"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    <shape modelObjectName="Copy_2_Of_Projection_3" modelObjectNameSpace="Join_5" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="CopyOfProjection_5" modelObjectNameSpace="Join_5" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="Union_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="249" y="627"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="169" y="531"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Union_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="Projection_4" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="323" y="531"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="244" y="435"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    <shape modelObjectName="Join_1" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_4" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="398" y="435"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="320" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    <shape modelObjectName="Join_3" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="166" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_6" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="243" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    <shape modelObjectName="Join_2" modelObjectNameSpace="Join_6" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_3" modelObjectNameSpace="Join_6" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="243" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+</layout>
+</Calculation:scenario>

@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="plx_analytics::CA_LO_MATERIAL_STORES_ON_HAND" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+  <origin/>
+  <descriptions defaultDescription="CA_LO_STORES_ON_HAND"/>
+  <metadata changedAt="2020-04-26 09:42:34.949"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="48"/>
+  <dataSources>
+    <DataSource id="ECC_MARD">
+      <resourceUri>ECC_MARD</resourceUri>
+    </DataSource>
+    <DataSource id="CA_DIM_MATERIALS">
+      <resourceUri>plx_analytics::CA_DIM_MATERIALS</resourceUri>
+    </DataSource>
+    <DataSource id="CA_DIM_ORG_STRCTR">
+      <resourceUri>plx_analytics::CA_DIM_ORG_STRCTR</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="PSTAT"/>
+        <viewAttribute id="LVORM"/>
+        <viewAttribute id="LFGJA"/>
+        <viewAttribute id="LFMON"/>
+        <viewAttribute id="SPERR"/>
+        <viewAttribute id="LABST"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="Z_MATNR" length="18" expressionLanguage="COLUMN_ENGINE">
+          <formula>ltrim(&quot;MATNR&quot;, '0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#ECC_MARD">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PSTAT" source="PSTAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LVORM" source="LVORM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LFGJA" source="LFGJA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LFMON" source="LFMON"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPERR" source="SPERR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LABST" source="LABST"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MATNR_FORMATED"/>
+        <viewAttribute id="MAKTX"/>
+        <viewAttribute id="MAKTG"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute id="MTART"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="WGBEZ"/>
+        <viewAttribute id="MTBEZ"/>
+        <viewAttribute id="MFRPN"/>
+        <viewAttribute id="MFRNR"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_DIM_MATERIALS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR_FORMATED" source="MATNR_FORMATED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTX" source="MAKTX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTG" source="MAKTG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MTART" source="MTART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WGBEZ" source="WGBEZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MTBEZ" source="MTBEZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRPN" source="MFRPN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRNR" source="MFRNR"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="PSTAT"/>
+        <viewAttribute id="LVORM"/>
+        <viewAttribute id="LFGJA"/>
+        <viewAttribute id="LFMON"/>
+        <viewAttribute id="SPERR"/>
+        <viewAttribute id="LABST"/>
+        <viewAttribute id="Z_MATNR"/>
+        <viewAttribute id="MATNR_FORMATED"/>
+        <viewAttribute id="MAKTX"/>
+        <viewAttribute id="MAKTG"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute id="MTART"/>
+        <viewAttribute id="WGBEZ"/>
+        <viewAttribute id="MTBEZ"/>
+        <viewAttribute id="MFRPN"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Projection_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PSTAT" source="PSTAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LVORM" source="LVORM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LFGJA" source="LFGJA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LFMON" source="LFMON"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPERR" source="SPERR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LABST" source="LABST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_MATNR" source="Z_MATNR"/>
+      </input>
+      <input node="#Projection_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR_FORMATED" source="MATNR_FORMATED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTX" source="MAKTX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTG" source="MAKTG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MTART" source="MTART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WGBEZ" source="WGBEZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MTBEZ" source="MTBEZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRPN" source="MFRPN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+      </input>
+      <joinAttribute name="MATNR"/>
+      <joinAttribute name="WERKS"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="BUTXT"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="PLANT_NAME"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_DIM_ORG_STRCTR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUTXT" source="BUTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PLANT_NAME" source="PLANT_NAME"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_2" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="LGORT"/>
+        <viewAttribute id="PSTAT"/>
+        <viewAttribute id="LVORM"/>
+        <viewAttribute id="LFGJA"/>
+        <viewAttribute id="LFMON"/>
+        <viewAttribute id="SPERR"/>
+        <viewAttribute id="LABST"/>
+        <viewAttribute id="Z_MATNR"/>
+        <viewAttribute id="MATNR_FORMATED"/>
+        <viewAttribute id="MAKTX"/>
+        <viewAttribute id="MAKTG"/>
+        <viewAttribute id="MEINS"/>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute id="MTART"/>
+        <viewAttribute id="WGBEZ"/>
+        <viewAttribute id="MTBEZ"/>
+        <viewAttribute id="MFRPN"/>
+        <viewAttribute id="MEMBER"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="BUTXT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Join_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PSTAT" source="PSTAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LVORM" source="LVORM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LFGJA" source="LFGJA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LFMON" source="LFMON"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SPERR" source="SPERR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LABST" source="LABST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_MATNR" source="Z_MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR_FORMATED" source="MATNR_FORMATED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTX" source="MAKTX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTG" source="MAKTG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MTART" source="MTART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WGBEZ" source="WGBEZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MTBEZ" source="MTBEZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRPN" source="MFRPN"/>
+      </input>
+      <input node="#Projection_3">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUTXT" source="BUTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+      </input>
+      <joinAttribute name="WERKS"/>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="Join_2">
+    <descriptions/>
+    <attributes>
+      <attribute id="MATNR" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Number"/>
+        <keyMapping columnObjectName="Join_2" columnName="MATNR"/>
+      </attribute>
+      <attribute id="WERKS" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Plant"/>
+        <keyMapping columnObjectName="Join_2" columnName="WERKS"/>
+      </attribute>
+      <attribute id="LGORT" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Storage Location"/>
+        <keyMapping columnObjectName="Join_2" columnName="LGORT"/>
+      </attribute>
+      <attribute id="PSTAT" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Maintenance status"/>
+        <keyMapping columnObjectName="Join_2" columnName="PSTAT"/>
+      </attribute>
+      <attribute id="LVORM" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Flag Material for Deletion at Storage Location Level"/>
+        <keyMapping columnObjectName="Join_2" columnName="LVORM"/>
+      </attribute>
+      <attribute id="LFGJA" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Year of Current Period"/>
+        <keyMapping columnObjectName="Join_2" columnName="LFGJA"/>
+      </attribute>
+      <attribute id="LFMON" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Current period (posting period)"/>
+        <keyMapping columnObjectName="Join_2" columnName="LFMON"/>
+      </attribute>
+      <attribute id="SPERR" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Physical Inventory Blocking Indicator"/>
+        <keyMapping columnObjectName="Join_2" columnName="SPERR"/>
+      </attribute>
+      <attribute id="MATNR_FORMATED" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Number"/>
+        <keyMapping columnObjectName="Join_2" columnName="MATNR_FORMATED"/>
+      </attribute>
+      <attribute id="MAKTX" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Description (Short Text)"/>
+        <keyMapping columnObjectName="Join_2" columnName="MAKTX"/>
+      </attribute>
+      <attribute id="MAKTG" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material description in upper case for matchcodes"/>
+        <keyMapping columnObjectName="Join_2" columnName="MAKTG"/>
+      </attribute>
+      <attribute id="MEINS" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Base Unit of Measure"/>
+        <keyMapping columnObjectName="Join_2" columnName="MEINS"/>
+      </attribute>
+      <attribute id="MATKL" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Group"/>
+        <keyMapping columnObjectName="Join_2" columnName="MATKL"/>
+      </attribute>
+      <attribute id="MTART" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Type"/>
+        <keyMapping columnObjectName="Join_2" columnName="MTART"/>
+      </attribute>
+      <attribute id="WGBEZ" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Group Description"/>
+        <keyMapping columnObjectName="Join_2" columnName="WGBEZ"/>
+      </attribute>
+      <attribute id="MFRPN" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Manufacturer Part Number"/>
+        <keyMapping columnObjectName="Join_2" columnName="MFRPN"/>
+      </attribute>
+      <attribute id="MEMBER" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Org ID"/>
+        <keyMapping columnObjectName="Join_2" columnName="MEMBER"/>
+      </attribute>
+      <attribute id="BUKRS" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Company Code"/>
+        <keyMapping columnObjectName="Join_2" columnName="BUKRS"/>
+      </attribute>
+      <attribute id="BUTXT" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Company Code Name"/>
+        <keyMapping columnObjectName="Join_2" columnName="BUTXT"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="LABST" order="9" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Valuated Unrestricted-Use Stock"/>
+        <measureMapping columnObjectName="Join_2" columnName="LABST"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="176" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="357"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="357"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

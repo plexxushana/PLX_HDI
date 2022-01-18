@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Privilege="http://www.sap.com/ndb/BiModelPrivilege.ecore" schemaVersion="2.3" id="plx_analytics::CA_MATERIAL_CMPL_COLS" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+  <descriptions defaultDescription="CA_MATERIAL_CMPL_COLS"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="23"/>
+  <dataSources>
+    <DataSource id="FN_MATERIAL_CHARACTERISTICS" type="TABLE_FUNCTION">
+      <resourceUri>plx_analytics::FN_MATERIAL_CHARACTERISTICS</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="ATINN"/>
+        <viewAttribute id="ATBEZ"/>
+        <viewAttribute id="ATWRT"/>
+        <viewAttribute id="ATWTB"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="TINYINT" id="CC_IS_OK" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;ATWRT&quot;) or strlen(&quot;ATWRT&quot;) = 0, 0, 1)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#FN_MATERIAL_CHARACTERISTICS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ATINN" source="ATINN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ATBEZ" source="ATBEZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ATWRT" source="ATWRT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ATWTB" source="ATWTB"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="Projection_1">
+    <descriptions/>
+    <attributes>
+      <attribute id="MATNR" key="true" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material"/>
+        <keyMapping columnObjectName="Projection_1" columnName="MATNR"/>
+      </attribute>
+      <attribute id="ATINN" hidden="true" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ATINN"/>
+        <keyMapping columnObjectName="Projection_1" columnName="ATINN"/>
+      </attribute>
+      <attribute id="ATBEZ" hidden="true" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ATBEZ"/>
+        <keyMapping columnObjectName="Projection_1" columnName="ATBEZ"/>
+      </attribute>
+      <attribute id="ATWRT" hidden="true" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ATWRT"/>
+        <keyMapping columnObjectName="Projection_1" columnName="ATWRT"/>
+      </attribute>
+      <attribute id="ATWTB" hidden="true" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ATWTB"/>
+        <keyMapping columnObjectName="Projection_1" columnName="ATWTB"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="CC_IS_OK" hidden="true" order="6" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="CC_IS_OK"/>
+        <measureMapping columnObjectName="Projection_1" columnName="CC_IS_OK"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures>
+      <measure id="RES_HAZ" hidden="false" order="7" baseMeasure="#CC_IS_OK">
+        <descriptions defaultDescription="Hazardous"/>
+        <restriction logicalOperator="AND">
+          <filter xsi:type="Privilege:AttributeFilter" attributeName="ATBEZ">
+            <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="Hazardous Material"/>
+          </filter>
+          <attributeName>ATBEZ</attributeName>
+        </restriction>
+      </measure>
+      <measure id="RES_LATEX" hidden="false" order="8" baseMeasure="#CC_IS_OK">
+        <descriptions defaultDescription="Latex"/>
+        <restriction logicalOperator="AND">
+          <filter xsi:type="Privilege:AttributeFilter" attributeName="ATBEZ">
+            <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="Latex"/>
+          </filter>
+          <attributeName>ATBEZ</attributeName>
+        </restriction>
+      </measure>
+      <measure id="RES_DEVICE_CLASS" hidden="false" order="9" baseMeasure="#CC_IS_OK">
+        <descriptions defaultDescription="Device Class"/>
+        <restriction logicalOperator="AND">
+          <filter xsi:type="Privilege:AttributeFilter" attributeName="ATBEZ">
+            <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="Medical Device Class Type"/>
+          </filter>
+          <attributeName>ATBEZ</attributeName>
+        </restriction>
+      </measure>
+      <measure id="RES_DEVICE_LICENCE" hidden="false" order="10" baseMeasure="#CC_IS_OK">
+        <descriptions defaultDescription="Device Licence"/>
+        <restriction logicalOperator="AND">
+          <filter xsi:type="Privilege:AttributeFilter" attributeName="ATBEZ">
+            <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="Medical Device Licence Number"/>
+          </filter>
+          <attributeName>ATBEZ</attributeName>
+        </restriction>
+      </measure>
+      <measure id="RES_RADIOACTIVE" hidden="false" order="11" baseMeasure="#CC_IS_OK">
+        <descriptions defaultDescription="Radioactive"/>
+        <restriction logicalOperator="AND">
+          <filter xsi:type="Privilege:AttributeFilter" attributeName="ATBEZ">
+            <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="Radioactive Material"/>
+          </filter>
+          <attributeName>ATBEZ</attributeName>
+        </restriction>
+      </measure>
+      <measure id="RES_STERILE" hidden="false" order="12" baseMeasure="#CC_IS_OK">
+        <descriptions defaultDescription="Sterile"/>
+        <restriction logicalOperator="AND">
+          <filter xsi:type="Privilege:AttributeFilter" attributeName="ATBEZ">
+            <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="Sterile"/>
+          </filter>
+          <attributeName>ATBEZ</attributeName>
+        </restriction>
+      </measure>
+    </restrictedMeasures>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="22" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="165"/>
+        <rectangleSize height="30" width="140"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

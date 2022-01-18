@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="3.0" id="plx_analytics::CA_DIM_OUTPUTS" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="DIMENSION" dimensionType="STANDARD" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection" xscCompatibilityMode="true">
+  <descriptions defaultDescription="Outputs"/>
+  <metadata changedAt="2017-08-01 11:40:34.581"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="29"/>
+  <dataSources>
+    <DataSource id="ECC_NAST">
+      <resourceUri>ECC_NAST</resourceUri>
+    </DataSource>
+  </dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="filtered_nast" filterExpressionLanguage="COLUMN_ENGINE">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="KSCHL"/>
+        <viewAttribute id="PARNR"/>
+        <viewAttribute id="PARVW"/>
+        <viewAttribute id="NACHA"/>
+        <viewAttribute id="DATVR"/>
+        <viewAttribute id="USNAM"/>
+        <viewAttribute id="OBJKY_10_CHAR"/>
+        <viewAttribute id="NATXT"/>
+        <viewAttribute id="ERDAT"/>
+        <viewAttribute id="ERUHR"/>
+        <viewAttribute id="KAPPL"/>
+        <viewAttribute id="OBJKY"/>
+        <viewAttribute id="UHRVR"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="VARCHAR" id="DATVR_UHRVR" length="14" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;DATVR&quot;+&quot;UHRVR&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="ECC_NAST"/>
+    <filter>&quot;KAPPL&quot; = 'EF' and &quot;DATVR&quot; != '00000000'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:RankView" id="first_message">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="KSCHL"/>
+        <viewAttribute id="PARNR"/>
+        <viewAttribute id="PARVW"/>
+        <viewAttribute id="NACHA"/>
+        <viewAttribute id="DATVR"/>
+        <viewAttribute id="USNAM"/>
+        <viewAttribute id="OBJKY_10_CHAR"/>
+        <viewAttribute id="NATXT"/>
+        <viewAttribute id="ERDAT"/>
+        <viewAttribute id="ERUHR"/>
+        <viewAttribute id="KAPPL"/>
+        <viewAttribute id="DATVR_UHRVR"/>
+        <viewAttribute id="UHRVR"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="filtered_nast"/>
+    <windowFunction dynamicPartitionAttributes="false">
+      <partitionViewAttributeName>OBJKY_10_CHAR</partitionViewAttributeName>
+      <order byViewAttributeName="DATVR_UHRVR" direction="ASC"/>
+      <rankThreshold>
+        <value>1</value>
+      </rankThreshold>
+      <rankViewAttributeName>Rank_Column</rankViewAttributeName>
+    </windowFunction>
+  </calculationView>
+</calculationViews>
+  <logicalModel id="first_message">
+    <descriptions/>
+    <attributes>
+      <attribute id="OBJKY_10_CHAR" key="true" order="1" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Object key"/>
+        <keyMapping columnObjectName="first_message" columnName="OBJKY_10_CHAR"/>
+      </attribute>
+      <attribute id="KSCHL" order="2" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Message type"/>
+        <keyMapping columnObjectName="first_message" columnName="KSCHL"/>
+      </attribute>
+      <attribute id="PARNR" order="3" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Message partner"/>
+        <keyMapping columnObjectName="first_message" columnName="PARNR"/>
+      </attribute>
+      <attribute id="PARVW" order="4" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Partner function (for example SH for ship-to party)"/>
+        <keyMapping columnObjectName="first_message" columnName="PARVW"/>
+      </attribute>
+      <attribute id="NACHA" order="5" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Message transmission medium code"/>
+        <keyMapping columnObjectName="first_message" columnName="NACHA"/>
+      </attribute>
+      <attribute id="DATVR" order="6" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Processing date"/>
+        <keyMapping columnObjectName="first_message" columnName="DATVR"/>
+      </attribute>
+      <attribute id="USNAM" order="7" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="User name"/>
+        <keyMapping columnObjectName="first_message" columnName="USNAM"/>
+      </attribute>
+      <attribute id="NATXT" order="8" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Message transmission medium"/>
+        <keyMapping columnObjectName="first_message" columnName="NATXT"/>
+      </attribute>
+      <attribute id="ERDAT" order="9" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Date on which status record was created"/>
+        <keyMapping columnObjectName="first_message" columnName="ERDAT"/>
+      </attribute>
+      <attribute id="ERUHR" order="10" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Time at which status record was created"/>
+        <keyMapping columnObjectName="first_message" columnName="ERUHR"/>
+      </attribute>
+      <attribute id="KAPPL" order="11" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Application for message conditions"/>
+        <keyMapping columnObjectName="first_message" columnName="KAPPL"/>
+      </attribute>
+      <attribute id="Rank_Column" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Rank_Column"/>
+        <keyMapping columnObjectName="first_message" columnName="Rank_Column"/>
+      </attribute>
+      <attribute id="UHRVR" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="UHRVR"/>
+        <keyMapping columnObjectName="first_message" columnName="UHRVR"/>
+      </attribute>
+      <attribute id="DATVR_UHRVR" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DATVR_UHRVR"/>
+        <keyMapping columnObjectName="first_message" columnName="DATVR_UHRVR"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+<layout>
+  <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="22" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="filtered_nast" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="243"/>
+        <rectangleSize height="30" width="140"/>
+      </shape>
+      <shape expanded="true" modelObjectName="first_message" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="165"/>
+        <rectangleSize height="30" width="140"/>
+      </shape>
+    </shapes>
+</layout>
+</Calculation:scenario>

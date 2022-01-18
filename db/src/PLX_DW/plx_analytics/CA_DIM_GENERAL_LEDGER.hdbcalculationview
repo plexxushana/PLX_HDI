@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="3.0" id="plx_analytics::CA_DIM_GENERAL_LEDGER" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection" xscCompatibilityMode="true">
+<origin/>
+  <descriptions defaultDescription="CA_DIM_GENERAL_LEDGER"/>
+  <metadata changedAt="2018-12-12 11:45:58.29"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="44"/>
+  <dataSources>
+    <DataSource id="ECC_SKA1">
+      <resourceUri>ECC_SKA1</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_SKB1">
+      <resourceUri>ECC_SKB1</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_SKAT">
+      <resourceUri>ECC_SKAT</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_T077Z">
+      <resourceUri>ECC_T077Z</resourceUri>
+    </DataSource>
+  </dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="KTOPL"/>
+        <viewAttribute id="SAKNR"/>
+        <viewAttribute id="XBILK"/>
+        <viewAttribute id="XLOEV"/>
+      
+      <viewAttribute id="KTOKS"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="ECC_SKA1"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="SAKNR"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="ECC_SKB1"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinType="rightOuter">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="SAKNR"/>
+        <viewAttribute id="KTOPL"/>
+        <viewAttribute id="XBILK"/>
+        <viewAttribute id="XLOEV"/>
+      <viewAttribute id="KTOKS"/>
+      <viewAttribute hidden="true" id="JOIN$SAKNR$SAKNR"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="Projection_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KTOPL" source="KTOPL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBILK" source="XBILK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XLOEV" source="XLOEV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KTOKS" source="KTOKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SAKNR$SAKNR" source="SAKNR"/>
+      </input>
+      <input node="Projection_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAKNR" source="SAKNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SAKNR$SAKNR" source="SAKNR"/>
+      </input>
+    <joinAttribute name="JOIN$SAKNR$SAKNR"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="SPRAS"/>
+        <viewAttribute id="KTOPL"/>
+        <viewAttribute id="SAKNR"/>
+        <viewAttribute id="TXT20"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="ECC_SKAT"/>
+    <filter>(&quot;SPRAS&quot; ='E')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2" joinType="leftOuter">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="SAKNR"/>
+        <viewAttribute id="KTOPL"/>
+        <viewAttribute id="XBILK"/>
+        <viewAttribute id="XLOEV"/>
+        <viewAttribute id="TXT20"/>
+      
+      <viewAttribute id="KTOKS"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="Join_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAKNR" source="SAKNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KTOPL" source="KTOPL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBILK" source="XBILK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XLOEV" source="XLOEV"/>
+      
+        <mapping xsi:type="Calculation:AttributeMapping" target="KTOKS" source="KTOKS"/>
+      </input>
+      <input node="Projection_3">
+        <mapping xsi:type="Calculation:AttributeMapping" target="TXT20" source="TXT20"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAKNR" source="SAKNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KTOPL" source="KTOPL"/>
+      </input>
+    <joinAttribute name="SAKNR"/>
+    <joinAttribute name="KTOPL"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="77Z">
+    <viewAttributes>
+      <viewAttribute id="SPRAS"/>
+      <viewAttribute id="KTOPL"/>
+      <viewAttribute id="KTOKS"/>
+      <viewAttribute id="TXT30"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="ECC_T077Z"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_3" cardinality="CN_N" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="BUKRS"/>
+      <viewAttribute id="SAKNR"/>
+      <viewAttribute id="KTOPL"/>
+      <viewAttribute id="XBILK"/>
+      <viewAttribute id="XLOEV"/>
+      <viewAttribute id="TXT20"/>
+      <viewAttribute id="TXT30"/>
+      <viewAttribute id="KTOKS"/>
+      <viewAttribute hidden="true" id="JOIN$KTOKS$KTOKS"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SAKNR" source="SAKNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KTOPL" source="KTOPL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XBILK" source="XBILK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XLOEV" source="XLOEV"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TXT20" source="TXT20"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$KTOKS$KTOKS" source="KTOKS"/>
+    </input>
+    <input node="77Z">
+      <mapping xsi:type="Calculation:AttributeMapping" target="TXT30" source="TXT30"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KTOKS" source="KTOKS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KTOPL" source="KTOPL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$KTOKS$KTOKS" source="KTOKS"/>
+    </input>
+    <joinAttribute name="KTOPL"/>
+    <joinAttribute name="JOIN$KTOKS$KTOKS"/>
+  </calculationView>
+</calculationViews>
+  <logicalModel id="Join_3">
+    <descriptions/>
+    <attributes>
+      <attribute id="BUKRS" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Company Code"/>
+        <keyMapping columnObjectName="Join_3" columnName="BUKRS"/>
+      </attribute>
+      <attribute id="SAKNR" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="G/L Account Number"/>
+        <keyMapping columnObjectName="Join_3" columnName="SAKNR"/>
+      </attribute>
+      <attribute id="KTOPL" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Chart of Accounts"/>
+        <keyMapping columnObjectName="Join_3" columnName="KTOPL"/>
+      </attribute>
+      <attribute id="XBILK" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Indicator: Account Is a Balance Sheet Account?"/>
+        <keyMapping columnObjectName="Join_3" columnName="XBILK"/>
+      </attribute>
+      <attribute id="XLOEV" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Indicator: Account marked for deletion?"/>
+        <keyMapping columnObjectName="Join_3" columnName="XLOEV"/>
+      </attribute>
+      <attribute id="TXT20" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="G/L account short text"/>
+        <keyMapping columnObjectName="Join_3" columnName="TXT20"/>
+      </attribute>
+    
+      <attribute id="KTOKS" order="7" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="KTOKS"/>
+    
+        <keyMapping columnObjectName="Join_3" columnName="KTOKS"/>
+    
+      </attribute>
+      <attribute id="TXT30" order="8" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="TXT30 Text"/>
+        <keyMapping columnObjectName="Join_3" columnName="TXT30"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+<layout>
+  <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="495" y="112"/>
+        <rectangleSize height="0" width="160"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="92" y="661"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="512" y="661"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="118" y="501"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+    <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="523" y="501"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="475" y="341"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+    
+    <shape modelObjectName="Join_1" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_3" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="77Z" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="728" y="358"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_3" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="475" y="236"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Join_2" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="77Z" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="136"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

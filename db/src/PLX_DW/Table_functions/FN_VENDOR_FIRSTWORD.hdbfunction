@@ -1,0 +1,47 @@
+FUNCTION "plx_analytics::FN_VENDOR_FIRSTWORD" ( ) 
+	RETURNS "Z_LFA1_FIRSTWORD"
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER AS
+BEGIN
+
+ /***************************** 
+ return set of 
+	 first words of vendor master name
+	 vendor master number
+ *****************************/
+ 	declare v_lifnr   		varchar(10);
+ 	declare v_first_word   	varchar(40);
+ 	
+ 	-- arrays for internal table
+    declare a_lifnr    		VARCHAR(10) array;
+    declare a_first_word	varchar(40) array;        
+    
+    --get cursor for vendors with single word name
+    DECLARE CURSOR c_cursor1 (v_lifnr varchar(10)) FOR
+       	    SELECT lifnr, 
+       	    	   name1, 
+       	    	   left(name1, instr(name1, ' ')) as word1
+       	    FROM   "ECC_LFA1"
+       		where  name1 not like '% %';
+
+    FOR cur_row AS c_cursor1(v_lifnr) 
+	DO
+		a_lifnr[c_cursor1::rowcount] 	  := cur_row.lifnr;												
+		a_first_word[c_cursor1::rowcount] := cur_row.name1;		
+    END FOR;
+        
+    t_firstwords = unnest(:a_lifnr, 
+    					  :a_first_word
+    					  ) as (
+    					  "LIFNR", 
+    					  "FIRST_WORD"
+    					  );
+    
+    --------------------------------
+    return (select lifnr, first_word from :t_firstwords)
+    		union
+    	   (select lifnr,
+    	    left(name1, instr(name1, ' ')) as first_word
+    	    from "ECC_LFA1"
+    	    where name1 like '% %');
+END

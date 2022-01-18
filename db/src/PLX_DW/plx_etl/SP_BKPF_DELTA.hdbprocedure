@@ -1,0 +1,25 @@
+PROCEDURE "plx_etl::SP_BKPF_DELTA" 
+            (OUT T_OUT "ECC_BKPF" )
+            
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   --DEFAULT SCHEMA <default_schema_name>
+   READS SQL DATA AS
+BEGIN
+    
+ declare lv_start_date nvarchar(10);
+
+ SELECT max(cpudt) into lv_start_date FROM "ECC_BKPF";
+ -- I can go back 1 or 2 days just for safety interval - But I belive CPUDT can't be entered any previous day.
+ 
+ T_OUT = SELECT  "BUKRS", "BELNR", "GJAHR", "BLART", "BLDAT", "BUDAT", "MONAT", "CPUDT", "CPUTM",
+                 "AEDAT", "UPDDT", "WWERT", "USNAM", "TCODE", "BVORG", "XBLNR", "DBBLG", "STBLG", "STJAH", "BKTXT",
+                 "WAERS", "KURSF", "KZWRS", "KZKRS", "BSTAT", "XNETB", "FRATH", "XRUEB", "GLVOR", "GRPID", "DOKID",
+                 "ARCID", "IBLAR", "AWTYP", "AWKEY", "FIKRS", "HWAER", "XSTOV", "STODT", "XMWST", "XSNET", "AUSBK",
+                 "XUSVR", "DUEFL", "AWSYS", "TXKRS", "CTXKRS", "LOTKZ", "XWVOF", "STGRD", "XREVERSAL", "REINDAT", 
+                 "PSOTM", "KNUMV", "LDGRP", "PPNAM"
+                FROM "V_ECC_BKPF" 
+                 WHERE "CPUDT" >= :lv_start_date;
+ 
+ 
+END ;
