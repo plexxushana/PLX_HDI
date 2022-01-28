@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="3.0" id="plx_analytics::CA_CO_PLX_COST_CENTER_ANALYSIS_CONSOLIDATED_CP_YTD_PROGRAMS" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED">
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="3.0" id="HYPERCARE_CA_CO_PLX_COST_CENTER_ANALYSIS_CONSOLIDATED_CP_YTD_PROGRAMS" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED">
   <descriptions defaultDescription="CA_CO_ELEM_HIERARCHY"/>
   <metadata changedAt="2021-10-05 10:31:35.652"/>
   <localVariables>
@@ -2601,12 +2601,8 @@
         <calculatedViewAttribute datatype="DECIMAL" id="CURR_ACTUAL" length="13" scale="3" expressionLanguage="COLUMN_ENGINE">
           <formula>IF(&quot;GJAHR&quot;='$$FISCAL_YEAR$$'and '$$IP_CURRENT_PERIOD$$'=&quot;Z_PERIOD&quot;, &quot;WKGBTR&quot;,0)</formula>
         </calculatedViewAttribute>
-        <calculatedViewAttribute datatype="DECIMAL" id="CURR_BUDGET" length="13" scale="3" expressionLanguage="SQL">
-          <formula>case when (&quot;GJAHR&quot;='$$FISCAL_YEAR$$' AND  '$$IP_CURRENT_PERIOD$$'=&quot;Z_PERIOD&quot;) then  &quot;WKG001&quot;
- else 0
-end
-
-</formula>
+        <calculatedViewAttribute datatype="DECIMAL" id="CURR_BUDGET" length="13" scale="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;GJAHR&quot;='$$FISCAL_YEAR$$' AND   '$$IP_CURRENT_PERIOD$$'=&quot;Z_PERIOD&quot; , &quot;WKG001&quot;,0)</formula>
         </calculatedViewAttribute>
         <calculatedViewAttribute datatype="DECIMAL" id="CURR_YTD_ACTUAL" length="13" scale="3" expressionLanguage="COLUMN_ENGINE">
           <formula>IF(&quot;GJAHR&quot;='$$FISCAL_YEAR$$' and &quot;Z_PERIOD&quot;&lt;='$$IP_CURRENT_PERIOD$$', &quot;WKGBTR&quot;,0)</formula>
@@ -2810,7 +2806,13 @@ end
         <viewAttribute id="PRIOR_MONTH_ACTUAL"/>
         <viewAttribute id="CURR_YTD_ACTUAL_TEST"/>
       </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="NEW_DIFFERENCE" datatype="DECIMAL" length="13" scale="2" expressionLanguage="SQL">
+        <formula>case when (&quot;GJAHR&quot;='$$FISCAL_YEAR$$' and &quot;Z_PERIOD&quot;&lt;='$$IP_CURRENT_PERIOD$$') then (&quot;WKG001&quot; - &quot;WKGBTR&quot;)
+else 0
+end</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
       <input node="Join_5">
         <mapping xsi:type="Calculation:AttributeMapping" target="OBJNR" source="OBJNR"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
@@ -3061,7 +3063,12 @@ end
       <measure id="CURR_YTD_ACTUAL_TEST" order="47" aggregationType="sum" measureType="simple">
         <descriptions/>
         <measureMapping columnObjectName="Join_6" columnName="CURR_YTD_ACTUAL_TEST"/>
-      </measure></baseMeasures>
+      </measure>
+      <measure id="NEW_DIFFERENCE" order="48" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="NEW_DIFFERENCE"/>
+        <measureMapping columnObjectName="Join_6" columnName="NEW_DIFFERENCE"/>
+      </measure>
+    </baseMeasures>
     <calculatedMeasures>
       <measure id="ANNUAL_FORECAST" hidden="false" order="3" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="13" scale="3">
         <descriptions defaultDescription="Annual Forecast"/>
@@ -3085,10 +3092,8 @@ end
         </measure>
       <measure id="VARIANCE" hidden="false" order="5" aggregationType="sum" measureType="simple" aggregatable="true" datatype="DECIMAL" expressionLanguage="SQL" length="15" scale="2">
         <descriptions defaultDescription="Variance"/>
-        <formula>case when &quot;GJAHR&quot;='$$FISCAL_YEAR$$'
-   then &quot;WKG001&quot;-&quot;WKGBTR&quot;
-   else 0
-  end</formula>
+        <formula> &quot;WKG001&quot;-&quot;WKGBTR&quot;
+</formula>
       
         
         
@@ -3098,9 +3103,8 @@ end
         </measure>
       <measure id="VARIANCE_PERC" hidden="false" order="6" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="SQL" length="13" scale="3">
         <descriptions defaultDescription="Difference ( %) "/>
-        <formula>case when (&quot;GJAHR&quot;='$$FISCAL_YEAR$$' and &quot;Z_PERIOD&quot;&lt;='$$IP_CURRENT_PERIOD$$') then (&quot;WKG001&quot; - &quot;WKGBTR&quot;)
-else 0
-end
+        <formula>(&quot;WKG001&quot; - &quot;WKGBTR&quot;)
+
 </formula>
       
         
