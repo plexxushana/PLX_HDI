@@ -1,0 +1,604 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="3.0" id="plx_analytics::ZZ_PLX_CC002_PO_GR_ID" applyPrivilegeType="NONE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+<origin/>
+  <descriptions defaultDescription="CA_PLX_CC002_PO_GR_ID"/>
+  <metadata changedAt="2021-11-04 07:58:23.713"/>
+  <localVariables>
+    <variable id="GoodsReceipt_DateRange">
+      <descriptions defaultDescription="Goods Receipt Date Range"/>
+      <variableProperties datatype="VARCHAR" mandatory="false">
+        <valueDomain type="AttributeValue">
+          <attribute name="BUDAT_formatted"/>
+        </valueDomain>
+        <selection multiLine="false" type="Interval"/>
+      </variableProperties>
+    </variable>
+    <variable id="Company_Code">
+      <descriptions defaultDescription="Company Code"/>
+      <variableProperties datatype="VARCHAR" mandatory="false">
+        <valueDomain type="AttributeValue">
+          <attribute name="BUKRS"/>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="31"/>
+  <dataSources>
+    <DataSource id="ECC_EKBE">
+      <resourceUri>ECC_EKBE</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_EKPO">
+      <resourceUri>ECC_EKPO</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_EKKO">
+      <resourceUri>ECC_EKKO</resourceUri>
+    </DataSource>
+  </dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2" filterExpressionLanguage="COLUMN_ENGINE">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="ERNAM_EKBE"/>
+        <viewAttribute id="VGABE"/>
+        <viewAttribute id="ZEKKN"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="BEWTP"/>
+        <viewAttribute id="BWART"/>
+        <viewAttribute id="MENGE"/>
+        <viewAttribute id="BPMNG"/>
+        <viewAttribute id="DMBTR"/>
+        <viewAttribute id="WRBTR"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="SHKZG"/>
+        <viewAttribute id="BWTAR"/>
+        <viewAttribute id="ELIKZ"/>
+        <viewAttribute id="XBLNR"/>
+        <viewAttribute id="GRUND"/>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="CPUTM"/>
+        <viewAttribute id="REEWR"/>
+        <viewAttribute id="BLDAT"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="ECC_EKBE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERNAM_EKBE" source="ERNAM"/></input>
+    <filter>(&quot;VGABE&quot; ='1') and (trim(&quot;ERNAM_EKBE&quot;)!='ALEREMOTE' and trim(&quot;ERNAM_EKBE&quot;)!='SBATCH')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_6">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="BUKRS"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="ECC_EKPO"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_5" filterExpressionLanguage="COLUMN_ENGINE">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="BSTYP"/>
+        <viewAttribute id="RLWRT"/>
+        <viewAttribute id="FRGGR"/>
+        <viewAttribute id="FRGKE"/>
+        <viewAttribute id="FRGRL"/>
+        <viewAttribute id="AEDAT"/>
+        <viewAttribute id="ERNAM_EKKO"/>
+        <viewAttribute id="FRGSX"/>
+        <viewAttribute id="RELEASE_DATE"/>
+        <viewAttribute id="FRGZU"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="ECC_EKKO">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERNAM_EKKO" source="ERNAM"/></input>
+    <filter>trim(&quot;ERNAM_EKKO&quot;)!='ALEREMOTE' and trim(&quot;ERNAM_EKKO&quot;)!='SBATCH'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2" joinType="leftOuter">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="BSTYP"/>
+        <viewAttribute id="RLWRT"/>
+        <viewAttribute id="FRGGR"/>
+        <viewAttribute id="FRGKE"/>
+        <viewAttribute id="FRGRL"/>
+        <viewAttribute id="AEDAT"/>
+        <viewAttribute id="FRGSX"/>
+        <viewAttribute id="RELEASE_DATE"/>
+        <viewAttribute id="ERNAM_EKKO"/>
+        <viewAttribute id="FRGZU"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="Projection_6">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+      </input>
+      <input node="Projection_5">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSTYP" source="BSTYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RLWRT" source="RLWRT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FRGGR" source="FRGGR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FRGKE" source="FRGKE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FRGRL" source="FRGRL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT" source="AEDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FRGSX" source="FRGSX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RELEASE_DATE" source="RELEASE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERNAM_EKKO" source="ERNAM_EKKO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FRGZU" source="FRGZU"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+      </input>
+    <joinAttribute name="EBELN"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_7" filterExpressionLanguage="COLUMN_ENGINE">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="BSTYP"/>
+        <viewAttribute id="RLWRT"/>
+        <viewAttribute id="FRGGR"/>
+        <viewAttribute id="FRGKE"/>
+        <viewAttribute id="FRGRL"/>
+        <viewAttribute id="AEDAT"/>
+        <viewAttribute id="FRGSX"/>
+        <viewAttribute id="RELEASE_DATE"/>
+        <viewAttribute id="ERNAM_EKKO"/>
+        <viewAttribute id="FRGZU"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="Join_2"/>
+    <filter>(&quot;BSTYP&quot; ='F') AND (&quot;FRGZU&quot; ='X')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinType="leftOuter">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="BSTYP"/>
+        <viewAttribute id="RLWRT"/>
+        <viewAttribute id="FRGGR"/>
+        <viewAttribute id="FRGKE"/>
+        <viewAttribute id="FRGRL"/>
+        <viewAttribute id="AEDAT"/>
+        <viewAttribute id="FRGSX"/>
+        <viewAttribute id="RELEASE_DATE"/>
+        <viewAttribute id="ERNAM_EKKO"/>
+        <viewAttribute id="ERNAM_EKBE"/>
+        <viewAttribute id="VGABE"/>
+        <viewAttribute id="ZEKKN"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="BEWTP"/>
+        <viewAttribute id="BWART"/>
+        <viewAttribute id="MENGE"/>
+        <viewAttribute id="BPMNG"/>
+        <viewAttribute id="DMBTR"/>
+        <viewAttribute id="WRBTR"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="SHKZG"/>
+        <viewAttribute id="BWTAR"/>
+        <viewAttribute id="ELIKZ"/>
+        <viewAttribute id="XBLNR"/>
+        <viewAttribute id="GRUND"/>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="CPUTM"/>
+        <viewAttribute id="REEWR"/>
+        <viewAttribute id="BLDAT"/>
+        <viewAttribute id="FRGZU"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="Projection_7">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSTYP" source="BSTYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RLWRT" source="RLWRT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FRGGR" source="FRGGR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FRGKE" source="FRGKE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FRGRL" source="FRGRL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT" source="AEDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FRGSX" source="FRGSX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RELEASE_DATE" source="RELEASE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERNAM_EKKO" source="ERNAM_EKKO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FRGZU" source="FRGZU"/>
+      </input>
+      <input node="Projection_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERNAM_EKBE" source="ERNAM_EKBE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VGABE" source="VGABE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZEKKN" source="ZEKKN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEWTP" source="BEWTP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BWART" source="BWART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE" source="MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BPMNG" source="BPMNG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR" source="DMBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WRBTR" source="WRBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SHKZG" source="SHKZG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BWTAR" source="BWTAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ELIKZ" source="ELIKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GRUND" source="GRUND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT" source="CPUDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUTM" source="CPUTM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REEWR" source="REEWR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+      </input>
+    <joinAttribute name="EBELN"/>
+    <joinAttribute name="EBELP"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="BSTYP"/>
+        <viewAttribute id="RLWRT"/>
+        <viewAttribute id="FRGGR"/>
+        <viewAttribute id="FRGKE"/>
+        <viewAttribute id="FRGRL"/>
+        <viewAttribute id="AEDAT"/>
+        <viewAttribute id="FRGSX"/>
+        <viewAttribute id="RELEASE_DATE"/>
+        <viewAttribute id="ERNAM_EKKO"/>
+        <viewAttribute id="ERNAM_EKBE"/>
+        <viewAttribute id="VGABE"/>
+        <viewAttribute id="ZEKKN"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="BEWTP"/>
+        <viewAttribute id="BWART"/>
+        <viewAttribute id="MENGE"/>
+        <viewAttribute id="BPMNG"/>
+        <viewAttribute id="DMBTR"/>
+        <viewAttribute id="WRBTR"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="SHKZG"/>
+        <viewAttribute id="BWTAR"/>
+        <viewAttribute id="ELIKZ"/>
+        <viewAttribute id="XBLNR"/>
+        <viewAttribute id="GRUND"/>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="CPUTM"/>
+        <viewAttribute id="REEWR"/>
+        <viewAttribute id="BLDAT"/>
+        <viewAttribute id="FRGZU"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="VARCHAR" id="Z_Comp_CreatedByID" length="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(isnull(&quot;ERNAM_EKBE&quot;) or (isnull(&quot;ERNAM_EKKO&quot;)) or (&quot;ERNAM_EKBE&quot;!=&quot;ERNAM_EKKO&quot;),'No','Yes')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="INTEGER" id="Z_Yes_Count" expressionLanguage="COLUMN_ENGINE">
+          <formula>If(&quot;Z_Comp_CreatedByID&quot;='Yes',1,0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="AEDAT_formatted" expressionLanguage="COLUMN_ENGINE">
+          <formula>(&quot;AEDAT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="BUDAT_formatted" expressionLanguage="COLUMN_ENGINE">
+          <formula>(&quot;BUDAT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CPUDT_formatted" expressionLanguage="COLUMN_ENGINE">
+          <formula>(&quot;BUDAT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="BLDAT_formatted" expressionLanguage="COLUMN_ENGINE">
+          <formula>(&quot;BLDAT&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="Join_1"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_4" filterExpressionLanguage="COLUMN_ENGINE">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="Z_Comp_CreatedByID"/>
+        <viewAttribute id="Z_Yes_Count"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="BSTYP"/>
+        <viewAttribute id="RLWRT"/>
+        <viewAttribute id="FRGGR"/>
+        <viewAttribute id="FRGKE"/>
+        <viewAttribute id="FRGRL"/>
+        <viewAttribute id="AEDAT"/>
+        <viewAttribute id="FRGSX"/>
+        <viewAttribute id="RELEASE_DATE"/>
+        <viewAttribute id="ERNAM_EKKO"/>
+        <viewAttribute id="ERNAM_EKBE"/>
+        <viewAttribute id="VGABE"/>
+        <viewAttribute id="ZEKKN"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="BEWTP"/>
+        <viewAttribute id="BWART"/>
+        <viewAttribute id="MENGE"/>
+        <viewAttribute id="BPMNG"/>
+        <viewAttribute id="DMBTR"/>
+        <viewAttribute id="WRBTR"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="SHKZG"/>
+        <viewAttribute id="BWTAR"/>
+        <viewAttribute id="ELIKZ"/>
+        <viewAttribute id="XBLNR"/>
+        <viewAttribute id="GRUND"/>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="CPUTM"/>
+        <viewAttribute id="REEWR"/>
+        <viewAttribute id="BLDAT"/>
+        <viewAttribute id="FRGZU"/>
+        <viewAttribute id="AEDAT_formatted"/>
+        <viewAttribute id="BUDAT_formatted"/>
+        <viewAttribute id="CPUDT_formatted"/>
+        <viewAttribute id="BLDAT_formatted"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="Projection_3"/>
+    <filter>(&quot;Z_Comp_CreatedByID&quot; ='Yes')</filter>
+  </calculationView>
+</calculationViews>
+  <logicalModel id="Projection_4">
+    <descriptions/>
+    <attributes>
+      <attribute id="EBELN" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchasing Document Number"/>
+        <keyMapping columnObjectName="Projection_4" columnName="EBELN"/>
+      </attribute>
+      <attribute id="EBELP" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Item Number of Purchasing Document"/>
+        <keyMapping columnObjectName="Projection_4" columnName="EBELP"/>
+      </attribute>
+      <attribute id="BUKRS" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Company Code"/>
+        <localVariable>Company_Code</localVariable>
+        <keyMapping columnObjectName="Projection_4" columnName="BUKRS"/>
+      </attribute>
+      <attribute id="BSTYP" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchasing Document Category"/>
+        <keyMapping columnObjectName="Projection_4" columnName="BSTYP"/>
+      </attribute>
+      <attribute id="FRGGR" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Release group"/>
+        <keyMapping columnObjectName="Projection_4" columnName="FRGGR"/>
+      </attribute>
+      <attribute id="FRGKE" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Release Indicator: Purchasing Document"/>
+        <keyMapping columnObjectName="Projection_4" columnName="FRGKE"/>
+      </attribute>
+      <attribute id="FRGRL" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Release Not Yet Completely Effected"/>
+        <keyMapping columnObjectName="Projection_4" columnName="FRGRL"/>
+      </attribute>
+      <attribute id="FRGZU" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Release status"/>
+        <keyMapping columnObjectName="Projection_4" columnName="FRGZU"/>
+      </attribute>
+      <attribute id="AEDAT" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Created on"/>
+        <keyMapping columnObjectName="Projection_4" columnName="AEDAT"/>
+      </attribute>
+      <attribute id="FRGSX" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Release Strategy"/>
+        <keyMapping columnObjectName="Projection_4" columnName="FRGSX"/>
+      </attribute>
+      <attribute id="RELEASE_DATE" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Release Date of Contract"/>
+        <keyMapping columnObjectName="Projection_4" columnName="RELEASE_DATE"/>
+      </attribute>
+      <attribute id="ERNAM_EKKO" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Name of Person who Created the Object (PO)"/>
+        <keyMapping columnObjectName="Projection_4" columnName="ERNAM_EKKO"/>
+      </attribute>
+      <attribute id="ERNAM_EKBE" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Name of Person who Created the Object (GR)"/>
+        <keyMapping columnObjectName="Projection_4" columnName="ERNAM_EKBE"/>
+      </attribute>
+      <attribute id="VGABE" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Transaction/event type, purchase order history"/>
+        <keyMapping columnObjectName="Projection_4" columnName="VGABE"/>
+      </attribute>
+      <attribute id="ZEKKN" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Sequential Number of Account Assignment"/>
+        <keyMapping columnObjectName="Projection_4" columnName="ZEKKN"/>
+      </attribute>
+      <attribute id="GJAHR" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Document Year"/>
+        <keyMapping columnObjectName="Projection_4" columnName="GJAHR"/>
+      </attribute>
+      <attribute id="BELNR" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Number of Material Document"/>
+        <keyMapping columnObjectName="Projection_4" columnName="BELNR"/>
+      </attribute>
+      <attribute id="BUZEI" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Item in Material Document"/>
+        <keyMapping columnObjectName="Projection_4" columnName="BUZEI"/>
+      </attribute>
+      <attribute id="BUDAT" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Posting Date in the Document"/>
+        <keyMapping columnObjectName="Projection_4" columnName="BUDAT"/>
+      </attribute>
+      <attribute id="BEWTP" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchase Order History Category"/>
+        <keyMapping columnObjectName="Projection_4" columnName="BEWTP"/>
+      </attribute>
+      <attribute id="BWART" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Movement Type (Inventory Management)"/>
+        <keyMapping columnObjectName="Projection_4" columnName="BWART"/>
+      </attribute>
+      <attribute id="BLDAT" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Document Date in Document"/>
+        <keyMapping columnObjectName="Projection_4" columnName="BLDAT"/>
+      </attribute>
+      <attribute id="WAERS" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Currency Key"/>
+        <keyMapping columnObjectName="Projection_4" columnName="WAERS"/>
+      </attribute>
+      <attribute id="SHKZG" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Debit/Credit Indicator"/>
+        <keyMapping columnObjectName="Projection_4" columnName="SHKZG"/>
+      </attribute>
+      <attribute id="BWTAR" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Valuation Type"/>
+        <keyMapping columnObjectName="Projection_4" columnName="BWTAR"/>
+      </attribute>
+      <attribute id="ELIKZ" order="31" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Delivery Completed Indicator"/>
+        <keyMapping columnObjectName="Projection_4" columnName="ELIKZ"/>
+      </attribute>
+      <attribute id="XBLNR" order="32" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Reference Document Number"/>
+        <keyMapping columnObjectName="Projection_4" columnName="XBLNR"/>
+      </attribute>
+      <attribute id="GRUND" order="33" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Reason for Movement"/>
+        <keyMapping columnObjectName="Projection_4" columnName="GRUND"/>
+      </attribute>
+      <attribute id="CPUDT" order="34" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Day On Which Accounting Document Was Entered"/>
+        <keyMapping columnObjectName="Projection_4" columnName="CPUDT"/>
+      </attribute>
+      <attribute id="CPUTM" order="35" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Time of Entry"/>
+        <keyMapping columnObjectName="Projection_4" columnName="CPUTM"/>
+      </attribute>
+      <attribute id="Z_Comp_CreatedByID" order="37" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Compare CreatedByID"/>
+        <keyMapping columnObjectName="Projection_4" columnName="Z_Comp_CreatedByID"/>
+      </attribute>
+      <attribute id="AEDAT_formatted" order="39" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Date of the Last Document Change by Transaction (formatted)"/>
+        <keyMapping columnObjectName="Projection_4" columnName="AEDAT_formatted"/>
+      </attribute>
+      <attribute id="BUDAT_formatted" order="40" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Posting Date in the Document (formatted)"/>
+        <localVariable>GoodsReceipt_DateRange</localVariable>
+        <keyMapping columnObjectName="Projection_4" columnName="BUDAT_formatted"/>
+      </attribute>
+      <attribute id="CPUDT_formatted" order="41" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Day On Which Accounting Document Was Entered (formatted)"/>
+        <keyMapping columnObjectName="Projection_4" columnName="CPUDT_formatted"/>
+      </attribute>
+      <attribute id="BLDAT_formatted" order="42" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Document Date in Document (formatted)"/>
+        <keyMapping columnObjectName="Projection_4" columnName="BLDAT_formatted"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="RLWRT" order="5" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total value at time of release"/>
+        <measureMapping columnObjectName="Projection_4" columnName="RLWRT"/>
+      </measure>
+      <measure id="MENGE" order="23" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Quantity"/>
+        <measureMapping columnObjectName="Projection_4" columnName="MENGE"/>
+      </measure>
+      <measure id="BPMNG" order="24" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Quantity in purchase order price unit"/>
+        <measureMapping columnObjectName="Projection_4" columnName="BPMNG"/>
+      </measure>
+      <measure id="DMBTR" order="25" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Amount in Local Currency"/>
+        <measureMapping columnObjectName="Projection_4" columnName="DMBTR"/>
+      </measure>
+      <measure id="WRBTR" order="26" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Amount in Document Currency"/>
+        <measureMapping columnObjectName="Projection_4" columnName="WRBTR"/>
+      </measure>
+      <measure id="REEWR" order="36" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Invoice Value Entered (in Local Currency)"/>
+        <measureMapping columnObjectName="Projection_4" columnName="REEWR"/>
+      </measure>
+      <measure id="Z_Yes_Count" order="38" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Yes Count"/>
+        <measureMapping columnObjectName="Projection_4" columnName="Z_Yes_Count"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/></logicalModel>
+<layout>
+  <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="256" y="112"/>
+        <rectangleSize height="0" width="160"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="92" y="626"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_6" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="113" y="931"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_5" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="323" y="931"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="232" y="771"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+    <shape modelObjectName="Projection_6" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_5" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="Projection_7" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="302" y="626"/>
+        <rectangleSize height="70" width="160"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="232" y="466"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+    <shape modelObjectName="Projection_7" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="232" y="361"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_4" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="256" y="217"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape></shapes>
+</layout>
+</Calculation:scenario>

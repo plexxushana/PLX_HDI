@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="plx_analytics::ZZ_PLX_08_06_AB" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
-  <origin/>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="3.0" id="plx_analytics::ZZ_PLX_08_06_AB" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+<origin/>
   <descriptions defaultDescription="CA_PLX_CC008_PARK_OR_POST_06_AB"/>
-  <metadata changedAt="2019-10-09 14:40:54.277"/>
+  <metadata changedAt="2021-08-19 18:02:33.025"/>
   <localVariables>
     <variable id="Posting_Date_Range">
       <descriptions defaultDescription="Posting Date Range"/>
-      <variableProperties datatype="VARCHAR" mandatory="false">
+      <variableProperties datatype="VARCHAR" mandatory="true">
         <valueDomain type="AttributeValue">
-          <attribute name="BUDAT"/>
+          <attribute name="ZBUDAT"/>
         </valueDomain>
         <selection multiLine="false" type="Interval"/>
       </variableProperties>
@@ -42,7 +42,7 @@
     </variable>
   </localVariables>
   <variableMappings/>
-  <informationModelLayout relativeWidthScenario="31"/>
+  <informationModelLayout relativeWidthScenario="28"/>
   <dataSources>
     <DataSource id="ECC_BKPF">
       <resourceUri>ECC_BKPF</resourceUri>
@@ -54,10 +54,10 @@
       <resourceUri>ECC_USR02</resourceUri>
     </DataSource>
   </dataSources>
-  <calculationViews>
-    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
-      <descriptions/>
-      <viewAttributes>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1" filterExpressionLanguage="COLUMN_ENGINE">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="BUKRS"/>
         <viewAttribute id="BELNR"/>
         <viewAttribute id="GJAHR"/>
@@ -81,40 +81,17 @@
         <viewAttribute id="GRPID"/>
         <viewAttribute id="XSTOV"/>
       </viewAttributes>
-      <calculatedViewAttributes>
+    <calculatedViewAttributes>
         <calculatedViewAttribute datatype="VARCHAR" id="ZUSNAM" length="12" expressionLanguage="COLUMN_ENGINE">
           <formula>TRIM(&quot;USNAM&quot;)</formula>
         </calculatedViewAttribute>
       </calculatedViewAttributes>
-      <input node="#ECC_BKPF">
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MONAT" source="MONAT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT" source="CPUDT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="USNAM" source="USNAM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TCODE" source="TCODE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CPUTM" source="CPUTM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT" source="AEDAT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BKTXT" source="BKTXT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="DBBLG" source="DBBLG"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="STBLG" source="STBLG"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="STJAH" source="STJAH"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BSTAT" source="BSTAT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XNETB" source="XNETB"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XRUEB" source="XRUEB"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GRPID" source="GRPID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XSTOV" source="XSTOV"/>
-      </input>
-      <filter>(&quot;BLART&quot; ='AB')</filter>
-    </calculationView>
-    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
-      <descriptions/>
-      <viewAttributes>
+      <input node="ECC_BKPF"/>
+    <filter>(&quot;BLART&quot; ='AB')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="BUKRS"/>
         <viewAttribute id="BELNR"/>
         <viewAttribute id="GJAHR"/>
@@ -137,34 +114,12 @@
         <viewAttribute id="ZUMSK"/>
         <viewAttribute id="UMSKS"/>
       </viewAttributes>
-      <calculatedViewAttributes/>
-      <input node="#ECC_BSEG">
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUZID" source="BUZID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BSCHL" source="BSCHL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KOART" source="KOART"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR" source="DMBTR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SHKZG" source="SHKZG"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ZUONR" source="ZUONR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SGTXT" source="SGTXT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SAKNR" source="SAKNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="AUGDT" source="AUGDT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="AUGCP" source="AUGCP"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL" source="AUGBL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="UMSKZ" source="UMSKZ"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ZUMSK" source="ZUMSK"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="UMSKS" source="UMSKS"/>
-      </input>
+    <calculatedViewAttributes/>
+      <input node="ECC_BSEG"/>
     </calculationView>
-    <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinOrder="OUTSIDE_IN" joinType="inner">
-      <descriptions/>
-      <viewAttributes>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinType="inner">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="BUKRS"/>
         <viewAttribute id="BELNR"/>
         <viewAttribute id="GJAHR"/>
@@ -207,8 +162,8 @@
         <viewAttribute id="GRPID"/>
         <viewAttribute id="XSTOV"/>
       </viewAttributes>
-      <calculatedViewAttributes/>
-      <input node="#Projection_2">
+    <calculatedViewAttributes/>
+      <input node="Projection_2">
         <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
@@ -231,7 +186,7 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="ZUMSK" source="ZUMSK"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="UMSKS" source="UMSKS"/>
       </input>
-      <input node="#Projection_1">
+      <input node="Projection_1">
         <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
@@ -256,13 +211,13 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
       </input>
-      <joinAttribute name="BELNR"/>
-      <joinAttribute name="GJAHR"/>
-      <joinAttribute name="BUKRS"/>
-    </calculationView>
-    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
-      <descriptions/>
-      <viewAttributes>
+    <joinAttribute name="BELNR"/>
+    <joinAttribute name="GJAHR"/>
+    <joinAttribute name="BUKRS"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3" filterExpressionLanguage="COLUMN_ENGINE">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="BUKRS"/>
         <viewAttribute id="BELNR"/>
         <viewAttribute id="GJAHR"/>
@@ -305,73 +260,25 @@
         <viewAttribute id="GRPID"/>
         <viewAttribute id="XSTOV"/>
       </viewAttributes>
-      <calculatedViewAttributes/>
-      <input node="#Join_1">
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUZID" source="BUZID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BSCHL" source="BSCHL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KOART" source="KOART"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR" source="DMBTR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SHKZG" source="SHKZG"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ZUONR" source="ZUONR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SGTXT" source="SGTXT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SAKNR" source="SAKNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MONAT" source="MONAT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT" source="CPUDT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="USNAM" source="USNAM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TCODE" source="TCODE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ZUSNAM" source="ZUSNAM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="AUGDT" source="AUGDT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="AUGCP" source="AUGCP"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL" source="AUGBL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="UMSKZ" source="UMSKZ"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ZUMSK" source="ZUMSK"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="UMSKS" source="UMSKS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CPUTM" source="CPUTM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT" source="AEDAT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BKTXT" source="BKTXT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="DBBLG" source="DBBLG"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="STBLG" source="STBLG"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="STJAH" source="STJAH"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BSTAT" source="BSTAT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XNETB" source="XNETB"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XRUEB" source="XRUEB"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GRPID" source="GRPID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XSTOV" source="XSTOV"/>
-      </input>
-      <filter>(not in (&quot;ZUSNAM&quot;,'SBATCH','ALEREMOTE','PIREMOTE'))</filter>
-    </calculationView>
-    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_5">
-      <descriptions/>
-      <viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="Join_1"/>
+    <filter>(not in (&quot;ZUSNAM&quot;,'SBATCH','ALEREMOTE','PIREMOTE'))</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_5">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="BNAME"/>
         <viewAttribute id="CLASS"/>
         <viewAttribute id="USTYP"/>
         <viewAttribute id="GLTGV"/>
         <viewAttribute id="GLTGB"/>
       </viewAttributes>
-      <calculatedViewAttributes/>
-      <input node="#ECC_USR02">
-        <mapping xsi:type="Calculation:AttributeMapping" target="BNAME" source="BNAME"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CLASS" source="CLASS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="USTYP" source="USTYP"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GLTGV" source="GLTGV"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GLTGB" source="GLTGB"/>
-      </input>
+    <calculatedViewAttributes/>
+      <input node="ECC_USR02"/>
     </calculationView>
-    <calculationView xsi:type="Calculation:JoinView" id="Join_2" joinOrder="OUTSIDE_IN" joinType="leftOuter">
-      <descriptions/>
-      <viewAttributes>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2" joinType="leftOuter">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="BUKRS"/>
         <viewAttribute id="BELNR"/>
         <viewAttribute id="GJAHR"/>
@@ -418,8 +325,8 @@
         <viewAttribute id="GRPID"/>
         <viewAttribute id="XSTOV"/>
       </viewAttributes>
-      <calculatedViewAttributes/>
-      <input node="#Projection_3">
+    <calculatedViewAttributes/>
+      <input node="Projection_3">
         <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
@@ -462,18 +369,18 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="GRPID" source="GRPID"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="XSTOV" source="XSTOV"/>
       </input>
-      <input node="#Projection_5">
+      <input node="Projection_5">
         <mapping xsi:type="Calculation:AttributeMapping" target="CLASS" source="CLASS"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="USTYP" source="USTYP"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="GLTGV" source="GLTGV"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="GLTGB" source="GLTGB"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="USNAM" source="BNAME"/>
       </input>
-      <joinAttribute name="USNAM"/>
-    </calculationView>
-    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_4">
-      <descriptions/>
-      <viewAttributes>
+    <joinAttribute name="USNAM"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_4">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="BUKRS"/>
         <viewAttribute id="BELNR"/>
         <viewAttribute id="GJAHR"/>
@@ -520,66 +427,44 @@
         <viewAttribute id="GRPID"/>
         <viewAttribute id="XSTOV"/>
       </viewAttributes>
-      <calculatedViewAttributes>
+    <calculatedViewAttributes>
         <calculatedViewAttribute datatype="INTEGER" id="Z_Yes_Count" expressionLanguage="COLUMN_ENGINE">
           <formula>1</formula>
         </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="ZBLDAT" expressionLanguage="COLUMN_ENGINE">
+          <formula>(&quot;BLDAT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="ZBUDAT" expressionLanguage="COLUMN_ENGINE">
+          <formula>(&quot;BUDAT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="ZCPUDT" expressionLanguage="COLUMN_ENGINE">
+          <formula>(&quot;CPUDT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="ZGLTGV" expressionLanguage="COLUMN_ENGINE">
+          <formula>(&quot;GLTGV&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="ZAUGDT" expressionLanguage="COLUMN_ENGINE">
+          <formula>(&quot;AUGDT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="ZAEDAT" expressionLanguage="COLUMN_ENGINE">
+          <formula>(&quot;AEDAT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="ZGLTGB" expressionLanguage="COLUMN_ENGINE">
+          <formula>(&quot;GLTGB&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="ZAUGCP" expressionLanguage="COLUMN_ENGINE">
+          <formula>(&quot;AUGCP&quot;)</formula>
+        </calculatedViewAttribute>
       </calculatedViewAttributes>
-      <input node="#Join_2">
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUZID" source="BUZID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BSCHL" source="BSCHL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KOART" source="KOART"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR" source="DMBTR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SHKZG" source="SHKZG"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ZUONR" source="ZUONR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SGTXT" source="SGTXT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SAKNR" source="SAKNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MONAT" source="MONAT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT" source="CPUDT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="USNAM" source="USNAM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TCODE" source="TCODE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ZUSNAM" source="ZUSNAM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CLASS" source="CLASS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="USTYP" source="USTYP"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GLTGV" source="GLTGV"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GLTGB" source="GLTGB"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="AUGDT" source="AUGDT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="AUGCP" source="AUGCP"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL" source="AUGBL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="UMSKZ" source="UMSKZ"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ZUMSK" source="ZUMSK"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="UMSKS" source="UMSKS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CPUTM" source="CPUTM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT" source="AEDAT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BKTXT" source="BKTXT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="DBBLG" source="DBBLG"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="STBLG" source="STBLG"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="STJAH" source="STJAH"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BSTAT" source="BSTAT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XNETB" source="XNETB"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XRUEB" source="XRUEB"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GRPID" source="GRPID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XSTOV" source="XSTOV"/>
-      </input>
+      <input node="Join_2"/>
     </calculationView>
-  </calculationViews>
+</calculationViews>
   <logicalModel id="Projection_4">
     <descriptions/>
     <attributes>
       <attribute id="BUKRS" order="1" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="Company Code"/>
-        <localVariable>#Company_Code</localVariable>
+        <localVariable>Company_Code</localVariable>
         <keyMapping columnObjectName="Projection_4" columnName="BUKRS"/>
       </attribute>
       <attribute id="KOKRS" order="2" attributeHierarchyActive="false" displayAttribute="false">
@@ -644,7 +529,6 @@
       </attribute>
       <attribute id="BUDAT" order="18" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="Posting Date in the Document"/>
-        <localVariable>#Posting_Date_Range</localVariable>
         <keyMapping columnObjectName="Projection_4" columnName="BUDAT"/>
       </attribute>
       <attribute id="MONAT" order="19" attributeHierarchyActive="false" displayAttribute="false">
@@ -665,12 +549,12 @@
       </attribute>
       <attribute id="ZUSNAM" order="23" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="User Name"/>
-        <localVariable>#User_ID</localVariable>
+        <localVariable>User_ID</localVariable>
         <keyMapping columnObjectName="Projection_4" columnName="ZUSNAM"/>
       </attribute>
       <attribute id="CLASS" order="24" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="User group in user master maintenance"/>
-        <localVariable>#User_Group</localVariable>
+        <localVariable>User_Group</localVariable>
         <keyMapping columnObjectName="Projection_4" columnName="CLASS"/>
       </attribute>
       <attribute id="USTYP" order="25" attributeHierarchyActive="false" displayAttribute="false">
@@ -757,6 +641,39 @@
         <descriptions defaultDescription="Indicator: Document is flagged for reversal"/>
         <keyMapping columnObjectName="Projection_4" columnName="XSTOV"/>
       </attribute>
+      <attribute id="ZBLDAT" order="47" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Document Date in Document (formatted)"/>
+        <keyMapping columnObjectName="Projection_4" columnName="ZBLDAT"/>
+      </attribute>
+      <attribute id="ZBUDAT" order="48" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Posting Date in the Document (formatted)"/>
+        <localVariable>Posting_Date_Range</localVariable>
+        <keyMapping columnObjectName="Projection_4" columnName="ZBUDAT"/>
+      </attribute>
+      <attribute id="ZCPUDT" order="49" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Day On Which Accounting Document Was Entered (formatted)"/>
+        <keyMapping columnObjectName="Projection_4" columnName="ZCPUDT"/>
+      </attribute>
+      <attribute id="ZGLTGV" order="50" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="User valid from (formatted)"/>
+        <keyMapping columnObjectName="Projection_4" columnName="ZGLTGV"/>
+      </attribute>
+      <attribute id="ZGLTGB" order="51" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="User valid to (formatted)"/>
+        <keyMapping columnObjectName="Projection_4" columnName="ZGLTGB"/>
+      </attribute>
+      <attribute id="ZAUGDT" order="52" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Clearing Date (formatted)"/>
+        <keyMapping columnObjectName="Projection_4" columnName="ZAUGDT"/>
+      </attribute>
+      <attribute id="ZAUGCP" order="53" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Clearing Entry Date (formatted)"/>
+        <keyMapping columnObjectName="Projection_4" columnName="ZAUGCP"/>
+      </attribute>
+      <attribute id="ZAEDAT" order="54" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Date of the Last Document Change by Transaction (formatted)"/>
+        <keyMapping columnObjectName="Projection_4" columnName="ZAEDAT"/>
+      </attribute>
     </attributes>
     <calculatedAttributes/>
     <privateDataFoundation>
@@ -778,11 +695,9 @@
     </baseMeasures>
     <calculatedMeasures/>
     <restrictedMeasures/>
-    <localDimensions/>
-    <sharedDimensions/>
-  </logicalModel>
-  <layout>
-    <shapes>
+    <localDimensions/></logicalModel>
+<layout>
+  <shapes>
       <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
         <upperLeftCorner x="99" y="87"/>
         <rectangleSize height="0" width="0"/>
@@ -799,6 +714,14 @@
         <upperLeftCorner x="176" y="437"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
+    <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
       <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
         <upperLeftCorner x="176" y="359"/>
         <rectangleSize height="-1" width="-1"/>
@@ -811,13 +734,17 @@
         <upperLeftCorner x="99" y="263"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
+    <shape modelObjectName="Projection_3" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_5" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
       <shape expanded="true" modelObjectName="Projection_4" modelObjectNameSpace="CalculationView">
         <upperLeftCorner x="99" y="185"/>
         <rectangleSize height="-1" width="-1"/>
-      </shape>
-      <shape modelObjectName="Projection_4" modelObjectNameSpace="StarJoinViewNodeInput" modelObjectType="repository">
-        <upperLeftCorner x="73" y="48"/>
-      </shape>
-    </shapes>
-  </layout>
+      </shape></shapes>
+</layout>
 </Calculation:scenario>

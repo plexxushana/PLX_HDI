@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="plx_analytics::ZZ_PLX11" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
-  <origin/>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="3.0" id="plx_analytics::ZZ_PLX11" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+<origin/>
   <descriptions defaultDescription="ZZ_PLX11"/>
-  <metadata changedAt="2019-10-18 14:55:04.905"/>
+  <metadata changedAt="2021-08-18 17:17:27.633"/>
   <localVariables>
     <variable id="Date_Range">
       <descriptions defaultDescription="Date Range"/>
-      <variableProperties datatype="VARCHAR" mandatory="false">
+      <variableProperties datatype="VARCHAR" mandatory="true">
         <valueDomain type="AttributeValue">
           <attribute name="UDATE"/>
         </valueDomain>
@@ -33,7 +33,7 @@
     </variable>
   </localVariables>
   <variableMappings/>
-  <informationModelLayout relativeWidthScenario="39"/>
+  <informationModelLayout relativeWidthScenario="26"/>
   <dataSources>
     <DataSource id="ECC_CDHDR">
       <resourceUri>ECC_CDHDR</resourceUri>
@@ -48,10 +48,10 @@
       <resourceUri>ECC_USR02</resourceUri>
     </DataSource>
   </dataSources>
-  <calculationViews>
-    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1" filterExpressionLanguage="COLUMN_ENGINE">
-      <descriptions/>
-      <viewAttributes>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1" filterExpressionLanguage="COLUMN_ENGINE">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="OBJECTCLAS"/>
         <viewAttribute id="OBJECTID"/>
         <viewAttribute id="CHANGENR"/>
@@ -66,31 +66,17 @@
         <viewAttribute id="LANGU"/>
         <viewAttribute id="VERSION"/>
       </viewAttributes>
-      <calculatedViewAttributes>
+    <calculatedViewAttributes>
         <calculatedViewAttribute datatype="VARCHAR" id="Z_TCODE" length="20" expressionLanguage="COLUMN_ENGINE">
           <formula>trim(&quot;TCODE&quot;)</formula>
         </calculatedViewAttribute>
       </calculatedViewAttributes>
-      <input node="#ECC_CDHDR">
-        <mapping xsi:type="Calculation:AttributeMapping" target="OBJECTCLAS" source="OBJECTCLAS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="OBJECTID" source="OBJECTID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CHANGENR" source="CHANGENR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="USERNAME" source="USERNAME"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="UDATE" source="UDATE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="UTIME" source="UTIME"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TCODE" source="TCODE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="PLANCHNGNR" source="PLANCHNGNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ACT_CHNGNO" source="ACT_CHNGNO"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WAS_PLANND" source="WAS_PLANND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CHANGE_IND" source="CHANGE_IND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="LANGU" source="LANGU"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
-      </input>
-      <filter>(not in(&quot;USERNAME&quot;,'SBATCH','ALEREMOTE','PIREMOTE')) and (&quot;OBJECTCLAS&quot;)='VERKBELEG'</filter>
-    </calculationView>
-    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2" filterExpressionLanguage="COLUMN_ENGINE">
-      <descriptions/>
-      <viewAttributes>
+      <input node="ECC_CDHDR"/>
+    <filter>(not in(&quot;USERNAME&quot;,'SBATCH','ALEREMOTE','PIREMOTE')) and trim(&quot;OBJECTCLAS&quot;)='VERKBELEG'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2" filterExpressionLanguage="COLUMN_ENGINE">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="OBJECTCLAS"/>
         <viewAttribute id="OBJECTID"/>
         <viewAttribute id="CHANGENR"/>
@@ -106,28 +92,13 @@
         <viewAttribute id="VALUE_NEW"/>
         <viewAttribute id="VALUE_OLD"/>
       </viewAttributes>
-      <calculatedViewAttributes/>
-      <input node="#ECC_CDPOS">
-        <mapping xsi:type="Calculation:AttributeMapping" target="OBJECTCLAS" source="OBJECTCLAS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="OBJECTID" source="OBJECTID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CHANGENR" source="CHANGENR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TABNAME" source="TABNAME"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TABKEY" source="TABKEY"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="FNAME" source="FNAME"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CHNGIND" source="CHNGIND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TEXT_CASE" source="TEXT_CASE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="UNIT_OLD" source="UNIT_OLD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="UNIT_NEW" source="UNIT_NEW"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CUKY_OLD" source="CUKY_OLD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CUKY_NEW" source="CUKY_NEW"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_NEW" source="VALUE_NEW"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_OLD" source="VALUE_OLD"/>
-      </input>
-      <filter>trim(&quot;OBJECTCLAS&quot;)='VERKBELEG'</filter>
-    </calculationView>
-    <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinOrder="OUTSIDE_IN" joinType="rightOuter">
-      <descriptions/>
-      <viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="ECC_CDPOS"/>
+    <filter>trim(&quot;OBJECTCLAS&quot;)='VERKBELEG'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinType="leftOuter">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="OBJECTCLAS"/>
         <viewAttribute id="OBJECTID"/>
         <viewAttribute id="CHANGENR"/>
@@ -153,8 +124,8 @@
         <viewAttribute id="VERSION"/>
         <viewAttribute id="Z_TCODE"/>
       </viewAttributes>
-      <calculatedViewAttributes/>
-      <input node="#Projection_2">
+    <calculatedViewAttributes/>
+      <input node="Projection_2">
         <mapping xsi:type="Calculation:AttributeMapping" target="OBJECTCLAS" source="OBJECTCLAS"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="OBJECTID" source="OBJECTID"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CHANGENR" source="CHANGENR"/>
@@ -170,7 +141,7 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_NEW" source="VALUE_NEW"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_OLD" source="VALUE_OLD"/>
       </input>
-      <input node="#Projection_1">
+      <input node="Projection_1">
         <mapping xsi:type="Calculation:AttributeMapping" target="USERNAME" source="USERNAME"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="UDATE" source="UDATE"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="UTIME" source="UTIME"/>
@@ -186,14 +157,14 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="OBJECTID" source="OBJECTID"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CHNGIND" source="CHANGE_IND"/>
       </input>
-      <joinAttribute name="OBJECTCLAS"/>
-      <joinAttribute name="CHANGENR"/>
-      <joinAttribute name="OBJECTID"/>
-      <joinAttribute name="CHNGIND"/>
-    </calculationView>
-    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
-      <descriptions/>
-      <viewAttributes>
+    <joinAttribute name="OBJECTCLAS"/>
+    <joinAttribute name="CHANGENR"/>
+    <joinAttribute name="OBJECTID"/>
+    <joinAttribute name="CHNGIND"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="OBJECTCLAS"/>
         <viewAttribute id="OBJECTID"/>
         <viewAttribute id="CHANGENR"/>
@@ -219,53 +190,24 @@
         <viewAttribute id="VERSION"/>
         <viewAttribute id="Z_TCODE"/>
       </viewAttributes>
-      <calculatedViewAttributes/>
-      <input node="#Join_1">
-        <mapping xsi:type="Calculation:AttributeMapping" target="OBJECTCLAS" source="OBJECTCLAS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="OBJECTID" source="OBJECTID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CHANGENR" source="CHANGENR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TABNAME" source="TABNAME"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TABKEY" source="TABKEY"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="FNAME" source="FNAME"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CHNGIND" source="CHNGIND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TEXT_CASE" source="TEXT_CASE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="UNIT_OLD" source="UNIT_OLD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="UNIT_NEW" source="UNIT_NEW"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CUKY_OLD" source="CUKY_OLD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CUKY_NEW" source="CUKY_NEW"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_NEW" source="VALUE_NEW"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_OLD" source="VALUE_OLD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="USERNAME" source="USERNAME"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="UDATE" source="UDATE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="UTIME" source="UTIME"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="PLANCHNGNR" source="PLANCHNGNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ACT_CHNGNO" source="ACT_CHNGNO"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WAS_PLANND" source="WAS_PLANND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CHANGE_IND" source="CHANGE_IND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="LANGU" source="LANGU"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="Z_TCODE" source="Z_TCODE"/>
-      </input>
-      <filter>(in (&quot;Z_TCODE&quot;,'VA01','VA02'))</filter>
-    </calculationView>
-    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_5">
-      <descriptions/>
-      <viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="Join_1"/>
+    <filter>(in (&quot;Z_TCODE&quot;,'VA01','VA02'))</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_5">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="ERNAM"/>
         <viewAttribute id="KOKRS"/>
         <viewAttribute id="WERKS"/>
       </viewAttributes>
-      <calculatedViewAttributes/>
-      <input node="#ECC_LIPS">
-        <mapping xsi:type="Calculation:AttributeMapping" target="ERNAM" source="ERNAM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
-      </input>
-      <filter>(not in (&quot;ERNAM&quot;,'SBATCH','ALEREMOTE','PIREMOTE'))</filter>
-    </calculationView>
-    <calculationView xsi:type="Calculation:JoinView" id="Join_2" joinOrder="OUTSIDE_IN" joinType="leftOuter">
-      <descriptions/>
-      <viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="ECC_LIPS"/>
+    <filter>(not in (&quot;ERNAM&quot;,'SBATCH','ALEREMOTE','PIREMOTE'))</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2" joinType="leftOuter">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="OBJECTCLAS"/>
         <viewAttribute id="OBJECTID"/>
         <viewAttribute id="CHANGENR"/>
@@ -294,8 +236,8 @@
         <viewAttribute id="KOKRS"/>
         <viewAttribute id="WERKS"/>
       </viewAttributes>
-      <calculatedViewAttributes/>
-      <input node="#Projection_3">
+    <calculatedViewAttributes/>
+      <input node="Projection_3">
         <mapping xsi:type="Calculation:AttributeMapping" target="OBJECTCLAS" source="OBJECTCLAS"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="OBJECTID" source="OBJECTID"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CHANGENR" source="CHANGENR"/>
@@ -321,17 +263,17 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="Z_TCODE" source="Z_TCODE"/>
       </input>
-      <input node="#Projection_5">
+      <input node="Projection_5">
         <mapping xsi:type="Calculation:AttributeMapping" target="ERNAM" source="ERNAM"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="USERNAME" source="ERNAM"/>
       </input>
-      <joinAttribute name="USERNAME"/>
-    </calculationView>
-    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_4">
-      <descriptions/>
-      <viewAttributes>
+    <joinAttribute name="USERNAME"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_4">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="OBJECTCLAS"/>
         <viewAttribute id="OBJECTID"/>
         <viewAttribute id="CHANGENR"/>
@@ -360,44 +302,16 @@
         <viewAttribute id="KOKRS"/>
         <viewAttribute id="WERKS"/>
       </viewAttributes>
-      <calculatedViewAttributes>
+    <calculatedViewAttributes>
         <calculatedViewAttribute datatype="VARCHAR" id="Z_Comp_USERID" length="3" expressionLanguage="COLUMN_ENGINE">
           <formula>IF((not isnull(&quot;USERNAME&quot;)) and (not isnull(&quot;ERNAM&quot;)) and (&quot;USERNAME&quot;=&quot;ERNAM&quot;),'Yes','No')</formula>
         </calculatedViewAttribute>
       </calculatedViewAttributes>
-      <input node="#Join_2">
-        <mapping xsi:type="Calculation:AttributeMapping" target="OBJECTCLAS" source="OBJECTCLAS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="OBJECTID" source="OBJECTID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CHANGENR" source="CHANGENR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TABNAME" source="TABNAME"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TABKEY" source="TABKEY"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="FNAME" source="FNAME"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CHNGIND" source="CHNGIND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TEXT_CASE" source="TEXT_CASE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="UNIT_OLD" source="UNIT_OLD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="UNIT_NEW" source="UNIT_NEW"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CUKY_OLD" source="CUKY_OLD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CUKY_NEW" source="CUKY_NEW"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_NEW" source="VALUE_NEW"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_OLD" source="VALUE_OLD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="UDATE" source="UDATE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="UTIME" source="UTIME"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="PLANCHNGNR" source="PLANCHNGNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ACT_CHNGNO" source="ACT_CHNGNO"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WAS_PLANND" source="WAS_PLANND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CHANGE_IND" source="CHANGE_IND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="LANGU" source="LANGU"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="Z_TCODE" source="Z_TCODE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="USERNAME" source="USERNAME"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ERNAM" source="ERNAM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
-      </input>
+      <input node="Join_2"/>
     </calculationView>
-    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_6">
-      <descriptions/>
-      <viewAttributes>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_6">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="OBJECTCLAS"/>
         <viewAttribute id="OBJECTID"/>
         <viewAttribute id="CHANGENR"/>
@@ -427,60 +341,25 @@
         <viewAttribute id="KOKRS"/>
         <viewAttribute id="WERKS"/>
       </viewAttributes>
-      <calculatedViewAttributes/>
-      <input node="#Projection_4">
-        <mapping xsi:type="Calculation:AttributeMapping" target="OBJECTCLAS" source="OBJECTCLAS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="OBJECTID" source="OBJECTID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CHANGENR" source="CHANGENR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TABNAME" source="TABNAME"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TABKEY" source="TABKEY"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="FNAME" source="FNAME"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CHNGIND" source="CHNGIND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TEXT_CASE" source="TEXT_CASE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="UNIT_OLD" source="UNIT_OLD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="UNIT_NEW" source="UNIT_NEW"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CUKY_OLD" source="CUKY_OLD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CUKY_NEW" source="CUKY_NEW"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_NEW" source="VALUE_NEW"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_OLD" source="VALUE_OLD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="UDATE" source="UDATE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="UTIME" source="UTIME"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="PLANCHNGNR" source="PLANCHNGNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ACT_CHNGNO" source="ACT_CHNGNO"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WAS_PLANND" source="WAS_PLANND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CHANGE_IND" source="CHANGE_IND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="LANGU" source="LANGU"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="Z_TCODE" source="Z_TCODE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="USERNAME" source="USERNAME"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="Z_Comp_USERID" source="Z_Comp_USERID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ERNAM" source="ERNAM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
-      </input>
-      <filter>(&quot;Z_Comp_USERID&quot; ='Yes')</filter>
-    </calculationView>
-    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_7">
-      <descriptions/>
-      <viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="Projection_4"/>
+    <filter>(&quot;Z_Comp_USERID&quot; ='Yes')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_7">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="BNAME"/>
         <viewAttribute id="CLASS"/>
         <viewAttribute id="GLTGV"/>
         <viewAttribute id="GLTGB"/>
         <viewAttribute id="USTYP"/>
       </viewAttributes>
-      <calculatedViewAttributes/>
-      <input node="#ECC_USR02">
-        <mapping xsi:type="Calculation:AttributeMapping" target="BNAME" source="BNAME"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CLASS" source="CLASS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GLTGV" source="GLTGV"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GLTGB" source="GLTGB"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="USTYP" source="USTYP"/>
-      </input>
+    <calculatedViewAttributes/>
+      <input node="ECC_USR02"/>
     </calculationView>
-    <calculationView xsi:type="Calculation:JoinView" id="Join_3" joinOrder="OUTSIDE_IN" joinType="rightOuter">
-      <descriptions/>
-      <viewAttributes>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_3" joinType="rightOuter">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="CLASS"/>
         <viewAttribute id="GLTGV"/>
         <viewAttribute id="GLTGB"/>
@@ -513,17 +392,17 @@
         <viewAttribute id="ERNAM"/>
         <viewAttribute id="KOKRS"/>
         <viewAttribute id="WERKS"/>
-        <viewAttribute hidden="true" id="JOIN$BNAME$USERNAME"/>
-      </viewAttributes>
-      <calculatedViewAttributes/>
-      <input node="#Projection_7">
+      <viewAttribute hidden="true" id="JOIN$BNAME$USERNAME"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="Projection_7">
         <mapping xsi:type="Calculation:AttributeMapping" target="CLASS" source="CLASS"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="GLTGV" source="GLTGV"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="GLTGB" source="GLTGB"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="USTYP" source="USTYP"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$BNAME$USERNAME" source="BNAME"/>
       </input>
-      <input node="#Projection_6">
+      <input node="Projection_6">
         <mapping xsi:type="Calculation:AttributeMapping" target="OBJECTCLAS" source="OBJECTCLAS"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="OBJECTID" source="OBJECTID"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CHANGENR" source="CHANGENR"/>
@@ -554,11 +433,11 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$BNAME$USERNAME" source="USERNAME"/>
       </input>
-      <joinAttribute name="JOIN$BNAME$USERNAME"/>
-    </calculationView>
-    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_8">
-      <descriptions/>
-      <viewAttributes>
+    <joinAttribute name="JOIN$BNAME$USERNAME"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_8">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="OBJECTCLAS"/>
         <viewAttribute id="OBJECTID"/>
         <viewAttribute id="CHANGENR"/>
@@ -592,43 +471,20 @@
         <viewAttribute id="KOKRS"/>
         <viewAttribute id="WERKS"/>
       </viewAttributes>
-      <calculatedViewAttributes/>
-      <input node="#Join_3">
-        <mapping xsi:type="Calculation:AttributeMapping" target="OBJECTCLAS" source="OBJECTCLAS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="OBJECTID" source="OBJECTID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CHANGENR" source="CHANGENR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TABNAME" source="TABNAME"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TABKEY" source="TABKEY"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="FNAME" source="FNAME"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CHNGIND" source="CHNGIND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TEXT_CASE" source="TEXT_CASE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="UNIT_OLD" source="UNIT_OLD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="UNIT_NEW" source="UNIT_NEW"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CUKY_OLD" source="CUKY_OLD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CUKY_NEW" source="CUKY_NEW"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_NEW" source="VALUE_NEW"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_OLD" source="VALUE_OLD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="UDATE" source="UDATE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="UTIME" source="UTIME"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="PLANCHNGNR" source="PLANCHNGNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ACT_CHNGNO" source="ACT_CHNGNO"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WAS_PLANND" source="WAS_PLANND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CHANGE_IND" source="CHANGE_IND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="LANGU" source="LANGU"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="Z_TCODE" source="Z_TCODE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="USERNAME" source="USERNAME"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="Z_Comp_USERID" source="Z_Comp_USERID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ERNAM" source="ERNAM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CLASS" source="CLASS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GLTGV" source="GLTGV"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GLTGB" source="GLTGB"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="USTYP" source="USTYP"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
-      </input>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="ZUDATE" expressionLanguage="COLUMN_ENGINE">
+          <formula>(&quot;UDATE&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="ZGLTGV" expressionLanguage="COLUMN_ENGINE">
+          <formula>(&quot;GLTGV&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="ZGLTGB" expressionLanguage="COLUMN_ENGINE">
+          <formula>(&quot;GLTGB&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="Join_3"/>
     </calculationView>
-  </calculationViews>
+</calculationViews>
   <logicalModel id="Projection_8">
     <descriptions/>
     <attributes>
@@ -646,7 +502,7 @@
       </attribute>
       <attribute id="UDATE" order="4" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="Creation date of the change document"/>
-        <localVariable>#Date_Range</localVariable>
+        <localVariable>Date_Range</localVariable>
         <keyMapping columnObjectName="Projection_8" columnName="UDATE"/>
       </attribute>
       <attribute id="TABNAME" order="5" attributeHierarchyActive="false" displayAttribute="false">
@@ -727,7 +583,7 @@
       </attribute>
       <attribute id="USERNAME" order="24" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="User name of the person responsible in change document"/>
-        <localVariable>#User_ID</localVariable>
+        <localVariable>User_ID</localVariable>
         <keyMapping columnObjectName="Projection_8" columnName="USERNAME"/>
       </attribute>
       <attribute id="ERNAM" order="25" attributeHierarchyActive="false" displayAttribute="false">
@@ -736,7 +592,7 @@
       </attribute>
       <attribute id="CLASS" order="26" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="User group in user master maintenance"/>
-        <localVariable>#User_Group</localVariable>
+        <localVariable>User_Group</localVariable>
         <keyMapping columnObjectName="Projection_8" columnName="CLASS"/>
       </attribute>
       <attribute id="GLTGV" order="27" attributeHierarchyActive="false" displayAttribute="false">
@@ -763,6 +619,18 @@
         <descriptions defaultDescription="Plants (LIPS)"/>
         <keyMapping columnObjectName="Projection_8" columnName="WERKS"/>
       </attribute>
+      <attribute id="ZUDATE" order="34" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Creation date of the change document (formatted)"/>
+        <keyMapping columnObjectName="Projection_8" columnName="ZUDATE"/>
+      </attribute>
+      <attribute id="ZGLTGV" order="35" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="User valid from (formatted)"/>
+        <keyMapping columnObjectName="Projection_8" columnName="ZGLTGV"/>
+      </attribute>
+      <attribute id="ZGLTGB" order="36" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="User valid to (formatted)"/>
+        <keyMapping columnObjectName="Projection_8" columnName="ZGLTGB"/>
+      </attribute>
     </attributes>
     <calculatedAttributes/>
     <privateDataFoundation>
@@ -775,7 +643,7 @@
     <baseMeasures/>
     <calculatedMeasures>
       <measure id="Z_Line_Count" hidden="false" order="33" aggregationType="sum" measureType="simple" aggregatable="true" calculatedMeasureType="counter" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
-        <descriptions defaultDescription="&#xD;&#xA;Line Count"/>
+        <descriptions defaultDescription=" Line Count"/>
         <exceptionAggregation exceptionAggregationType="countDistinct">
           <attribute attributeName="CHANGENR"/>
           <attribute attributeName="OBJECTID"/>
@@ -784,11 +652,9 @@
       </measure>
     </calculatedMeasures>
     <restrictedMeasures/>
-    <localDimensions/>
-    <sharedDimensions/>
-  </logicalModel>
-  <layout>
-    <shapes>
+    <localDimensions/></logicalModel>
+<layout>
+  <shapes>
       <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
         <upperLeftCorner x="99" y="87"/>
         <rectangleSize height="0" width="0"/>
@@ -805,6 +671,14 @@
         <upperLeftCorner x="99" y="691"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
+    <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
       <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
         <upperLeftCorner x="99" y="613"/>
         <rectangleSize height="-1" width="-1"/>
@@ -817,6 +691,14 @@
         <upperLeftCorner x="176" y="517"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
+    <shape modelObjectName="Projection_3" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_5" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
       <shape expanded="true" modelObjectName="Projection_4" modelObjectNameSpace="CalculationView">
         <upperLeftCorner x="176" y="439"/>
         <rectangleSize height="-1" width="-1"/>
@@ -833,13 +715,17 @@
         <upperLeftCorner x="99" y="263"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
+    <shape modelObjectName="Projection_7" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_6" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
       <shape expanded="true" modelObjectName="Projection_8" modelObjectNameSpace="CalculationView">
         <upperLeftCorner x="99" y="185"/>
         <rectangleSize height="-1" width="-1"/>
-      </shape>
-      <shape modelObjectName="Projection_8" modelObjectNameSpace="StarJoinViewNodeInput" modelObjectType="repository">
-        <upperLeftCorner x="183" y="13"/>
-      </shape>
-    </shapes>
-  </layout>
+      </shape></shapes>
+</layout>
 </Calculation:scenario>
