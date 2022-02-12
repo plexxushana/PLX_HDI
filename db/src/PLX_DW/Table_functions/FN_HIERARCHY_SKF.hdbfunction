@@ -1,7 +1,6 @@
 FUNCTION "plx_analytics::FN_HIERARCHY_SKF" (
 		
-		ORG_UNIT NVARCHAR(24),
-		Group_Root_Node NVARCHAR(24)
+	Group_Root_Node NVARCHAR(24)
 ) 
  	RETURNS table(
 		 --CHART_OF_ACCOUNTS NVARCHAR(4), 
@@ -20,20 +19,26 @@ BEGIN
 
 DECLARE NUM int := 0; 
 DECLARE LEV int := 1;
---declare v_org nvarchar(24) := '123' ;  
-declare v_org nvarchar(24) := TRIM(:ORG_UNIT) ;  
+declare v_org nvarchar(24) := '0000' ;  
+--declare v_org nvarchar(24) := TRIM(:ORG_UNIT) ;  
 
 declare STCLS nvarchar(4) := '0104';
-ORG_UNIT := TRIM(ORG_UNIT) ;  
+--ORG_UNIT := TRIM(ORG_UNIT) ;  
 Group_Root_Node := TRIM(Group_Root_Node) ;
 
 
 
 BEGIN
 
+  IF :Group_Root_Node LIKE '%ALL' THEN 
+	v_org := left(:Group_Root_Node,4);
+   ELSE 
+	SELECT MAX(SUBCLASS) into v_org FROM ECC_SETNODE 
+	WHERE SETNAME LIKE :Group_Root_Node AND SETCLASS = '0104';
+END IF; 
 
 	
-	if :Group_Root_Node = 'ALL' then
+	if :Group_Root_Node like '%ALL' then
 	
 		LT_ROOT = 
 			SELECT DISTINCT NULL AS PARENT, 
@@ -55,7 +60,10 @@ BEGIN
 							:v_org AS KOKRS	
 			FROM "ECC_SETLEAF"
 			WHERE SETCLASS = :STCLS 
-			and   trim(SUBCLASS)  = :v_org;
+			and   trim(SUBCLASS)  = :v_org
+			and setname in ( 
+				select subsetname FROM ECC_SETNODE 	WHERE SETCLASS = :STCLS
+							and   trim(SUBCLASS)  = :v_org );
 			
 		LT_HIERARCHY = 
 			SELECT PARENT, 
