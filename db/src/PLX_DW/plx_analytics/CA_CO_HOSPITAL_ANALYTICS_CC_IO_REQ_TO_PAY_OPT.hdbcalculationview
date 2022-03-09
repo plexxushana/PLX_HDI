@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="plx_analytics::CA_CO_HOSPITAL_ANALYTICS_CC_IO_REQ_TO_PAY_OPT" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" cacheEnabled="true" cacheInvalidationPeriod="DAILY" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" analyticViewCompatibilityMode="false" dataCategory="CUBE" determineTextFuzzySearchEnablement="true" enforceSqlExecution="true" executionSemantic="UNDEFINED" xscCompatibilityMode="true">
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="3.0" id="plx_analytics::CA_CO_HOSPITAL_ANALYTICS_CC_IO_REQ_TO_PAY_OPT" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" cacheEnabled="true" cacheInvalidationPeriod="DAILY" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" analyticViewCompatibilityMode="false" dataCategory="CUBE" determineTextFuzzySearchEnablement="true" enforceSqlExecution="true" executionSemantic="UNDEFINED" xscCompatibilityMode="true">
   <descriptions defaultDescription="Hospital Analytics"/>
   <metadata changedAt="2021-03-15 12:37:56.437"/>
   <localVariables>
@@ -48,11 +48,21 @@
         <selection multiLine="false" type="SingleValue"/>
       </variableProperties>
     </variable>
+  
+    <variable id="FISCAL_YEAR">
+      <descriptions defaultDescription="FISCAL_YEAR"/>
+      <variableProperties datatype="NVARCHAR" length="4" scale="null" defaultValue="">
+        <valueDomain type="AttributeValue">
+          <attribute name="GJAHR"/>
+        </valueDomain>
+        <selection multiLine="true" type="SingleValue"/>
+      </variableProperties>
+    </variable>
   </localVariables>
   <variableMappings>
     <mapping xsi:type="Variable:VariableMapping" forStarJoin="true">
       <targetVariable name="IP_1" resourceUri="plx_analytics::CopyOfCA_DIM_AUFK"/>
-      <localVariable>#P_COST_CENTER_GROUP</localVariable>
+      <localVariable>P_COST_CENTER_GROUP</localVariable>
     </mapping>
   </variableMappings>
   <informationModelLayout relativeWidthScenario="32"/>
@@ -61,10 +71,10 @@
       <resourceUri>plx_analytics::CA_PLX_PUR_PO_GRIR_OPT</resourceUri>
     </DataSource>
   </dataSources>
-  <calculationViews>
-    <calculationView xsi:type="Calculation:ProjectionView" id="Actual">
-      <descriptions/>
-      <viewAttributes>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Actual">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="BUKRS"/>
         <viewAttribute id="BELNR"/>
         <viewAttribute id="BUZEI"/>
@@ -151,7 +161,7 @@
         <viewAttribute id="VOIDR"/>
         <viewAttribute id="VOIDD"/>
         <viewAttribute id="VOIDU"/>
-        <viewAttribute id="SAKNR_BSEG" transparentFilter="false"/>
+        <viewAttribute id="SAKNR_BSEG"/>
         <viewAttribute id="VOIDT"/>
         <viewAttribute id="MRM_ZLSPR"/>
         <viewAttribute id="BLOCK_REASON"/>
@@ -174,119 +184,10 @@
         <viewAttribute id="AUFNR"/>
         <viewAttribute id="KTOKK"/>
       </viewAttributes>
-      <calculatedViewAttributes/>
-      <input node="#CA_PLX_PUR_PO_GRIR_OPT">
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR_BSAK" source="LIFNR_BSAK"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="AUGBL" source="AUGBL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="AUGDT" source="AUGDT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="UMSKS" source="UMSKS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="UMSKZ" source="UMSKZ"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ZUONR" source="ZUONR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MONAT" source="MONAT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR" source="DMBTR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SAKNR" source="SAKNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="LAUFD" source="LAUFD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="LAUFI" source="LAUFI"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="RZAWE" source="RZAWE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XVORL" source="XVORL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ZBUKR" source="ZBUKR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR" source="KUNNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="EMPFG" source="EMPFG"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="VBLNR" source="VBLNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CHECF_PAYR" source="CHECF_PAYR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CHECT_PAYR" source="CHECT_PAYR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="RWBTR_PAYR" source="RWBTR_PAYR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR_REGUP" source="DMBTR_REGUP"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR_REGUP" source="LIFNR_REGUP"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ZALDT" source="ZALDT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ZWELS" source="ZWELS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="RWBTR_REGUH" source="RWBTR_REGUH"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SHKZG" source="SHKZG"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WRBTR" source="WRBTR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR_BSEG" source="DMBTR_BSEG"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI_BSEG" source="BUZEI_BSEG"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BEDNR" source="BEDNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BANFN" source="BANFN"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BNFPO" source="BNFPO"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTG" source="MAKTG"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MAKTX" source="MAKTX"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="EKGRP" source="EKGRP"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TXZ01" source="TXZ01"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR_GR" source="BELNR_GR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI_GR" source="BUZEI_GR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR_GR" source="GJAHR_GR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR_IR" source="BELNR_IR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI_IR" source="BUZEI_IR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR_IR" source="GJAHR_IR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR_CNCL" source="BELNR_CNCL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI_CNCL" source="BUZEI_CNCL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR_CNCL" source="GJAHR_CNCL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="NETWR" source="NETWR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BEDAT" source="BEDAT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT_GR" source="BUDAT_GR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT_GR" source="CPUDT_GR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT_IR" source="BUDAT_IR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT_IR" source="CPUDT_IR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WGBEZ" source="WGBEZ"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR_FI" source="LIFNR_FI"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="NAME1_LIFNR" source="NAME1_LIFNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="NAME2_LIFNR" source="NAME2_LIFNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="DATBI" source="DATBI"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KTEXT_KOSTL" source="KTEXT_KOSTL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="LTEXT_KOSTL" source="LTEXT_KOSTL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MCTXT_KOSTL" source="MCTXT_KOSTL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KTOPL" source="KTOPL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KTEXT_KSTAR" source="KTEXT_KSTAR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="LTEXT_KSTAR" source="LTEXT_KSTAR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MCTXT_KSTAR" source="MCTXT_KSTAR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="KSTAR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR_CALC" source="DMBTR_CALC"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GL_DESCRIPTION" source="GL_DESCRIPTION"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR_REGUP_CALC" source="DMBTR_REGUP_CALC"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="VOIDR" source="VOIDR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="VOIDD" source="VOIDD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="VOIDU" source="VOIDU"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SAKNR_BSEG" source="SAKNR_BSEG"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="VOIDT" source="VOIDT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MRM_ZLSPR" source="MRM_ZLSPR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BLOCK_REASON" source="BLOCK_REASON"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT_SQL" source="BUDAT_SQL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="COBL_NR" source="COBL_NR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="LINE_ID" source="LINE_ID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE" source="MENGE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="EKNAM" source="EKNAM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT_SQL" source="BLDAT_SQL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="AUGDT_SQL" source="AUGDT_SQL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ZALDT_SQL" source="ZALDT_SQL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BEDAT_SQL" source="BEDAT_SQL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="LAUFD_SQL" source="LAUFD_SQL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="STBLG" source="STBLG"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="STJAH" source="STJAH"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="LINFR_BSEG" source="LINFR_BSEG"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="NAME1" source="NAME1"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="NAME2" source="NAME2"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE_MD" source="MENGE_MD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="AUFNR" source="AUFNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KTOKK" source="KTOKK"/>
-      </input>
+    <calculatedViewAttributes/>
+      <input node="CA_PLX_PUR_PO_GRIR_OPT"/>
     </calculationView>
-  </calculationViews>
+</calculationViews>
   <logicalModel id="Actual">
     <descriptions/>
     <attributes>
@@ -308,6 +209,7 @@
       </attribute>
       <attribute id="GJAHR" order="5" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="Fiscal Year"/>
+        <localVariable>FISCAL_YEAR</localVariable>
         <keyMapping columnObjectName="Actual" columnName="GJAHR"/>
       </attribute>
       <attribute id="AUGDT" order="6" attributeHierarchyActive="false" displayAttribute="false">
@@ -412,7 +314,7 @@
       </attribute>
       <attribute id="KOKRS" order="36" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="Controlling Area"/>
-        <localVariable>#P_CONTROLLING_AREA</localVariable>
+        <localVariable>P_CONTROLLING_AREA</localVariable>
         <keyMapping columnObjectName="Actual" columnName="KOKRS"/>
       </attribute>
       <attribute id="HKONT" order="37" attributeHierarchyActive="false" displayAttribute="false">
@@ -555,7 +457,7 @@
         <descriptions defaultDescription="Voided check user"/>
         <keyMapping columnObjectName="Actual" columnName="VOIDU"/>
       </attribute>
-      <attribute id="SAKNR_BSEG" order="76" attributeHierarchyActive="false" displayAttribute="false" transparentFilter="false">
+      <attribute id="SAKNR_BSEG" order="76" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="G/L Account Number (Invoice)"/>
         <keyMapping columnObjectName="Actual" columnName="SAKNR_BSEG"/>
       </attribute>
@@ -585,23 +487,23 @@
       </attribute>
       <attribute id="KOSTL" order="83" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="Cost Center"/>
-        <localVariable>#COST_CENTER</localVariable>
+        <localVariable>COST_CENTER</localVariable>
         <keyMapping columnObjectName="Actual" columnName="KOSTL"/>
       </attribute>
       <attribute id="KSTAR" order="84" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="Cost Element"/>
-        <localVariable>#COST_ELEMENT</localVariable>
+        <localVariable>COST_ELEMENT</localVariable>
         <keyMapping columnObjectName="Actual" columnName="KSTAR"/>
       </attribute>
       <attribute id="EKNAM" order="86" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="Buyer Name"/>
         <keyMapping columnObjectName="Actual" columnName="EKNAM"/>
       </attribute>
-      <attribute id="BLDAT_SQL" hidden="false" order="87" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="BLDAT_SQL" order="87" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="Document Date"/>
         <keyMapping columnObjectName="Actual" columnName="BLDAT_SQL"/>
       </attribute>
-      <attribute id="AUGDT_SQL" hidden="false" order="88" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="AUGDT_SQL" order="88" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="Clearing Date"/>
         <keyMapping columnObjectName="Actual" columnName="AUGDT_SQL"/>
       </attribute>
@@ -613,7 +515,7 @@
         <descriptions defaultDescription="Purchase Order Date"/>
         <keyMapping columnObjectName="Actual" columnName="BEDAT_SQL"/>
       </attribute>
-      <attribute id="LAUFD_SQL" hidden="false" order="91" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="LAUFD_SQL" order="91" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="Payment Run Date"/>
         <keyMapping columnObjectName="Actual" columnName="LAUFD_SQL"/>
       </attribute>
@@ -695,7 +597,7 @@
         <descriptions defaultDescription="Net Order Value in PO Currency"/>
         <measureMapping columnObjectName="Actual" columnName="NETWR"/>
       </measure>
-      <measure id="DMBTR_CALC" hidden="false" order="70" aggregationType="sum" measureType="simple">
+      <measure id="DMBTR_CALC" order="70" aggregationType="sum" measureType="simple">
         <descriptions defaultDescription="Invoice Line Item Amount"/>
         <measureMapping columnObjectName="Actual" columnName="DMBTR_CALC"/>
       </measure>
@@ -714,18 +616,18 @@
     <sharedDimensions>
       <logicalJoin associatedObjectUri="plx_analytics::CopyOfCA_DIM_AUFK">
         <attributes>
-          <attributeRef>#KOKRS$local</attributeRef>
+          <attributeRef>KOKRS$local</attributeRef>
         </attributes>
         <associatedAttributeNames>
           <attributeName>AUFNR_KOKRS</attributeName>
         </associatedAttributeNames>
-        <properties joinOperator="Equal" joinType="leftOuter"/>
+        <properties joinType="leftOuter" joinOperator="Equal"/>
         <associatedAttributeFeatures/>
       </logicalJoin>
     </sharedDimensions>
   </logicalModel>
-  <layout>
-    <shapes>
+<layout>
+  <shapes>
       <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
         <upperLeftCorner x="22" y="87"/>
         <rectangleSize height="0" width="0"/>
@@ -741,5 +643,5 @@
         <upperLeftCorner x="488" y="697"/>
       </shape>
     </shapes>
-  </layout>
+</layout>
 </Calculation:scenario>
