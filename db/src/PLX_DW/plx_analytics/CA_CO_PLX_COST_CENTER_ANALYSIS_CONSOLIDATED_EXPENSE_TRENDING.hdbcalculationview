@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="3.0" id="plx_analytics::CA_CO_PLX_COST_CENTER_ANALYSIS_CONSOLIDATED_EXPENSE_TRENDING" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED">
+  <descriptions defaultDescription="CA_CO_ELEM_HIERARCHY"/>
+  <metadata changedAt="2021-05-03 15:20:13.344"/>
+  <localVariables>
+    <variable id="IP_KOKRS" parameter="true">
+      <descriptions defaultDescription="Controlling Area"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="" length="4" mandatory="false" scale="0">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_CONTROLLING_AREAS</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>KOKRS</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="IP_CE_GROUP_NODE" parameter="true">
+      <descriptions defaultDescription="Cost Element Group:"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="undefined" length="24" mandatory="true" scale="0">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_CE_VALUE_HELP_BROADER</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>Z_SETNAME</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="IP_CHART" parameter="true">
+      <descriptions defaultDescription="Chart of Accounts"/>
+      <variableProperties datatype="NVARCHAR" length="4" mandatory="false" defaultValue="undefined">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="IP_GROUP_NODE" parameter="true">
+      <descriptions defaultDescription="Cost Centre Node"/>
+      <variableProperties datatype="NVARCHAR" length="40" mandatory="false" scale="0" defaultValue="undefined">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_CC_VALUE_HELP</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>NODE</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="FISCAL_YEAR" parameter="true">
+      <descriptions defaultDescription="Fiscal Year"/>
+      <variableProperties datatype="VARCHAR" defaultValue="" length="4" mandatory="true" scale="0">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_FISC_CAL</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>ZFISCAL_YEAR</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="V_COSTELEM">
+      <descriptions defaultDescription="Cost Element"/>
+      <variableProperties datatype="VARCHAR" defaultValue="" mandatory="false">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_CE_VALUE_HELP</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>Z_SETNAME</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="true" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="V_COST_CENTER">
+      <descriptions defaultDescription="Cost Centres"/>
+      <variableProperties datatype="VARCHAR" defaultValue="" mandatory="false">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_CC_VALUE_HELP</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>NODE</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="true" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="V_BUS_AREA">
+      <descriptions defaultDescription="Business Area"/>
+      <variableProperties datatype="VARCHAR" mandatory="false">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_CONTROLLING_AREAS</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>GSBER</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="PREV_YEAR" parameter="true">
+      <descriptions defaultDescription="Load Previous Year? (Y/N)"/>
+      <variableProperties datatype="VARCHAR" defaultValue="N" length="1" mandatory="true">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" forStarJoin="true">
+      <targetVariable name="IP_CHART" resourceUri="plx_analytics::CA_DIM_CE_HIERARCHY_ALL"/>
+      <localVariable>IP_CHART</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" forStarJoin="true">
+      <targetVariable name="IP_CE_GROUP_NODE" resourceUri="plx_analytics::CA_DIM_CE_HIERARCHY_ALL"/>
+      <localVariable>IP_CE_GROUP_NODE</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" forStarJoin="true">
+      <targetVariable name="IP_GROUP_NODE" resourceUri="plx_analytics::CA_DIM_CC_HIERARCHY_ALL"/>
+      <localVariable>IP_GROUP_NODE</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" forStarJoin="true">
+      <targetVariable name="IP_KOKRS" resourceUri="plx_analytics::CA_DIM_CC_HIERARCHY_ALL"/>
+      <localVariable>IP_KOKRS</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="39"/>
+  <dataSources>
+    <DataSource id="plx_analytics::CA_CO_PLX_COST_CENTER_ANALYSIS_CONSOLIDATED_CP_YTD">
+      <resourceUri>plx_analytics::CA_CO_PLX_COST_CENTER_ANALYSIS_CONSOLIDATED_CP_YTD</resourceUri>
+    </DataSource>
+    <DataSource id="Aggregation_1_copy$$$$plx_analytics::CA_CO_PLX_COST_CENTER_ANALYSIS_CONSOLIDATED_CP_YTD$$">
+      <resourceUri>plx_analytics::CA_CO_PLX_COST_CENTER_ANALYSIS_CONSOLIDATED_CP_YTD</resourceUri>
+    </DataSource>
+  </dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="CONTROLLING_AREA"/>
+      <viewAttribute id="GJAHR"/>
+      <viewAttribute id="VERSN"/>
+      <viewAttribute id="Z_PERIOD"/>
+      <viewAttribute id="BUKRS"/>
+      <viewAttribute id="KSTAR"/>
+      <viewAttribute id="KOSTL"/>
+      <viewAttribute id="CONT_AREA"/>
+      <viewAttribute id="WKG001" aggregationType="sum"/>
+      <viewAttribute id="WTGBTR" aggregationType="sum"/>
+      <viewAttribute id="WOGBTR" aggregationType="sum"/>
+      <viewAttribute id="WKGBTR" aggregationType="sum"/>
+      <viewAttribute id="CURR_MONTH"/>
+      <viewAttribute id="PAST_MONTH"/>
+      <viewAttribute id="LONG_PAST_MONTH"/>
+      <viewAttribute id="CURR_PERIOD"/>
+      <viewAttribute id="PY_ACTUAL" aggregationType="sum"/>
+      <viewAttribute id="FISC_PAST_MONTH"/>
+      <viewAttribute id="CURR_ACTUAL" aggregationType="sum"/>
+      <viewAttribute id="CURR_YTD_PERIOD"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="Actual" datatype="DECIMAL" length="13" scale="3" expressionLanguage="SQL">
+        <formula>0 - &quot;WKG001&quot;</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="plx_analytics::CA_CO_PLX_COST_CENTER_ANALYSIS_CONSOLIDATED_CP_YTD"/>
+    <filter>'$$IP_CE_GROUP_NODE$$'='105MOHBF'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1_copy" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="CONTROLLING_AREA"/>
+      <viewAttribute id="GJAHR"/>
+      <viewAttribute id="VERSN"/>
+      <viewAttribute id="Z_PERIOD"/>
+      <viewAttribute id="BUKRS"/>
+      <viewAttribute id="KSTAR"/>
+      <viewAttribute id="KOSTL"/>
+      <viewAttribute id="CONT_AREA"/>
+      <viewAttribute id="WKG001" aggregationType="sum"/>
+      <viewAttribute id="WTGBTR" aggregationType="sum"/>
+      <viewAttribute id="WOGBTR" aggregationType="sum"/>
+      <viewAttribute id="WKGBTR" aggregationType="sum"/>
+      <viewAttribute id="CURR_MONTH"/>
+      <viewAttribute id="PAST_MONTH"/>
+      <viewAttribute id="LONG_PAST_MONTH"/>
+      <viewAttribute id="CURR_PERIOD"/>
+      <viewAttribute id="PY_ACTUAL" aggregationType="sum"/>
+      <viewAttribute id="FISC_PAST_MONTH"/>
+      <viewAttribute id="CURR_ACTUAL" aggregationType="sum"/>
+      <viewAttribute id="CURR_YTD_PERIOD"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="Actual" datatype="DECIMAL" length="13" scale="3" expressionLanguage="SQL">
+        <formula>0 - &quot;WKG001&quot;</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input emptyUnionBehavior="undefined" node="Aggregation_1_copy$$$$plx_analytics::CA_CO_PLX_COST_CENTER_ANALYSIS_CONSOLIDATED_CP_YTD$$"/>
+    <filter>'$$IP_CE_GROUP_NODE$$'='110MOHOTHR'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:UnionView" id="Union_1">
+    <viewAttributes>
+      <viewAttribute id="CONTROLLING_AREA"/>
+      <viewAttribute id="GJAHR"/>
+      <viewAttribute id="VERSN"/>
+      <viewAttribute id="Z_PERIOD"/>
+      <viewAttribute id="BUKRS"/>
+      <viewAttribute id="KSTAR"/>
+      <viewAttribute id="KOSTL"/>
+      <viewAttribute id="CONT_AREA"/>
+      <viewAttribute id="WKG001" aggregationType="sum"/>
+      <viewAttribute id="WTGBTR" aggregationType="sum"/>
+      <viewAttribute id="WOGBTR" aggregationType="sum"/>
+      <viewAttribute id="WKGBTR" aggregationType="sum"/>
+      <viewAttribute id="CURR_MONTH" aggregationType="sum"/>
+      <viewAttribute id="PAST_MONTH" aggregationType="sum"/>
+      <viewAttribute id="LONG_PAST_MONTH"/>
+      <viewAttribute id="CURR_PERIOD"/>
+      <viewAttribute id="PY_ACTUAL" aggregationType="sum"/>
+      <viewAttribute id="FISC_PAST_MONTH"/>
+      <viewAttribute id="CURR_ACTUAL" aggregationType="sum"/>
+      <viewAttribute id="CURR_YTD_PERIOD"/>
+      <viewAttribute id="Actual" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Aggregation_1" emptyUnionBehavior="NO_ROW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CONTROLLING_AREA" source="CONTROLLING_AREA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSN" source="VERSN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Z_PERIOD" source="Z_PERIOD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="KSTAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CONT_AREA" source="CONT_AREA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WKG001" source="WKG001"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WTGBTR" source="WTGBTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WOGBTR" source="WOGBTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WKGBTR" source="WKGBTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CURR_MONTH" source="CURR_MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PAST_MONTH" source="PAST_MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LONG_PAST_MONTH" source="LONG_PAST_MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CURR_PERIOD" source="CURR_PERIOD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PY_ACTUAL" source="PY_ACTUAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FISC_PAST_MONTH" source="FISC_PAST_MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CURR_ACTUAL" source="CURR_ACTUAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CURR_YTD_PERIOD" source="CURR_YTD_PERIOD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Actual" source="Actual"/>
+    </input>
+    <input node="Aggregation_1_copy" emptyUnionBehavior="NO_ROW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CONTROLLING_AREA" source="CONTROLLING_AREA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSN" source="VERSN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Z_PERIOD" source="Z_PERIOD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="KSTAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CONT_AREA" source="CONT_AREA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WKG001" source="WKG001"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WTGBTR" source="WTGBTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WOGBTR" source="WOGBTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WKGBTR" source="WKGBTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CURR_MONTH" source="CURR_MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PAST_MONTH" source="PAST_MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LONG_PAST_MONTH" source="LONG_PAST_MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CURR_PERIOD" source="CURR_PERIOD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PY_ACTUAL" source="PY_ACTUAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FISC_PAST_MONTH" source="FISC_PAST_MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CURR_ACTUAL" source="CURR_ACTUAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CURR_YTD_PERIOD" source="CURR_YTD_PERIOD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Actual" source="Actual"/>
+    </input>
+  </calculationView>
+</calculationViews>
+  <logicalModel id="Union_1">
+    <descriptions/>
+    <attributes>
+      <attribute id="GJAHR" order="1" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Fiscal Year"/>
+        <keyMapping columnObjectName="Union_1" columnName="GJAHR"/>
+      </attribute>
+      <attribute id="VERSN" order="2" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Version"/>
+        <keyMapping columnObjectName="Union_1" columnName="VERSN"/>
+      </attribute>
+      <attribute id="Z_PERIOD" order="3" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Z_PERIOD"/>
+        <keyMapping columnObjectName="Union_1" columnName="Z_PERIOD"/>
+      </attribute>
+      <attribute id="BUKRS" order="4" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Company Code"/>
+        <keyMapping columnObjectName="Union_1" columnName="BUKRS"/>
+      </attribute>
+      <attribute id="CONT_AREA" order="5" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Controlling Area"/>
+        <keyMapping columnObjectName="Union_1" columnName="CONT_AREA"/>
+      </attribute>
+      <attribute id="LONG_PAST_MONTH" order="12" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="LONG_PAST_MONTH"/>
+        <keyMapping columnObjectName="Union_1" columnName="LONG_PAST_MONTH"/>
+      </attribute>
+      <attribute id="CURR_PERIOD" order="13" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="CURR_PERIOD"/>
+        <keyMapping columnObjectName="Union_1" columnName="CURR_PERIOD"/>
+      </attribute>
+      <attribute id="FISC_PAST_MONTH" order="15" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="FISC_PAST_MONTH"/>
+        <keyMapping columnObjectName="Union_1" columnName="FISC_PAST_MONTH"/>
+      </attribute>
+      <attribute id="CURR_YTD_PERIOD" order="17" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="CURR_YTD_PERIOD"/>
+        <keyMapping columnObjectName="Union_1" columnName="CURR_YTD_PERIOD"/>
+      </attribute>
+      <attribute id="KSTAR$local">
+        <descriptions defaultDescription="Cost Elem"/>
+        <keyMapping columnObjectName="Union_1" columnName="KSTAR"/>
+      </attribute>
+      <attribute id="CONTROLLING_AREA$local">
+        <descriptions defaultDescription="Controlling Area CC"/>
+        <keyMapping columnObjectName="Union_1" columnName="CONTROLLING_AREA"/>
+      </attribute>
+      <attribute id="KOSTL$local">
+        <descriptions defaultDescription="Cost Centre"/>
+        <keyMapping columnObjectName="Union_1" columnName="KOSTL"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="WKG001" order="6" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Plan"/>
+        <measureMapping columnObjectName="Union_1" columnName="WKG001"/>
+      </measure>
+      <measure id="WTGBTR" order="7" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total Value in Transaction Currency"/>
+        <measureMapping columnObjectName="Union_1" columnName="WTGBTR"/>
+      </measure>
+      <measure id="WOGBTR" order="8" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total Value in Object Currency"/>
+        <measureMapping columnObjectName="Union_1" columnName="WOGBTR"/>
+      </measure>
+      <measure id="WKGBTR" order="9" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Actual"/>
+        <measureMapping columnObjectName="Union_1" columnName="WKGBTR"/>
+      </measure>
+      <measure id="CURR_MONTH" order="10" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="CURR_MONTH"/>
+        <measureMapping columnObjectName="Union_1" columnName="CURR_MONTH"/>
+      </measure>
+      <measure id="PAST_MONTH" order="11" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="PAST_MONTH"/>
+        <measureMapping columnObjectName="Union_1" columnName="PAST_MONTH"/>
+      </measure>
+      <measure id="PY_ACTUAL" order="14" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="PY_ACTUAL"/>
+        <measureMapping columnObjectName="Union_1" columnName="PY_ACTUAL"/>
+      </measure>
+      <measure id="CURR_ACTUAL" order="16" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="CURR_ACTUAL"/>
+        <measureMapping columnObjectName="Union_1" columnName="CURR_ACTUAL"/>
+      </measure>
+      <measure id="Actual" order="18" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Actual"/>
+        <measureMapping columnObjectName="Union_1" columnName="Actual"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+    <sharedDimensions>
+      <logicalJoin associatedObjectUri="plx_analytics::CA_DIM_CE_HIERARCHY_ALL">
+        <attributes>
+          <attributeRef>KSTAR$local</attributeRef>
+        </attributes>
+        <associatedAttributeNames>
+          <attributeName>CHILD_CE</attributeName>
+        </associatedAttributeNames>
+        <properties cardinality="CN_N" joinType="rightOuter" joinOperator="Equal"/>
+        <associatedAttributeFeatures/>
+      </logicalJoin>
+      <logicalJoin associatedObjectUri="plx_analytics::CA_DIM_CC_HIERARCHY_ALL">
+        <attributes>
+          <attributeRef>CONTROLLING_AREA$local</attributeRef>
+          <attributeRef>KOSTL$local</attributeRef>
+        </attributes>
+        <associatedAttributeNames>
+          <attributeName>CONTROLLING_AREA</attributeName>
+          <attributeName>CHILD_CC</attributeName>
+        </associatedAttributeNames>
+        <properties cardinality="CN_N" joinType="rightOuter" joinOperator="Equal"/>
+        <associatedAttributeFeatures/>
+      </logicalJoin>
+    </sharedDimensions>
+  </logicalModel>
+<layout>
+  <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="221" y="112"/>
+        <rectangleSize height="0" width="160"/>
+      </shape>
+    <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="386"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_1_copy" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302" y="386"/>
+      <rectangleSize width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Union_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="221" y="247"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Union_1" modelObjectNameSpace="StarJoinViewNodeInput" modelObjectType="repository">
+      <upperLeftCorner x="1140" y="30"/>
+      <rectangleSize width="111"/>
+    </shape>
+      <shape modelObjectName="plx_analytics::CA_DIM_CE_HIERARCHY_ALL" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
+        <upperLeftCorner x="762" y="214"/>
+      </shape>
+      <shape modelObjectName="plx_analytics::CA_DIM_CC_HIERARCHY_ALL" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
+        <upperLeftCorner x="332" y="216"/>
+      
+        <rectangleSize width="325"/>
+      </shape>
+    </shapes>
+</layout>
+</Calculation:scenario>
