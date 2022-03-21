@@ -29,7 +29,7 @@
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="Projection_1"/>
-    <rankingFilter type="RANK" offset="0" offsetReference="FRONT" dynamicPartitionAttributes="false">
+    <rankingFilter type="ROW_NUMBER" offset="0" offsetReference="FRONT" dynamicPartitionAttributes="false">
       <partitionViewAttributeName id="MATNR"/>
       <order byViewAttributeName="MEINH1" direction="ASC"/>
       <rankThreshold>
@@ -62,6 +62,9 @@
       <viewAttribute id="UMREZ1"/>
       <viewAttribute id="MEINH2"/>
       <viewAttribute id="UMREZ2"/>
+    
+      <viewAttribute id="Rank_1"/>
+      <viewAttribute id="Rank_2"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="Union_1"/>
@@ -73,6 +76,9 @@
       <viewAttribute id="UMREZ1" aggregationType="sum"/>
       <viewAttribute id="MEINH2"/>
       <viewAttribute id="UMREZ2" aggregationType="sum"/>
+    
+      <viewAttribute id="Rank_1"/>
+      <viewAttribute id="Rank_2"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="Rank_2" emptyUnionBehavior="NO_ROW">
@@ -81,13 +87,19 @@
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="UMREZ1" null="true" value=""/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MEINH2" source="MEINH2"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="UMREZ2" source="UMREZ2"/>
+    
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Rank_1" null="true" value=""/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Rank_2" source="Rank_2"/>
     </input>
-    <input node="Rank_1">
+    <input node="Rank_1" emptyUnionBehavior="NO_ROW">
       <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MEINH1" source="MEINH1"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="UMREZ1" source="UMREZ1"/>
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="MEINH2" null="true" value=""/>
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="UMREZ2" null="true" value=""/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="Rank_1" source="Rank_1"/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Rank_2" null="true" value=""/>
     </input>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="Rank_1" filterExpressionLanguage="SQL">
@@ -117,6 +129,15 @@
     <attribute id="MEINH2" order="4" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="MEINH2"/>
       <keyMapping columnObjectName="Projection_3" columnName="MEINH2"/>
+    </attribute>
+  
+    <attribute id="Rank_1" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Rank_1"/>
+      <keyMapping columnObjectName="Projection_3" columnName="Rank_1"/>
+    </attribute>
+    <attribute id="Rank_2" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Rank_2"/>
+      <keyMapping columnObjectName="Projection_3" columnName="Rank_2"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
