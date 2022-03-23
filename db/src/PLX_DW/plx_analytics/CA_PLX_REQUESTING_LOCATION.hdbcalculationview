@@ -190,7 +190,7 @@
     <joinAttribute name="MATNR"/>
     <joinAttribute name="WERKS"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="Join_3" cardinality="CN_1" joinType="leftOuter">
+  <calculationView xsi:type="Calculation:JoinView" id="Join_3" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="FEBEL"/>
     
@@ -292,6 +292,10 @@
       <calculatedViewAttribute id="MATNR_FORMATTED" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
         <formula>LTRIM(&quot;MATNR&quot;,'0')</formula>
       </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="STR_NO_Formatted" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>ltrim(&quot;STR_NO&quot;,'0')</formula>
+      </calculatedViewAttribute>
     </calculatedViewAttributes>
     <input node="Join_3"/>
   </calculationView>
@@ -319,7 +323,7 @@
     <calculatedViewAttributes/>
     <input node="plx_analytics::CA_LO_INSPECTIONS"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="Join_4" cardinality="CN_N" joinType="leftOuter">
+  <calculationView xsi:type="Calculation:JoinView" id="Join_4" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="LGORT"/>
       <viewAttribute id="COST_CEN"/>
@@ -327,7 +331,6 @@
       <viewAttribute id="MEINS"/>
       <viewAttribute id="ROP"/>
       <viewAttribute id="MAX_QTY"/>
-      <viewAttribute id="WERKS"/>
       <viewAttribute id="MAKTX"/>
       <viewAttribute id="CART_LI_PLATE"/>
       <viewAttribute id="STATUS"/>
@@ -337,7 +340,6 @@
       <viewAttribute id="BLD_NUM"/>
       <viewAttribute id="MARCODE"/>
       <viewAttribute id="SORTCODE"/>
-      <viewAttribute id="BUKRS"/>
       <viewAttribute id="FEBEL"/>
       <viewAttribute id="LIFNR"/>
       <viewAttribute id="EBELN"/>
@@ -357,8 +359,9 @@
       <viewAttribute id="LIFNR_EORD"/>
       <viewAttribute id="MATNR"/>
       <viewAttribute id="MATNR_FORMATTED"/>
-      <viewAttribute hidden="true" id="JOIN$WERKS$WERKS"/>
-      <viewAttribute hidden="true" id="JOIN$BUKRS$BUKRS"/>
+      <viewAttribute id="STR_NO_Formatted"/>
+      <viewAttribute id="BUKRS"/>
+      <viewAttribute id="WERKS"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="Projection_6">
@@ -378,8 +381,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="MARCODE" source="MARCODE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="SORTCODE" source="SORTCODE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$WERKS$WERKS" source="WERKS"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$BUKRS$BUKRS" source="BUKRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
     </input>
     <input node="Projection_5">
       <mapping xsi:type="Calculation:AttributeMapping" target="FEBEL" source="FEBEL"/>
@@ -399,16 +402,15 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="PACK_STR" source="PACK_STR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="EXTSOURCE_FLG" source="EXTSOURCE_FLG"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR_EORD" source="LIFNR_EORD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATNR_FORMATTED" source="MATNR_FORMATTED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STR_NO_Formatted" source="STR_NO_Formatted"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATNR_FORMATTED" source="MATNR_FORMATTED"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$WERKS$WERKS" source="WERKS"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$BUKRS$BUKRS" source="BUKRS"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR_FORMATTED"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
     </input>
-    <joinAttribute name="JOIN$WERKS$WERKS"/>
-    <joinAttribute name="JOIN$BUKRS$BUKRS"/>
+    <joinAttribute name="WERKS"/>
+    <joinAttribute name="BUKRS"/>
     <joinAttribute name="MATNR"/>
     <joinAttribute name="LGORT"/>
   </calculationView>
@@ -420,7 +422,6 @@
       <viewAttribute id="MEINS"/>
       <viewAttribute id="ROP"/>
       <viewAttribute id="MAX_QTY"/>
-      <viewAttribute id="WERKS"/>
       <viewAttribute id="MAKTX"/>
       <viewAttribute id="CART_LI_PLATE"/>
       <viewAttribute id="STATUS"/>
@@ -430,7 +431,6 @@
       <viewAttribute id="BLD_NUM"/>
       <viewAttribute id="MARCODE"/>
       <viewAttribute id="SORTCODE"/>
-      <viewAttribute id="BUKRS"/>
       <viewAttribute id="FEBEL"/>
       <viewAttribute id="LIFNR"/>
       <viewAttribute id="EBELN"/>
@@ -452,6 +452,9 @@
       <viewAttribute id="MATNR"/>
     
       <viewAttribute id="MATNR_FORMATTED"/>
+    
+      <viewAttribute id="BUKRS"/>
+      <viewAttribute id="WERKS"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="Join_4"/>
@@ -483,130 +486,133 @@
       <descriptions defaultDescription="Maximum Quantity"/>
       <keyMapping columnObjectName="Projection_7" columnName="MAX_QTY"/>
     </attribute>
-    <attribute id="WERKS" order="7" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Plant"/>
-      <keyMapping columnObjectName="Projection_7" columnName="WERKS"/>
-    </attribute>
-    <attribute id="MAKTX" order="8" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="MAKTX" order="7" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Material Description (Short Text)"/>
       <keyMapping columnObjectName="Projection_7" columnName="MAKTX"/>
     </attribute>
-    <attribute id="CART_LI_PLATE" order="9" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CART_LI_PLATE" order="8" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Cart License Plate"/>
       <keyMapping columnObjectName="Projection_7" columnName="CART_LI_PLATE"/>
     </attribute>
-    <attribute id="STATUS" order="10" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="STATUS" order="9" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Cart Header - Status (Active/Inactive)"/>
       <keyMapping columnObjectName="Projection_7" columnName="STATUS"/>
     </attribute>
-    <attribute id="DEPT" order="11" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="DEPT" order="10" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Cart Header - Department"/>
       <keyMapping columnObjectName="Projection_7" columnName="DEPT"/>
     </attribute>
-    <attribute id="ROOM_NUM" order="12" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="ROOM_NUM" order="11" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Room or Appartment Number"/>
       <keyMapping columnObjectName="Projection_7" columnName="ROOM_NUM"/>
     </attribute>
-    <attribute id="FLOOR_NUM" order="13" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="FLOOR_NUM" order="12" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Floor in building"/>
       <keyMapping columnObjectName="Projection_7" columnName="FLOOR_NUM"/>
     </attribute>
-    <attribute id="BLD_NUM" order="14" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="BLD_NUM" order="13" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Building (Number or Code)"/>
       <keyMapping columnObjectName="Projection_7" columnName="BLD_NUM"/>
     </attribute>
-    <attribute id="MARCODE" order="15" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="MARCODE" order="14" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Cart Marshalling code"/>
       <keyMapping columnObjectName="Projection_7" columnName="MARCODE"/>
     </attribute>
-    <attribute id="SORTCODE" order="16" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="SORTCODE" order="15" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Cart Header - Sort Code"/>
       <keyMapping columnObjectName="Projection_7" columnName="SORTCODE"/>
     </attribute>
-    <attribute id="BUKRS" order="17" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Company Code"/>
-      <keyMapping columnObjectName="Projection_7" columnName="BUKRS"/>
-    </attribute>
-    <attribute id="FEBEL" order="18" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="FEBEL" order="16" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Fixed Agmt Item"/>
       <keyMapping columnObjectName="Projection_7" columnName="FEBEL"/>
     </attribute>
-    <attribute id="LIFNR" order="19" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="LIFNR" order="17" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Vendor"/>
       <keyMapping columnObjectName="Projection_7" columnName="LIFNR"/>
     </attribute>
-    <attribute id="EBELN" order="20" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="EBELN" order="18" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Agreement"/>
       <keyMapping columnObjectName="Projection_7" columnName="EBELN"/>
     </attribute>
-    <attribute id="EBELP" order="21" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="EBELP" order="19" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Item"/>
       <keyMapping columnObjectName="Projection_7" columnName="EBELP"/>
     </attribute>
-    <attribute id="VDATU" order="22" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="VDATU" order="20" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Valid from"/>
       <keyMapping columnObjectName="Projection_7" columnName="VDATU"/>
     </attribute>
-    <attribute id="BDATU" order="23" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="BDATU" order="21" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Valid to"/>
       <keyMapping columnObjectName="Projection_7" columnName="BDATU"/>
     </attribute>
-    <attribute id="STR_NO" order="24" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="STR_NO" order="22" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Street Number"/>
       <keyMapping columnObjectName="Projection_7" columnName="STR_NO"/>
     </attribute>
-    <attribute id="STREET_NAME" order="25" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="STREET_NAME" order="23" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Street"/>
       <keyMapping columnObjectName="Projection_7" columnName="STREET_NAME"/>
     </attribute>
-    <attribute id="CITY" order="26" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CITY" order="24" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="City"/>
       <keyMapping columnObjectName="Projection_7" columnName="CITY"/>
     </attribute>
-    <attribute id="POSTAL_CODE" order="27" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="POSTAL_CODE" order="25" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Postal Code"/>
       <keyMapping columnObjectName="Projection_7" columnName="POSTAL_CODE"/>
     </attribute>
-    <attribute id="MMSTA" order="28" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="MMSTA" order="26" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="P-S matl status"/>
       <keyMapping columnObjectName="Projection_7" columnName="MMSTA"/>
     </attribute>
-    <attribute id="INFNR" order="30" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="INFNR" order="28" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="PIR"/>
       <keyMapping columnObjectName="Projection_7" columnName="INFNR"/>
     </attribute>
-    <attribute id="IDNLF" order="31" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="IDNLF" order="29" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Vendor Mat. No."/>
       <keyMapping columnObjectName="Projection_7" columnName="IDNLF"/>
     </attribute>
-    <attribute id="PACK_STR" order="32" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="PACK_STR" order="30" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Packaging String"/>
       <keyMapping columnObjectName="Projection_7" columnName="PACK_STR"/>
     </attribute>
-    <attribute id="EXTSOURCE_FLG" order="33" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="EXTSOURCE_FLG" order="31" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Ext Source Flag"/>
       <keyMapping columnObjectName="Projection_7" columnName="EXTSOURCE_FLG"/>
     </attribute>
-    <attribute id="LIFNR_EORD" order="34" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="LIFNR_EORD" order="32" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Vendor (EORD)"/>
       <keyMapping columnObjectName="Projection_7" columnName="LIFNR_EORD"/>
     </attribute>
   
-    <attribute id="MATNR" order="35" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="MATNR" order="33" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Material (Cart in Stock)"/>
   
       <keyMapping columnObjectName="Projection_7" columnName="MATNR"/>
   
     </attribute>
   
-    <attribute id="MATNR_FORMATTED" order="36" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="MATNR_FORMATTED" order="34" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Material (Formatted)"/>
+  
       <keyMapping columnObjectName="Projection_7" columnName="MATNR_FORMATTED"/>
+  
+    </attribute>
+  
+    <attribute id="BUKRS" order="35" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Company Code"/>
+      <keyMapping columnObjectName="Projection_7" columnName="BUKRS"/>
+    </attribute>
+    <attribute id="WERKS" order="36" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Plant"/>
+      <keyMapping columnObjectName="Projection_7" columnName="WERKS"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
-    <measure id="PROF_RNDVAL" order="29" aggregationType="sum" measureType="simple">
+    <measure id="PROF_RNDVAL" order="27" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="Profile Rounding Val"/>
       <measureMapping columnObjectName="Projection_7" columnName="PROF_RNDVAL"/>
     </measure>
