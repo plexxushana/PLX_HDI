@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="plx_analytics::CA_MD_VENDORS" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="3.0" id="plx_analytics::CA_MD_VENDORS" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
   <descriptions defaultDescription="Data Quality - Vendors"/>
   <metadata changedAt="2019-01-22 11:40:05.454"/>
   <localVariables/>
@@ -25,10 +25,10 @@
       <resourceUri>ECC_NACH</resourceUri>
     </DataSource>
   </dataSources>
-  <calculationViews>
-    <calculationView xsi:type="Calculation:ProjectionView" id="complete">
-      <descriptions/>
-      <viewAttributes>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="complete">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="LIFNR_Formated"/>
         <viewAttribute id="LIFNR"/>
         <viewAttribute id="VENDOR_NAME"/>
@@ -54,7 +54,7 @@
         <viewAttribute id="LOEVM"/>
         <viewAttribute id="SORTL"/>
       </viewAttributes>
-      <calculatedViewAttributes>
+    <calculatedViewAttributes>
         <calculatedViewAttribute datatype="TINYINT" id="IS_TELF1_INCOMPLETE" expressionLanguage="COLUMN_ENGINE">
           <formula>if(&quot;TELF1&quot; = '', 1, 0)</formula>
         </calculatedViewAttribute>
@@ -84,7 +84,7 @@
 &quot;IS_ORT01_INCOMPLETE&quot;+
 &quot;IS_REGIO_INCOMPLETE&quot;+
 &quot;IS_LAND1_INCOMPLETE&quot;+
-&quot;IS_KRAUS_INCOMPLETE&quot;) > 0, 1, 0)</formula>
+&quot;IS_KRAUS_INCOMPLETE&quot;) &gt; 0, 1, 0)</formula>
         </calculatedViewAttribute>
         <calculatedViewAttribute datatype="TINYINT" id="IS_VENDOR_COMPLETE" expressionLanguage="COLUMN_ENGINE">
           <formula>IF(&quot;IS_VENDOR_INCOMPLETE&quot; = 1, 0, 1)</formula>
@@ -93,36 +93,11 @@
           <formula>1</formula>
         </calculatedViewAttribute>
       </calculatedViewAttributes>
-      <input node="#CA_DIM_VENDORS">
-        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR_Formated" source="LIFNR_Formated"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="VENDOR_NAME" source="VENDOR_NAME"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KTOKK" source="KTOKK"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TXT30" source="TXT30"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TELF1" source="TELF1"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="STRAS" source="STRAS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="REGIO" source="REGIO"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="PSTLZ" source="PSTLZ"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ORT01" source="ORT01"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="NAME3" source="NAME3"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="NAME2" source="NAME2"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MCOD2" source="MCOD2"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MCOD1" source="MCOD1"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="LAND1" source="LAND1"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR" source="KUNNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KRAUS" source="KRAUS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ERNAM" source="ERNAM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ERDAT" source="ERDAT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BRSCH" source="BRSCH"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SPERR" source="SPERR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SPERM" source="SPERM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="LOEVM" source="LOEVM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SORTL" source="SORTL"/>
-      </input>
+      <input node="CA_DIM_VENDORS"/>
     </calculationView>
-    <calculationView xsi:type="Calculation:ProjectionView" id="companyCode">
-      <descriptions/>
-      <viewAttributes>
+  <calculationView xsi:type="Calculation:ProjectionView" id="companyCode">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="LIFNR"/>
         <viewAttribute id="BUKRS"/>
         <viewAttribute id="PERNR"/>
@@ -133,24 +108,22 @@
         <viewAttribute id="ZUAWA"/>
         <viewAttribute id="AKONT"/>
         <viewAttribute id="BEGRU"/>
-      </viewAttributes>
-      <calculatedViewAttributes/>
-      <input node="#ECC_LFB1">
-        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="PERNR" source="PERNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ERDAT" source="ERDAT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ERNAM" source="ERNAM"/>
+      
+      <viewAttribute id="ZTERM"/>
+      <viewAttribute id="ZSABE"/>
+      <viewAttribute id="ZWELS"/>
+      <viewAttribute id="TLFNS"/>
+      <viewAttribute id="TLFXS"/>
+      <viewAttribute id="INTAD"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="ECC_LFB1">
         <mapping xsi:type="Calculation:AttributeMapping" target="LFB1_SPERR" source="SPERR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="LFB1_LOEVM" source="LOEVM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ZUAWA" source="ZUAWA"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="AKONT" source="AKONT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BEGRU" source="BEGRU"/>
-      </input>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LFB1_LOEVM" source="LOEVM"/></input>
     </calculationView>
-    <calculationView xsi:type="Calculation:ProjectionView" id="duplicates" filterExpressionLanguage="COLUMN_ENGINE">
-      <descriptions/>
-      <viewAttributes>
+  <calculationView xsi:type="Calculation:ProjectionView" id="duplicates" filterExpressionLanguage="COLUMN_ENGINE">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="LIFNR"/>
         <viewAttribute id="GROUP_ID"/>
         <viewAttribute id="REVIEW_GROUP"/>
@@ -160,22 +133,13 @@
         <viewAttribute id="SPERR"/>
         <viewAttribute id="KTOKK"/>
       </viewAttributes>
-      <calculatedViewAttributes/>
-      <input node="#ECC_LFA1_MATCH">
-        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GROUP_ID" source="GROUP_ID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="REVIEW_GROUP" source="REVIEW_GROUP"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CONFLICT_GROUP" source="CONFLICT_GROUP"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="LOEVM" source="LOEVM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SPERM" source="SPERM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SPERR" source="SPERR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KTOKK" source="KTOKK"/>
-      </input>
-      <filter>(not isNull(&quot;GROUP_ID&quot;)) AND (&quot;LOEVM&quot; =' ') AND (&quot;SPERM&quot; =' ') AND (&quot;SPERR&quot; =' ') AND (&quot;KTOKK&quot; ='Z001')</filter>
-    </calculationView>
-    <calculationView xsi:type="Calculation:JoinView" id="complete_dupli" joinOrder="OUTSIDE_IN" joinType="leftOuter">
-      <descriptions/>
-      <viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="ECC_LFA1_MATCH"/>
+    <filter>(not isNull(&quot;GROUP_ID&quot;)) AND (&quot;LOEVM&quot; =' ') AND (&quot;SPERM&quot; =' ') AND (&quot;SPERR&quot; =' ') AND (&quot;KTOKK&quot; ='Z001')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="complete_dupli" joinType="leftOuter">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="LIFNR_Formated"/>
         <viewAttribute id="LIFNR"/>
         <viewAttribute id="VENDOR_NAME"/>
@@ -214,12 +178,12 @@
         <viewAttribute id="KTOKK"/>
         <viewAttribute id="SORTL"/>
       </viewAttributes>
-      <calculatedViewAttributes>
+    <calculatedViewAttributes>
         <calculatedViewAttribute datatype="TINYINT" id="IS_UNIQUE" expressionLanguage="COLUMN_ENGINE">
           <formula>IF(ISNULL(&quot;GROUP_ID&quot;), 1, 0)</formula>
         </calculatedViewAttribute>
       </calculatedViewAttributes>
-      <input node="#complete">
+      <input node="complete">
         <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR_Formated" source="LIFNR_Formated"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="VENDOR_NAME" source="VENDOR_NAME"/>
@@ -255,31 +219,27 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="KTOKK" source="KTOKK"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="SORTL" source="SORTL"/>
       </input>
-      <input node="#duplicates">
+      <input node="duplicates">
         <mapping xsi:type="Calculation:AttributeMapping" target="GROUP_ID" source="GROUP_ID"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="REVIEW_GROUP" source="REVIEW_GROUP"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CONFLICT_GROUP" source="CONFLICT_GROUP"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
       </input>
-      <joinAttribute name="LIFNR"/>
-    </calculationView>
-    <calculationView xsi:type="Calculation:ProjectionView" id="org_structure1">
-      <descriptions/>
-      <viewAttributes>
+    <joinAttribute name="LIFNR"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="org_structure1">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="MEMBER"/>
         <viewAttribute id="BUTXT"/>
         <viewAttribute id="BUKRS"/>
       </viewAttributes>
-      <calculatedViewAttributes/>
-      <input node="#CA_DIM_ORG_STRCTR">
-        <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUTXT" source="BUTXT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
-      </input>
+    <calculatedViewAttributes/>
+      <input node="CA_DIM_ORG_STRCTR"/>
     </calculationView>
-    <calculationView xsi:type="Calculation:JoinView" id="ccode_org_struct" joinOrder="OUTSIDE_IN" joinType="inner">
-      <descriptions/>
-      <viewAttributes>
+  <calculationView xsi:type="Calculation:JoinView" id="ccode_org_struct" joinType="leftOuter">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="BUKRS"/>
         <viewAttribute id="BUTXT"/>
         <viewAttribute id="MEMBER"/>
@@ -292,10 +252,16 @@
         <viewAttribute id="PERNR"/>
         <viewAttribute id="ERDAT"/>
         <viewAttribute id="ERNAM"/>
-        <viewAttribute hidden="true" id="JOIN$BUKRS$BUKRS"/>
-      </viewAttributes>
-      <calculatedViewAttributes/>
-      <input node="#companyCode">
+      <viewAttribute id="ZTERM"/>
+      <viewAttribute id="ZSABE"/>
+      <viewAttribute id="ZWELS"/>
+      <viewAttribute id="TLFNS"/>
+      <viewAttribute id="TLFXS"/>
+      <viewAttribute id="INTAD"/>
+      <viewAttribute hidden="true" id="JOIN$BUKRS$BUKRS"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="companyCode">
         <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="LFB1_SPERR" source="LFB1_SPERR"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="LFB1_LOEVM" source="LFB1_LOEVM"/>
@@ -305,35 +271,38 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="PERNR" source="PERNR"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="ERDAT" source="ERDAT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="ERNAM" source="ERNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZTERM" source="ZTERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZSABE" source="ZSABE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZWELS" source="ZWELS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TLFNS" source="TLFNS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TLFXS" source="TLFXS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INTAD" source="INTAD"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$BUKRS$BUKRS" source="BUKRS"/>
       </input>
-      <input node="#org_structure1">
+      <input node="org_structure1">
         <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="BUTXT" source="BUTXT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$BUKRS$BUKRS" source="BUKRS"/>
       </input>
-      <joinAttribute name="JOIN$BUKRS$BUKRS"/>
-    </calculationView>
-    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
-      <descriptions/>
-      <viewAttributes>
+    <joinAttribute name="JOIN$BUKRS$BUKRS"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="NACHA"/>
         <viewAttribute id="NATXT"/>
       </viewAttributes>
-      <calculatedViewAttributes/>
-      <input node="#OUTPUT_TYPES">
-        <mapping xsi:type="Calculation:AttributeMapping" target="NACHA" source="NACHA"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="NATXT" source="NATXT"/>
-      </input>
+    <calculatedViewAttributes/>
+      <input node="OUTPUT_TYPES"/>
     </calculationView>
-    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
-      <descriptions/>
-      <viewAttributes>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="NACHA"/>
         <viewAttribute id="VAKEY"/>
       </viewAttributes>
-      <calculatedViewAttributes>
+    <calculatedViewAttributes>
         <calculatedViewAttribute datatype="VARCHAR" id="CC_BUKRS" length="4" expressionLanguage="COLUMN_ENGINE">
           <formula>midstr(&quot;VAKEY&quot;,5,4)</formula>
         </calculatedViewAttribute>
@@ -341,34 +310,31 @@
           <formula>MIDSTR(&quot;VAKEY&quot;,9,10)</formula>
         </calculatedViewAttribute>
       </calculatedViewAttributes>
-      <input node="#ECC_NACH">
-        <mapping xsi:type="Calculation:AttributeMapping" target="NACHA" source="NACHA"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="VAKEY" source="VAKEY"/>
-      </input>
+      <input node="ECC_NACH"/>
     </calculationView>
-    <calculationView xsi:type="Calculation:JoinView" id="Join_2" joinOrder="OUTSIDE_IN" joinType="inner">
-      <descriptions/>
-      <viewAttributes>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2" joinType="inner">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="CC_BUKRS"/>
         <viewAttribute id="CC_VENDOR"/>
         <viewAttribute id="NATXT"/>
-        <viewAttribute hidden="true" id="JOIN$NACHA$NACHA"/>
-      </viewAttributes>
-      <calculatedViewAttributes/>
-      <input node="#Projection_2">
+      <viewAttribute hidden="true" id="JOIN$NACHA$NACHA"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="Projection_2">
         <mapping xsi:type="Calculation:AttributeMapping" target="NATXT" source="NATXT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$NACHA$NACHA" source="NACHA"/>
       </input>
-      <input node="#Projection_1">
+      <input node="Projection_1">
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_BUKRS" source="CC_BUKRS"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_VENDOR" source="CC_VENDOR"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$NACHA$NACHA" source="NACHA"/>
       </input>
-      <joinAttribute name="JOIN$NACHA$NACHA"/>
-    </calculationView>
-    <calculationView xsi:type="Calculation:JoinView" id="Join_3" joinOrder="OUTSIDE_IN" joinType="leftOuter">
-      <descriptions/>
-      <viewAttributes>
+    <joinAttribute name="JOIN$NACHA$NACHA"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_3" joinType="leftOuter">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="BUKRS"/>
         <viewAttribute id="BUTXT"/>
         <viewAttribute id="MEMBER"/>
@@ -382,9 +348,16 @@
         <viewAttribute id="ERDAT"/>
         <viewAttribute id="ERNAM"/>
         <viewAttribute id="NATXT"/>
-      </viewAttributes>
-      <calculatedViewAttributes/>
-      <input node="#ccode_org_struct">
+      
+      <viewAttribute id="ZTERM"/>
+      <viewAttribute id="ZSABE"/>
+      <viewAttribute id="ZWELS"/>
+      <viewAttribute id="TLFNS"/>
+      <viewAttribute id="TLFXS"/>
+      <viewAttribute id="INTAD"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="ccode_org_struct">
         <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="BUTXT" source="BUTXT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
@@ -397,18 +370,25 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="PERNR" source="PERNR"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="ERDAT" source="ERDAT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="ERNAM" source="ERNAM"/>
+      
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZTERM" source="ZTERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZSABE" source="ZSABE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZWELS" source="ZWELS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TLFNS" source="TLFNS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TLFXS" source="TLFXS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INTAD" source="INTAD"/>
       </input>
-      <input node="#Join_2">
+      <input node="Join_2">
         <mapping xsi:type="Calculation:AttributeMapping" target="NATXT" source="NATXT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="CC_BUKRS"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="CC_VENDOR"/>
       </input>
-      <joinAttribute name="BUKRS"/>
-      <joinAttribute name="LIFNR"/>
-    </calculationView>
-    <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinOrder="OUTSIDE_IN" joinType="leftOuter">
-      <descriptions/>
-      <viewAttributes>
+    <joinAttribute name="BUKRS"/>
+    <joinAttribute name="LIFNR"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinType="leftOuter">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="LIFNR_Formated"/>
         <viewAttribute id="LIFNR"/>
         <viewAttribute id="VENDOR_NAME"/>
@@ -459,9 +439,16 @@
         <viewAttribute id="ERNAM"/>
         <viewAttribute id="NATXT"/>
         <viewAttribute id="SORTL"/>
-      </viewAttributes>
-      <calculatedViewAttributes/>
-      <input node="#complete_dupli">
+      
+      <viewAttribute id="ZTERM"/>
+      <viewAttribute id="ZSABE"/>
+      <viewAttribute id="ZWELS"/>
+      <viewAttribute id="TLFNS"/>
+      <viewAttribute id="TLFXS"/>
+      <viewAttribute id="INTAD"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="complete_dupli">
         <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR_Formated" source="LIFNR_Formated"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="VENDOR_NAME" source="VENDOR_NAME"/>
@@ -501,7 +488,7 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_UNIQUE" source="IS_UNIQUE"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="SORTL" source="SORTL"/>
       </input>
-      <input node="#Join_3">
+      <input node="Join_3">
         <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="BUTXT" source="BUTXT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="MEMBER" source="MEMBER"/>
@@ -514,11 +501,17 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="ERDAT" source="ERDAT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="ERNAM" source="ERNAM"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="NATXT" source="NATXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZTERM" source="ZTERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZSABE" source="ZSABE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZWELS" source="ZWELS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TLFNS" source="TLFNS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TLFXS" source="TLFXS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INTAD" source="INTAD"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
       </input>
-      <joinAttribute name="LIFNR"/>
-    </calculationView>
-  </calculationViews>
+    <joinAttribute name="LIFNR"/>
+  </calculationView>
+</calculationViews>
   <logicalModel id="Join_1">
     <descriptions/>
     <attributes>
@@ -678,6 +671,33 @@
         <descriptions defaultDescription="Sort field"/>
         <keyMapping columnObjectName="Join_1" columnName="SORTL"/>
       </attribute>
+    
+      <attribute id="ZTERM" order="55" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="ZTERM"/>
+    
+        <keyMapping columnObjectName="Join_1" columnName="ZTERM"/>
+    
+      </attribute>
+      <attribute id="ZSABE" order="56" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="ZSABE"/>
+        <keyMapping columnObjectName="Join_1" columnName="ZSABE"/>
+      </attribute>
+      <attribute id="ZWELS" order="57" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="ZWELS"/>
+        <keyMapping columnObjectName="Join_1" columnName="ZWELS"/>
+      </attribute>
+      <attribute id="TLFNS" order="58" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="TLFNS"/>
+        <keyMapping columnObjectName="Join_1" columnName="TLFNS"/>
+      </attribute>
+      <attribute id="TLFXS" order="59" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="TLFXS"/>
+        <keyMapping columnObjectName="Join_1" columnName="TLFXS"/>
+      </attribute>
+      <attribute id="INTAD" order="60" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="INTAD"/>
+        <keyMapping columnObjectName="Join_1" columnName="INTAD"/>
+      </attribute>
     </attributes>
     <calculatedAttributes/>
     <privateDataFoundation>
@@ -740,76 +760,121 @@
           <attribute attributeName="LIFNR"/>
         </exceptionAggregation>
         <formula>1</formula>
-      </measure>
+      
+        </measure>
       <measure id="PERCENT_UNIQUE_VENDORS" hidden="false" order="33" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="12" scale="10">
         <descriptions defaultDescription="% Unique Vendors"/>
         <formula>&quot;IS_UNIQUE&quot;/&quot;COUNT_VENDORS_FROM_DIM&quot;</formula>
-      </measure>
+      
+        </measure>
       <measure id="PERCENT_COMPLETE_VENDORS" hidden="false" order="34" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="12" scale="10">
         <descriptions defaultDescription="% Complete Vendors"/>
         <formula>&quot;IS_VENDOR_COMPLETE&quot;/&quot;COUNT_VENDORS_FROM_DIM&quot;</formula>
-      </measure>
+      
+        </measure>
       <measure id="COUNT_DISTINCT_GROUPID" hidden="false" order="41" aggregationType="sum" measureType="simple" aggregatable="true" calculatedMeasureType="counter" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
         <descriptions defaultDescription="Count of distinct Group IDs"/>
         <exceptionAggregation exceptionAggregationType="countDistinct">
           <attribute attributeName="GROUP_ID"/>
         </exceptionAggregation>
         <formula>1</formula>
-      </measure>
+      
+        </measure>
     </calculatedMeasures>
     <restrictedMeasures/>
     <localDimensions/>
   </logicalModel>
-  <layout>
-    <shapes>
+<layout>
+  <shapes>
       <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-        <upperLeftCorner x="253" y="87"/>
-        <rectangleSize height="0" width="0"/>
+        <upperLeftCorner x="738" y="105"/>
+        <rectangleSize height="0" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="complete" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="22" y="357"/>
-        <rectangleSize height="30" width="140"/>
+        <upperLeftCorner x="738" y="536"/>
+        <rectangleSize height="30" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="companyCode" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="176" y="453"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="722" y="696"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="duplicates" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="176" y="357"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="948" y="536"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="complete_dupli" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="176" y="261"/>
-        <rectangleSize height="30" width="140"/>
+        <upperLeftCorner x="764" y="376"/>
+        <rectangleSize height="30" width="160"/>
       </shape>
+    <shape modelObjectName="complete" modelObjectNameSpace="complete_dupli" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="duplicates" modelObjectNameSpace="complete_dupli" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
       <shape expanded="true" modelObjectName="org_structure1" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="330" y="453"/>
-        <rectangleSize height="30" width="140"/>
+        <upperLeftCorner x="512" y="696"/>
+        <rectangleSize height="30" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="ccode_org_struct" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="330" y="357"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="528" y="536"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
+    <shape modelObjectName="companyCode" modelObjectNameSpace="ccode_org_struct" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="org_structure1" modelObjectNameSpace="ccode_org_struct" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
       <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="484" y="453"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="302" y="696"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="638" y="453"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="92" y="696"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="484" y="357"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="275" y="536"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
+    <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
       <shape expanded="true" modelObjectName="Join_3" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="330" y="261"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="501" y="376"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
+    <shape modelObjectName="ccode_org_struct" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Join_2" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
       <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="253" y="165"/>
-        <rectangleSize height="30" width="140"/>
+        <upperLeftCorner x="618" y="208"/>
+        <rectangleSize height="30" width="160"/>
       </shape>
-    </shapes>
-  </layout>
+    
+    <shape modelObjectName="complete_dupli" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Join_3" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+  </shapes>
+</layout>
 </Calculation:scenario>

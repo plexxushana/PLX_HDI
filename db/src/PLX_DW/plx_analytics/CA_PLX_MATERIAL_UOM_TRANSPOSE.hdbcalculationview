@@ -12,108 +12,38 @@
   <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
     <viewAttributes>
       <viewAttribute id="MATNR"/>
-      <viewAttribute id="MEINH1"/>
-      <viewAttribute id="UMREZ1"/>
+      <viewAttribute id="MEINH"/>
+      <viewAttribute id="UMREZ"/>
     </viewAttributes>
     <calculatedViewAttributes/>
-    <input node="ECC_MARM">
-      <mapping xsi:type="Calculation:AttributeMapping" target="MEINH1" source="MEINH"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="UMREZ1" source="UMREZ"/>
-    </input>
+    <input node="ECC_MARM"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:RankView" id="Rank">
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
     <viewAttributes>
       <viewAttribute id="MATNR"/>
-      <viewAttribute id="MEINH1"/>
-      <viewAttribute id="UMREZ1" aggregationType="sum"/>
+      <viewAttribute id="MEINH"/>
+      <viewAttribute id="UMREZ"/>
+      <viewAttribute id="Rank_Column"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Rank_1"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:RankView" id="Rank_1">
+    <viewAttributes>
+      <viewAttribute id="MATNR"/>
+      <viewAttribute id="MEINH"/>
+      <viewAttribute id="UMREZ" aggregationType="sum"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="Projection_1"/>
     <rankingFilter type="ROW_NUMBER" offset="0" offsetReference="FRONT" dynamicPartitionAttributes="false">
       <partitionViewAttributeName id="MATNR"/>
-      <order byViewAttributeName="MEINH1" direction="ASC"/>
+      <order byViewAttributeName="MEINH" direction="ASC"/>
       <rankThreshold>
-        <value>8</value>
+        <value>1</value>
       </rankThreshold>
       <rankViewAttributeName>Rank_Column</rankViewAttributeName>
     </rankingFilter>
-  </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="Rank_2">
-    <viewAttributes>
-      <viewAttribute id="MATNR"/>
-      <viewAttribute id="MEINH2"/>
-      <viewAttribute id="UMREZ2"/>
-    
-      <viewAttribute id="Rank_2"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="Rank">
-      <mapping xsi:type="Calculation:AttributeMapping" target="Rank_2" source="Rank_Column"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="MEINH2" source="MEINH1"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="UMREZ2" source="UMREZ1"/>
-    </input>
-    <filter>&quot;Rank_2&quot;=1</filter>
-  </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
-    <viewAttributes>
-      <viewAttribute id="MATNR"/>
-      <viewAttribute id="MEINH1"/>
-      <viewAttribute id="UMREZ1"/>
-      <viewAttribute id="MEINH2"/>
-      <viewAttribute id="UMREZ2"/>
-    
-      <viewAttribute id="Rank_1"/>
-      <viewAttribute id="Rank_2"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="Union_1"/>
-  </calculationView>
-  <calculationView xsi:type="Calculation:UnionView" id="Union_1">
-    <viewAttributes>
-      <viewAttribute id="MATNR"/>
-      <viewAttribute id="MEINH1"/>
-      <viewAttribute id="UMREZ1" aggregationType="sum"/>
-      <viewAttribute id="MEINH2"/>
-      <viewAttribute id="UMREZ2" aggregationType="sum"/>
-    
-      <viewAttribute id="Rank_1"/>
-      <viewAttribute id="Rank_2"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="Rank_2" emptyUnionBehavior="NO_ROW">
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="MATNR" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="MEINH1" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="UMREZ1" null="true" value=""/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MEINH2" source="MEINH2"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="UMREZ2" source="UMREZ2"/>
-    
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Rank_1" null="true" value=""/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="Rank_2" source="Rank_2"/>
-    </input>
-    <input node="Rank_1" emptyUnionBehavior="NO_ROW">
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MEINH1" source="MEINH1"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="UMREZ1" source="UMREZ1"/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="MEINH2" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="UMREZ2" null="true" value=""/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="Rank_1" source="Rank_1"/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Rank_2" null="true" value=""/>
-    </input>
-  </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="Rank_1" filterExpressionLanguage="SQL">
-    <viewAttributes>
-      <viewAttribute id="MATNR"/>
-      <viewAttribute id="MEINH1"/>
-      <viewAttribute id="UMREZ1"/>
-      <viewAttribute id="Rank_1"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="Rank">
-      <mapping xsi:type="Calculation:AttributeMapping" target="Rank_1" source="Rank_Column"/>
-    </input>
-    <filter>&quot;Rank_1&quot;=1</filter>
   </calculationView>
 </calculationViews>
 <logicalModel id="Projection_3">
@@ -122,35 +52,20 @@
       <descriptions defaultDescription="MATNR"/>
       <keyMapping columnObjectName="Projection_3" columnName="MATNR"/>
     </attribute>
-    <attribute id="MEINH1" order="2" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MEINH1"/>
-      <keyMapping columnObjectName="Projection_3" columnName="MEINH1"/>
-    </attribute>
-    <attribute id="MEINH2" order="4" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MEINH2"/>
-      <keyMapping columnObjectName="Projection_3" columnName="MEINH2"/>
-    </attribute>
-  
-    <attribute id="Rank_1" order="6" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Rank_1"/>
-  
-      <keyMapping columnObjectName="Projection_3" columnName="Rank_1"/>
-  
-    </attribute>
-    <attribute id="Rank_2" order="7" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Rank_2"/>
-      <keyMapping columnObjectName="Projection_3" columnName="Rank_2"/>
+    <attribute id="MEINH" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MEINH"/>
+      <keyMapping columnObjectName="Projection_3" columnName="MEINH"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
-    <measure id="UMREZ1" order="3" aggregationType="max" measureType="simple">
-      <descriptions defaultDescription="UMREZ1"/>
-      <measureMapping columnObjectName="Projection_3" columnName="UMREZ1"/>
+    <measure id="UMREZ" order="3" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="UMREZ"/>
+      <measureMapping columnObjectName="Projection_3" columnName="UMREZ"/>
     </measure>
-    <measure id="UMREZ2" order="5" aggregationType="max" measureType="simple">
-      <descriptions defaultDescription="UMREZ2"/>
-      <measureMapping columnObjectName="Projection_3" columnName="UMREZ2"/>
+    <measure id="Rank_Column" order="4" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Rank_Column"/>
+      <measureMapping columnObjectName="Projection_3" columnName="Rank_Column"/>
     </measure>
   </baseMeasures>
   <calculatedMeasures/>
@@ -167,14 +82,6 @@
     </shape>
   
     <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="657"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="Rank" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="552"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="Rank_2" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="92" y="427"/>
       <rectangleSize height="30" width="160"/>
     </shape>
@@ -182,12 +89,8 @@
       <upperLeftCorner x="92" y="217"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape expanded="true" modelObjectName="Union_1" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="300" y="306"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
     <shape expanded="true" modelObjectName="Rank_1" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="403" y="423"/>
+      <upperLeftCorner x="92" y="322"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="Projection_3" modelObjectNameSpace="StarJoinViewNodeInput" modelObjectType="repository">
