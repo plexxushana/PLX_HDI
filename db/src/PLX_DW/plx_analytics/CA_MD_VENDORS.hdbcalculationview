@@ -656,7 +656,7 @@
     <calculatedViewAttributes/>
     <input node="ECC_WYT3"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="Join_7" cardinality="CN_N" joinType="inner">
+  <calculationView xsi:type="Calculation:JoinView" id="Join_7" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="LIFNR"/>
       <viewAttribute id="EKORG"/>
@@ -672,19 +672,8 @@
       <viewAttribute id="VERKF"/>
       <viewAttribute id="KZRET"/>
       <viewAttribute id="PARVW"/>
-      <viewAttribute id="LIFN2"/>
-      <viewAttribute hidden="true" id="JOIN$LIFNR$LIFNR"/>
-      <viewAttribute hidden="true" id="JOIN$WERKS$WERKS"/>
-      <viewAttribute hidden="true" id="JOIN$EKORG$EKORG"/>
-    </viewAttributes>
+      <viewAttribute id="LIFN2"/></viewAttributes>
     <calculatedViewAttributes/>
-    <input node="Projection_9">
-      <mapping xsi:type="Calculation:AttributeMapping" target="PARVW" source="PARVW"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="LIFN2" source="LIFN2"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LIFNR$LIFNR" source="LIFNR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$WERKS$WERKS" source="WERKS"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$EKORG$EKORG" source="EKORG"/>
-    </input>
     <input node="Join_6">
       <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="EKORG" source="EKORG"/>
@@ -698,14 +687,17 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="BSTAE" source="BSTAE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="SPERM" source="SPERM"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="VERKF" source="VERKF"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="KZRET" source="KZRET"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LIFNR$LIFNR" source="LIFNR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$WERKS$WERKS" source="WERKS"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$EKORG$EKORG" source="EKORG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KZRET" source="KZRET"/></input>
+    <input node="Projection_9">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARVW" source="PARVW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LIFN2" source="LIFN2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EKORG" source="EKORG"/>
     </input>
-    <joinAttribute name="JOIN$LIFNR$LIFNR"/>
-    <joinAttribute name="JOIN$WERKS$WERKS"/>
-    <joinAttribute name="JOIN$EKORG$EKORG"/>
+    <joinAttribute name="LIFNR"/>
+    <joinAttribute name="WERKS"/>
+    <joinAttribute name="EKORG"/>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="Projection_10">
     <viewAttributes>
@@ -812,11 +804,28 @@
     
       <mapping xsi:type="Calculation:AttributeMapping" target="TELFX" source="TELFX"/>
     </input>
-    <input node="Projection_11">
+    <input node="Rank_1">
       <mapping xsi:type="Calculation:AttributeMapping" target="SMTP_ADDR" source="SMTP_ADDR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ADRNR" source="ADDRNUMBER"/>
     </input>
     <joinAttribute name="ADRNR"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:RankView" id="Rank_1" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="SMTP_ADDR"/>
+    
+      <viewAttribute id="ADDRNUMBER"/></viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Projection_11"/>
+    <rankingFilter type="RANK" offset="0" offsetReference="FRONT" dynamicPartitionAttributes="false">
+      <partitionViewAttributeName id="ADDRNUMBER"/>
+      <order byViewAttributeName="SMTP_ADDR" direction="ASC"/>
+      <rankThreshold>
+        <value>1</value>
+      </rankThreshold>
+      <rankViewAttributeName>Rank_Column</rankViewAttributeName>
+    </rankingFilter>
+    <filter>&quot;Rank_Column&quot;='1'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="Join_10" joinType="leftOuter">
     <viewAttributes>
@@ -973,7 +982,7 @@
     <calculatedViewAttributes/>
     <input node="Join_1"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="Join_11" cardinality="CN_N" joinType="leftOuter" optimizeJoinColumns="false">
+  <calculationView xsi:type="Calculation:JoinView" id="Join_11" joinType="leftOuter" optimizeJoinColumns="false">
     <viewAttributes>
       <viewAttribute id="LIFNR"/>
       <viewAttribute id="EKORG"/>
@@ -1317,7 +1326,7 @@
         <keyMapping columnObjectName="Projection_14" columnName="INTAD"/>
       </attribute>
       <attribute id="NAME1" order="27" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="Name 1"/>
+        <descriptions defaultDescription="OA Vendor Name"/>
         <keyMapping columnObjectName="Projection_14" columnName="NAME1"/>
       </attribute>
       <attribute id="ADRNR" order="28" displayAttribute="false" attributeHierarchyActive="false">
@@ -1335,6 +1344,50 @@
       <attribute id="TXT30" order="31" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="Account Group Name"/>
         <keyMapping columnObjectName="Projection_14" columnName="TXT30"/>
+      </attribute>
+      <attribute id="IS_TELF1_INCOMPLETE" order="32" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Incomplete-Telephone"/>
+        <keyMapping columnObjectName="Projection_14" columnName="IS_TELF1_INCOMPLETE"/>
+      </attribute>
+      <attribute id="IS_STRAS_INCOMPLETE" order="33" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Incomplete-Street"/>
+        <keyMapping columnObjectName="Projection_14" columnName="IS_STRAS_INCOMPLETE"/>
+      </attribute>
+      <attribute id="IS_PSTLZ_INCOMPLETE" order="34" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Incomplete-Postal Code"/>
+        <keyMapping columnObjectName="Projection_14" columnName="IS_PSTLZ_INCOMPLETE"/>
+      </attribute>
+      <attribute id="IS_ORT01_INCOMPLETE" order="35" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Incomplete-City"/>
+        <keyMapping columnObjectName="Projection_14" columnName="IS_ORT01_INCOMPLETE"/>
+      </attribute>
+      <attribute id="IS_REGIO_INCOMPLETE" order="36" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Incomplete-Region"/>
+        <keyMapping columnObjectName="Projection_14" columnName="IS_REGIO_INCOMPLETE"/>
+      </attribute>
+      <attribute id="IS_LAND1_INCOMPLETE" order="37" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Incomplete-Country"/>
+        <keyMapping columnObjectName="Projection_14" columnName="IS_LAND1_INCOMPLETE"/>
+      </attribute>
+      <attribute id="IS_KRAUS_INCOMPLETE" order="38" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Incomplete-DUNS Number"/>
+        <keyMapping columnObjectName="Projection_14" columnName="IS_KRAUS_INCOMPLETE"/>
+      </attribute>
+      <attribute id="IS_VENDOR_INCOMPLETE" order="39" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Is Vendor Incomplete"/>
+        <keyMapping columnObjectName="Projection_14" columnName="IS_VENDOR_INCOMPLETE"/>
+      </attribute>
+      <attribute id="IS_VENDOR_COMPLETE" order="40" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Is Vendor Complete"/>
+        <keyMapping columnObjectName="Projection_14" columnName="IS_VENDOR_COMPLETE"/>
+      </attribute>
+      <attribute id="COUNT_VENDORS_FROM_DIM" order="41" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Count of vendors from dimension"/>
+        <keyMapping columnObjectName="Projection_14" columnName="COUNT_VENDORS_FROM_DIM"/>
+      </attribute>
+      <attribute id="GROUP_ID" order="42" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Group ID"/>
+        <keyMapping columnObjectName="Projection_14" columnName="GROUP_ID"/>
       </attribute>
       <attribute id="REVIEW_GROUP" order="43" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="Review Group"/>
@@ -1420,6 +1473,10 @@
         <descriptions defaultDescription="Telephone"/>
         <keyMapping columnObjectName="Projection_14" columnName="TELF1"/>
       </attribute>
+      <attribute id="IS_UNIQUE" order="64" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Vendor is unique"/>
+        <keyMapping columnObjectName="Projection_14" columnName="IS_UNIQUE"/>
+      </attribute>
       <attribute id="BUTXT" order="65" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="Name of Company Code or Company"/>
         <keyMapping columnObjectName="Projection_14" columnName="BUTXT"/>
@@ -1499,56 +1556,7 @@
         <shapes/>
       </layout>
     </privateDataFoundation>
-    <baseMeasures>
-      <measure id="IS_TELF1_INCOMPLETE" order="32" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="Incomplete-Telephone"/>
-        <measureMapping columnObjectName="Projection_14" columnName="IS_TELF1_INCOMPLETE"/>
-      </measure>
-      <measure id="IS_STRAS_INCOMPLETE" order="33" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="Incomplete-Street"/>
-        <measureMapping columnObjectName="Projection_14" columnName="IS_STRAS_INCOMPLETE"/>
-      </measure>
-      <measure id="IS_PSTLZ_INCOMPLETE" order="34" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="Incomplete-Postal Code"/>
-        <measureMapping columnObjectName="Projection_14" columnName="IS_PSTLZ_INCOMPLETE"/>
-      </measure>
-      <measure id="IS_ORT01_INCOMPLETE" order="35" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="Incomplete-City"/>
-        <measureMapping columnObjectName="Projection_14" columnName="IS_ORT01_INCOMPLETE"/>
-      </measure>
-      <measure id="IS_REGIO_INCOMPLETE" order="36" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="Incomplete-Region"/>
-        <measureMapping columnObjectName="Projection_14" columnName="IS_REGIO_INCOMPLETE"/>
-      </measure>
-      <measure id="IS_LAND1_INCOMPLETE" order="37" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="Incomplete-Country"/>
-        <measureMapping columnObjectName="Projection_14" columnName="IS_LAND1_INCOMPLETE"/>
-      </measure>
-      <measure id="IS_KRAUS_INCOMPLETE" order="38" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="Incomplete-DUNS Number"/>
-        <measureMapping columnObjectName="Projection_14" columnName="IS_KRAUS_INCOMPLETE"/>
-      </measure>
-      <measure id="IS_VENDOR_INCOMPLETE" order="39" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="Is Vendor Incomplete"/>
-        <measureMapping columnObjectName="Projection_14" columnName="IS_VENDOR_INCOMPLETE"/>
-      </measure>
-      <measure id="IS_VENDOR_COMPLETE" order="40" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="Is Vendor Complete"/>
-        <measureMapping columnObjectName="Projection_14" columnName="IS_VENDOR_COMPLETE"/>
-      </measure>
-      <measure id="COUNT_VENDORS_FROM_DIM" order="41" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="Count of vendors from dimension"/>
-        <measureMapping columnObjectName="Projection_14" columnName="COUNT_VENDORS_FROM_DIM"/>
-      </measure>
-      <measure id="GROUP_ID" order="42" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="Group ID"/>
-        <measureMapping columnObjectName="Projection_14" columnName="GROUP_ID"/>
-      </measure>
-      <measure id="IS_UNIQUE" order="64" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="Vendor is unique"/>
-        <measureMapping columnObjectName="Projection_14" columnName="IS_UNIQUE"/>
-      </measure>
-    </baseMeasures>
+    <baseMeasures/>
     <calculatedMeasures>
       <measure id="COUNT_DISTINCT_LIFNR" hidden="false" order="1" aggregationType="sum" measureType="simple" aggregatable="true" calculatedMeasureType="counter" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
         <descriptions defaultDescription="Count of Distinct Vendor Numbers"/>
@@ -1560,6 +1568,7 @@
         
         
         
+        
         </measure>
       <measure id="PERCENT_UNIQUE_VENDORS" hidden="false" order="2" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="12" scale="10">
         <descriptions defaultDescription="% Unique Vendors"/>
@@ -1568,11 +1577,13 @@
         
         
         
+        
         </measure>
       <measure id="PERCENT_COMPLETE_VENDORS" hidden="false" order="3" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="12" scale="10">
         <descriptions defaultDescription="% Complete Vendors"/>
         <formula>&quot;IS_VENDOR_COMPLETE&quot;/&quot;COUNT_VENDORS_FROM_DIM&quot;</formula>
       
+        
         
         
         
@@ -1587,6 +1598,7 @@
         
         
         
+        
         </measure>
     </calculatedMeasures>
     <restrictedMeasures/>
@@ -1595,23 +1607,23 @@
 <layout>
   <shapes>
       <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-        <upperLeftCorner x="1363" y="112"/>
+        <upperLeftCorner x="1552.4600885509167" y="112"/>
         <rectangleSize height="0" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="complete" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="958" y="926"/>
+        <upperLeftCorner x="1222.3509872986256" y="926.9999952316284"/>
         <rectangleSize height="30" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="companyCode" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="91" y="1086"/>
+        <upperLeftCorner x="2049.2994880971873" y="1086.9999940395355"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="duplicates" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="748" y="926"/>
+        <upperLeftCorner x="1432.3509872986256" y="926.9999952316284"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="complete_dupli" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="833" y="766"/>
+        <upperLeftCorner x="1405.684320631959" y="766.9999964237213"/>
         <rectangleSize height="30" width="160"/>
       </shape>
     <shape modelObjectName="complete" modelObjectNameSpace="complete_dupli" modelObjectType="JoinNodeInput">
@@ -1623,11 +1635,11 @@
       <rectangleSize width="250"/>
     </shape>
       <shape expanded="true" modelObjectName="org_structure1" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="301" y="1086"/>
+        <upperLeftCorner x="1839.2994880971873" y="1086.9999940395355"/>
         <rectangleSize height="30" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="ccode_org_struct" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="275" y="926"/>
+        <upperLeftCorner x="1853.0048529894698" y="926.9999952316284"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
     <shape modelObjectName="companyCode" modelObjectNameSpace="ccode_org_struct" modelObjectType="JoinNodeInput">
@@ -1639,15 +1651,15 @@
       <rectangleSize width="250"/>
     </shape>
       <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="511" y="1086"/>
+        <upperLeftCorner x="1419.2994880971873" y="1086.9999940395355"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="721" y="1086"/>
+        <upperLeftCorner x="1629.2994880971876" y="1086.9999940395355"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="538" y="926"/>
+        <upperLeftCorner x="1642.3509872986258" y="926.9999952316284"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
     <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
@@ -1659,7 +1671,7 @@
       <rectangleSize width="250"/>
     </shape>
       <shape expanded="true" modelObjectName="Join_3" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="511" y="766"/>
+        <upperLeftCorner x="1665.8481184453362" y="766.9999964237213"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
     <shape modelObjectName="ccode_org_struct" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
@@ -1671,7 +1683,7 @@
       <rectangleSize width="250"/>
     </shape>
       <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="806" y="606"/>
+        <upperLeftCorner x="1470.3265600486006" y="606.9999976158142"/>
         <rectangleSize height="30" width="160"/>
       </shape>
     
@@ -1685,11 +1697,11 @@
     </shape>
   
     <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1809" y="1086"/>
+      <upperLeftCorner x="722.0000000000001" y="1086.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Join_4" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1820" y="926"/>
+      <upperLeftCorner x="748.6666666666667" y="926.9999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="Projection_3" modelObjectNameSpace="Join_4" modelObjectType="JoinNodeInput">
@@ -1701,19 +1713,19 @@
       <rectangleSize width="136"/>
     </shape>
     <shape expanded="true" modelObjectName="Projection_4" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="2019" y="1086"/>
+      <upperLeftCorner x="932.0000000000003" y="1086.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Projection_5" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1389" y="1086"/>
+      <upperLeftCorner x="92" y="1086.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Projection_6" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1179" y="1086"/>
+      <upperLeftCorner x="302" y="1086.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Join_5" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1383" y="926"/>
+      <upperLeftCorner x="275.33333333333326" y="926.9999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="Projection_6" modelObjectNameSpace="Join_5" modelObjectType="JoinNodeInput">
@@ -1725,15 +1737,15 @@
       <rectangleSize width="136"/>
     </shape>
     <shape expanded="true" modelObjectName="Projection_7" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1839" y="1406"/>
+      <upperLeftCorner x="1183.8604849052676" y="1406.9999916553497"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Projection_8" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1629" y="1406"/>
+      <upperLeftCorner x="1393.8604849052676" y="1406.9999916553497"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Join_6" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1740" y="1246"/>
+      <upperLeftCorner x="1367.1938182386011" y="1246.9999928474426"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="Projection_7" modelObjectNameSpace="Join_6" modelObjectType="JoinNodeInput">
@@ -1745,27 +1757,27 @@
       <rectangleSize width="136"/>
     </shape>
     <shape expanded="true" modelObjectName="Projection_9" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1520" y="1246"/>
+      <upperLeftCorner x="1117.6227265765879" y="1246.9999928474426"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Join_7" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1599" y="1086"/>
+      <upperLeftCorner x="1144.2893932432544" y="1086.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape modelObjectName="Projection_9" modelObjectNameSpace="Join_7" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="Join_6" modelObjectNameSpace="Join_7" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape modelObjectName="Join_6" modelObjectNameSpace="Join_7" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="Projection_9" modelObjectNameSpace="Join_7" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="Projection_10" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1599" y="944"/>
+      <upperLeftCorner x="1012.3509872986257" y="944.4999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Join_8" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1615" y="766"/>
+      <upperLeftCorner x="895.6523011766026" y="766.9999964237213"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="Projection_10" modelObjectNameSpace="Join_8" modelObjectType="JoinNodeInput">
@@ -1777,23 +1789,29 @@
       <rectangleSize width="142"/>
     </shape>
     <shape expanded="true" modelObjectName="Projection_11" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1173" y="926"/>
+      <upperLeftCorner x="512" y="1086.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Join_9" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1308" y="766"/>
+      <upperLeftCorner x="495.55712321316037" y="766.9999964237213"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="Join_5" modelObjectNameSpace="Join_9" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="123"/>
     </shape>
-    <shape modelObjectName="Projection_11" modelObjectNameSpace="Join_9" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="320" y="30"/>
+    <shape modelObjectName="Rank_1" modelObjectNameSpace="Join_9" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="420" y="164"/>
       <rectangleSize width="164"/>
     </shape>
+  
+    <shape expanded="true" modelObjectName="Rank_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="522.2237898798271" y="934.4999952316284"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
     <shape expanded="true" modelObjectName="Join_10" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1335" y="606"/>
+      <upperLeftCorner x="868.985634509936" y="606.9999976158142"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="Join_8" modelObjectNameSpace="Join_10" modelObjectType="JoinNodeInput">
@@ -1805,15 +1823,15 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="Projection_12" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1335" y="501"/>
+      <upperLeftCorner x="868.985634509936" y="501.9999976158142"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Projection_13" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="806" y="501"/>
+      <upperLeftCorner x="1470.3265600486006" y="501.9999976158142"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Join_11" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1293" y="341"/>
+      <upperLeftCorner x="1443.659893381934" y="341.9999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="Projection_12" modelObjectNameSpace="Join_11" modelObjectType="JoinNodeInput">
@@ -1825,9 +1843,8 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="Projection_14" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1293" y="236"/>
+      <upperLeftCorner x="1443.659893381934" y="236.9999988079071"/>
       <rectangleSize height="30" width="160"/>
-    </shape>
-  </shapes>
+    </shape></shapes>
 </layout>
 </Calculation:scenario>
