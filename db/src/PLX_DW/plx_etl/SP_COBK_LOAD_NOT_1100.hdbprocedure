@@ -1,0 +1,66 @@
+PROCEDURE "SP_COBK_LOAD_NOT_1100"(OUT T_OUT ECC_COBK)
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   --DEFAULT SCHEMA <default_schema_name>
+   READS SQL DATA AS
+BEGIN
+   
+ DECLARE LV_START_YEAR NVARCHAR(4) ;
+ DECLARE LV_FILTER_STRING VARCHAR(100);
+ 
+ SELECT YEAR_PAR1 INTO LV_START_YEAR FROM HANA_FG_FILTER_CTRL WHERE FLOWGRAPH = 'FG_COBK_LOAD_NOT_1100' AND VRSN = 'A' ;
+ 
+ LV_FILTER_STRING = 'GJAHR >= ''' || LV_START_YEAR || ''' AND KOKRS <> ''1100''';
+ 
+ -- APPLY_FILTER function to execute the Dynamic SQL.
+ T_OUT_SOURCE = APPLY_FILTER(V_ECC_COBK, :LV_FILTER_STRING);	 
+ 
+ ---- Exactly define the ECC_COBK table structure columns instead of * here.
+ T_OUT = SELECT
+				"KOKRS",
+				"BELNR",
+				"GJAHR",
+				"VERSN",
+				"VRGNG",
+				"TIMESTMP",
+				"PERAB",
+				"PERBI",
+				"BLDAT",
+				"BUDAT",
+				"CPUDT",
+				"USNAM",
+				"BLTXT",
+				"STFLG",
+				"STOKZ",
+				"REFBT",
+				"REFBN",
+				"REFBK",
+				"REFGJ",
+				"BLART",
+				"ORGVG",
+				"SUMBZ",
+				"DELBZ",
+				"WSDAT",
+				"KURST",
+				"VARNR",
+				"KWAER",
+				"CTYP1",
+				"CTYP2",
+				"CTYP3",
+				"CTYP4",
+				"AWTYP",
+				"AWORG",
+				"LOGSYSTEM",
+				"CPUTM",
+				"ALEBZ",
+				"ALEBN",
+				"AWSYS",
+				"AWREF_REV",
+				"AWORG_REV",
+				"VALDT"
+		FROM :T_OUT_SOURCE ;
+END ;
+
+
+
+
