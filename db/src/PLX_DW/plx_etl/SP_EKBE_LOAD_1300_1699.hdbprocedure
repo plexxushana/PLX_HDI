@@ -1,0 +1,98 @@
+PROCEDURE "SP_EKBE_LOAD_1300_1699"(OUT T_OUT ECC_EKBE)
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   --DEFAULT SCHEMA <default_schema_name>
+   READS SQL DATA AS
+BEGIN
+   
+ DECLARE LV_START_DATE NVARCHAR(8) ;
+ DECLARE LV_END_DATE NVARCHAR(8);
+ DECLARE LV_FILTER_STRING VARCHAR(100);
+ 
+ SELECT DATE_PAR1, DATE_PAR2 INTO LV_START_DATE, LV_END_DATE FROM HANA_FG_FILTER_CTRL WHERE FLOWGRAPH = 'FG_EKBE_LOAD_1300_1699' AND VRSN = 'A' ;
+ 
+ LV_FILTER_STRING = 'BUDAT >= ''' || LV_START_DATE || ''' AND BUDAT <= ''' || LV_END_DATE || ''' AND WERKS >= ''1300'' AND WERKS <= ''1699''';
+ 
+ T_OUT_SOURCE = APPLY_FILTER(V_ECC_EKBE, :LV_FILTER_STRING);	 
+ 
+ ---- Exactly define the ECC_EKBE table structure columns instead of * here.
+ T_OUT = SELECT "EBELN",
+				"EBELP",
+				"ZEKKN",
+				"VGABE",
+				"GJAHR",
+				"BELNR",
+				"BUZEI",
+				"BEWTP",
+				"BWART",
+				"BUDAT",
+				"MENGE",
+				"BPMNG",
+				"DMBTR",
+				"WRBTR",
+				"WAERS",
+				"AREWR",
+				"WESBS",
+				"BPWES",
+				"SHKZG",
+				"BWTAR",
+				"ELIKZ",
+				"XBLNR",
+				"LFGJA",
+				"LFBNR",
+				"LFPOS",
+				"GRUND",
+				"CPUDT",
+				"CPUTM",
+				"REEWR",
+				"EVERE",
+				"REFWR",
+				"MATNR",
+				"WERKS",
+				"XWSBR",
+				"ETENS",
+				"KNUMV",
+				"MWSKZ",
+				"LSMNG",
+				"LSMEH",
+				"EMATN",
+				"AREWW",
+				"HSWAE",
+				"BAMNG",
+				"CHARG",
+				"BLDAT",
+				"XWOFF",
+				"XUNPL",
+				"ERNAM",
+				"SRVPOS",
+				"PACKNO",
+				"INTROW",
+				"BEKKN",
+				"LEMIN",
+				"AREWB",
+				"REWRB",
+				"SAPRL",
+				"MENGE_POP",
+				"BPMNG_POP",
+				"DMBTR_POP",
+				"WRBTR_POP",
+				"WESBB",
+				"BPWEB",
+				"WEORA",
+				"AREWR_POP",
+				"KUDIF",
+				"RETAMT_FC",
+				"RETAMT_LC",
+				"RETAMTP_FC",
+				"RETAMTP_LC",
+				"XMACC",
+				"WKURS",
+				"ET_UPD",
+				"J_SC_DIE_COMP_F"
+		FROM :T_OUT_SOURCE ;
+		
+END ;
+
+
+
+
