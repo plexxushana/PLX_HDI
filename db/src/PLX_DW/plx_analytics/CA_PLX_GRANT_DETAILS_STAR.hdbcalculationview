@@ -169,6 +169,65 @@
       </input>
     <joinAttribute name="GRANT_NBR"/>
   </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_7" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="AMOUNT" aggregationType="sum"/>
+      <viewAttribute id="TOTAL_AWARD" aggregationType="sum"/>
+      <viewAttribute id="TOTAL_AMOUNT" aggregationType="sum"/>
+      <viewAttribute id="VALUETYPE"/>
+      <viewAttribute id="CLASS_TYPE"/>
+      <viewAttribute id="SIGN"/>
+      <viewAttribute id="PARTNER_LINE"/>
+      <viewAttribute id="UNIT_OF_MEASURE"/>
+      <viewAttribute id="SPONSORED_PROG"/>
+      <viewAttribute id="SPONSORED_CLASS"/>
+      <viewAttribute id="BDGT_VLDTY_NBR"/>
+      <viewAttribute id="FUND"/>
+      <viewAttribute id="GRANTEE_FY"/>
+      <viewAttribute id="QUANTITY" aggregationType="sum"/>
+      <viewAttribute id="POSTING_DATE"/>
+      <viewAttribute id="MATERIAL"/>
+      <viewAttribute id="GRANT_NBR"/>
+      <viewAttribute id="ZFISCAL_YEAR"/>
+      <viewAttribute id="ZFISCAL_PERIOD"/>
+    
+      <viewAttribute id="PERC_IDC" aggregationType="sum"/>
+      <viewAttribute id="AMOUNT_IDC" aggregationType="sum"/>
+      <viewAttribute id="PERC_CSH" aggregationType="sum"/>
+      <viewAttribute id="AMOUNT_CSH" aggregationType="sum"/>
+      <viewAttribute id="PRICE_PER_UNIT" aggregationType="sum"/></viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Projection_3">
+      <mapping xsi:type="Calculation:AttributeMapping" target="GRANT_NBR" source="GRANT_NBR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BDGT_VLDTY_NBR" source="BDGT_VLDTY_NBR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SPONSORED_PROG" source="SPONSORED_PROG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SPONSORED_CLASS" source="SPONSORED_CLASS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FUND" source="FUND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AMOUNT" source="AMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERC_IDC" source="PERC_IDC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AMOUNT_IDC" source="AMOUNT_IDC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_AWARD" source="TOTAL_AWARD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERC_CSH" source="PERC_CSH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AMOUNT_CSH" source="AMOUNT_CSH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_AMOUNT" source="TOTAL_AMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALUETYPE" source="VALUETYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="POSTING_DATE" source="POSTING_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GRANTEE_FY" source="GRANTEE_FY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLASS_TYPE" source="CLASS_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SIGN" source="SIGN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER_LINE" source="PARTNER_LINE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATERIAL" source="MATERIAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNIT_OF_MEASURE" source="UNIT_OF_MEASURE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="QUANTITY" source="QUANTITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRICE_PER_UNIT" source="PRICE_PER_UNIT"/>
+    </input>
+    <input node="Projection_5">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="POSTING_DATE" source="SAP_DATE"/>
+    </input>
+    <joinAttribute name="POSTING_DATE"/>
+  </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
     <descriptions/>
     <viewAttributes>
@@ -256,7 +315,11 @@
       <viewAttribute id="COSTCENTER"/>
       <viewAttribute id="DOCTY"/>
     </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_PERIOD" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>TRIM(SUBSTR(&quot;POPER&quot;, 2))</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
       <input node="Projection_1">
         <mapping xsi:type="Calculation:AttributeMapping" target="RLDNR" source="RLDNR"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="RRCTY" source="RRCTY"/>
@@ -351,6 +414,8 @@
       
       <viewAttribute id="COSTCENTER"/>
       <viewAttribute id="DOCTY"/>
+    
+      <viewAttribute id="CC_PERIOD"/>
     </viewAttributes>
     <calculatedViewAttributes/>
       <input emptyUnionBehavior="NO_ROW" node="Join_1">
@@ -359,7 +424,7 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="RVERS" source="RVERS"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="RYEAR" source="RYEAR"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="RTCUR" source="RTCUR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="POPER" source="POPER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POPER" source="CC_PERIOD"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="RVALUETYPE_9" source="RVALUETYPE_9"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="RTRANS" source="RTRANS"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="RSTATS_IND" source="RSTATS_IND"/>
@@ -400,6 +465,8 @@
       
         <mapping xsi:type="Calculation:AttributeMapping" target="COSTCENTER" source="COSTCENTER"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="DOCTY" source="DOCTY"/>
+      
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PERIOD" source="CC_PERIOD"/>
       </input>
       <input emptyUnionBehavior="NO_ROW" node="Join_4">
         <mapping xsi:type="Calculation:ConstantAttributeMapping" target="RLDNR" null="true" value=""/>
@@ -448,6 +515,8 @@
       
         <mapping xsi:type="Calculation:ConstantAttributeMapping" target="COSTCENTER" null="true" value=""/>
         <mapping xsi:type="Calculation:ConstantAttributeMapping" target="DOCTY" null="true" value=""/>
+      
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_PERIOD" null="true" value=""/>
       </input>
     </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
@@ -865,7 +934,7 @@
       </input>
     <joinAttribute name="RSTATS_IND"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="Join_6" cardinality="C1_N" joinType="inner">
+  <calculationView xsi:type="Calculation:JoinView" id="Join_6" cardinality="C1_N" joinType="leftOuter">
     <descriptions/>
     <viewAttributes>
         <viewAttribute id="TOTAL_AMOUNT"/>
@@ -991,65 +1060,6 @@
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="plx_analytics::CA_DIM_FISC_CAL"/>
-  </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="Join_7" cardinality="CN_N" joinType="inner">
-    <viewAttributes>
-      <viewAttribute id="GRANT_NBR"/>
-      <viewAttribute id="BDGT_VLDTY_NBR"/>
-      <viewAttribute id="SPONSORED_PROG"/>
-      <viewAttribute id="SPONSORED_CLASS"/>
-      <viewAttribute id="FUND"/>
-      <viewAttribute id="AMOUNT" aggregationType="sum"/>
-      <viewAttribute id="PERC_IDC" aggregationType="sum"/>
-      <viewAttribute id="AMOUNT_IDC" aggregationType="sum"/>
-      <viewAttribute id="TOTAL_AWARD" aggregationType="sum"/>
-      <viewAttribute id="PERC_CSH" aggregationType="sum"/>
-      <viewAttribute id="AMOUNT_CSH" aggregationType="sum"/>
-      <viewAttribute id="TOTAL_AMOUNT" aggregationType="sum"/>
-      <viewAttribute id="VALUETYPE"/>
-      <viewAttribute id="POSTING_DATE"/>
-      <viewAttribute id="GRANTEE_FY"/>
-      <viewAttribute id="CLASS_TYPE"/>
-      <viewAttribute id="SIGN"/>
-      <viewAttribute id="PARTNER_LINE"/>
-      <viewAttribute id="MATERIAL"/>
-      <viewAttribute id="UNIT_OF_MEASURE"/>
-      <viewAttribute id="QUANTITY" aggregationType="sum"/>
-      <viewAttribute id="PRICE_PER_UNIT" aggregationType="sum"/>
-      <viewAttribute id="ZFISCAL_YEAR"/>
-      <viewAttribute id="ZFISCAL_PERIOD"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="Projection_3">
-      <mapping xsi:type="Calculation:AttributeMapping" target="GRANT_NBR" source="GRANT_NBR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BDGT_VLDTY_NBR" source="BDGT_VLDTY_NBR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="SPONSORED_PROG" source="SPONSORED_PROG"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="SPONSORED_CLASS" source="SPONSORED_CLASS"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="FUND" source="FUND"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AMOUNT" source="AMOUNT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PERC_IDC" source="PERC_IDC"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AMOUNT_IDC" source="AMOUNT_IDC"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_AWARD" source="TOTAL_AWARD"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PERC_CSH" source="PERC_CSH"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AMOUNT_CSH" source="AMOUNT_CSH"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_AMOUNT" source="TOTAL_AMOUNT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="VALUETYPE" source="VALUETYPE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="POSTING_DATE" source="POSTING_DATE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="GRANTEE_FY" source="GRANTEE_FY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CLASS_TYPE" source="CLASS_TYPE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="SIGN" source="SIGN"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER_LINE" source="PARTNER_LINE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATERIAL" source="MATERIAL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="UNIT_OF_MEASURE" source="UNIT_OF_MEASURE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="QUANTITY" source="QUANTITY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PRICE_PER_UNIT" source="PRICE_PER_UNIT"/>
-    </input>
-    <input node="Projection_5">
-      <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_YEAR" source="ZFISCAL_YEAR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ZFISCAL_PERIOD" source="ZFISCAL_PERIOD"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="POSTING_DATE" source="SAP_DATE"/>
-    </input>
-    <joinAttribute name="POSTING_DATE"/>
   </calculationView>
 </calculationViews>
   <logicalModel id="Join_6">
@@ -1304,19 +1314,19 @@
 <layout>
   <shapes>
       <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-        <upperLeftCorner x="425.38185901801364" y="112"/>
+        <upperLeftCorner x="425" y="112"/>
         <rectangleSize height="0" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="393.10029595773915" y="1396.9999928474426"/>
+        <upperLeftCorner x="393" y="1396"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Projection_4" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="302" y="1256.9999940395355"/>
+        <upperLeftCorner x="302" y="1256"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Join_4" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="404.0167822015758" y="1096.9999952316284"/>
+        <upperLeftCorner x="404" y="1096"/>
         <rectangleSize height="0" width="160"/>
       </shape>
     <shape modelObjectName="Join_7" modelObjectNameSpace="Join_4" modelObjectType="JoinNodeInput">
@@ -1327,12 +1337,24 @@
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
     </shape>
+    <shape expanded="true" modelObjectName="Join_7" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="512" y="1256"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Projection_3" modelObjectNameSpace="Join_7" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_5" modelObjectNameSpace="Join_7" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="316" y="175"/>
+      <rectangleSize width="179"/>
+    </shape>
       <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="91.99999999999989" y="1256.9999940395355"/>
+        <upperLeftCorner x="91" y="1256"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="118.66666666666663" y="1096.9999952316284"/>
+        <upperLeftCorner x="118" y="1096"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
     <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
@@ -1344,15 +1366,15 @@
       <rectangleSize width="250"/>
     </shape>
       <shape expanded="true" modelObjectName="Union_1" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="357.4784931603333" y="956.9999964237213"/>
+        <upperLeftCorner x="357" y="956"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="357.4784931603333" y="851.9999964237213"/>
+        <upperLeftCorner x="357" y="851"/>
         <rectangleSize height="0" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="410.1507092951964" y="691.9999976158142"/>
+        <upperLeftCorner x="410" y="691"/>
         <rectangleSize height="0" width="160"/>
       </shape>
     <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
@@ -1364,7 +1386,7 @@
       <rectangleSize width="250"/>
     </shape>
       <shape expanded="true" modelObjectName="Join_3" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="410.1507092951964" y="551.9999976158142"/>
+        <upperLeftCorner x="410" y="551"/>
         <rectangleSize height="0" width="160"/>
       </shape>
     <shape modelObjectName="Join_2" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
@@ -1376,7 +1398,7 @@
       <rectangleSize width="250"/>
     </shape>
       <shape expanded="true" modelObjectName="Join_5" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="423.78594731814985" y="391.9999988079071"/>
+        <upperLeftCorner x="423" y="391"/>
         <rectangleSize height="0" width="160"/>
       </shape>
     <shape modelObjectName="Join_3" modelObjectNameSpace="Join_5" modelObjectType="JoinNodeInput">
@@ -1388,7 +1410,7 @@
       <rectangleSize width="250"/>
     </shape>
       <shape expanded="true" modelObjectName="Join_6" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="423.78594731814985" y="251.9999988079071"/>
+        <upperLeftCorner x="423" y="251"/>
         <rectangleSize height="0" width="160"/>
       </shape>
     <shape modelObjectName="Join_5" modelObjectNameSpace="Join_6" modelObjectType="JoinNodeInput">
@@ -1400,20 +1422,8 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="Projection_5" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="603.1002959577391" y="1396.9999928474426"/>
+      <upperLeftCorner x="603" y="1396"/>
       <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="Join_7" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="512" y="1256.9999940395355"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape modelObjectName="Projection_3" modelObjectNameSpace="Join_7" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="250"/>
-    </shape>
-    <shape modelObjectName="Projection_5" modelObjectNameSpace="Join_7" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="316" y="175"/>
-      <rectangleSize width="179.521484375"/>
     </shape>
       <shape modelObjectName="Join_6" modelObjectNameSpace="StarJoinViewNodeInput" modelObjectType="repository">
         <upperLeftCorner x="-5" y="-5"/>
