@@ -57,6 +57,9 @@
     <DataSource id="ECC_GMGR">
       <resourceUri>ECC_GMGR</resourceUri>
     </DataSource>
+    <DataSource id="plx_analytics::CA_DIM_FISC_CAL">
+      <resourceUri>plx_analytics::CA_DIM_FISC_CAL</resourceUri>
+    </DataSource>
     <DataSource id="ECC_GMIA">
       <resourceUri>ECC_GMIA</resourceUri>
     </DataSource>
@@ -71,9 +74,6 @@
     </DataSource>
     <DataSource id="ECC_GMVALUETYPE_TEXT">
       <resourceUri>ECC_GMVALUETYPE_TEXT</resourceUri>
-    </DataSource>
-    <DataSource id="plx_analytics::CA_DIM_FISC_CAL">
-      <resourceUri>plx_analytics::CA_DIM_FISC_CAL</resourceUri>
     </DataSource>
   </dataSources>
 <calculationViews>
@@ -227,6 +227,15 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="POSTING_DATE" source="SAP_DATE"/>
     </input>
     <joinAttribute name="POSTING_DATE"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_5">
+    <viewAttributes>
+      <viewAttribute id="ZFISCAL_YEAR"/>
+      <viewAttribute id="ZFISCAL_PERIOD"/>
+    
+      <viewAttribute id="SAP_DATE"/></viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="plx_analytics::CA_DIM_FISC_CAL"/>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
     <descriptions/>
@@ -1052,15 +1061,6 @@
       </input>
     <joinAttribute name="RVALUETYPE_9"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_5">
-    <viewAttributes>
-      <viewAttribute id="SAP_DATE"/>
-      <viewAttribute id="ZFISCAL_YEAR"/>
-      <viewAttribute id="ZFISCAL_PERIOD"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="plx_analytics::CA_DIM_FISC_CAL"/>
-  </calculationView>
 </calculationViews>
   <logicalModel id="Join_6">
     <descriptions/>
@@ -1239,7 +1239,6 @@
         <keyMapping columnObjectName="Join_6" columnName="DOCTY"/>
       </attribute>
       <attribute id="RGRANT_NBR$local">
-        <descriptions defaultDescription="Grant"/>
         <keyMapping columnObjectName="Join_6" columnName="RGRANT_NBR"/>
       </attribute>
     </attributes>
@@ -1304,10 +1303,8 @@
         <associatedAttributeNames>
           <attributeName>GRANT_NBR</attributeName>
         </associatedAttributeNames>
-        <properties cardinality="CN_1" joinType="leftOuter" joinOperator="Equal"/>
-        <associatedAttributeFeatures>
-          <attributeReference attributeName="GRANT_NBR" hidden="true"/>
-        </associatedAttributeFeatures>
+        <properties cardinality="CN_N" joinType="leftOuter" joinOperator="Equal"/>
+        <associatedAttributeFeatures/>
       </logicalJoin>
     </sharedDimensions>
   </logicalModel>
@@ -1348,6 +1345,10 @@
     <shape modelObjectName="Projection_5" modelObjectNameSpace="Join_7" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="316" y="175"/>
       <rectangleSize width="179"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_5" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="603" y="1396"/>
+      <rectangleSize height="30" width="160"/>
     </shape>
       <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
         <upperLeftCorner x="91" y="1256"/>
@@ -1421,16 +1422,15 @@
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape expanded="true" modelObjectName="Projection_5" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="603" y="1396"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
       <shape modelObjectName="Join_6" modelObjectNameSpace="StarJoinViewNodeInput" modelObjectType="repository">
-        <upperLeftCorner x="-5" y="-5"/>
+        <upperLeftCorner x="193" y="20"/>
+      
+        <rectangleSize width="276.09375"/>
       </shape>
-      <shape modelObjectName="plx_analytics::CA_PLX_GRANT_DETAILS" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
-        <upperLeftCorner x="470" y="30"/>
-      </shape>
-    </shapes>
+    <shape modelObjectName="plx_analytics::CA_PLX_GRANT_DETAILS" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
+      <upperLeftCorner x="493" y="30"/>
+      <rectangleSize width="301.1640625"/>
+    </shape>
+  </shapes>
 </layout>
 </Calculation:scenario>
