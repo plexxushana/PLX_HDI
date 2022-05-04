@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="plx_analytics::CA_MATERIAL_CHARACTERICS_AUSP" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" dataCategory="DIMENSION" dimensionType="STANDARD" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="CA_MATERIAL_CHARACTERICS_AUSP"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="ECC_MARA">
+    <resourceUri>ECC_MARA</resourceUri>
+  </DataSource>
+  <DataSource id="ECC_INOB">
+    <resourceUri>ECC_INOB</resourceUri>
+  </DataSource>
+  <DataSource id="ECC_KSSK">
+    <resourceUri>ECC_KSSK</resourceUri>
+  </DataSource>
+  <DataSource id="ECC_KSML">
+    <resourceUri>ECC_KSML</resourceUri>
+  </DataSource>
+  <DataSource id="ECC_AUSP">
+    <resourceUri>ECC_AUSP</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <viewAttributes>
+      <viewAttribute id="MATNR"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="ECC_MARA"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+    <viewAttributes>
+      <viewAttribute id="OBJEK"/>
+      <viewAttribute id="CUOBJ"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="ECC_INOB"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="MATNR"/>
+      <viewAttribute id="CUOBJ"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Projection_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+    </input>
+    <input node="Projection_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CUOBJ" source="CUOBJ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="OBJEK"/>
+    </input>
+    <joinAttribute name="MATNR"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
+    <viewAttributes>
+      <viewAttribute id="OBJEK"/>
+      <viewAttribute id="CLINT"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="ECC_KSSK"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="MATNR"/>
+      <viewAttribute id="CLINT"/>
+      <viewAttribute hidden="true" id="JOIN$CUOBJ$OBJEK"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CUOBJ$OBJEK" source="CUOBJ"/>
+    </input>
+    <input node="Projection_3">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLINT" source="CLINT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CUOBJ$OBJEK" source="OBJEK"/>
+    </input>
+    <joinAttribute name="JOIN$CUOBJ$OBJEK"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_4">
+    <viewAttributes>
+      <viewAttribute id="CLINT"/>
+      <viewAttribute id="IMERK"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="ECC_KSML"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_3" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="MATNR"/>
+      <viewAttribute id="IMERK"/>
+      <viewAttribute hidden="true" id="JOIN$CLINT$CLINT"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CLINT$CLINT" source="CLINT"/>
+    </input>
+    <input node="Projection_4">
+      <mapping xsi:type="Calculation:AttributeMapping" target="IMERK" source="IMERK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CLINT$CLINT" source="CLINT"/>
+    </input>
+    <joinAttribute name="JOIN$CLINT$CLINT"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_5">
+    <viewAttributes>
+      <viewAttribute id="ATINN"/>
+      <viewAttribute id="ATWRT"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="ECC_AUSP"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_4" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="MATNR"/>
+      <viewAttribute id="ATWRT"/>
+      <viewAttribute id="ATINN"/>
+      <viewAttribute hidden="true" id="JOIN$IMERK$ATINN"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_3">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$IMERK$ATINN" source="IMERK"/>
+    </input>
+    <input node="Projection_5">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ATWRT" source="ATWRT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ATINN" source="ATINN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$IMERK$ATINN" source="ATINN"/>
+    </input>
+    <joinAttribute name="JOIN$IMERK$ATINN"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_6">
+    <viewAttributes>
+      <viewAttribute id="MATNR"/>
+      <viewAttribute id="ATWRT"/>
+      <viewAttribute id="ATINN"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CD_MEDICAL_DEVICE_CLASSTYPE" datatype="NVARCHAR" length="50" expressionLanguage="SQL">
+        <formula>CASE WHEN &quot;ATINN&quot; = 'MEDICALDEVICECLASSTYPE' THEN &quot;ATWRT&quot; ELSE '' END</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CD_MED_DEVICE_LICENCE_NUMBER" datatype="NVARCHAR" length="50" expressionLanguage="SQL">
+        <formula>CASE WHEN &quot;ATINN&quot; = 'MEDICALDEVICELICENCENUMBER' THEN &quot;ATWRT&quot; ELSE '' END</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CD_STERILE" datatype="NVARCHAR" length="30" expressionLanguage="SQL">
+        <formula>CASE WHEN &quot;ATINN&quot; = 'STERILE' THEN &quot;ATWRT&quot; ELSE '' END</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CD_LATEX" datatype="NVARCHAR" length="30" expressionLanguage="SQL">
+        <formula>CASE WHEN &quot;ATINN&quot; = 'LATEX' THEN &quot;ATWRT&quot; ELSE '' END</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CD_RADIOACTIVE" datatype="NVARCHAR" length="30" expressionLanguage="SQL">
+        <formula>CASE WHEN &quot;ATINN&quot; = 'RADIOACTIVE' THEN &quot;ATWRT&quot; ELSE '' END</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CD_HAZARDOUS" datatype="NVARCHAR" length="30" expressionLanguage="SQL">
+        <formula>CASE WHEN &quot;ATINN&quot; = 'HAZARDOUS' THEN &quot;ATWRT&quot; ELSE '' END</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="Join_4"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1">
+    <viewAttributes>
+      <viewAttribute id="MATNR"/>
+      <viewAttribute id="CD_MEDICAL_DEVICE_CLASSTYPE" aggregationType="max"/>
+      <viewAttribute id="CD_MED_DEVICE_LICENCE_NUMBER" aggregationType="max"/>
+      <viewAttribute id="CD_STERILE" aggregationType="max"/>
+      <viewAttribute id="CD_LATEX" aggregationType="max"/>
+      <viewAttribute id="CD_RADIOACTIVE" aggregationType="max"/>
+      <viewAttribute id="CD_HAZARDOUS" aggregationType="max"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="Projection_6"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Aggregation_1">
+  <attributes>
+    <attribute id="MATNR" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATNR"/>
+      <keyMapping columnObjectName="Aggregation_1" columnName="MATNR"/>
+    </attribute>
+    <attribute id="CD_MEDICAL_DEVICE_CLASSTYPE" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CD_MEDICAL_DEVICE_CLASSTYPE"/>
+      <keyMapping columnObjectName="Aggregation_1" columnName="CD_MEDICAL_DEVICE_CLASSTYPE"/>
+    </attribute>
+    <attribute id="CD_MED_DEVICE_LICENCE_NUMBER" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CD_MED_DEVICE_LICENCE_NUMBER"/>
+      <keyMapping columnObjectName="Aggregation_1" columnName="CD_MED_DEVICE_LICENCE_NUMBER"/>
+    </attribute>
+    <attribute id="CD_STERILE" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CD_STERILE"/>
+      <keyMapping columnObjectName="Aggregation_1" columnName="CD_STERILE"/>
+    </attribute>
+    <attribute id="CD_LATEX" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CD_LATEX"/>
+      <keyMapping columnObjectName="Aggregation_1" columnName="CD_LATEX"/>
+    </attribute>
+    <attribute id="CD_RADIOACTIVE" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CD_RADIOACTIVE"/>
+      <keyMapping columnObjectName="Aggregation_1" columnName="CD_RADIOACTIVE"/>
+    </attribute>
+    <attribute id="CD_HAZARDOUS" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CD_HAZARDOUS"/>
+      <keyMapping columnObjectName="Aggregation_1" columnName="CD_HAZARDOUS"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="568.8469543325172" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="91.99999999999993" y="1086.9999940395355"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="301.9999999999999" y="1086.9999940395355"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="118.66666666666663" y="926.9999952316284"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="136"/>
+    </shape>
+    <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="136"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="381.9363456124747" y="926.9999952316284"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="145.33333333333331" y="766.9999964237213"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Join_1" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_3" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="510" y="30"/>
+      <rectangleSize width="136"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_4" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="481.11381780212673" y="766.9999964237213"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_3" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="171.99999999999994" y="606.9999976158142"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Join_2" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="124"/>
+    </shape>
+    <shape modelObjectName="Projection_4" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="136"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_5" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="598.1400330883915" y="606.9999976158142"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_4" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="547.1882110366711" y="446.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Join_3" modelObjectNameSpace="Join_4" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="124"/>
+    </shape>
+    <shape modelObjectName="Projection_5" modelObjectNameSpace="Join_4" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="136"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_6" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="547.1882110366711" y="341.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="568.8469543325172" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
