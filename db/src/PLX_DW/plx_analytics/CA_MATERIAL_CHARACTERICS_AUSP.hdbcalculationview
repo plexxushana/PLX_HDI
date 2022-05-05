@@ -19,6 +19,12 @@
   <DataSource id="ECC_AUSP">
     <resourceUri>ECC_AUSP</resourceUri>
   </DataSource>
+  <DataSource id="ECC_CAWN">
+    <resourceUri>ECC_CAWN</resourceUri>
+  </DataSource>
+  <DataSource id="ECC_CAWNT">
+    <resourceUri>ECC_CAWNT</resourceUri>
+  </DataSource>
 </dataSources>
 <calculationViews>
   <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
@@ -141,28 +147,53 @@
       <viewAttribute id="MATNR"/>
       <viewAttribute id="ATWRT"/>
       <viewAttribute id="ATINN"/>
+    
+      <viewAttribute id="ATWTB"/>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CD_MEDICAL_DEVICE_CLASSTYPE" datatype="NVARCHAR" length="50" expressionLanguage="SQL">
-        <formula>CASE WHEN &quot;ATINN&quot; = '0000000818' THEN &quot;ATWRT&quot; ELSE '' END</formula>
+        <formula>CASE WHEN &quot;ATINN&quot; = '0000000818' THEN &quot;ATWTB&quot; ELSE '' END</formula>
       </calculatedViewAttribute>
       <calculatedViewAttribute id="CD_MED_DEVICE_LICENCE_NUMBER" datatype="NVARCHAR" length="50" expressionLanguage="SQL">
         <formula>CASE WHEN &quot;ATINN&quot; = '0000000819' THEN &quot;ATWRT&quot; ELSE '' END</formula>
       </calculatedViewAttribute>
       <calculatedViewAttribute id="CD_STERILE" datatype="NVARCHAR" length="30" expressionLanguage="SQL">
-        <formula>CASE WHEN &quot;ATINN&quot; = '0000000816' THEN &quot;ATWRT&quot; ELSE '' END</formula>
+        <formula>CASE WHEN &quot;ATINN&quot; = '0000000816' THEN &quot;ATWTB&quot; ELSE '' END</formula>
       </calculatedViewAttribute>
       <calculatedViewAttribute id="CD_LATEX" datatype="NVARCHAR" length="30" expressionLanguage="SQL">
-        <formula>CASE WHEN &quot;ATINN&quot; = '0000000817' THEN &quot;ATWRT&quot; ELSE '' END</formula>
+        <formula>CASE WHEN &quot;ATINN&quot; = '0000000817' THEN &quot;ATWTB&quot; ELSE '' END</formula>
       </calculatedViewAttribute>
       <calculatedViewAttribute id="CD_RADIOACTIVE" datatype="NVARCHAR" length="30" expressionLanguage="SQL">
-        <formula>CASE WHEN &quot;ATINN&quot; = '0000000820' THEN &quot;ATWRT&quot; ELSE '' END</formula>
+        <formula>CASE WHEN &quot;ATINN&quot; = '0000000820' THEN &quot;ATWTB&quot; ELSE '' END</formula>
       </calculatedViewAttribute>
       <calculatedViewAttribute id="CD_HAZARDOUS" datatype="NVARCHAR" length="30" expressionLanguage="SQL">
-        <formula>CASE WHEN &quot;ATINN&quot; = '0000000821' THEN &quot;ATWRT&quot; ELSE '' END</formula>
+        <formula>CASE WHEN &quot;ATINN&quot; = '0000000821' THEN &quot;ATWTB&quot; ELSE '' END</formula>
       </calculatedViewAttribute>
     </calculatedViewAttributes>
-    <input node="Join_4"/>
+    <input node="Join_6"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_6" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="MATNR"/>
+      <viewAttribute id="ATWRT"/>
+      <viewAttribute id="ATINN"/>
+      <viewAttribute id="ATWTB"/>
+      <viewAttribute hidden="true" id="JOIN$ATZHL$ATZHL"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_5">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ATWRT" source="ATWRT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ATINN" source="ATINN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ATZHL$ATZHL" source="ATZHL"/>
+    </input>
+    <input node="Projection_8">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ATWTB" source="ATWTB"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ATINN" source="ATINN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ATZHL$ATZHL" source="ATZHL"/>
+    </input>
+    <joinAttribute name="ATINN"/>
+    <joinAttribute name="JOIN$ATZHL$ATZHL"/>
   </calculationView>
   <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1">
     <viewAttributes>
@@ -177,6 +208,49 @@
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="Projection_6"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_7">
+    <viewAttributes>
+      <viewAttribute id="ATINN"/>
+      <viewAttribute id="ATWRT"/>
+      <viewAttribute id="ATZHL"/>
+      <viewAttribute id="ADZHL"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="ECC_CAWN"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_5" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="MATNR"/>
+      <viewAttribute id="ATWRT"/>
+      <viewAttribute id="ATINN"/>
+      <viewAttribute id="ATZHL"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_4">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ATWRT" source="ATWRT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ATINN" source="ATINN"/>
+    </input>
+    <input node="Projection_7">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ATZHL" source="ATZHL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ATWRT" source="ATWRT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ATINN" source="ATINN"/>
+    </input>
+    <joinAttribute name="ATWRT"/>
+    <joinAttribute name="ATINN"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_8" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="ATINN"/>
+      <viewAttribute id="ATZHL"/>
+      <viewAttribute id="SPRAS"/>
+      <viewAttribute id="ADZHL"/>
+      <viewAttribute id="ATWTB"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="ECC_CAWNT"/>
+    <filter>&quot;SPRAS&quot; = 'E'</filter>
   </calculationView>
 </calculationViews>
 <logicalModel id="Aggregation_1">
@@ -218,21 +292,21 @@
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="568" y="112"/>
+      <upperLeftCorner x="849.8094479982284" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="91" y="1086"/>
+      <upperLeftCorner x="92.00000000000001" y="1406.9999916553497"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="301" y="1086"/>
+      <upperLeftCorner x="302.0000000000002" y="1406.9999916553497"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="118" y="926"/>
+      <upperLeftCorner x="118.66666666666664" y="1246.9999928474426"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
@@ -244,11 +318,11 @@
       <rectangleSize width="136"/>
     </shape>
     <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="381" y="926"/>
+      <upperLeftCorner x="380.57262736469" y="1246.9999928474426"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="145" y="766"/>
+      <upperLeftCorner x="145.33333333333326" y="1086.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="Join_1" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
@@ -260,11 +334,11 @@
       <rectangleSize width="136"/>
     </shape>
     <shape expanded="true" modelObjectName="Projection_4" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="481" y="766"/>
+      <upperLeftCorner x="475.15432075642576" y="1086.9999940395355"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Join_3" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="171" y="606"/>
+      <upperLeftCorner x="171.9999999999999" y="926.9999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="Join_2" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
@@ -276,11 +350,11 @@
       <rectangleSize width="136"/>
     </shape>
     <shape expanded="true" modelObjectName="Projection_5" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="598" y="606"/>
+      <upperLeftCorner x="583.5883561337661" y="926.9999952316284"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Join_4" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="547" y="446"/>
+      <upperLeftCorner x="198.66666666666652" y="766.9999964237213"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="Join_3" modelObjectNameSpace="Join_4" modelObjectType="JoinNodeInput">
@@ -293,13 +367,46 @@
     </shape>
   
     <shape expanded="true" modelObjectName="Projection_6" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="547" y="341"/>
+      <upperLeftCorner x="809.5537182609766" y="341.9999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
+    <shape expanded="true" modelObjectName="Join_6" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="809.5537182609766" y="446.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Join_5" modelObjectNameSpace="Join_6" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_8" modelObjectNameSpace="Join_6" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="136"/>
+    </shape>
+  
     <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="568" y="217"/>
+      <upperLeftCorner x="849.8094479982284" y="217"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-  </shapes>
+  
+    <shape expanded="true" modelObjectName="Projection_7" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="704.8469891346266" y="766.9999964237213"/>
+      <rectangleSize height="30" width="159"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_5" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="225.33333333333314" y="606.9999976158142"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Join_4" modelObjectNameSpace="Join_5" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_7" modelObjectNameSpace="Join_5" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="136"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_8" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="836.8257861239446" y="606.9999976158142"/>
+      <rectangleSize height="30" width="160"/>
+    </shape></shapes>
 </layout>
 </Calculation:scenario>
