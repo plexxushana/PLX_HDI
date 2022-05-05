@@ -46,9 +46,9 @@ BEGIN
 	SELECT  BUKRS, BELNR, GJAHR
 	FROM    "ECC_BKPF"
 	WHERE   CONCAT("BELNR","BUKRS") NOT IN (SELECT CONCAT("BELNR","BUKRS") AS A  
-	FROM "ECC_BSEG" where gjahr = '2022' and "BUKRS" = ip_bukrs )  
-    AND "GJAHR" = '2022'   AND  (cpudt   BETWEEN '20201201'  AND '20211231' or
-                              aedat   BETWEEN '20201201'  AND '20211231' ) 
+	FROM "ECC_BSEG" where gjahr = '2023' and "BUKRS" = ip_bukrs )  
+    AND "GJAHR" = '2023'   AND  (cpudt   BETWEEN '20220101'  AND '20221231' or
+                              aedat   BETWEEN '20220101'  AND '20221231' ) 
 	and "BUKRS" = ip_bukrs ; 
 	
   
@@ -167,7 +167,7 @@ BEGIN
 	--	lv_gjahr := :ARR_BKPF_GJAHR[lv_row_count];
 		
 	 --CALL "PLX_DW"."plx_etl::SP_WRITE_BSEG_DELTA" (lv_belnr, lv_bukrs ,    lv_gjahr, t_out );
-   lv_gjahr = '2022';
+   lv_gjahr = '2023';
   
   lv_filter_string = 'BELNR IN (''' || lv_belnr ||''',''' || lv_belnr1 ||''',''' || lv_belnr2 ||''','''|| lv_belnr3 ||''',''' ||
                       lv_belnr4 ||''',''' || lv_belnr5 ||''','''|| lv_belnr6 ||''',''' || lv_belnr7  ||''',''' || lv_belnr8  || ''','''|| 
@@ -215,7 +215,7 @@ BEGIN
  
     	*/
 	   				
-	   				t_out = select * from :t_bseg1  where bukrs = ip_bukrs and gjahr = '2022'
+	   				t_out = select * from :t_bseg1  where bukrs = ip_bukrs and gjahr = '2023'
 	   							union all 
                				select *  from :t_out ; 
                				
