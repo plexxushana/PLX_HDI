@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="plx_analytics::CA_PLX_CC003_INVENTORYCOUNT_POSTING" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
-  <origin/>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="3.0" id="plx_analytics::CA_PLX_CC003_INVENTORYCOUNT_POSTING" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+<origin/>
   <descriptions defaultDescription="CA_PLX_COMPCONTROLS_CC003"/>
-  <metadata changedAt="2021-03-15 15:59:16.819"/>
+  <metadata changedAt="2021-08-30 12:15:08.178"/>
   <localVariables>
     <variable id="Posting_Date">
       <descriptions defaultDescription="Posting Date"/>
-      <variableProperties datatype="VARCHAR" mandatory="false">
+      <variableProperties datatype="VARCHAR" mandatory="true">
         <valueDomain type="AttributeValue">
-          <attribute name="BUDAT"/>
+          <attribute name="BUDAT_formatted"/>
         </valueDomain>
         <selection multiLine="false" type="Interval"/>
       </variableProperties>
@@ -33,7 +33,7 @@
     </variable>
   </localVariables>
   <variableMappings/>
-  <informationModelLayout relativeWidthScenario="27"/>
+  <informationModelLayout relativeWidthScenario="34"/>
   <dataSources>
     <DataSource id="ECC_ISEG">
       <resourceUri>ECC_ISEG</resourceUri>
@@ -45,10 +45,10 @@
       <resourceUri>ECC_LFA1</resourceUri>
     </DataSource>
   </dataSources>
-  <calculationViews>
-    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1" filterExpressionLanguage="COLUMN_ENGINE">
-      <descriptions/>
-      <viewAttributes>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1" filterExpressionLanguage="COLUMN_ENGINE">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="IBLNR"/>
         <viewAttribute id="GJAHR"/>
         <viewAttribute id="ZEILI"/>
@@ -112,7 +112,7 @@
         <viewAttribute id="WSTI_POSW"/>
         <viewAttribute id="WSTI_XCALC"/>
       </viewAttributes>
-      <calculatedViewAttributes>
+    <calculatedViewAttributes>
         <calculatedViewAttribute datatype="VARCHAR" id="Z_CountedBy_PostingBy" length="3" expressionLanguage="COLUMN_ENGINE">
           <formula>IF((&quot;Z_USNAD&quot;=&quot;Z_USNAZ&quot;) AND (&quot;Z_USNAD&quot;!='ALEREMOTE' and &quot;Z_USNAD&quot;!='SBATCH'), 'Yes','No')</formula>
         </calculatedViewAttribute>
@@ -129,87 +129,21 @@
           <formula>trim(&quot;USNAZ&quot;)</formula>
         </calculatedViewAttribute>
       </calculatedViewAttributes>
-      <input node="#ECC_ISEG">
-        <mapping xsi:type="Calculation:AttributeMapping" target="IBLNR" source="IBLNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ZEILI" source="ZEILI"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CHARG" source="CHARG"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SOBKZ" source="SOBKZ"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BSTAR" source="BSTAR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KDAUF" source="KDAUF"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KDPOS" source="KDPOS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KDEIN" source="KDEIN"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR" source="KUNNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="PLPLA" source="PLPLA"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="USNAM" source="USNAM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT" source="AEDAT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="USNAZ" source="USNAZ"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ZLDAT" source="ZLDAT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="USNAD" source="USNAD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNI" source="XBLNI"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XZAEL" source="XZAEL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XDIFF" source="XDIFF"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XNZAE" source="XNZAE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XLOEK" source="XLOEK"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XAMEI" source="XAMEI"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUCHM" source="BUCHM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XNULL" source="XNULL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE" source="MENGE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ERFMG" source="ERFMG"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ERFME" source="ERFME"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MBLNR" source="MBLNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MJAHR" source="MJAHR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ZEILE" source="ZEILE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="NBLNR" source="NBLNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR" source="DMBTR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ABCIN" source="ABCIN"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="PS_PSP_PNR" source="PS_PSP_PNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="VKWRT" source="VKWRT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="EXVKW" source="EXVKW"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUCHW" source="BUCHW"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KWART" source="KWART"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="VKWRA" source="VKWRA"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="VKMZL" source="VKMZL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="VKNZL" source="VKNZL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WRTZL" source="WRTZL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WRTBM" source="WRTBM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="DIWZL" source="DIWZL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ATTYP" source="ATTYP"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GRUND" source="GRUND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SAMAT" source="SAMAT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XDISPATCH" source="XDISPATCH"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_COUNTDATE" source="WSTI_COUNTDATE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_COUNTTIME" source="WSTI_COUNTTIME"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_FREEZEDATE" source="WSTI_FREEZEDATE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_FREEZETIME" source="WSTI_FREEZETIME"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_POSM" source="WSTI_POSM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_POSW" source="WSTI_POSW"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_XCALC" source="WSTI_XCALC"/>
-      </input>
-      <filter>(&quot;Z_USNAD&quot;!='ALEREMOTE' and &quot;Z_USNAD&quot;!='SBATCH' and (&quot;Z_USNAD&quot;>0)) and (&quot;Z_USNAZ&quot;!='ALEREMOTE' and &quot;Z_USNAZ&quot;!='SBATCH' and (&quot;Z_USNAZ&quot;>0))</filter>
-    </calculationView>
-    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
-      <descriptions/>
-      <viewAttributes>
+      <input node="ECC_ISEG"/>
+    <filter>(&quot;Z_USNAD&quot;!='ALEREMOTE' and &quot;Z_USNAD&quot;!='SBATCH' and (&quot;Z_USNAD&quot;&gt;0)) and (&quot;Z_USNAZ&quot;!='ALEREMOTE' and &quot;Z_USNAZ&quot;!='SBATCH' and (&quot;Z_USNAZ&quot;&gt;0))</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="BUKRS"/>
         <viewAttribute id="WERKS"/>
       </viewAttributes>
-      <calculatedViewAttributes/>
-      <input node="#CA_DIM_ORG_STRCTR">
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
-      </input>
+    <calculatedViewAttributes/>
+      <input node="CA_DIM_ORG_STRCTR"/>
     </calculationView>
-    <calculationView xsi:type="Calculation:JoinView" id="Join_2" joinOrder="OUTSIDE_IN" joinType="leftOuter">
-      <descriptions/>
-      <viewAttributes>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2" joinType="leftOuter">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="IBLNR"/>
         <viewAttribute id="GJAHR"/>
         <viewAttribute id="ZEILI"/>
@@ -279,8 +213,8 @@
         <viewAttribute id="Z_USNAZ"/>
         <viewAttribute id="KTOKK"/>
       </viewAttributes>
-      <calculatedViewAttributes/>
-      <input node="#Projection_1">
+    <calculatedViewAttributes/>
+      <input node="Projection_1">
         <mapping xsi:type="Calculation:AttributeMapping" target="IBLNR" source="IBLNR"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="ZEILI" source="ZEILI"/>
@@ -349,15 +283,15 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="Z_USNAD" source="Z_USNAD"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="Z_USNAZ" source="Z_USNAZ"/>
       </input>
-      <input node="#ECC_LFA1">
+      <input node="ECC_LFA1">
         <mapping xsi:type="Calculation:AttributeMapping" target="KTOKK" source="KTOKK"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
       </input>
-      <joinAttribute name="LIFNR"/>
-    </calculationView>
-    <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinOrder="OUTSIDE_IN" joinType="leftOuter">
-      <descriptions/>
-      <viewAttributes>
+    <joinAttribute name="LIFNR"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinType="leftOuter">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="BUKRS"/>
         <viewAttribute id="IBLNR"/>
         <viewAttribute id="GJAHR"/>
@@ -428,86 +362,86 @@
         <viewAttribute id="Z_USNAZ"/>
         <viewAttribute id="KTOKK"/>
       </viewAttributes>
-      <calculatedViewAttributes/>
-      <input node="#Join_2">
-        <mapping xsi:type="Calculation:AttributeMapping" target="Z_USNAZ" source="Z_USNAZ"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="Z_USNAD" source="Z_USNAD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="Z_No_Count" source="Z_No_Count"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="Z_Yes_Count" source="Z_Yes_Count"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="Z_CountedBy_PostingBy" source="Z_CountedBy_PostingBy"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_XCALC" source="WSTI_XCALC"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_POSW" source="WSTI_POSW"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_POSM" source="WSTI_POSM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_FREEZETIME" source="WSTI_FREEZETIME"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_FREEZEDATE" source="WSTI_FREEZEDATE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_COUNTTIME" source="WSTI_COUNTTIME"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_COUNTDATE" source="WSTI_COUNTDATE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XDISPATCH" source="XDISPATCH"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SAMAT" source="SAMAT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GRUND" source="GRUND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ATTYP" source="ATTYP"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="DIWZL" source="DIWZL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WRTBM" source="WRTBM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WRTZL" source="WRTZL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="VKNZL" source="VKNZL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="VKMZL" source="VKMZL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="VKWRA" source="VKWRA"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KWART" source="KWART"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUCHW" source="BUCHW"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="EXVKW" source="EXVKW"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="VKWRT" source="VKWRT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="PS_PSP_PNR" source="PS_PSP_PNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ABCIN" source="ABCIN"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR" source="DMBTR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="NBLNR" source="NBLNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ZEILE" source="ZEILE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MJAHR" source="MJAHR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MBLNR" source="MBLNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ERFME" source="ERFME"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ERFMG" source="ERFMG"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE" source="MENGE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XNULL" source="XNULL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUCHM" source="BUCHM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XAMEI" source="XAMEI"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XLOEK" source="XLOEK"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XNZAE" source="XNZAE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XDIFF" source="XDIFF"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XZAEL" source="XZAEL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNI" source="XBLNI"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="USNAD" source="USNAD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ZLDAT" source="ZLDAT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="USNAZ" source="USNAZ"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT" source="AEDAT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="USNAM" source="USNAM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="PLPLA" source="PLPLA"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR" source="KUNNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KDEIN" source="KDEIN"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KDPOS" source="KDPOS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KDAUF" source="KDAUF"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BSTAR" source="BSTAR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SOBKZ" source="SOBKZ"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CHARG" source="CHARG"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ZEILI" source="ZEILI"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+    <calculatedViewAttributes/>
+      <input node="Join_2">
         <mapping xsi:type="Calculation:AttributeMapping" target="IBLNR" source="IBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZEILI" source="ZEILI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARG" source="CHARG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOBKZ" source="SOBKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSTAR" source="BSTAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KDAUF" source="KDAUF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KDPOS" source="KDPOS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KDEIN" source="KDEIN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR" source="KUNNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PLPLA" source="PLPLA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="USNAM" source="USNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT" source="AEDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="USNAZ" source="USNAZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZLDAT" source="ZLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="USNAD" source="USNAD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNI" source="XBLNI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XZAEL" source="XZAEL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XDIFF" source="XDIFF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XNZAE" source="XNZAE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XLOEK" source="XLOEK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XAMEI" source="XAMEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUCHM" source="BUCHM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XNULL" source="XNULL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE" source="MENGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFMG" source="ERFMG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERFME" source="ERFME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MBLNR" source="MBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MJAHR" source="MJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZEILE" source="ZEILE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NBLNR" source="NBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR" source="DMBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ABCIN" source="ABCIN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_PSP_PNR" source="PS_PSP_PNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VKWRT" source="VKWRT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXVKW" source="EXVKW"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUCHW" source="BUCHW"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KWART" source="KWART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VKWRA" source="VKWRA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VKMZL" source="VKMZL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VKNZL" source="VKNZL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WRTZL" source="WRTZL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WRTBM" source="WRTBM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DIWZL" source="DIWZL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ATTYP" source="ATTYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GRUND" source="GRUND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAMAT" source="SAMAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="XDISPATCH" source="XDISPATCH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_COUNTDATE" source="WSTI_COUNTDATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_COUNTTIME" source="WSTI_COUNTTIME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_FREEZEDATE" source="WSTI_FREEZEDATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_FREEZETIME" source="WSTI_FREEZETIME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_POSM" source="WSTI_POSM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_POSW" source="WSTI_POSW"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_XCALC" source="WSTI_XCALC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_CountedBy_PostingBy" source="Z_CountedBy_PostingBy"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_Yes_Count" source="Z_Yes_Count"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_No_Count" source="Z_No_Count"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_USNAD" source="Z_USNAD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_USNAZ" source="Z_USNAZ"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="KTOKK" source="KTOKK"/>
       </input>
-      <input node="#Projection_2">
+      <input node="Projection_2">
         <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
       </input>
-      <joinAttribute name="WERKS"/>
-    </calculationView>
-    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
-      <descriptions/>
-      <viewAttributes>
+    <joinAttribute name="WERKS"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="IBLNR"/>
         <viewAttribute id="GJAHR"/>
         <viewAttribute id="ZEILI"/>
@@ -578,81 +512,21 @@
         <viewAttribute id="Z_USNAZ"/>
         <viewAttribute id="KTOKK"/>
       </viewAttributes>
-      <calculatedViewAttributes/>
-      <input node="#Join_1">
-        <mapping xsi:type="Calculation:AttributeMapping" target="IBLNR" source="IBLNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ZEILI" source="ZEILI"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CHARG" source="CHARG"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SOBKZ" source="SOBKZ"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BSTAR" source="BSTAR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KDAUF" source="KDAUF"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KDPOS" source="KDPOS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KDEIN" source="KDEIN"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR" source="KUNNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="PLPLA" source="PLPLA"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="USNAM" source="USNAM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="AEDAT" source="AEDAT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="USNAZ" source="USNAZ"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ZLDAT" source="ZLDAT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="USNAD" source="USNAD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XBLNI" source="XBLNI"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XZAEL" source="XZAEL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XDIFF" source="XDIFF"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XNZAE" source="XNZAE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XLOEK" source="XLOEK"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XAMEI" source="XAMEI"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUCHM" source="BUCHM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XNULL" source="XNULL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MENGE" source="MENGE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ERFMG" source="ERFMG"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ERFME" source="ERFME"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MBLNR" source="MBLNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MJAHR" source="MJAHR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ZEILE" source="ZEILE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="NBLNR" source="NBLNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="DMBTR" source="DMBTR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ABCIN" source="ABCIN"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="PS_PSP_PNR" source="PS_PSP_PNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="VKWRT" source="VKWRT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="EXVKW" source="EXVKW"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUCHW" source="BUCHW"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KWART" source="KWART"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="VKWRA" source="VKWRA"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="VKMZL" source="VKMZL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="VKNZL" source="VKNZL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WRTZL" source="WRTZL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WRTBM" source="WRTBM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="DIWZL" source="DIWZL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ATTYP" source="ATTYP"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GRUND" source="GRUND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SAMAT" source="SAMAT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="XDISPATCH" source="XDISPATCH"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_COUNTDATE" source="WSTI_COUNTDATE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_COUNTTIME" source="WSTI_COUNTTIME"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_FREEZEDATE" source="WSTI_FREEZEDATE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_FREEZETIME" source="WSTI_FREEZETIME"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_POSM" source="WSTI_POSM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_POSW" source="WSTI_POSW"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WSTI_XCALC" source="WSTI_XCALC"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="Z_CountedBy_PostingBy" source="Z_CountedBy_PostingBy"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="Z_Yes_Count" source="Z_Yes_Count"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="Z_No_Count" source="Z_No_Count"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="Z_USNAD" source="Z_USNAD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="Z_USNAZ" source="Z_USNAZ"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KTOKK" source="KTOKK"/>
-      </input>
-      <filter>(&quot;Z_Yes_Count&quot; ='1')</filter>
-    </calculationView>
-  </calculationViews>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="AEDAT_formatted" expressionLanguage="COLUMN_ENGINE">
+          <formula>(&quot;AEDAT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="ZLDAT_formatted" expressionLanguage="COLUMN_ENGINE">
+          <formula>(&quot;ZLDAT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="BUDAT_formatted" expressionLanguage="COLUMN_ENGINE">
+          <formula>(&quot;BUDAT&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="Join_1"/>
+    <filter>(&quot;DMBTR&quot; &gt;'100') AND (&quot;Z_Yes_Count&quot; ='1')</filter>
+  </calculationView>
+</calculationViews>
   <logicalModel id="Projection_3">
     <descriptions/>
     <attributes>
@@ -674,12 +548,12 @@
       </attribute>
       <attribute id="BUKRS" order="5" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="Company Code"/>
-        <localVariable>#Company_Code</localVariable>
+        <localVariable>Company_Code</localVariable>
         <keyMapping columnObjectName="Projection_3" columnName="BUKRS"/>
       </attribute>
       <attribute id="WERKS" order="6" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="Plant"/>
-        <localVariable>#Plant</localVariable>
+        <localVariable>Plant</localVariable>
         <keyMapping columnObjectName="Projection_3" columnName="WERKS"/>
       </attribute>
       <attribute id="LGORT" order="7" attributeHierarchyActive="false" displayAttribute="false">
@@ -744,7 +618,6 @@
       </attribute>
       <attribute id="BUDAT" order="22" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="Posting Date in the Document"/>
-        <localVariable>#Posting_Date</localVariable>
         <keyMapping columnObjectName="Projection_3" columnName="BUDAT"/>
       </attribute>
       <attribute id="XBLNI" order="23" attributeHierarchyActive="false" displayAttribute="false">
@@ -855,17 +728,30 @@
         <descriptions defaultDescription="Comp. CountedBy&amp;PostingBy"/>
         <keyMapping columnObjectName="Projection_3" columnName="Z_CountedBy_PostingBy"/>
       </attribute>
-      <attribute id="Z_USNAD" hidden="false" order="67" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="Z_USNAD" order="67" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="Posted By (New)"/>
         <keyMapping columnObjectName="Projection_3" columnName="Z_USNAD"/>
       </attribute>
-      <attribute id="Z_USNAZ" hidden="false" order="68" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="Z_USNAZ" order="68" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="Counted By (New)"/>
         <keyMapping columnObjectName="Projection_3" columnName="Z_USNAZ"/>
       </attribute>
       <attribute id="KTOKK" order="69" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="Vendor account group"/>
         <keyMapping columnObjectName="Projection_3" columnName="KTOKK"/>
+      </attribute>
+      <attribute id="AEDAT_formatted" order="70" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Date of the Last Document Change by Transaction (formatted)"/>
+        <keyMapping columnObjectName="Projection_3" columnName="AEDAT_formatted"/>
+      </attribute>
+      <attribute id="ZLDAT_formatted" order="71" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Date of last count (formatted)"/>
+        <keyMapping columnObjectName="Projection_3" columnName="ZLDAT_formatted"/>
+      </attribute>
+      <attribute id="BUDAT_formatted" order="72" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Posting Date in the Document (formatted)"/>
+        <localVariable>Posting_Date</localVariable>
+        <keyMapping columnObjectName="Projection_3" columnName="BUDAT_formatted"/>
       </attribute>
     </attributes>
     <calculatedAttributes/>
@@ -950,32 +836,48 @@
     <restrictedMeasures/>
     <localDimensions/>
   </logicalModel>
-  <layout>
-    <shapes>
+<layout>
+  <shapes>
       <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-        <upperLeftCorner x="99" y="87"/>
-        <rectangleSize height="0" width="0"/>
+        <upperLeftCorner x="221" y="112"/>
+        <rectangleSize height="0" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="176" y="437"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="92" y="661"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="22" y="339"/>
-        <rectangleSize height="-1" width="-1"/>
-      </shape>
-      <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="99" y="243"/>
-        <rectangleSize height="-1" width="-1"/>
-      </shape>
-      <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="99" y="165"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="302" y="521"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="176" y="339"/>
-        <rectangleSize height="0" width="0"/>
+        <upperLeftCorner x="92" y="521"/>
+        <rectangleSize height="0" width="160"/>
+      </shape>
+    <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="ECC_LFA1" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="216" y="361"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+    <shape modelObjectName="Join_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="216" y="236"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
     </shapes>
-  </layout>
+</layout>
 </Calculation:scenario>

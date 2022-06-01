@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="plx_analytics::CA_PLX_CC010_TRANSPORT_ENTRIES" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
-  <origin/>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="3.0" id="plx_analytics::CA_PLX_CC010_TRANSPORT_ENTRIES" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+<origin/>
   <descriptions defaultDescription="ZZ_PLX10"/>
-  <metadata changedAt="2019-09-05 14:42:46.593"/>
+  <metadata changedAt="2021-08-17 13:26:14.994"/>
   <localVariables/>
   <variableMappings/>
-  <informationModelLayout relativeWidthScenario="36"/>
+  <informationModelLayout relativeWidthScenario="24"/>
   <dataSources>
     <DataSource id="MANUAL_CC010_TRANSPORT">
       <resourceUri>MANUAL_CC010_TRANSPORT</resourceUri>
@@ -14,10 +14,10 @@
       <resourceUri>ECC_E070</resourceUri>
     </DataSource>
   </dataSources>
-  <calculationViews>
-    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
-      <descriptions/>
-      <viewAttributes>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="Status"/>
         <viewAttribute id="System"/>
         <viewAttribute id="Trans_Number"/>
@@ -25,23 +25,21 @@
         <viewAttribute id="Transport_Owner"/>
         <viewAttribute id="Approved_Released_to_Prod_Date"/>
       </viewAttributes>
-      <calculatedViewAttributes>
+    <calculatedViewAttributes>
         <calculatedViewAttribute datatype="VARCHAR" id="Z_Trans_Number" length="20" expressionLanguage="COLUMN_ENGINE">
           <formula>trim(&quot;Trans_Number&quot;)</formula>
         </calculatedViewAttribute>
       </calculatedViewAttributes>
-      <input node="#MANUAL_CC010_TRANSPORT">
-        <mapping xsi:type="Calculation:AttributeMapping" target="Status" source="Status"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="System" source="System"/>
+      <input node="MANUAL_CC010_TRANSPORT">
         <mapping xsi:type="Calculation:AttributeMapping" target="Trans_Number" source="Trans Number"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="Import_Sequence" source="Import Sequence"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="Transport_Owner" source="Transport Owner"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="Approved_Released_to_Prod_Date" source="Approved Released to Prod Date"/>
       </input>
     </calculationView>
-    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
-      <descriptions/>
-      <viewAttributes>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="TRKORR"/>
         <viewAttribute id="TRFUNCTION"/>
         <viewAttribute id="TRSTATUS"/>
@@ -52,26 +50,16 @@
         <viewAttribute id="AS4TIME"/>
         <viewAttribute id="STRKORR"/>
       </viewAttributes>
-      <calculatedViewAttributes>
+    <calculatedViewAttributes>
         <calculatedViewAttribute datatype="VARCHAR" id="Z_TRKORR" length="20" expressionLanguage="COLUMN_ENGINE">
           <formula>trim(&quot;TRKORR&quot;)</formula>
         </calculatedViewAttribute>
       </calculatedViewAttributes>
-      <input node="#ECC_E070">
-        <mapping xsi:type="Calculation:AttributeMapping" target="TRKORR" source="TRKORR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TRFUNCTION" source="TRFUNCTION"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TRSTATUS" source="TRSTATUS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TARSYSTEM" source="TARSYSTEM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KORRDEV" source="KORRDEV"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="AS4USER" source="AS4USER"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="AS4DATE" source="AS4DATE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="AS4TIME" source="AS4TIME"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="STRKORR" source="STRKORR"/>
-      </input>
+      <input node="ECC_E070"/>
     </calculationView>
-    <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinOrder="OUTSIDE_IN" joinType="leftOuter">
-      <descriptions/>
-      <viewAttributes>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinType="leftOuter">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="TRKORR"/>
         <viewAttribute id="TRFUNCTION"/>
         <viewAttribute id="TRSTATUS"/>
@@ -90,8 +78,8 @@
         <viewAttribute id="Z_TRKORR"/>
         <viewAttribute id="Z_Trans_Number"/>
       </viewAttributes>
-      <calculatedViewAttributes/>
-      <input node="#Projection_2">
+    <calculatedViewAttributes/>
+      <input node="Projection_2">
         <mapping xsi:type="Calculation:AttributeMapping" target="TRKORR" source="TRKORR"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="TRFUNCTION" source="TRFUNCTION"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="TRSTATUS" source="TRSTATUS"/>
@@ -103,7 +91,7 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="STRKORR" source="STRKORR"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="Z_TRKORR" source="Z_TRKORR"/>
       </input>
-      <input node="#Projection_1">
+      <input node="Projection_1">
         <mapping xsi:type="Calculation:AttributeMapping" target="Status" source="Status"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="System" source="System"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="Import_Sequence" source="Import_Sequence"/>
@@ -113,11 +101,11 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="Z_Trans_Number" source="Z_Trans_Number"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="Z_TRKORR" source="Z_Trans_Number"/>
       </input>
-      <joinAttribute name="Z_TRKORR"/>
-    </calculationView>
-    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
-      <descriptions/>
-      <viewAttributes>
+    <joinAttribute name="Z_TRKORR"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="TRFUNCTION"/>
         <viewAttribute id="TRSTATUS"/>
         <viewAttribute id="TARSYSTEM"/>
@@ -134,28 +122,16 @@
         <viewAttribute id="Z_TRKORR"/>
         <viewAttribute id="Z_Trans_Number"/>
       </viewAttributes>
-      <calculatedViewAttributes/>
-      <input node="#Join_1">
-        <mapping xsi:type="Calculation:AttributeMapping" target="TRFUNCTION" source="TRFUNCTION"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TRSTATUS" source="TRSTATUS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TARSYSTEM" source="TARSYSTEM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KORRDEV" source="KORRDEV"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="AS4USER" source="AS4USER"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="AS4DATE" source="AS4DATE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="AS4TIME" source="AS4TIME"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="STRKORR" source="STRKORR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="Status" source="Status"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="System" source="System"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="Import_Sequence" source="Import_Sequence"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="Transport_Owner" source="Transport_Owner"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="Approved_Released_to_Prod_Date" source="Approved_Released_to_Prod_Date"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="Z_TRKORR" source="Z_TRKORR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="Z_Trans_Number" source="Z_Trans_Number"/>
-      </input>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="ZAS4DATE" expressionLanguage="COLUMN_ENGINE">
+          <formula>(&quot;AS4DATE&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="Join_1"/>
     </calculationView>
-    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_4">
-      <descriptions/>
-      <viewAttributes>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_4">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="TRFUNCTION"/>
         <viewAttribute id="TRSTATUS"/>
         <viewAttribute id="TARSYSTEM"/>
@@ -171,8 +147,9 @@
         <viewAttribute id="Approved_Released_to_Prod_Date"/>
         <viewAttribute id="Z_TRKORR"/>
         <viewAttribute id="Z_Trans_Number"/>
+        <viewAttribute id="ZAS4DATE"/>
       </viewAttributes>
-      <calculatedViewAttributes>
+    <calculatedViewAttributes>
         <calculatedViewAttribute datatype="VARCHAR" id="Z_Comp_TransNumber" length="3" expressionLanguage="COLUMN_ENGINE">
           <formula>if(isnull(&quot;Z_Trans_Number&quot;),'Yes','No')</formula>
         </calculatedViewAttribute>
@@ -180,28 +157,12 @@
           <formula>if(&quot;Z_Comp_TransNumber&quot;='Yes',1,0)</formula>
         </calculatedViewAttribute>
       </calculatedViewAttributes>
-      <input node="#Projection_3">
-        <mapping xsi:type="Calculation:AttributeMapping" target="TRFUNCTION" source="TRFUNCTION"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TRSTATUS" source="TRSTATUS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TARSYSTEM" source="TARSYSTEM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KORRDEV" source="KORRDEV"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="AS4USER" source="AS4USER"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="AS4DATE" source="AS4DATE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="AS4TIME" source="AS4TIME"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="STRKORR" source="STRKORR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="Status" source="Status"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="System" source="System"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="Import_Sequence" source="Import_Sequence"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="Transport_Owner" source="Transport_Owner"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="Approved_Released_to_Prod_Date" source="Approved_Released_to_Prod_Date"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="Z_TRKORR" source="Z_TRKORR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="Z_Trans_Number" source="Z_Trans_Number"/>
-      </input>
-      <filter>(&quot;Z_TRKORR&quot; !='')</filter>
-    </calculationView>
-    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_5">
-      <descriptions/>
-      <viewAttributes>
+      <input node="Projection_3"/>
+    <filter>(&quot;Z_TRKORR&quot; !='')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_5">
+    <descriptions/>
+    <viewAttributes>
         <viewAttribute id="Z_TRKORR"/>
         <viewAttribute id="TRFUNCTION"/>
         <viewAttribute id="TRSTATUS"/>
@@ -219,30 +180,13 @@
         <viewAttribute id="Approved_Released_to_Prod_Date"/>
         <viewAttribute id="Z_Comp_TransNumber"/>
         <viewAttribute id="Z_Yes_Count"/>
+        <viewAttribute id="ZAS4DATE"/>
       </viewAttributes>
-      <calculatedViewAttributes/>
-      <input node="#Projection_4">
-        <mapping xsi:type="Calculation:AttributeMapping" target="Z_TRKORR" source="Z_TRKORR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TRFUNCTION" source="TRFUNCTION"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TRSTATUS" source="TRSTATUS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TARSYSTEM" source="TARSYSTEM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KORRDEV" source="KORRDEV"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="AS4USER" source="AS4USER"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="AS4DATE" source="AS4DATE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="AS4TIME" source="AS4TIME"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="STRKORR" source="STRKORR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="Z_Trans_Number" source="Z_Trans_Number"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="Status" source="Status"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="System" source="System"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="Import_Sequence" source="Import_Sequence"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="Transport_Owner" source="Transport_Owner"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="Approved_Released_to_Prod_Date" source="Approved_Released_to_Prod_Date"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="Z_Comp_TransNumber" source="Z_Comp_TransNumber"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="Z_Yes_Count" source="Z_Yes_Count"/>
-      </input>
-      <filter>(&quot;Z_Comp_TransNumber&quot; ='Yes')</filter>
-    </calculationView>
-  </calculationViews>
+    <calculatedViewAttributes/>
+      <input node="Projection_4"/>
+    <filter>(&quot;Z_Comp_TransNumber&quot; ='Yes')</filter>
+  </calculationView>
+</calculationViews>
   <logicalModel id="Projection_5">
     <descriptions/>
     <attributes>
@@ -310,6 +254,10 @@
         <descriptions defaultDescription="Comp Trans Number"/>
         <keyMapping columnObjectName="Projection_5" columnName="Z_Comp_TransNumber"/>
       </attribute>
+      <attribute id="ZAS4DATE" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Date of Last Change (formatted)"/>
+        <keyMapping columnObjectName="Projection_5" columnName="ZAS4DATE"/>
+      </attribute>
     </attributes>
     <calculatedAttributes/>
     <privateDataFoundation>
@@ -327,11 +275,9 @@
     </baseMeasures>
     <calculatedMeasures/>
     <restrictedMeasures/>
-    <localDimensions/>
-    <sharedDimensions/>
-  </logicalModel>
-  <layout>
-    <shapes>
+    <localDimensions/></logicalModel>
+<layout>
+  <shapes>
       <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
         <upperLeftCorner x="99" y="87"/>
         <rectangleSize height="0" width="0"/>
@@ -348,6 +294,14 @@
         <upperLeftCorner x="99" y="419"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
+    <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
       <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
         <upperLeftCorner x="99" y="341"/>
         <rectangleSize height="-1" width="-1"/>
@@ -359,10 +313,6 @@
       <shape expanded="true" modelObjectName="Projection_5" modelObjectNameSpace="CalculationView">
         <upperLeftCorner x="99" y="185"/>
         <rectangleSize height="-1" width="-1"/>
-      </shape>
-      <shape modelObjectName="Projection_5" modelObjectNameSpace="StarJoinViewNodeInput" modelObjectType="repository">
-        <upperLeftCorner x="45" y="21"/>
-      </shape>
-    </shapes>
-  </layout>
+      </shape></shapes>
+</layout>
 </Calculation:scenario>
