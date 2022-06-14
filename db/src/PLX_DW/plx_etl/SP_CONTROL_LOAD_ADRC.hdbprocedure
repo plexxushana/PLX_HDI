@@ -1,0 +1,115 @@
+PROCEDURE "SP_CONTROL_LOAD_ADRC"(OUT T_OUT ECC_ADRC )
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   --DEFAULT SCHEMA <default_schema_name>
+   READS SQL DATA AS
+BEGIN
+
+DECLARE LV_ADDR_NUMBER1 NVARCHAR(10) ;
+DECLARE LV_ADDR_NUMBER2 VARCHAR(10);
+DECLARE LV_FILTER_STRING VARCHAR(100);
+ 
+ SELECT GENERAL_PAR1, GENERAL_PARA2  INTO LV_ADDR_NUMBER1 ,  LV_ADDR_NUMBER2  FROM HANA_FG_FILTER_CTRL WHERE FLOWGRAPH = 'FG_ADRC_LOAD_CONTROL' AND VRSN = 'A' ;
+ 
+ LV_FILTER_STRING = 'ADDRNUMBER >= ''' || LV_ADDR_NUMBER1 || ''' AND ADDRNUMBER <= ''' || LV_ADDR_NUMBER2 || ''' AND MANDT = ''100'' ';
+
+ 
+ -- APPLY_FILTER function to execute the Dynamic SQL.
+ T_OUT_SOURCE = APPLY_FILTER(V_ECC_ADRC, :LV_FILTER_STRING);	 
+ 
+ ---- Exactly define the ECC_KONV table structure columns instead of * here.
+ T_OUT = SELECT
+			  	"CLIENT",
+				"ADDRNUMBER",
+				"DATE_FROM",
+				"NATION",
+				"DATE_TO",
+				"TITLE",
+				"NAME1",
+				"NAME2",
+				"NAME3",
+				"NAME4",
+				"NAME_TEXT",
+				"NAME_CO",
+				"CITY1",
+				"CITY2",
+				"CITY_CODE",
+				"CITYP_CODE",
+				"HOME_CITY",
+				"CITYH_CODE",
+				"CHCKSTATUS",
+				"REGIOGROUP",
+				"POST_CODE1",
+				"POST_CODE2",
+				"POST_CODE3",
+				"PCODE1_EXT",
+				"PCODE2_EXT",
+				"PCODE3_EXT",
+				"PO_BOX",
+				"DONT_USE_P",
+				"PO_BOX_NUM",
+				"PO_BOX_LOC",
+				"CITY_CODE2",
+				"PO_BOX_REG",
+				"PO_BOX_CTY",
+				"POSTALAREA",
+				"TRANSPZONE",
+				"STREET",
+				"DONT_USE_S",
+				"STREETCODE",
+				"STREETABBR",
+				"HOUSE_NUM1",
+				"HOUSE_NUM2",
+				"HOUSE_NUM3",
+				"STR_SUPPL1",
+				"STR_SUPPL2",
+				"STR_SUPPL3",
+				"LOCATION",
+				"BUILDING",
+				"FLOOR",
+				"ROOMNUMBER",
+				"COUNTRY",
+				"LANGU",
+				"REGION",
+				"ADDR_GROUP",
+				"FLAGGROUPS",
+				"PERS_ADDR",
+				"SORT1",
+				"SORT2",
+				"SORT_PHN",
+				"DEFLT_COMM",
+				"TEL_NUMBER",
+				"TEL_EXTENS",
+				"FAX_NUMBER",
+				"FAX_EXTENS",
+				"FLAGCOMM2",
+				"FLAGCOMM3",
+				"FLAGCOMM4",
+				"FLAGCOMM5",
+				"FLAGCOMM6",
+				"FLAGCOMM7",
+				"FLAGCOMM8",
+				"FLAGCOMM9",
+				"FLAGCOMM10",
+				"FLAGCOMM11",
+				"FLAGCOMM12",
+				"FLAGCOMM13",
+				"ADDRORIGIN",
+				"MC_NAME1",
+				"MC_CITY1",
+				"MC_STREET",
+				"EXTENSION1",
+				"EXTENSION2",
+				"TIME_ZONE",
+				"TAXJURCODE",
+				"ADDRESS_ID",
+				"LANGU_CREA",
+				"PO_BOX_LOBBY",
+				"DELI_SERV_TYPE",
+				"DELI_SERV_NUMBER"
+		
+		FROM :T_OUT_SOURCE ;
+ 
+ 
+END ;
+  
