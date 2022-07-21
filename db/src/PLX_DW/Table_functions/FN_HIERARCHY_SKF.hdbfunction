@@ -1,6 +1,7 @@
 FUNCTION "plx_analytics::FN_HIERARCHY_SKF" (
 		
-	Group_Root_Node NVARCHAR(24)
+	Group_Root_Node NVARCHAR(24), 
+	controlling_area nvarchar(4)
 ) 
  	RETURNS table(
 		 --CHART_OF_ACCOUNTS NVARCHAR(4), 
@@ -34,7 +35,7 @@ BEGIN
 	v_org := left(:Group_Root_Node,4);
    ELSE 
 	SELECT MAX(SUBCLASS) into v_org FROM ECC_SETNODE 
-	WHERE SETNAME LIKE :Group_Root_Node AND SETCLASS = '0104';
+	WHERE SETNAME LIKE :Group_Root_Node AND SETCLASS = '0104' AND SUBCLASS=:controlling_area;
 END IF; 
 
 	
@@ -476,4 +477,3 @@ from :var_out;
 
 
 end;
-
