@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="3.0" id="plx_analytics::CA_CO_PLX_COST_CENTER_ANALYSIS_CONSOLIDATED_CP_YTD" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED">
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="3.0" id="CA_CO_PLX_COST_CENTER_ANALYSIS_CONSOLIDATED_DASHBOARD" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED">
   <descriptions defaultDescription="CA_CO_ELEM_HIERARCHY"/>
-  <metadata changedAt="2021-05-03 15:20:13.344"/>
+  <metadata changedAt="2021-04-27 16:39:08.607"/>
   <localVariables>
     <variable id="IP_KOKRS" parameter="true">
       <descriptions defaultDescription="Controlling Area"/>
       <variableProperties datatype="NVARCHAR" defaultValue="" length="4" mandatory="false" scale="0">
         <valueDomain type="AttributeValue">
           <externalLikeStructureName>plx_analytics::CA_DIM_CONTROLLING_AREAS</externalLikeStructureName>
-          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
           <externalLikeElementName>KOKRS</externalLikeElementName>
         </valueDomain>
         <selection multiLine="false" type="SingleValue"/>
@@ -19,7 +18,6 @@
       <variableProperties datatype="NVARCHAR" defaultValue="undefined" length="24" mandatory="true" scale="0">
         <valueDomain type="AttributeValue">
           <externalLikeStructureName>plx_analytics::CA_DIM_CE_VALUE_HELP_BROADER</externalLikeStructureName>
-          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
           <externalLikeElementName>Z_SETNAME</externalLikeElementName>
         </valueDomain>
         <selection multiLine="false" type="SingleValue"/>
@@ -37,7 +35,6 @@
       <variableProperties datatype="NVARCHAR" length="40" mandatory="false" scale="0" defaultValue="undefined">
         <valueDomain type="AttributeValue">
           <externalLikeStructureName>plx_analytics::CA_DIM_CC_VALUE_HELP</externalLikeStructureName>
-          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
           <externalLikeElementName>NODE</externalLikeElementName>
         </valueDomain>
         <selection multiLine="false" type="SingleValue"/>
@@ -48,30 +45,26 @@
       <variableProperties datatype="VARCHAR" defaultValue="" length="4" mandatory="true" scale="0">
         <valueDomain type="AttributeValue">
           <externalLikeStructureName>plx_analytics::CA_DIM_FISC_CAL</externalLikeStructureName>
-          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
           <externalLikeElementName>ZFISCAL_YEAR</externalLikeElementName>
         </valueDomain>
-        <selection multiLine="true" type="SingleValue"/>
+        <selection multiLine="false" type="SingleValue"/>
       </variableProperties>
     </variable>
     <variable id="V_COSTELEM">
       <descriptions defaultDescription="Cost Element"/>
-      <variableProperties datatype="NVARCHAR" defaultValue="" mandatory="false" length="10" scale="NaN">
+      <variableProperties datatype="VARCHAR" defaultValue="" mandatory="false">
         <valueDomain type="AttributeValue">
-          <externalLikeStructureName>plx_analytics::CA_CO_PLX_COST_CENTER_ANALYSIS_CONSOLIDATED_CP_YTD</externalLikeStructureName>
-          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
-          <externalLikeElementName>KSTAR</externalLikeElementName>
+          <attribute name="KSTAR"/>
         </valueDomain>
         <selection multiLine="true" type="SingleValue"/>
       </variableProperties>
     </variable>
     <variable id="V_COST_CENTER">
       <descriptions defaultDescription="Cost Centres"/>
-      <variableProperties datatype="NVARCHAR" defaultValue="" mandatory="false" length="10" scale="NaN">
+      <variableProperties datatype="VARCHAR" defaultValue="" mandatory="false">
         <valueDomain type="AttributeValue">
-          <externalLikeStructureName>plx_analytics::CA_DIM_CONTROLLING_AREAS</externalLikeStructureName>
-          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
-          <externalLikeElementName>KOSTL</externalLikeElementName>
+          <externalLikeStructureName>plx_analytics::CA_DIM_CC_VALUE_HELP</externalLikeStructureName>
+          <externalLikeElementName>NODE</externalLikeElementName>
         </valueDomain>
         <selection multiLine="true" type="SingleValue"/>
       </variableProperties>
@@ -81,7 +74,6 @@
       <variableProperties datatype="VARCHAR" mandatory="false">
         <valueDomain type="AttributeValue">
           <externalLikeStructureName>plx_analytics::CA_DIM_CONTROLLING_AREAS</externalLikeStructureName>
-          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
           <externalLikeElementName>GSBER</externalLikeElementName>
         </valueDomain>
         <selection multiLine="false" type="SingleValue"/>
@@ -112,6 +104,48 @@
       <targetVariable name="CE_GROUP_ROOT_NODE" resourceUri="plx_analytics::FN_HIERARCHY_KOSTL_KSTAR_RESTRICT"/>
       <localVariable>IP_CE_GROUP_NODE</localVariable>
     </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="CA_DIM_CE_HIERARCHY_ALL">
+      <targetVariable name="IP_CHART" resourceUri="plx_analytics::CA_DIM_CE_HIERARCHY_ALL"/>
+      <localVariable>IP_CHART</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:ConstantVariableMapping" dataSource="CA_DIM_CE_HIERARCHY_ALL" value="TOTALEXP">
+      <targetVariable name="IP_CE_GROUP_NODE" resourceUri="plx_analytics::CA_DIM_CE_HIERARCHY_ALL"/>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="plx_analytics::CA_DIM_CE_HIERARCHY_ALL">
+      <targetVariable name="IP_CHART" resourceUri="plx_analytics::CA_DIM_CE_HIERARCHY_ALL"/>
+      <localVariable>IP_CHART</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:ConstantVariableMapping" dataSource="plx_analytics::CA_DIM_CE_HIERARCHY_ALL" value="105MOHBF">
+      <targetVariable name="IP_CE_GROUP_NODE" resourceUri="plx_analytics::CA_DIM_CE_HIERARCHY_ALL"/>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="110MOHOTHR$$$$plx_analytics::CA_DIM_CE_HIERARCHY_ALL$$">
+      <targetVariable name="IP_CHART" resourceUri="plx_analytics::CA_DIM_CE_HIERARCHY_ALL"/>
+      <localVariable>IP_CHART</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:ConstantVariableMapping" dataSource="110MOHOTHR$$$$plx_analytics::CA_DIM_CE_HIERARCHY_ALL$$" value="110MOHOTHR">
+      <targetVariable name="IP_CE_GROUP_NODE" resourceUri="plx_analytics::CA_DIM_CE_HIERARCHY_ALL"/>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="115MOHBAM$$$$plx_analytics::CA_DIM_CE_HIERARCHY_ALL$$">
+      <targetVariable name="IP_CHART" resourceUri="plx_analytics::CA_DIM_CE_HIERARCHY_ALL"/>
+      <localVariable>IP_CHART</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:ConstantVariableMapping" dataSource="115MOHBAM$$$$plx_analytics::CA_DIM_CE_HIERARCHY_ALL$$" value="115MOHBAM">
+      <targetVariable name="IP_CE_GROUP_NODE" resourceUri="plx_analytics::CA_DIM_CE_HIERARCHY_ALL"/>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="120MOHQBP$$$$plx_analytics::CA_DIM_CE_HIERARCHY_ALL$$">
+      <targetVariable name="IP_CHART" resourceUri="plx_analytics::CA_DIM_CE_HIERARCHY_ALL"/>
+      <localVariable>IP_CHART</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:ConstantVariableMapping" dataSource="120MOHQBP$$$$plx_analytics::CA_DIM_CE_HIERARCHY_ALL$$" value="120MOHQBP">
+      <targetVariable name="IP_CE_GROUP_NODE" resourceUri="plx_analytics::CA_DIM_CE_HIERARCHY_ALL"/>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="125MOHWI$$$$plx_analytics::CA_DIM_CE_HIERARCHY_ALL$$">
+      <targetVariable name="IP_CHART" resourceUri="plx_analytics::CA_DIM_CE_HIERARCHY_ALL"/>
+      <localVariable>IP_CHART</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:ConstantVariableMapping" dataSource="125MOHWI$$$$plx_analytics::CA_DIM_CE_HIERARCHY_ALL$$" value="125MOHWI">
+      <targetVariable name="IP_CE_GROUP_NODE" resourceUri="plx_analytics::CA_DIM_CE_HIERARCHY_ALL"/>
+    </mapping>
     <mapping xsi:type="Variable:VariableMapping" forStarJoin="true">
       <targetVariable name="IP_CHART" resourceUri="plx_analytics::CA_DIM_CE_HIERARCHY_ALL"/>
       <localVariable>IP_CHART</localVariable>
@@ -129,7 +163,7 @@
       <localVariable>IP_KOKRS</localVariable>
     </mapping>
   </variableMappings>
-  <informationModelLayout relativeWidthScenario="39"/>
+  <informationModelLayout relativeWidthScenario="50"/>
   <dataSources>
     <DataSource id="ECC_COEJ">
       <resourceUri>ECC_COEJ</resourceUri>
@@ -196,6 +230,30 @@
     </DataSource>
     <DataSource id="FN_HIERARCHY_KOSTL_KSTAR_RESTRICT" type="TABLE_FUNCTION">
       <resourceUri>plx_analytics::FN_HIERARCHY_KOSTL_KSTAR_RESTRICT</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_CSKS">
+      <resourceUri>ECC_CSKS</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_SETHEADERT">
+      <resourceUri>ECC_SETHEADERT</resourceUri>
+    </DataSource>
+    <DataSource id="CA_DIM_CE_HIERARCHY_ALL">
+      <resourceUri>plx_analytics::CA_DIM_CE_HIERARCHY_ALL</resourceUri>
+    </DataSource>
+    <DataSource id="plx_analytics::CA_DIM_CE_HIERARCHY_ALL">
+      <resourceUri>plx_analytics::CA_DIM_CE_HIERARCHY_ALL</resourceUri>
+    </DataSource>
+    <DataSource id="110MOHOTHR$$$$plx_analytics::CA_DIM_CE_HIERARCHY_ALL$$">
+      <resourceUri>plx_analytics::CA_DIM_CE_HIERARCHY_ALL</resourceUri>
+    </DataSource>
+    <DataSource id="115MOHBAM$$$$plx_analytics::CA_DIM_CE_HIERARCHY_ALL$$">
+      <resourceUri>plx_analytics::CA_DIM_CE_HIERARCHY_ALL</resourceUri>
+    </DataSource>
+    <DataSource id="120MOHQBP$$$$plx_analytics::CA_DIM_CE_HIERARCHY_ALL$$">
+      <resourceUri>plx_analytics::CA_DIM_CE_HIERARCHY_ALL</resourceUri>
+    </DataSource>
+    <DataSource id="125MOHWI$$$$plx_analytics::CA_DIM_CE_HIERARCHY_ALL$$">
+      <resourceUri>plx_analytics::CA_DIM_CE_HIERARCHY_ALL</resourceUri>
     </DataSource>
   </dataSources>
 <calculationViews>
@@ -2560,38 +2618,7 @@
       <viewAttribute hidden="true" id="JOIN$CHILD$KOSTL"/>
       <viewAttribute hidden="true" id="JOIN$CONTROLLING_AREA$CONT_AREA"/>
     </viewAttributes>
-    <calculatedViewAttributes>
-        <calculatedViewAttribute datatype="INTEGER" id="CURR_MONTH" expressionLanguage="SQL">
-          <formula>RIGHT(LEFT(current_date, 7) , 2) </formula>
-        </calculatedViewAttribute>
-        <calculatedViewAttribute datatype="INTEGER" id="PAST_MONTH" expressionLanguage="COLUMN_ENGINE">
-          <formula>IF(&quot;CURR_MONTH&quot;&gt;=1, &quot;CURR_MONTH&quot;-1, 12)</formula>
-        </calculatedViewAttribute>
-        <calculatedViewAttribute datatype="NVARCHAR" id="LONG_PAST_MONTH" length="3" expressionLanguage="SQL">
-          <formula>RIGHT(concat('00', &quot;PAST_MONTH&quot;),3)</formula>
-        </calculatedViewAttribute>
-        <calculatedViewAttribute datatype="NVARCHAR" id="FISC_PAST_MONTH" length="3" expressionLanguage="COLUMN_ENGINE">
-          <formula>case(&quot;LONG_PAST_MONTH&quot;, '001', '010', '002', '011', '003', '012', '004', '001', '005', '002', '006', '003', '007', '004', '008', '005', '009', '006', '010', '007', '011', '008', '009')</formula>
-        </calculatedViewAttribute>
-        <calculatedViewAttribute datatype="NVARCHAR" id="CURR_PERIOD" length="1" expressionLanguage="COLUMN_ENGINE">
-          <formula>IF(&quot;FISC_PAST_MONTH&quot;=&quot;Z_PERIOD&quot;,'X','')</formula>
-        </calculatedViewAttribute>
-        <calculatedViewAttribute datatype="NVARCHAR" id="CURR_YTD_PERIOD" length="1" expressionLanguage="COLUMN_ENGINE">
-          <formula>IF(&quot;Z_PERIOD&quot;&lt;=&quot;FISC_PAST_MONTH&quot;,'X','')</formula>
-        </calculatedViewAttribute>
-        <calculatedViewAttribute datatype="DECIMAL" id="PY_ACTUAL" length="13" scale="3" expressionLanguage="COLUMN_ENGINE">
-          <formula>IF(&quot;GJAHR&quot;='$$FISCAL_YEAR$$'-1 , &quot;WKGBTR&quot;,0)</formula>
-        </calculatedViewAttribute>
-        <calculatedViewAttribute datatype="DECIMAL" id="PY_BUDGET" length="13" scale="3" expressionLanguage="COLUMN_ENGINE">
-          <formula>IF(&quot;GJAHR&quot;='$$FISCAL_YEAR$$'-1 , &quot;WKG001&quot;,0)</formula>
-        </calculatedViewAttribute>
-        <calculatedViewAttribute datatype="DECIMAL" id="CURR_ACTUAL" length="13" scale="3" expressionLanguage="COLUMN_ENGINE">
-          <formula>IF(&quot;GJAHR&quot;='$$FISCAL_YEAR$$' , &quot;WKGBTR&quot;,0)</formula>
-        </calculatedViewAttribute>
-        <calculatedViewAttribute datatype="DECIMAL" id="CURR_BUDGET" length="13" scale="3" expressionLanguage="COLUMN_ENGINE">
-          <formula>IF(&quot;GJAHR&quot;='$$FISCAL_YEAR$$' , &quot;WKG001&quot;,0)</formula>
-        </calculatedViewAttribute>
-      </calculatedViewAttributes>
+    <calculatedViewAttributes/>
       <input node="Projection_4">
         <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CHILD$KOSTL" source="CHILD"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CONTROLLING_AREA$CONT_AREA" source="CONTROLLING_AREA"/>
@@ -2623,108 +2650,1179 @@
     <joinAttribute name="JOIN$CHILD$KOSTL"/>
     <joinAttribute name="JOIN$CONTROLLING_AREA$CONT_AREA"/>
   </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_3">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="KHINR"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+      <input node="ECC_CSKS"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_8" cardinality="C1_N" joinType="rightOuter">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="WKGBTR"/>
+        <viewAttribute id="WOGBTR"/>
+        <viewAttribute id="WTGBTR"/>
+        <viewAttribute id="WKG001"/>
+        <viewAttribute id="WTG00N"/>
+        <viewAttribute id="CONT_AREA"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="KWAER"/>
+        <viewAttribute id="GSBER_1"/>
+        <viewAttribute id="BEKNZ"/>
+        <viewAttribute id="LTEXT"/>
+        <viewAttribute id="L_FORM_PERIOD"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="ZZKOSTL_PLAN"/>
+        <viewAttribute id="REVERSE"/>
+        <viewAttribute id="Z_PERIOD"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="OBJNR"/>
+        <viewAttribute id="KHINR"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="KOSTL_1"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="INTEGER" id="CURR_MONTH1" expressionLanguage="SQL">
+          <formula>RIGHT(LEFT(current_date, 7) , 2) </formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="INTEGER" id="PAST_MONTH1" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;CURR_MONTH1&quot;&gt;=1, &quot;CURR_MONTH1&quot;-1, 12)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="LONG_PAST_MONTH1" length="3" expressionLanguage="SQL">
+          <formula>RIGHT(concat('00', &quot;PAST_MONTH1&quot;),3)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="Aggregation_3">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KHINR" source="KHINR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL_1" source="KOSTL"/>
+      </input>
+      <input node="Join_3">
+        <mapping xsi:type="Calculation:AttributeMapping" target="WKGBTR" source="WKGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WOGBTR" source="WOGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTGBTR" source="WTGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WKG001" source="WKG001"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTG00N" source="WTG00N"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONT_AREA" source="CONT_AREA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="KSTAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KWAER" source="KWAER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GSBER_1" source="GSBER_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEKNZ" source="BEKNZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LTEXT" source="LTEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="L_FORM_PERIOD" source="L_FORM_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZKOSTL_PLAN" source="ZZKOSTL_PLAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVERSE" source="REVERSE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_PERIOD" source="Z_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VERSN" source="VERSN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OBJNR" source="OBJNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="CONT_AREA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL_1" source="KOSTL"/>
+      </input>
+    <joinAttribute name="KOKRS"/>
+    <joinAttribute name="KOSTL_1"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_6" cardinality="C1_N" joinType="rightOuter">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="DESCRIPT_CCGR"/>
+        <viewAttribute id="WKGBTR"/>
+        <viewAttribute id="WOGBTR"/>
+        <viewAttribute id="WTGBTR"/>
+        <viewAttribute id="WKG001"/>
+        <viewAttribute id="WTG00N"/>
+        <viewAttribute id="CONT_AREA"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="KWAER"/>
+        <viewAttribute id="GSBER_1"/>
+        <viewAttribute id="BEKNZ"/>
+        <viewAttribute id="LTEXT"/>
+        <viewAttribute id="L_FORM_PERIOD"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="ZZKOSTL_PLAN"/>
+        <viewAttribute id="REVERSE"/>
+        <viewAttribute id="Z_PERIOD"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="OBJNR"/>
+        <viewAttribute id="KHINR"/>
+        <viewAttribute id="CURR_MONTH1"/>
+        <viewAttribute id="PAST_MONTH1"/>
+        <viewAttribute id="LONG_PAST_MONTH1"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="VARCHAR" id="Curr_Year" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;GJAHR&quot; = '$$FISCAL_YEAR$$', 'X', ' ')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="INTEGER" id="CURR_MONTH" expressionLanguage="SQL">
+          <formula>RIGHT(LEFT(current_date, 7) , 2) </formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="INTEGER" id="PAST_MONTH" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;CURR_MONTH&quot;&gt;=1, &quot;CURR_MONTH&quot;-1, 12)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="LONG_PAST_MONTH" length="3" expressionLanguage="SQL">
+          <formula>RIGHT(concat('00', &quot;PAST_MONTH&quot;),3)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CURR_PERIOD_B" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;LONG_PAST_MONTH&quot;=&quot;Z_PERIOD&quot;,'X','')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="Annual_Forecast" length="15" scale="6" expressionLanguage="COLUMN_ENGINE">
+          <formula>(&quot;WKGBTR&quot;/&quot;PAST_MONTH&quot;)*12</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="CP_ACTUAL" length="13" scale="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;Curr_Year&quot;='X' AND &quot;LONG_PAST_MONTH&quot;=&quot;PAST_MONTH&quot;, &quot;WKGBTR&quot;,0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="CP_BUDGET" length="13" scale="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;Curr_Year&quot;='X' AND &quot;LONG_PAST_MONTH&quot;=&quot;PAST_MONTH&quot;, &quot;WKG001&quot;,0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="PY_CP_ACTUAL" length="13" scale="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;Curr_Year&quot;='' AND &quot;LONG_PAST_MONTH&quot;=&quot;PAST_MONTH&quot;, &quot;WKGBTR&quot;,0)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="Join_8">
+        <mapping xsi:type="Calculation:AttributeMapping" target="WKGBTR" source="WKGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WOGBTR" source="WOGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTGBTR" source="WTGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WKG001" source="WKG001"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTG00N" source="WTG00N"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONT_AREA" source="CONT_AREA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="KSTAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KWAER" source="KWAER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GSBER_1" source="GSBER_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEKNZ" source="BEKNZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LTEXT" source="LTEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="L_FORM_PERIOD" source="L_FORM_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZKOSTL_PLAN" source="ZZKOSTL_PLAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVERSE" source="REVERSE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_PERIOD" source="Z_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VERSN" source="VERSN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OBJNR" source="OBJNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KHINR" source="KHINR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURR_MONTH1" source="CURR_MONTH1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PAST_MONTH1" source="PAST_MONTH1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LONG_PAST_MONTH1" source="LONG_PAST_MONTH1"/>
+      </input>
+      <input node="ECC_SETHEADERT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="DESCRIPT_CCGR" source="DESCRIPT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KHINR" source="SETNAME"/>
+      </input>
+    <joinAttribute name="KHINR"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Expenses" joinType="inner">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="Curr_Year"/>
+        <viewAttribute id="Z_PERIOD"/>
+        <viewAttribute id="WKG001"/>
+        <viewAttribute id="WKGBTR"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="CONT_AREA"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="PAST_MONTH"/>
+        <viewAttribute id="CURR_MONTH"/>
+        <viewAttribute id="CP_ACTUAL"/>
+        <viewAttribute id="CURR_PERIOD_B"/>
+        <viewAttribute id="CP_BUDGET"/>
+        <viewAttribute id="PY_CP_ACTUAL"/>
+        <viewAttribute id="LONG_PAST_MONTH"/>
+        <viewAttribute id="CURR_MONTH1"/>
+        <viewAttribute id="PAST_MONTH1"/>
+        <viewAttribute id="LONG_PAST_MONTH1"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="Join_6">
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Curr_Year" source="Curr_Year"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_PERIOD" source="Z_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WKG001" source="WKG001"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WKGBTR" source="WKGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VERSN" source="VERSN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="KSTAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONT_AREA" source="CONT_AREA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PAST_MONTH" source="PAST_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURR_MONTH" source="CURR_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CP_ACTUAL" source="CP_ACTUAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURR_PERIOD_B" source="CURR_PERIOD_B"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CP_BUDGET" source="CP_BUDGET"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PY_CP_ACTUAL" source="PY_CP_ACTUAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LONG_PAST_MONTH" source="LONG_PAST_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURR_MONTH1" source="CURR_MONTH1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PAST_MONTH1" source="PAST_MONTH1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LONG_PAST_MONTH1" source="LONG_PAST_MONTH1"/>
+      </input>
+      <input node="CA_DIM_CE_HIERARCHY_ALL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="CHILD_CE"/>
+      </input>
+    <joinAttribute name="KSTAR"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="105MOHBF" joinType="inner">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="Curr_Year"/>
+        <viewAttribute id="Z_PERIOD"/>
+        <viewAttribute id="WKG001"/>
+        <viewAttribute id="WKGBTR"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="CONT_AREA"/>
+        <viewAttribute id="PAST_MONTH"/>
+        <viewAttribute id="CURR_MONTH"/>
+        <viewAttribute id="CP_ACTUAL"/>
+        <viewAttribute id="CURR_PERIOD_B"/>
+        <viewAttribute id="CP_BUDGET"/>
+        <viewAttribute id="PY_CP_ACTUAL"/>
+        <viewAttribute id="LONG_PAST_MONTH"/>
+        <viewAttribute id="CURR_MONTH1"/>
+        <viewAttribute id="PAST_MONTH1"/>
+        <viewAttribute id="LONG_PAST_MONTH1"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DECIMAL" id="Plan" length="15" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>0 - &quot;WKG001&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="Actual" length="15" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>0 - &quot;WKGBTR&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="Join_6">
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Curr_Year" source="Curr_Year"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_PERIOD" source="Z_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WKG001" source="WKG001"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WKGBTR" source="WKGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VERSN" source="VERSN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="KSTAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONT_AREA" source="CONT_AREA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PAST_MONTH" source="PAST_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURR_MONTH" source="CURR_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CP_ACTUAL" source="CP_ACTUAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURR_PERIOD_B" source="CURR_PERIOD_B"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CP_BUDGET" source="CP_BUDGET"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PY_CP_ACTUAL" source="PY_CP_ACTUAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LONG_PAST_MONTH" source="LONG_PAST_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURR_MONTH1" source="CURR_MONTH1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PAST_MONTH1" source="PAST_MONTH1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LONG_PAST_MONTH1" source="LONG_PAST_MONTH1"/>
+      </input>
+      <input node="plx_analytics::CA_DIM_CE_HIERARCHY_ALL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="CHILD_CE"/>
+      </input>
+    <joinAttribute name="KSTAR"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="110MOHOTHR" joinType="inner">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="Curr_Year"/>
+        <viewAttribute id="Z_PERIOD"/>
+        <viewAttribute id="WKG001"/>
+        <viewAttribute id="WKGBTR"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="CONT_AREA"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="PAST_MONTH"/>
+        <viewAttribute id="CURR_MONTH"/>
+        <viewAttribute id="CP_ACTUAL"/>
+        <viewAttribute id="CURR_PERIOD_B"/>
+        <viewAttribute id="CP_BUDGET"/>
+        <viewAttribute id="PY_CP_ACTUAL"/>
+        <viewAttribute id="LONG_PAST_MONTH"/>
+        <viewAttribute id="CURR_MONTH1"/>
+        <viewAttribute id="PAST_MONTH1"/>
+        <viewAttribute id="LONG_PAST_MONTH1"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DECIMAL" id="Actual" length="15" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>0 - &quot;WKGBTR&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="Plan" length="15" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>0 - &quot;WKG001&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="Join_6">
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Curr_Year" source="Curr_Year"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_PERIOD" source="Z_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WKG001" source="WKG001"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WKGBTR" source="WKGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VERSN" source="VERSN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="KSTAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONT_AREA" source="CONT_AREA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PAST_MONTH" source="PAST_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURR_MONTH" source="CURR_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CP_ACTUAL" source="CP_ACTUAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURR_PERIOD_B" source="CURR_PERIOD_B"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CP_BUDGET" source="CP_BUDGET"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PY_CP_ACTUAL" source="PY_CP_ACTUAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LONG_PAST_MONTH" source="LONG_PAST_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURR_MONTH1" source="CURR_MONTH1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PAST_MONTH1" source="PAST_MONTH1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LONG_PAST_MONTH1" source="LONG_PAST_MONTH1"/>
+      </input>
+      <input node="110MOHOTHR$$$$plx_analytics::CA_DIM_CE_HIERARCHY_ALL$$">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="CHILD_CE"/>
+      </input>
+    <joinAttribute name="KSTAR"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="115MOHBAM" joinType="inner">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="Curr_Year"/>
+        <viewAttribute id="Z_PERIOD"/>
+        <viewAttribute id="WKG001"/>
+        <viewAttribute id="WKGBTR"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="CONT_AREA"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="PAST_MONTH"/>
+        <viewAttribute id="CURR_MONTH"/>
+        <viewAttribute id="CP_ACTUAL"/>
+        <viewAttribute id="CURR_PERIOD_B"/>
+        <viewAttribute id="CP_BUDGET"/>
+        <viewAttribute id="PY_CP_ACTUAL"/>
+        <viewAttribute id="LONG_PAST_MONTH"/>
+        <viewAttribute id="CURR_MONTH1"/>
+        <viewAttribute id="PAST_MONTH1"/>
+        <viewAttribute id="LONG_PAST_MONTH1"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DECIMAL" id="Actual" length="15" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>0 - &quot;WKGBTR&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="Plan" length="15" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>0 - &quot;WKG001&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="Join_6">
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Curr_Year" source="Curr_Year"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_PERIOD" source="Z_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WKG001" source="WKG001"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WKGBTR" source="WKGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VERSN" source="VERSN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="KSTAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONT_AREA" source="CONT_AREA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PAST_MONTH" source="PAST_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURR_MONTH" source="CURR_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CP_ACTUAL" source="CP_ACTUAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURR_PERIOD_B" source="CURR_PERIOD_B"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CP_BUDGET" source="CP_BUDGET"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PY_CP_ACTUAL" source="PY_CP_ACTUAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LONG_PAST_MONTH" source="LONG_PAST_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURR_MONTH1" source="CURR_MONTH1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PAST_MONTH1" source="PAST_MONTH1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LONG_PAST_MONTH1" source="LONG_PAST_MONTH1"/>
+      </input>
+      <input node="115MOHBAM$$$$plx_analytics::CA_DIM_CE_HIERARCHY_ALL$$">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="CHILD_CE"/>
+      </input>
+    <joinAttribute name="KSTAR"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="120MOHQBP" joinType="inner">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="Curr_Year"/>
+        <viewAttribute id="Z_PERIOD"/>
+        <viewAttribute id="WKG001"/>
+        <viewAttribute id="WKGBTR"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="CONT_AREA"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="PAST_MONTH"/>
+        <viewAttribute id="CURR_MONTH"/>
+        <viewAttribute id="CP_ACTUAL"/>
+        <viewAttribute id="CURR_PERIOD_B"/>
+        <viewAttribute id="CP_BUDGET"/>
+        <viewAttribute id="PY_CP_ACTUAL"/>
+        <viewAttribute id="LONG_PAST_MONTH"/>
+        <viewAttribute id="CURR_MONTH1"/>
+        <viewAttribute id="PAST_MONTH1"/>
+        <viewAttribute id="LONG_PAST_MONTH1"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DECIMAL" id="Actual" length="15" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>0 - &quot;WKGBTR&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="Plan" length="15" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>0 - &quot;WKG001&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="Join_6">
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Curr_Year" source="Curr_Year"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_PERIOD" source="Z_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WKG001" source="WKG001"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WKGBTR" source="WKGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VERSN" source="VERSN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONT_AREA" source="CONT_AREA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="KSTAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PAST_MONTH" source="PAST_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURR_MONTH" source="CURR_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CP_ACTUAL" source="CP_ACTUAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURR_PERIOD_B" source="CURR_PERIOD_B"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CP_BUDGET" source="CP_BUDGET"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PY_CP_ACTUAL" source="PY_CP_ACTUAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LONG_PAST_MONTH" source="LONG_PAST_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURR_MONTH1" source="CURR_MONTH1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PAST_MONTH1" source="PAST_MONTH1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LONG_PAST_MONTH1" source="LONG_PAST_MONTH1"/>
+      </input>
+      <input node="120MOHQBP$$$$plx_analytics::CA_DIM_CE_HIERARCHY_ALL$$">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="CHILD_CE"/>
+      </input>
+    <joinAttribute name="KSTAR"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="125MOHWI" joinType="inner">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="Curr_Year"/>
+        <viewAttribute id="Z_PERIOD"/>
+        <viewAttribute id="WKG001"/>
+        <viewAttribute id="WKGBTR"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="CONT_AREA"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="PAST_MONTH"/>
+        <viewAttribute id="CURR_MONTH"/>
+        <viewAttribute id="CP_ACTUAL"/>
+        <viewAttribute id="CURR_PERIOD_B"/>
+        <viewAttribute id="CP_BUDGET"/>
+        <viewAttribute id="PY_CP_ACTUAL"/>
+        <viewAttribute id="LONG_PAST_MONTH"/>
+        <viewAttribute id="CURR_MONTH1"/>
+        <viewAttribute id="PAST_MONTH1"/>
+        <viewAttribute id="LONG_PAST_MONTH1"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DECIMAL" id="Actual" length="15" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>0 - &quot;WKGBTR&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="Plan" length="15" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>0 - &quot;WKG001&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="Join_6">
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Curr_Year" source="Curr_Year"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_PERIOD" source="Z_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WKG001" source="WKG001"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WKGBTR" source="WKGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VERSN" source="VERSN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONT_AREA" source="CONT_AREA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="KSTAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PAST_MONTH" source="PAST_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURR_MONTH" source="CURR_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CP_ACTUAL" source="CP_ACTUAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURR_PERIOD_B" source="CURR_PERIOD_B"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CP_BUDGET" source="CP_BUDGET"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PY_CP_ACTUAL" source="PY_CP_ACTUAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LONG_PAST_MONTH" source="LONG_PAST_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURR_MONTH1" source="CURR_MONTH1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PAST_MONTH1" source="PAST_MONTH1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LONG_PAST_MONTH1" source="LONG_PAST_MONTH1"/>
+      </input>
+      <input node="125MOHWI$$$$plx_analytics::CA_DIM_CE_HIERARCHY_ALL$$">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="CHILD_CE"/>
+      </input>
+    <joinAttribute name="KSTAR"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_5">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="Curr_Year"/>
+        <viewAttribute id="Z_PERIOD"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute aggregationType="sum" id="Plan"/>
+        <viewAttribute aggregationType="sum" id="Actual"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="CONT_AREA"/>
+        <viewAttribute id="PAST_MONTH"/>
+        <viewAttribute id="CURR_MONTH"/>
+        <viewAttribute id="CP_ACTUAL"/>
+        <viewAttribute id="CURR_PERIOD_B"/>
+        <viewAttribute id="CP_BUDGET"/>
+        <viewAttribute id="PY_CP_ACTUAL"/>
+        <viewAttribute id="LONG_PAST_MONTH"/>
+        <viewAttribute id="CURR_MONTH1"/>
+        <viewAttribute id="PAST_MONTH1"/>
+        <viewAttribute id="LONG_PAST_MONTH1"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+      <input node="105MOHBF"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_6">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="Curr_Year"/>
+        <viewAttribute id="Z_PERIOD"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute aggregationType="sum" id="Actual"/>
+        <viewAttribute aggregationType="sum" id="Plan"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="CONT_AREA"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="PAST_MONTH"/>
+        <viewAttribute id="CURR_MONTH"/>
+        <viewAttribute id="CP_ACTUAL"/>
+        <viewAttribute id="CURR_PERIOD_B"/>
+        <viewAttribute id="CP_BUDGET"/>
+        <viewAttribute id="PY_CP_ACTUAL"/>
+        <viewAttribute id="LONG_PAST_MONTH"/>
+        <viewAttribute id="CURR_MONTH1"/>
+        <viewAttribute id="PAST_MONTH1"/>
+        <viewAttribute id="LONG_PAST_MONTH1"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+      <input node="110MOHOTHR"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_7">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="Curr_Year"/>
+        <viewAttribute id="Z_PERIOD"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute aggregationType="sum" id="Actual"/>
+        <viewAttribute aggregationType="sum" id="Plan"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="CONT_AREA"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="PAST_MONTH"/>
+        <viewAttribute id="CURR_MONTH"/>
+        <viewAttribute id="CP_ACTUAL"/>
+        <viewAttribute id="CURR_PERIOD_B"/>
+        <viewAttribute id="CP_BUDGET"/>
+        <viewAttribute id="PY_CP_ACTUAL"/>
+        <viewAttribute id="LONG_PAST_MONTH"/>
+        <viewAttribute id="CURR_MONTH1"/>
+        <viewAttribute id="PAST_MONTH1"/>
+        <viewAttribute id="LONG_PAST_MONTH1"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+      <input node="115MOHBAM"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_8">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="Curr_Year"/>
+        <viewAttribute id="Z_PERIOD"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute aggregationType="sum" id="Actual"/>
+        <viewAttribute aggregationType="sum" id="Plan"/>
+        <viewAttribute id="CONT_AREA"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="PAST_MONTH"/>
+        <viewAttribute id="CURR_MONTH"/>
+        <viewAttribute id="CP_ACTUAL"/>
+        <viewAttribute id="CURR_PERIOD_B"/>
+        <viewAttribute id="CP_BUDGET"/>
+        <viewAttribute id="PY_CP_ACTUAL"/>
+        <viewAttribute id="LONG_PAST_MONTH"/>
+        <viewAttribute id="CURR_MONTH1"/>
+        <viewAttribute id="PAST_MONTH1"/>
+        <viewAttribute id="LONG_PAST_MONTH1"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+      <input node="120MOHQBP"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_9">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="Curr_Year"/>
+        <viewAttribute id="Z_PERIOD"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute aggregationType="sum" id="Actual"/>
+        <viewAttribute aggregationType="sum" id="Plan"/>
+        <viewAttribute id="CONT_AREA"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="PAST_MONTH"/>
+        <viewAttribute id="CURR_MONTH"/>
+        <viewAttribute id="CP_ACTUAL"/>
+        <viewAttribute id="CURR_PERIOD_B"/>
+        <viewAttribute id="CP_BUDGET"/>
+        <viewAttribute id="PY_CP_ACTUAL"/>
+        <viewAttribute id="LONG_PAST_MONTH"/>
+        <viewAttribute id="CURR_MONTH1"/>
+        <viewAttribute id="PAST_MONTH1"/>
+        <viewAttribute id="LONG_PAST_MONTH1"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+      <input node="125MOHWI"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_4">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="Curr_Year"/>
+        <viewAttribute id="Z_PERIOD"/>
+        <viewAttribute aggregationType="sum" id="Plan"/>
+        <viewAttribute aggregationType="sum" id="Actual"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="CONT_AREA"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="PAST_MONTH"/>
+        <viewAttribute id="CURR_MONTH"/>
+        <viewAttribute id="CP_ACTUAL"/>
+        <viewAttribute id="CURR_PERIOD_B"/>
+        <viewAttribute id="CP_BUDGET"/>
+        <viewAttribute id="PY_CP_ACTUAL"/>
+        <viewAttribute id="LONG_PAST_MONTH"/>
+        <viewAttribute id="CURR_MONTH1"/>
+        <viewAttribute id="PAST_MONTH1"/>
+        <viewAttribute id="LONG_PAST_MONTH1"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+      <input node="Expenses">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Plan" source="WKG001"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Actual" source="WKGBTR"/></input>
+    </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Annual_Budget">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="WKGBTR"/>
+        <viewAttribute id="Annual_Budget"/>
+        <viewAttribute id="CONT_AREA"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="Curr_Year"/>
+        <viewAttribute id="PAST_MONTH"/>
+        <viewAttribute id="CURR_MONTH"/>
+        <viewAttribute id="CP_ACTUAL"/>
+        <viewAttribute id="CURR_PERIOD_B"/>
+        <viewAttribute id="CP_BUDGET"/>
+        <viewAttribute id="PY_CP_ACTUAL"/>
+        <viewAttribute id="LONG_PAST_MONTH"/>
+        <viewAttribute id="CURR_MONTH1"/>
+        <viewAttribute id="PAST_MONTH1"/>
+        <viewAttribute id="LONG_PAST_MONTH1"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="Z_PERIOD" length="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>'ALL'</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="Join_6">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Annual_Budget" source="WKG001"/></input>
+    </calculationView>
+  <calculationView xsi:type="Calculation:UnionView" id="Union_4">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="CONT_AREA"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="KWAER"/>
+        <viewAttribute id="GSBER_1"/>
+        <viewAttribute id="BEKNZ"/>
+        <viewAttribute id="LTEXT"/>
+        <viewAttribute id="L_FORM_PERIOD"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="ZZKOSTL_PLAN"/>
+        <viewAttribute id="REVERSE"/>
+        <viewAttribute id="Z_PERIOD"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="OBJNR"/>
+        <viewAttribute id="KHINR"/>
+        <viewAttribute id="DESCRIPT_CCGR"/>
+        <viewAttribute id="Curr_Year"/>
+        <viewAttribute id="WKGBTR"/>
+        <viewAttribute id="WOGBTR"/>
+        <viewAttribute id="WTGBTR"/>
+        <viewAttribute id="WKG001"/>
+        <viewAttribute id="WTG00N"/>
+        <viewAttribute id="Actual"/>
+        <viewAttribute id="Plan"/>
+        <viewAttribute id="Annual_Budget"/>
+        <viewAttribute id="Annual_Forecast"/>
+        <viewAttribute id="PAST_MONTH"/>
+        <viewAttribute id="CURR_MONTH"/>
+        <viewAttribute id="CP_ACTUAL"/>
+        <viewAttribute id="CURR_PERIOD_B"/>
+        <viewAttribute id="CP_BUDGET"/>
+        <viewAttribute id="PY_CP_ACTUAL"/>
+        <viewAttribute id="LONG_PAST_MONTH"/>
+        <viewAttribute id="CURR_MONTH1"/>
+        <viewAttribute id="PAST_MONTH1"/>
+        <viewAttribute id="LONG_PAST_MONTH1"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input emptyUnionBehavior="NO_ROW" node="Annual_Budget">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONT_AREA" source="CONT_AREA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="KSTAR"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="KWAER" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="GSBER_1" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BEKNZ" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="LTEXT" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="L_FORM_PERIOD" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BUKRS" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ZZKOSTL_PLAN" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="REVERSE" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_PERIOD" source="Z_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VERSN" source="VERSN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="OBJNR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="KHINR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="DESCRIPT_CCGR" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Curr_Year" source="Curr_Year"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WKGBTR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WOGBTR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WTGBTR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WKG001" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WTG00N" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Actual" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Plan" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Annual_Budget" source="Annual_Budget"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Annual_Forecast" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PAST_MONTH" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CURR_MONTH" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CP_ACTUAL" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CURR_PERIOD_B" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CP_BUDGET" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PY_CP_ACTUAL" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="LONG_PAST_MONTH" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CURR_MONTH1" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PAST_MONTH1" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="LONG_PAST_MONTH1" null="true" value=""/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="Aggregation_9">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONT_AREA" source="CONT_AREA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="KSTAR"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="KWAER" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="GSBER_1" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BEKNZ" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="LTEXT" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="L_FORM_PERIOD" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BUKRS" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ZZKOSTL_PLAN" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="REVERSE" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_PERIOD" source="Z_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VERSN" source="VERSN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="OBJNR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="KHINR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="DESCRIPT_CCGR" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Curr_Year" source="Curr_Year"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WKGBTR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WOGBTR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WTGBTR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WKG001" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WTG00N" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Actual" source="Actual"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Plan" source="Plan"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Annual_Budget" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Annual_Forecast" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PAST_MONTH" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CURR_MONTH" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CP_ACTUAL" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CURR_PERIOD_B" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CP_BUDGET" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PY_CP_ACTUAL" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="LONG_PAST_MONTH" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CURR_MONTH1" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PAST_MONTH1" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="LONG_PAST_MONTH1" null="true" value=""/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="Aggregation_8">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONT_AREA" source="CONT_AREA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="KSTAR"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="KWAER" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="GSBER_1" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BEKNZ" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="LTEXT" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="L_FORM_PERIOD" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BUKRS" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ZZKOSTL_PLAN" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="REVERSE" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_PERIOD" source="Z_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VERSN" source="VERSN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="OBJNR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="KHINR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="DESCRIPT_CCGR" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Curr_Year" source="Curr_Year"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WKGBTR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WOGBTR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WTGBTR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WKG001" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WTG00N" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Actual" source="Actual"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Plan" source="Plan"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Annual_Budget" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Annual_Forecast" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PAST_MONTH" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CURR_MONTH" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CP_ACTUAL" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CURR_PERIOD_B" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CP_BUDGET" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PY_CP_ACTUAL" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="LONG_PAST_MONTH" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CURR_MONTH1" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PAST_MONTH1" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="LONG_PAST_MONTH1" null="true" value=""/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="Aggregation_7">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONT_AREA" source="CONT_AREA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="KSTAR"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="KWAER" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="GSBER_1" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BEKNZ" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="LTEXT" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="L_FORM_PERIOD" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BUKRS" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ZZKOSTL_PLAN" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="REVERSE" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_PERIOD" source="Z_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VERSN" source="VERSN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="OBJNR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="KHINR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="DESCRIPT_CCGR" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Curr_Year" source="Curr_Year"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WKGBTR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WOGBTR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WTGBTR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WKG001" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WTG00N" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Actual" source="Actual"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Plan" source="Plan"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Annual_Budget" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Annual_Forecast" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PAST_MONTH" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CURR_MONTH" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CP_ACTUAL" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CURR_PERIOD_B" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CP_BUDGET" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PY_CP_ACTUAL" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="LONG_PAST_MONTH" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CURR_MONTH1" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PAST_MONTH1" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="LONG_PAST_MONTH1" null="true" value=""/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="Aggregation_6">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONT_AREA" source="CONT_AREA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="KSTAR"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="KWAER" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="GSBER_1" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BEKNZ" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="LTEXT" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="L_FORM_PERIOD" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BUKRS" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ZZKOSTL_PLAN" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="REVERSE" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_PERIOD" source="Z_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VERSN" source="VERSN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="OBJNR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="KHINR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="DESCRIPT_CCGR" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Curr_Year" source="Curr_Year"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WKGBTR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WOGBTR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WTGBTR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WKG001" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WTG00N" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Actual" source="Actual"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Plan" source="Plan"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Annual_Budget" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Annual_Forecast" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PAST_MONTH" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CURR_MONTH" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CP_ACTUAL" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CURR_PERIOD_B" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CP_BUDGET" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PY_CP_ACTUAL" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="LONG_PAST_MONTH" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CURR_MONTH1" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PAST_MONTH1" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="LONG_PAST_MONTH1" null="true" value=""/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="Aggregation_5">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONT_AREA" source="CONT_AREA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="KSTAR"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="KWAER" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="GSBER_1" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BEKNZ" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="LTEXT" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="L_FORM_PERIOD" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BUKRS" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ZZKOSTL_PLAN" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="REVERSE" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_PERIOD" source="Z_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VERSN" source="VERSN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="OBJNR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="KHINR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="DESCRIPT_CCGR" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Curr_Year" source="Curr_Year"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WKGBTR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WOGBTR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WTGBTR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WKG001" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WTG00N" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Actual" source="Actual"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Plan" source="Plan"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Annual_Budget" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Annual_Forecast" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PAST_MONTH" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CURR_MONTH" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CP_ACTUAL" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CURR_PERIOD_B" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CP_BUDGET" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PY_CP_ACTUAL" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="LONG_PAST_MONTH" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CURR_MONTH1" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PAST_MONTH1" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="LONG_PAST_MONTH1" null="true" value=""/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="Aggregation_4">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONT_AREA" source="CONT_AREA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="KSTAR"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="KWAER" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="GSBER_1" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BEKNZ" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="LTEXT" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="L_FORM_PERIOD" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BUKRS" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ZZKOSTL_PLAN" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="REVERSE" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_PERIOD" source="Z_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VERSN" source="VERSN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="OBJNR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="KHINR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="DESCRIPT_CCGR" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Curr_Year" source="Curr_Year"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WKGBTR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WOGBTR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WTGBTR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WKG001" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WTG00N" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Actual" source="Actual"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Plan" source="Plan"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Annual_Budget" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Annual_Forecast" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PAST_MONTH" source="PAST_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURR_MONTH" source="CURR_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CP_ACTUAL" source="CP_ACTUAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURR_PERIOD_B" source="CURR_PERIOD_B"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CP_BUDGET" source="CP_BUDGET"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PY_CP_ACTUAL" source="PY_CP_ACTUAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LONG_PAST_MONTH" source="LONG_PAST_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURR_MONTH1" source="CURR_MONTH1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PAST_MONTH1" source="PAST_MONTH1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LONG_PAST_MONTH1" source="LONG_PAST_MONTH1"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="Join_6">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONT_AREA" source="CONT_AREA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="KSTAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KWAER" source="KWAER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GSBER_1" source="GSBER_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEKNZ" source="BEKNZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LTEXT" source="LTEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="L_FORM_PERIOD" source="L_FORM_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZKOSTL_PLAN" source="ZZKOSTL_PLAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVERSE" source="REVERSE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Z_PERIOD" source="Z_PERIOD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VERSN" source="VERSN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OBJNR" source="OBJNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KHINR" source="KHINR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DESCRIPT_CCGR" source="DESCRIPT_CCGR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Curr_Year" source="Curr_Year"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WKGBTR" source="WKGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WOGBTR" source="WOGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTGBTR" source="WTGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WKG001" source="WKG001"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTG00N" source="WTG00N"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Actual" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Plan" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Annual_Budget" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Annual_Forecast" source="Annual_Forecast"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PAST_MONTH" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CURR_MONTH" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CP_ACTUAL" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CURR_PERIOD_B" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CP_BUDGET" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PY_CP_ACTUAL" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="LONG_PAST_MONTH" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CURR_MONTH1" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PAST_MONTH1" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="LONG_PAST_MONTH1" null="true" value=""/>
+      </input>
+    </calculationView>
 </calculationViews>
-  <logicalModel id="Join_3">
+  <logicalModel id="Union_4">
     <descriptions/>
     <attributes>
-      <attribute id="OBJNR" order="4" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="Obj Number"/>
-        <keyMapping columnObjectName="Join_3" columnName="OBJNR"/>
+      <attribute id="CONT_AREA" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Controlling Area"/>
+        <keyMapping columnObjectName="Union_4" columnName="CONT_AREA"/>
       </attribute>
-      <attribute id="GJAHR" order="5" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="Fiscal Year"/>
-        <keyMapping columnObjectName="Join_3" columnName="GJAHR"/>
-      </attribute>
-      <attribute id="VERSN" order="6" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="Version"/>
-        <keyMapping columnObjectName="Join_3" columnName="VERSN"/>
-      </attribute>
-      <attribute id="Z_PERIOD" order="7" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="Z_PERIOD"/>
-        <keyMapping columnObjectName="Join_3" columnName="Z_PERIOD"/>
-      </attribute>
-      <attribute id="REVERSE" order="8" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="Reverse"/>
-        <keyMapping columnObjectName="Join_3" columnName="REVERSE"/>
-      </attribute>
-      <attribute id="ZZKOSTL_PLAN" order="9" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="Cost Centre Plan"/>
-        <keyMapping columnObjectName="Join_3" columnName="ZZKOSTL_PLAN"/>
-      </attribute>
-      <attribute id="BUKRS" order="10" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="Company Code"/>
-        <keyMapping columnObjectName="Join_3" columnName="BUKRS"/>
-      </attribute>
-      <attribute id="L_FORM_PERIOD" order="11" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="Long Form Period"/>
-        <keyMapping columnObjectName="Join_3" columnName="L_FORM_PERIOD"/>
-      </attribute>
-      <attribute id="LTEXT" order="12" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="Cost Ctr Description"/>
-        <keyMapping columnObjectName="Join_3" columnName="LTEXT"/>
-      </attribute>
-      <attribute id="BEKNZ" order="13" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="Debit/credit indicator"/>
-        <keyMapping columnObjectName="Join_3" columnName="BEKNZ"/>
-      </attribute>
-      <attribute id="GSBER_1" order="14" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="Business Area"/>
-        <localVariable>V_BUS_AREA</localVariable>
-        <keyMapping columnObjectName="Join_3" columnName="GSBER_1"/>
-      </attribute>
-      <attribute id="KWAER" order="15" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="KWAER"/>
-        <keyMapping columnObjectName="Join_3" columnName="KWAER"/>
-      </attribute>
-      <attribute id="KSTAR" order="16" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="Cost Elem"/>
-        <localVariable>V_COSTELEM</localVariable>
-        <keyMapping columnObjectName="Join_3" columnName="KSTAR"/>
-      </attribute>
-      <attribute id="KOSTL" order="17" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="KOSTL" order="4" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="Cost Centre"/>
         <localVariable>V_COST_CENTER</localVariable>
-        <keyMapping columnObjectName="Join_3" columnName="KOSTL"/>
+        <keyMapping columnObjectName="Union_4" columnName="KOSTL"/>
       </attribute>
-      <attribute id="CONT_AREA" order="18" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="Controlling Area"/>
-        <keyMapping columnObjectName="Join_3" columnName="CONT_AREA"/>
+      <attribute id="KSTAR" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cost Elem"/>
+        <localVariable>V_COSTELEM</localVariable>
+        <keyMapping columnObjectName="Union_4" columnName="KSTAR"/>
       </attribute>
-      <attribute id="CURR_MONTH" order="24" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="KWAER" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="KWAER"/>
+        <keyMapping columnObjectName="Union_4" columnName="KWAER"/>
+      </attribute>
+      <attribute id="GSBER_1" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Business Area"/>
+        <localVariable>V_BUS_AREA</localVariable>
+        <keyMapping columnObjectName="Union_4" columnName="GSBER_1"/>
+      </attribute>
+      <attribute id="BEKNZ" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Debit/credit indicator"/>
+        <keyMapping columnObjectName="Union_4" columnName="BEKNZ"/>
+      </attribute>
+      <attribute id="LTEXT" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cost Ctr Description"/>
+        <keyMapping columnObjectName="Union_4" columnName="LTEXT"/>
+      </attribute>
+      <attribute id="L_FORM_PERIOD" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Long Form Period"/>
+        <keyMapping columnObjectName="Union_4" columnName="L_FORM_PERIOD"/>
+      </attribute>
+      <attribute id="BUKRS" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Company Code"/>
+        <keyMapping columnObjectName="Union_4" columnName="BUKRS"/>
+      </attribute>
+      <attribute id="ZZKOSTL_PLAN" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cost Centre Plan"/>
+        <keyMapping columnObjectName="Union_4" columnName="ZZKOSTL_PLAN"/>
+      </attribute>
+      <attribute id="REVERSE" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Reverse"/>
+        <keyMapping columnObjectName="Union_4" columnName="REVERSE"/>
+      </attribute>
+      <attribute id="Z_PERIOD" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Z_PERIOD"/>
+        <keyMapping columnObjectName="Union_4" columnName="Z_PERIOD"/>
+      </attribute>
+      <attribute id="VERSN" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Version"/>
+        <keyMapping columnObjectName="Union_4" columnName="VERSN"/>
+      </attribute>
+      <attribute id="GJAHR" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Year"/>
+        <keyMapping columnObjectName="Union_4" columnName="GJAHR"/>
+      </attribute>
+      <attribute id="OBJNR" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Obj Number"/>
+        <keyMapping columnObjectName="Union_4" columnName="OBJNR"/>
+      </attribute>
+      <attribute id="KHINR" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Standard Hierarchy Area"/>
+        <keyMapping columnObjectName="Union_4" columnName="KHINR"/>
+      </attribute>
+      <attribute id="DESCRIPT_CCGR" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Short description of a set"/>
+        <keyMapping columnObjectName="Union_4" columnName="DESCRIPT_CCGR"/>
+      </attribute>
+      <attribute id="Curr_Year" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Curr_Year"/>
+        <keyMapping columnObjectName="Union_4" columnName="Curr_Year"/>
+      </attribute>
+      <attribute id="PAST_MONTH" order="31" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions/>
-        <keyMapping columnObjectName="Join_3" columnName="CURR_MONTH"/>
+        <keyMapping columnObjectName="Union_4" columnName="PAST_MONTH"/>
       </attribute>
-      <attribute id="PAST_MONTH" order="25" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="CURR_MONTH" order="32" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions/>
-        <keyMapping columnObjectName="Join_3" columnName="PAST_MONTH"/>
+        <keyMapping columnObjectName="Union_4" columnName="CURR_MONTH"/>
       </attribute>
-      <attribute id="LONG_PAST_MONTH" order="26" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="CURR_PERIOD_B" order="34" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions/>
-        <keyMapping columnObjectName="Join_3" columnName="LONG_PAST_MONTH"/>
+        <keyMapping columnObjectName="Union_4" columnName="CURR_PERIOD_B"/>
       </attribute>
-      <attribute id="CURR_PERIOD" order="27" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="LONG_PAST_MONTH" order="37" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions/>
-        <keyMapping columnObjectName="Join_3" columnName="CURR_PERIOD"/>
+        <keyMapping columnObjectName="Union_4" columnName="LONG_PAST_MONTH"/>
       </attribute>
-      <attribute id="FISC_PAST_MONTH" order="29" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="CURR_MONTH1" order="38" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions/>
-        <keyMapping columnObjectName="Join_3" columnName="FISC_PAST_MONTH"/>
+        <keyMapping columnObjectName="Union_4" columnName="CURR_MONTH1"/>
       </attribute>
-      <attribute id="CURR_YTD_PERIOD" order="34" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="PAST_MONTH1" order="39" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions/>
-        <keyMapping columnObjectName="Join_3" columnName="CURR_YTD_PERIOD"/>
+        <keyMapping columnObjectName="Union_4" columnName="PAST_MONTH1"/>
+      </attribute>
+      <attribute id="LONG_PAST_MONTH1" order="40" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="Union_4" columnName="LONG_PAST_MONTH1"/>
       </attribute>
       <attribute id="KSTAR$local">
         <descriptions defaultDescription="Cost Elem"/>
-        <keyMapping columnObjectName="Join_3" columnName="KSTAR"/>
+        <keyMapping columnObjectName="Union_4" columnName="KSTAR"/>
       </attribute>
       <attribute id="KOSTL$local">
         <descriptions defaultDescription="Cost Centre"/>
-        <keyMapping columnObjectName="Join_3" columnName="KOSTL"/>
+        <keyMapping columnObjectName="Union_4" columnName="KOSTL"/>
       </attribute>
       <attribute id="CONT_AREA$local">
         <descriptions defaultDescription="Controlling Area"/>
-        <keyMapping columnObjectName="Join_3" columnName="CONT_AREA"/>
+        <keyMapping columnObjectName="Union_4" columnName="CONT_AREA"/>
       </attribute>
     </attributes>
     <calculatedAttributes>
@@ -2750,59 +3848,59 @@
       </layout>
     </privateDataFoundation>
     <baseMeasures>
-      <measure id="WTG00N" hidden="true" order="19" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="Actual "/>
-        <measureMapping columnObjectName="Join_3" columnName="WTG00N"/>
-      </measure>
-      <measure id="WKG001" order="20" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="Plan"/>
-        <measureMapping columnObjectName="Join_3" columnName="WKG001"/>
-      </measure>
-      <measure id="WTGBTR" order="21" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="Total Value in Transaction Currency"/>
-        <measureMapping columnObjectName="Join_3" columnName="WTGBTR"/>
+      <measure id="WKGBTR" order="21" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total Value in Controlling Area Currency"/>
+        <measureMapping columnObjectName="Union_4" columnName="WKGBTR"/>
       </measure>
       <measure id="WOGBTR" order="22" aggregationType="sum" measureType="simple">
         <descriptions defaultDescription="Total Value in Object Currency"/>
-        <measureMapping columnObjectName="Join_3" columnName="WOGBTR"/>
+        <measureMapping columnObjectName="Union_4" columnName="WOGBTR"/>
       </measure>
-      <measure id="WKGBTR" order="23" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="Actual"/>
-        <measureMapping columnObjectName="Join_3" columnName="WKGBTR"/>
+      <measure id="WTGBTR" order="23" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total Value in Transaction Currency"/>
+        <measureMapping columnObjectName="Union_4" columnName="WTGBTR"/>
       </measure>
-      <measure id="PY_ACTUAL" order="28" aggregationType="sum" measureType="simple">
+      <measure id="WKG001" order="24" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Plan"/>
+        <measureMapping columnObjectName="Union_4" columnName="WKG001"/>
+      </measure>
+      <measure id="WTG00N" order="25" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Actual "/>
+        <measureMapping columnObjectName="Union_4" columnName="WTG00N"/>
+      </measure>
+      <measure id="Expense" order="26" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Expense"/>
+        <measureMapping columnObjectName="Union_4" columnName="Actual"/>
+      </measure>
+      <measure id="Plan" order="27" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Expense Budget"/>
+        <measureMapping columnObjectName="Union_4" columnName="Plan"/>
+      </measure>
+      <measure id="Annual_Forecast" order="28" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Annual_Forecast"/>
+        <measureMapping columnObjectName="Union_4" columnName="Annual_Forecast"/>
+      </measure>
+      <measure id="Annual_Budget" order="29" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Plan"/>
+        <measureMapping columnObjectName="Union_4" columnName="Annual_Budget"/>
+      </measure>
+      <measure id="CP_ACTUAL" order="33" aggregationType="sum" measureType="simple">
         <descriptions/>
-        <measureMapping columnObjectName="Join_3" columnName="PY_ACTUAL"/>
+        <measureMapping columnObjectName="Union_4" columnName="CP_ACTUAL"/>
       </measure>
-      <measure id="PY_BUDGET" order="30" aggregationType="sum" measureType="simple">
+      <measure id="CP_BUDGET" order="35" aggregationType="sum" measureType="simple">
         <descriptions/>
-        <measureMapping columnObjectName="Join_3" columnName="PY_BUDGET"/>
+        <measureMapping columnObjectName="Union_4" columnName="CP_BUDGET"/>
       </measure>
-      <measure id="CURR_ACTUAL" order="31" aggregationType="sum" measureType="simple">
+      <measure id="PY_CP_ACTUAL" order="36" aggregationType="sum" measureType="simple">
         <descriptions/>
-        <measureMapping columnObjectName="Join_3" columnName="CURR_ACTUAL"/>
-      </measure>
-      <measure id="CURR_BUDGET" order="32" aggregationType="sum" measureType="simple">
-        <descriptions/>
-        <measureMapping columnObjectName="Join_3" columnName="CURR_BUDGET"/>
+        <measureMapping columnObjectName="Union_4" columnName="PY_CP_ACTUAL"/>
       </measure>
     </baseMeasures>
     <calculatedMeasures>
-      <measure id="VARIANCE" hidden="false" order="3" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="15" scale="2">
+      <measure id="VARIANCE" hidden="false" order="30" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="15" scale="2">
         <descriptions defaultDescription="Variance"/>
-        <formula>&quot;CURR_BUDGET&quot;-&quot;CURR_ACTUAL&quot;</formula>
-      </measure>
-      <measure id="VARIANCE_PERC" hidden="false" order="33" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="13" scale="3">
-        <descriptions defaultDescription="Difference ( %) "/>
-        <formula>If( &quot;CURR_BUDGET&quot;!=0, (&quot;CURR_BUDGET&quot;-&quot;CURR_ACTUAL&quot;)/&quot;CURR_BUDGET&quot;*100, 0) </formula>
-      </measure>
-      <measure id="ANNUAL_FORECAST" hidden="false" order="35" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="13" scale="3">
-        <descriptions defaultDescription="Annual Forecast"/>
-        <formula>(&quot;WKGBTR&quot;/INT(&quot;FISC_PAST_MONTH&quot;)) * 12</formula>
-      </measure>
-      <measure id="annual_forecast2" hidden="false" order="36" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="13" scale="3">
-        <descriptions defaultDescription="annual_forecast2"/>
-        <formula>(&quot;CURR_ACTUAL&quot;/INT(&quot;FISC_PAST_MONTH&quot;))*12</formula>
+        <formula>&quot;WKG001&quot; - &quot;WKGBTR&quot;</formula>
       </measure>
     </calculatedMeasures>
     <restrictedMeasures/>
@@ -2828,97 +3926,95 @@
           <attributeName>CONTROLLING_AREA</attributeName>
         </associatedAttributeNames>
         <properties cardinality="CN_N" joinType="rightOuter" joinOperator="Equal"/>
-        <associatedAttributeFeatures>
-          <attributeReference attributeName="ZCOST_CENTER" hidden="true"/>
-        </associatedAttributeFeatures>
+        <associatedAttributeFeatures/>
       </logicalJoin>
     </sharedDimensions>
   </logicalModel>
 <layout>
   <shapes>
       <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-        <upperLeftCorner x="1744" y="87"/>
-        <rectangleSize height="0" width="0"/>
+        <upperLeftCorner x="1693" y="112"/>
+        <rectangleSize height="0" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="period1" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="2332" y="1053"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="512" y="2436"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="period2" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="2178" y="1053"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="1142" y="2436"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="period3" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="2024" y="1053"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="722" y="2436"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="period5" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="1716" y="1053"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="1352" y="2436"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="period4" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="1870" y="1053"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="3662" y="2436"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="period16" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="22" y="1053"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="3032" y="2436"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="period15" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="176" y="1053"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="1772" y="2436"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="period14" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="330" y="1053"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="3452" y="2436"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="period13" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="484" y="1053"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="1562" y="2436"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="period12" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="638" y="1053"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="2822" y="2436"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="period11" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="792" y="1053"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="932" y="2436"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="period10" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="946" y="1053"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="2612" y="2436"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="period9" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="1100" y="1053"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="2192" y="2436"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="period8" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="1254" y="1053"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="1982" y="2436"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="period7" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="1408" y="1053"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="2402" y="2436"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="period6" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="1562" y="1053"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="3242" y="2436"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Union_1" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="1254" y="685"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="2081" y="1946"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="2486" y="1053"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="92" y="2436"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="2640" y="1053"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="302" y="2436"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="2486" y="685"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="275" y="2073"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
     <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
@@ -2929,12 +4025,12 @@
       <rectangleSize width="250"/>
     </shape>
       <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="2240" y="685"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="885" y="1946"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="2240" y="589"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="858" y="1786"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
     <shape modelObjectName="Join_1" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
@@ -2945,12 +4041,12 @@
       <rectangleSize width="250"/>
     </shape>
       <shape expanded="true" modelObjectName="Projection_5" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="1100" y="685"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="1871" y="1946"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Join_4" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="1254" y="589"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="1897" y="1786"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
     <shape modelObjectName="Union_1" modelObjectNameSpace="Join_4" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
@@ -2961,24 +4057,24 @@
       <rectangleSize width="250"/>
     </shape>
       <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="1500" y="511"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="1897" y="1681"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Aggregation_2" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="1993" y="511"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="858" y="1681"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Union_2" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="1745" y="395"/>
-        <rectangleSize height="30" width="140"/>
+        <upperLeftCorner x="1871" y="1541"/>
+        <rectangleSize height="30" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Projection_7" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="1899" y="395"/>
-        <rectangleSize height="30" width="140"/>
+        <upperLeftCorner x="1586" y="1541"/>
+        <rectangleSize height="30" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Join_7" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="1821" y="299"/>
-        <rectangleSize height="30" width="140"/>
+        <upperLeftCorner x="1612" y="1381"/>
+        <rectangleSize height="30" width="160"/>
       </shape>
     <shape modelObjectName="Union_2" modelObjectNameSpace="Join_7" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
@@ -2989,12 +4085,12 @@
       <rectangleSize width="250"/>
     </shape>
       <shape expanded="true" modelObjectName="Projection_4" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="1667" y="299"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="1948" y="1381"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Join_3" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="1744" y="203"/>
-        <rectangleSize height="701" width="140"/>
+        <upperLeftCorner x="1921" y="1221"/>
+        <rectangleSize height="0" width="160"/>
       </shape>
     <shape modelObjectName="Projection_4" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
@@ -3004,14 +4100,146 @@
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-      <shape modelObjectName="Join_3" modelObjectNameSpace="StarJoinViewNodeInput" modelObjectType="repository">
-        <upperLeftCorner x="347" y="44"/>
+      <shape expanded="true" modelObjectName="Aggregation_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="1671" y="1221"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_8" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="1698" y="1061"/>
+        <rectangleSize height="0" width="160"/>
+      </shape>
+    <shape modelObjectName="Aggregation_3" modelObjectNameSpace="Join_8" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Join_3" modelObjectNameSpace="Join_8" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="Join_6" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="1663" y="901"/>
+        <rectangleSize height="0" width="160"/>
+      </shape>
+    <shape modelObjectName="Join_8" modelObjectNameSpace="Join_6" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="ECC_SETHEADERT" modelObjectNameSpace="Join_6" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="Expenses" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="2092" y="681"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+    <shape modelObjectName="Join_6" modelObjectNameSpace="Expenses" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="plx_analytics::CA_DIM_CE_HIERARCHY_ALL" modelObjectNameSpace="Expenses" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="105MOHBF" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="832" y="681"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+    <shape modelObjectName="Join_6" modelObjectNameSpace="105MOHBF" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="plx_analytics::CA_DIM_CE_HIERARCHY_ALL" modelObjectNameSpace="105MOHBF" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="110MOHOTHR" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="1042" y="681"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+    <shape modelObjectName="Join_6" modelObjectNameSpace="110MOHOTHR" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="plx_analytics::CA_DIM_CE_HIERARCHY_ALL" modelObjectNameSpace="110MOHOTHR" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="115MOHBAM" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="1672" y="681"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+    <shape modelObjectName="Join_6" modelObjectNameSpace="115MOHBAM" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="plx_analytics::CA_DIM_CE_HIERARCHY_ALL" modelObjectNameSpace="115MOHBAM" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="120MOHQBP" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="1882" y="681"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+    <shape modelObjectName="Join_6" modelObjectNameSpace="120MOHQBP" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="plx_analytics::CA_DIM_CE_HIERARCHY_ALL" modelObjectNameSpace="120MOHQBP" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="125MOHWI" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="1462" y="681"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+    <shape modelObjectName="Join_6" modelObjectNameSpace="125MOHWI" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="plx_analytics::CA_DIM_CE_HIERARCHY_ALL" modelObjectNameSpace="125MOHWI" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="Aggregation_5" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="832" y="556"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Aggregation_6" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="1187" y="556"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Aggregation_7" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="1657" y="556"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Aggregation_8" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="1867" y="556"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Aggregation_9" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="1447" y="556"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Aggregation_4" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="2077" y="556"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Annual_Budget" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="1252" y="699"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Union_4" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="1648" y="266"/>
+        <rectangleSize height="0" width="160"/>
+      </shape>
+      <shape modelObjectName="Union_4" modelObjectNameSpace="StarJoinViewNodeInput" modelObjectType="repository">
+        <upperLeftCorner x="35" y="35"/>
       </shape>
       <shape modelObjectName="plx_analytics::CA_DIM_CE_HIERARCHY_ALL" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
-        <upperLeftCorner x="762" y="214"/>
+        <upperLeftCorner x="464" y="60"/>
       </shape>
       <shape modelObjectName="plx_analytics::CA_DIM_CC_HIERARCHY_ALL" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
-        <upperLeftCorner x="840" y="394"/>
+        <upperLeftCorner x="496" y="273"/>
       </shape>
     </shapes>
 </layout>
