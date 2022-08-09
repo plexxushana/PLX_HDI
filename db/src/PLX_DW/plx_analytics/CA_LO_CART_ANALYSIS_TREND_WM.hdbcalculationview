@@ -254,7 +254,10 @@
         <viewAttribute id="CC_1"/>
         <viewAttribute id="CC_12"/>
         <viewAttribute id="IN_PERIOD_W"/>
-      </viewAttributes>
+      
+      <viewAttribute id="CART_TYPE"/>
+      <viewAttribute id="STATUS"/>
+    </viewAttributes>
     <calculatedViewAttributes>
         <calculatedViewAttribute datatype="NVARCHAR" id="CURRENT_PERIOD" length="7" expressionLanguage="COLUMN_ENGINE">
           <formula>&quot;CURRENT_PERIOD_M&quot;</formula>
@@ -279,7 +282,11 @@
         <viewAttribute id="ROP"/>
         <viewAttribute id="MAKTX"/>
         <viewAttribute id="CURRENT_PERIOD"/>
-      </viewAttributes>
+      
+      <viewAttribute id="CART_TYPE"/>
+    
+      <viewAttribute id="STATUS"/>
+    </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
       <input node="Projection_2"/>
@@ -373,7 +380,7 @@
     <restrictedViewAttributes/>
       <input node="Projection_5"/>
     </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="Join_1">
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinType="fullOuter">
     <descriptions/>
     <viewAttributes>
         <viewAttribute id="Z_NR_SCANS"/>
@@ -415,6 +422,8 @@
         <viewAttribute id="DTLASTSCAN"/>
         <viewAttribute id="WAERS"/>
       <viewAttribute id="MAT_BIN_NUM"/>
+      <viewAttribute id="CART_TYPE"/>
+      <viewAttribute id="STATUS"/>
       <viewAttribute hidden="true" id="JOIN$CART_LI_PLATE$CART_LI_PLATE"/>
       <viewAttribute hidden="true" id="JOIN$BUKRS$BUKRS"/>
       <viewAttribute hidden="true" id="JOIN$WERKS$WERKS"/>
@@ -465,6 +474,8 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="MAKTX" source="MAKTX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CART_TYPE" source="CART_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS" source="STATUS"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CART_LI_PLATE$CART_LI_PLATE" source="CART_LI_PLATE"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$BUKRS$BUKRS" source="BUKRS"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$WERKS$WERKS" source="WERKS"/>
@@ -560,6 +571,10 @@
         <viewAttribute id="WAERS"/>
       
       <viewAttribute id="MAT_BIN_NUM"/>
+    
+      <viewAttribute id="CART_TYPE"/>
+    
+      <viewAttribute id="STATUS"/>
     </viewAttributes>
     <calculatedViewAttributes/>
       <input node="Join_1">
@@ -603,6 +618,10 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
       
         <mapping xsi:type="Calculation:AttributeMapping" target="MAT_BIN_NUM" source="MAT_BIN_NUM"/>
+      
+        <mapping xsi:type="Calculation:AttributeMapping" target="CART_TYPE" source="CART_TYPE"/>
+      
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS" source="STATUS"/>
       </input>
       <input node="Join_2">
         <mapping xsi:type="Calculation:AttributeMapping" target="MFRNR" source="MFRNR"/>
@@ -658,6 +677,10 @@
         <viewAttribute id="WAERS"/>
       
       <viewAttribute id="MAT_BIN_NUM"/>
+    
+      <viewAttribute id="CART_TYPE"/>
+    
+      <viewAttribute id="STATUS"/>
     </viewAttributes>
     <calculatedViewAttributes>
         <calculatedViewAttribute aggregationType="sum" datatype="INTEGER" id="TOTAL_QTY" expressionLanguage="COLUMN_ENGINE">
@@ -761,6 +784,18 @@
     
         <keyMapping columnObjectName="Aggregation_2" columnName="MAT_BIN_NUM"/>
     
+      </attribute>
+    
+      <attribute id="CART_TYPE" order="51" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="CART_TYPE"/>
+    
+        <keyMapping columnObjectName="Aggregation_2" columnName="CART_TYPE"/>
+    
+      </attribute>
+    
+      <attribute id="STATUS" order="52" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="STATUS"/>
+        <keyMapping columnObjectName="Aggregation_2" columnName="STATUS"/>
       </attribute>
     </attributes>
     <calculatedAttributes/>
@@ -866,36 +901,50 @@
         <descriptions defaultDescription="Weekly Avg"/>
         <formula>IF('$$IP_TREND_TYPE$$'='M', double(&quot;TOTAL_QTY&quot;) / DOUBLE(52), double(&quot;TOTAL_QTY&quot;) / DOUBLE(12))</formula>
       
+        
+        
         </measure>
       <measure id="AVG_SCAN" hidden="false" order="2" aggregationType="sum" measureType="simple" aggregatable="true" datatype="DOUBLE" expressionLanguage="COLUMN_ENGINE">
         <descriptions defaultDescription="Avg per Scan"/>
         <formula>double(&quot;TOTAL_QTY&quot;)/&quot;Z_NR_SCANS&quot;</formula>
       
+        
+        
         </measure>
       <measure id="SCANS_WEEK" hidden="false" order="3" aggregationType="sum" measureType="simple" aggregatable="true" datatype="DOUBLE" expressionLanguage="COLUMN_ENGINE">
         <descriptions defaultDescription="SCANS_WEEK"/>
         <formula>IF('$$IP_TREND_TYPE$$'='M',double(&quot;Z_NR_SCANS&quot;)/52, double(&quot;Z_NR_SCANS&quot;)/12) </formula>
       
+        
+        
         </measure>
       <measure id="RECM_MAX" hidden="false" order="4" aggregationType="sum" measureType="simple" aggregatable="true" datatype="DOUBLE" expressionLanguage="COLUMN_ENGINE">
         <descriptions defaultDescription="RECM_MAX"/>
         <formula>round(double(if(&quot;PROF_RNDVAL&quot;&gt;&quot;WEEKLY_AVG&quot; AND &quot;PROF_RNDVAL&quot;&gt;1,  DOUBLE( &quot;PROF_RNDVAL&quot;), DOUBLE(&quot;WEEKLY_AVG&quot;) +1.5)), 0)</formula>
       
+        
+        
         </measure>
       <measure id="RECM_MIN" hidden="false" order="5" aggregationType="sum" measureType="simple" aggregatable="true" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="34" scale="7">
         <descriptions defaultDescription="RECM_MIN"/>
         <formula>round(double(( &quot;WEEKLY_AVG&quot;*43 /100 ) + 0.5), 0)</formula>
       
+        
+        
         </measure>
       <measure id="AVG_ON_HAND" hidden="false" order="6" aggregationType="sum" measureType="simple" aggregatable="true" datatype="DOUBLE" expressionLanguage="COLUMN_ENGINE">
         <descriptions defaultDescription="AVG_ON_HAND"/>
         <formula>double((double(&quot;PROF_MAXQTY&quot;) - double(&quot;PROF_ROP&quot;))/2+double(&quot;PROF_ROP&quot;))  *double(&quot;Z_CONTRACT_PRICE&quot;)</formula>
       
+        
+        
         </measure>
       <measure id="RECM_AVG_VALUE" hidden="false" order="7" aggregationType="sum" measureType="simple" aggregatable="true" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="34" scale="7">
         <descriptions defaultDescription="RECM_AVG_VALUE"/>
         <formula>double(((&quot;RECM_MAX&quot;-&quot;RECM_MIN&quot;)/2+&quot;RECM_MIN&quot;)*&quot;Z_CONTRACT_PRICE&quot;)</formula>
       
+        
+        
         </measure>
     </calculatedMeasures>
     <restrictedMeasures/>
