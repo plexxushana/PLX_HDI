@@ -5,7 +5,7 @@
   <localVariables>
     <variable id="IP_KOKRS" parameter="true">
       <descriptions defaultDescription="Controlling Area"/>
-      <variableProperties datatype="NVARCHAR" defaultValue="" length="4" mandatory="false" scale="0">
+      <variableProperties datatype="NVARCHAR" defaultValue="1100" length="4" mandatory="false" scale="0">
         <valueDomain type="AttributeValue">
           <externalLikeStructureName>plx_analytics::CA_DIM_CONTROLLING_AREAS</externalLikeStructureName>
           <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
@@ -27,7 +27,7 @@
     </variable>
     <variable id="P_CC_GROUP_NODE" parameter="true">
       <descriptions defaultDescription="Cost Centre Node"/>
-      <variableProperties datatype="NVARCHAR" length="40" mandatory="false" scale="0" defaultValue="undefined">
+      <variableProperties datatype="NVARCHAR" length="40" mandatory="false" scale="0" defaultValue="UHN">
         <valueDomain type="AttributeValue">
           <externalLikeStructureName>plx_analytics::CA_DIM_CC_VALUE_HELP</externalLikeStructureName>
           <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
@@ -59,7 +59,16 @@
       </variableProperties>
     </variable>
   </localVariables>
-  <variableMappings/>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" forStarJoin="true">
+      <targetVariable name="P_CONTROLLING_AREA" resourceUri="plx_analytics::CA_DIM_CC_HIERARCHY"/>
+      <localVariable>IP_KOKRS</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" forStarJoin="true">
+      <targetVariable name="P_CC_GROUP_NODE" resourceUri="plx_analytics::CA_DIM_CC_HIERARCHY"/>
+      <localVariable>P_CC_GROUP_NODE</localVariable>
+    </mapping>
+  </variableMappings>
   <informationModelLayout relativeWidthScenario="38"/>
   <dataSources>
     <DataSource id="ECC_COEPR">
@@ -214,14 +223,11 @@
         <localVariable>Business_Area</localVariable>
         <keyMapping columnObjectName="Aggregation_1" columnName="GEBER"/>
       </attribute>
-      <attribute id="KOSTL" order="10" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="KOSTL"/>
-        <keyMapping columnObjectName="Aggregation_1" columnName="KOSTL"/>
-      </attribute>
-    
-      <attribute id="KOKRS" order="11" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="KOKRS"/>
+      <attribute id="KOKRS$local">
         <keyMapping columnObjectName="Aggregation_1" columnName="KOKRS"/>
+      </attribute>
+      <attribute id="KOSTL$local">
+        <keyMapping columnObjectName="Aggregation_1" columnName="KOSTL"/>
       </attribute>
     </attributes>
     <calculatedAttributes/>
@@ -266,7 +272,20 @@
     </calculatedMeasures>
     <restrictedMeasures/>
     <localDimensions/>
-    <sharedDimensions/>
+    <sharedDimensions>
+      <logicalJoin associatedObjectUri="plx_analytics::CA_DIM_CC_HIERARCHY">
+        <attributes>
+          <attributeRef>KOKRS$local</attributeRef>
+          <attributeRef>KOSTL$local</attributeRef>
+        </attributes>
+        <associatedAttributeNames>
+          <attributeName>CONTROLLING_AREA</attributeName>
+          <attributeName>CHILD_CC</attributeName>
+        </associatedAttributeNames>
+        <properties cardinality="CN_N" joinType="rightOuter" joinOperator="Equal"/>
+        <associatedAttributeFeatures/>
+      </logicalJoin>
+    </sharedDimensions>
   </logicalModel>
 <layout>
   <shapes>
@@ -301,6 +320,11 @@
     <shape modelObjectName="Aggregation_1" modelObjectNameSpace="StarJoinViewNodeInput" modelObjectType="repository">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="250"/>
-    </shape></shapes>
+    </shape>
+    <shape modelObjectName="plx_analytics::CA_DIM_CC_HIERARCHY" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="325.38671875"/>
+    </shape>
+  </shapes>
 </layout>
 </Calculation:scenario>
