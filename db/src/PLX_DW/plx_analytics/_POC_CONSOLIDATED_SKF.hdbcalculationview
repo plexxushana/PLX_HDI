@@ -59,7 +59,16 @@
       </variableProperties>
     </variable>
   </localVariables>
-  <variableMappings/>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" forStarJoin="true">
+      <targetVariable name="IP_GROUP_NODE" resourceUri="plx_analytics::CA_DIM_CC_HIERARCHY_ALL"/>
+      <localVariable>P_GROUP_NODE</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" forStarJoin="true">
+      <targetVariable name="IP_KOKRS" resourceUri="plx_analytics::CA_DIM_CC_HIERARCHY_ALL"/>
+      <localVariable>IP_KOKRS</localVariable>
+    </mapping>
+  </variableMappings>
   <informationModelLayout relativeWidthScenario="38"/>
   <dataSources>
     <DataSource id="ECC_COEPR">
@@ -101,7 +110,7 @@
     <input node="ECC_COEPR"/>
     <filter>(&quot;KOKRS&quot; ='$$IP_KOKRS$$')</filter>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2" filterExpressionLanguage="SQL">
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
     <viewAttributes>
       <viewAttribute id="OBJNR"/>
       <viewAttribute id="KOKRS"/>
@@ -192,36 +201,35 @@
   <logicalModel id="Aggregation_1">
     <descriptions/>
     <attributes>
-      <attribute id="KOKRS" order="3" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="Controlling Area"/>
-        <keyMapping columnObjectName="Aggregation_1" columnName="KOKRS"/>
-      </attribute>
-      <attribute id="PERIO" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <attribute id="PERIO" order="3" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="PERIO"/>
         <keyMapping columnObjectName="Aggregation_1" columnName="PERIO"/>
       </attribute>
-      <attribute id="GJAHR" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <attribute id="GJAHR" order="6" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="GJAHR"/>
         <localVariable>Fiscal_Year</localVariable>
         <keyMapping columnObjectName="Aggregation_1" columnName="GJAHR"/>
       </attribute>
-      <attribute id="VERSN" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <attribute id="VERSN" order="7" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="VERSN"/>
         <keyMapping columnObjectName="Aggregation_1" columnName="VERSN"/>
       </attribute>
-      <attribute id="STAGR" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <attribute id="STAGR" order="8" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="STAGR"/>
         <keyMapping columnObjectName="Aggregation_1" columnName="STAGR"/>
       </attribute>
-      <attribute id="KOSTL" order="10" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="Cost Center"/>
-        <keyMapping columnObjectName="Aggregation_1" columnName="KOSTL"/>
-      </attribute>
-      <attribute id="GEBER" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <attribute id="GEBER" order="9" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="GEBER"/>
         <localVariable>Business_Area</localVariable>
         <keyMapping columnObjectName="Aggregation_1" columnName="GEBER"/>
-      </attribute></attributes>
+      </attribute>
+      <attribute id="KOKRS$local">
+        <keyMapping columnObjectName="Aggregation_1" columnName="KOKRS"/>
+      </attribute>
+      <attribute id="KOSTL$local">
+        <keyMapping columnObjectName="Aggregation_1" columnName="KOSTL"/>
+      </attribute>
+    </attributes>
     <calculatedAttributes/>
     <privateDataFoundation>
       <tableProxies/>
@@ -231,11 +239,11 @@
       </layout>
     </privateDataFoundation>
     <baseMeasures>
-      <measure id="SMEBTR" order="5" aggregationType="sum" measureType="simple">
+      <measure id="SMEBTR" order="4" aggregationType="sum" measureType="simple">
         <descriptions defaultDescription="SMEBTR"/>
         <measureMapping columnObjectName="Aggregation_1" columnName="SMEBTR"/>
       </measure>
-      <measure id="SMABTR" order="6" aggregationType="sum" measureType="simple">
+      <measure id="SMABTR" order="5" aggregationType="sum" measureType="simple">
         <descriptions defaultDescription="SMABTR"/>
         <measureMapping columnObjectName="Aggregation_1" columnName="SMABTR"/>
       </measure>
@@ -247,6 +255,7 @@
       
         
         
+        
         </measure>
       <measure id="VARIANCE_PERC" hidden="false" order="2" aggregationType="sum" measureType="simple" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="13" scale="3">
         <descriptions defaultDescription="Difference ( %) "/>
@@ -254,11 +263,28 @@
       
         
         
+        
         </measure>
     </calculatedMeasures>
     <restrictedMeasures/>
     <localDimensions/>
-    <sharedDimensions/>
+    <sharedDimensions>
+      <logicalJoin associatedObjectUri="plx_analytics::CA_DIM_CC_HIERARCHY_ALL">
+        <attributes>
+          <attributeRef>KOKRS$local</attributeRef>
+          <attributeRef>KOSTL$local</attributeRef>
+        </attributes>
+        <associatedAttributeNames>
+          <attributeName>CONTROLLING_AREA</attributeName>
+          <attributeName>CHILD_CC</attributeName>
+        </associatedAttributeNames>
+        <properties cardinality="CN_N" joinType="rightOuter" joinOperator="Equal"/>
+        <associatedAttributeFeatures/>
+        <associatedHierarchyFeature hierarchyName="CC_HIER">
+          <joinProperties nodeElementName="CC_HIERnode" expressionParameterName="CC_HIERexpr"/>
+        </associatedHierarchyFeature>
+      </logicalJoin>
+    </sharedDimensions>
   </logicalModel>
 <layout>
   <shapes>
@@ -293,6 +319,11 @@
     <shape modelObjectName="Aggregation_1" modelObjectNameSpace="StarJoinViewNodeInput" modelObjectType="repository">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="250"/>
-    </shape></shapes>
+    </shape>
+    <shape modelObjectName="plx_analytics::CA_DIM_CC_HIERARCHY_ALL" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="325.38671875"/>
+    </shape>
+  </shapes>
 </layout>
 </Calculation:scenario>
