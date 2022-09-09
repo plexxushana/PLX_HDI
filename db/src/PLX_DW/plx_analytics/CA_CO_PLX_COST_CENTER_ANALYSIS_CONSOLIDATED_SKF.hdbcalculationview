@@ -577,7 +577,7 @@
     <input emptyUnionBehavior="undefined" node="P_012$$$$plx_analytics::CA_PLX_CO_SKF_BYYEAR$$"/>
     <filter>(&quot;KOKRS&quot; ='$$IP_KOKRS$$')</filter>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinType="leftOuter">
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinType="leftOuter" filterExpressionLanguage="SQL">
     <descriptions/>
     <viewAttributes>
         <viewAttribute id="KOSTL"/>
@@ -612,10 +612,11 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="OBJNR" source="OBJNR"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
       </input>
+    <filter>LEFT(&quot;OBJNR&quot;, 2)='KS'</filter>
     <joinAttribute name="OBJNR"/>
     <joinAttribute name="KOKRS"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3" filterExpressionLanguage="SQL">
     <descriptions/>
     <viewAttributes>
         <viewAttribute id="OBJNR"/>
@@ -624,8 +625,10 @@
       </viewAttributes>
     <calculatedViewAttributes/>
       <input node="Projection_3$$$$ECC_ONRKS$$"/>
-    </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    
+    <filter>LEFT(&quot;OBJNR&quot;, 2)='KS'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1" filterExpressionLanguage="SQL">
     <descriptions/>
     <viewAttributes>
         <viewAttribute id="KOKRS"/>
@@ -645,7 +648,9 @@
       </viewAttributes>
     <calculatedViewAttributes/>
       <input node="CA_PLX_CO_SKF_BYPERIOD"/>
-    </calculationView>
+    
+    <filter>LEFT(&quot;OBJNR&quot;, 2)='KS'</filter>
+  </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="Join_2" joinType="leftOuter">
     <descriptions/>
     <viewAttributes>
@@ -663,16 +668,8 @@
         <viewAttribute id="OBJNR"/>
         <viewAttribute id="LEDNR"/>
         <viewAttribute id="VERSN"/>
-        <viewAttribute id="KOSTL"/>
-      <viewAttribute hidden="true" id="JOIN$KOKRS$KOKRS"/>
-      <viewAttribute hidden="true" id="JOIN$OBJNR$OBJNR"/>
-    </viewAttributes>
+        <viewAttribute id="KOSTL"/></viewAttributes>
     <calculatedViewAttributes/>
-      <input node="Projection_3">
-        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$KOKRS$KOKRS" source="KOKRS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$OBJNR$OBJNR" source="OBJNR"/>
-      </input>
       <input node="Projection_1">
         <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="GRTYP" source="GRTYP"/>
@@ -687,12 +684,14 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="WRTTP" source="WRTTP"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="OBJNR" source="OBJNR"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="LEDNR" source="LEDNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="VERSN" source="VERSN"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$KOKRS$KOKRS" source="KOKRS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$OBJNR$OBJNR" source="OBJNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VERSN" source="VERSN"/></input>
+      <input node="Projection_3">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OBJNR" source="OBJNR"/>
       </input>
-    <joinAttribute name="JOIN$KOKRS$KOKRS"/>
-    <joinAttribute name="JOIN$OBJNR$OBJNR"/>
+    <joinAttribute name="KOKRS"/>
+    <joinAttribute name="OBJNR"/>
   </calculationView>
   <calculationView xsi:type="Calculation:UnionView" id="Union_2">
     <descriptions/>
@@ -992,11 +991,11 @@
         <upperLeftCorner x="1343" y="546"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
-    <shape modelObjectName="Projection_3" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-    <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="Projection_3" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
     </shape>
