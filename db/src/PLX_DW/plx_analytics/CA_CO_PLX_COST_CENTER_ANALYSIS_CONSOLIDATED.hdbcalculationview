@@ -75,10 +75,12 @@
       </variableProperties>
     </variable>
     <variable id="V_FISCAL_YEAR">
-      <descriptions defaultDescription="Fiscal YEar"/>
-      <variableProperties datatype="NVARCHAR" length="4" scale="NaN" defaultValue="">
+      <descriptions defaultDescription="Fiscal Year"/>
+      <variableProperties datatype="NVARCHAR" length="4" scale="null" defaultValue="">
         <valueDomain type="AttributeValue">
-          <attribute name="GJAHR"/>
+          <externalLikeStructureName>plx_analytics::CA_DIM_FISC_CAL</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>ZFISCAL_YEAR</externalLikeElementName>
         </valueDomain>
         <selection multiLine="true" type="SingleValue"/>
       </variableProperties>
@@ -687,7 +689,7 @@
       </viewAttributes>
     <calculatedViewAttributes>
         <calculatedViewAttribute datatype="NVARCHAR" id="Z_PERIOD" length="3" expressionLanguage="COLUMN_ENGINE">
-          <formula>'012'</formula>
+          <formula>'013'</formula>
         </calculatedViewAttribute>
       </calculatedViewAttributes>
       <input node="period13$$$$ECC_COEJ$$"/></calculationView>
@@ -2662,7 +2664,9 @@
         <viewAttribute id="CURR_MONTH1"/>
         <viewAttribute id="PAST_MONTH1"/>
         <viewAttribute id="LONG_PAST_MONTH1"/>
-      </viewAttributes>
+      
+      <viewAttribute id="SETNAME"/>
+    </viewAttributes>
     <calculatedViewAttributes>
         <calculatedViewAttribute datatype="INTEGER" id="CURR_MONTH" expressionLanguage="SQL">
           <formula>RIGHT(LEFT(current_date, 7) , 2) </formula>
@@ -2704,6 +2708,7 @@
       </input>
       <input node="ECC_SETHEADERT">
         <mapping xsi:type="Calculation:AttributeMapping" target="DESCRIPT_CCGR" source="DESCRIPT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SETNAME" source="SETNAME"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="KHINR" source="SETNAME"/>
       </input>
     <joinAttribute name="KHINR"/>
@@ -2713,7 +2718,7 @@
     <descriptions/>
     <attributes>
       <attribute id="DESCRIPT_CCGR" order="4" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="DESCRIPT_CCGR"/>
+        <descriptions defaultDescription="CCGR Description"/>
         <keyMapping columnObjectName="Join_6" columnName="DESCRIPT_CCGR"/>
       </attribute>
       <attribute id="KWAER" order="10" displayAttribute="false" attributeHierarchyActive="false">
@@ -2721,7 +2726,7 @@
         <keyMapping columnObjectName="Join_6" columnName="KWAER"/>
       </attribute>
       <attribute id="GSBER_1" order="11" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="GSBER_1"/>
+        <descriptions defaultDescription="Business Area"/>
         <keyMapping columnObjectName="Join_6" columnName="GSBER_1"/>
       </attribute>
       <attribute id="BEKNZ" order="12" displayAttribute="false" attributeHierarchyActive="false">
@@ -2737,11 +2742,11 @@
         <keyMapping columnObjectName="Join_6" columnName="L_FORM_PERIOD"/>
       </attribute>
       <attribute id="BUKRS" order="15" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="BUKRS"/>
+        <descriptions defaultDescription="Company Code"/>
         <keyMapping columnObjectName="Join_6" columnName="BUKRS"/>
       </attribute>
       <attribute id="ZZKOSTL_PLAN" order="16" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="ZZKOSTL_PLAN"/>
+        <descriptions defaultDescription="Cost Centre"/>
         <keyMapping columnObjectName="Join_6" columnName="ZZKOSTL_PLAN"/>
       </attribute>
       <attribute id="REVERSE" order="17" displayAttribute="false" attributeHierarchyActive="false">
@@ -2749,20 +2754,20 @@
         <keyMapping columnObjectName="Join_6" columnName="REVERSE"/>
       </attribute>
       <attribute id="Z_PERIOD" order="18" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="Z_PERIOD"/>
+        <descriptions defaultDescription="Period"/>
         <keyMapping columnObjectName="Join_6" columnName="Z_PERIOD"/>
       </attribute>
       <attribute id="VERSN" order="19" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="VERSN"/>
+        <descriptions defaultDescription="Version"/>
         <keyMapping columnObjectName="Join_6" columnName="VERSN"/>
       </attribute>
       <attribute id="GJAHR" order="20" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="GJAHR"/>
+        <descriptions defaultDescription="Fiscal Year"/>
         <localVariable>V_FISCAL_YEAR</localVariable>
         <keyMapping columnObjectName="Join_6" columnName="GJAHR"/>
       </attribute>
       <attribute id="OBJNR" order="21" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="OBJNR"/>
+        <descriptions defaultDescription="Obj Number"/>
         <keyMapping columnObjectName="Join_6" columnName="OBJNR"/>
       </attribute>
       <attribute id="KHINR" order="22" displayAttribute="false" attributeHierarchyActive="false">
@@ -2794,6 +2799,10 @@
         <localVariable>V_COSTELEM</localVariable>
         <keyMapping columnObjectName="Join_6" columnName="KSTAR"/>
       </attribute>
+      <attribute id="SETNAME" order="33" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="SETNAME"/>
+        <keyMapping columnObjectName="Join_6" columnName="SETNAME"/>
+      </attribute>
       <attribute id="KSTAR$local">
         <descriptions defaultDescription="Cost Elem"/>
         <keyMapping columnObjectName="Join_6" columnName="KSTAR"/>
@@ -2813,14 +2822,14 @@
         <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="25">
           <formula>midstr(&quot;OBJNR&quot;, 3) </formula>
         </keyCalculation>
-      </calculatedAttribute>
+        </calculatedAttribute>
       <calculatedAttribute id="PARTNER_OBEJCT_TYPE" hidden="false" order="2" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="Partner Object Type"/>
         <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="10">
           <formula>CASE(leftstr(&quot;OBJNR&quot;, 2), 'OR', 'Order',
 'PR', 'WBS Element', 'Not Assigned')</formula>
         </keyCalculation>
-      </calculatedAttribute>
+        </calculatedAttribute>
     </calculatedAttributes>
     <privateDataFoundation>
       <tableProxies/>
@@ -2831,23 +2840,23 @@
     </privateDataFoundation>
     <baseMeasures>
       <measure id="WKGBTR" order="5" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="WKGBTR"/>
+        <descriptions defaultDescription="Actual"/>
         <measureMapping columnObjectName="Join_6" columnName="WKGBTR"/>
       </measure>
       <measure id="WOGBTR" order="6" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="WOGBTR"/>
+        <descriptions defaultDescription="Total Value in Object Currency"/>
         <measureMapping columnObjectName="Join_6" columnName="WOGBTR"/>
       </measure>
       <measure id="WTGBTR" order="7" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="WTGBTR"/>
+        <descriptions defaultDescription="Total Value in Transaction Currency"/>
         <measureMapping columnObjectName="Join_6" columnName="WTGBTR"/>
       </measure>
       <measure id="WKG001" order="8" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="WKG001"/>
+        <descriptions defaultDescription="Plan"/>
         <measureMapping columnObjectName="Join_6" columnName="WKG001"/>
       </measure>
       <measure id="WTG00N" order="9" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="WTG00N"/>
+        <descriptions defaultDescription="Plan in Transaction Currency"/>
         <measureMapping columnObjectName="Join_6" columnName="WTG00N"/>
       </measure>
       <measure id="CURR_MONTH1" order="23" aggregationType="sum" measureType="simple">
@@ -2871,6 +2880,7 @@
         <descriptions defaultDescription="Variance"/>
         <formula>&quot;WKG001&quot; - &quot;WKGBTR&quot;</formula>
       
+        
         </measure>
     </calculatedMeasures>
     <restrictedMeasures/>
@@ -2903,7 +2913,7 @@
 <layout>
   <shapes>
       <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-        <upperLeftCorner x="2582" y="112"/>
+        <upperLeftCorner x="2557" y="105"/>
         <rectangleSize height="0" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="period1" modelObjectNameSpace="CalculationView">
