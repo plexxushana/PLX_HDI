@@ -61,6 +61,14 @@
   </localVariables>
   <variableMappings>
     <mapping xsi:type="Variable:VariableMapping" forStarJoin="true">
+      <targetVariable name="P_CONTROLLING_AREA" resourceUri="plx_analytics::CA_DIM_CC_HIERARCHY_ALL"/>
+      <localVariable>IP_KOKRS</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" forStarJoin="true">
+      <targetVariable name="P_CC_GROUP_NODE" resourceUri="plx_analytics::CA_DIM_CC_HIERARCHY_ALL"/>
+      <localVariable>P_CC_GROUP_NODE</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" forStarJoin="true">
       <targetVariable name="IP_GROUP_NODE" resourceUri="plx_analytics::CA_DIM_CC_HIERARCHY_ALL"/>
       <localVariable>P_CC_GROUP_NODE</localVariable>
     </mapping>
@@ -73,6 +81,9 @@
   <dataSources>
     <DataSource id="ECC_COEPR">
       <resourceUri>ECC_COEPR</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_ONRKS">
+      <resourceUri>ECC_ONRKS</resourceUri>
     </DataSource>
   </dataSources>
 <calculationViews>
@@ -103,15 +114,19 @@
       <viewAttribute id="GRANT_NBR"/>
       <viewAttribute id="BUDGET_PD"/>
     </viewAttributes>
-    <calculatedViewAttributes>
-      <calculatedViewAttribute id="CC_1" datatype="NVARCHAR" length="10" expressionLanguage="SQL">
-        <formula>TRIM(SUBSTR(&quot;OBJNR&quot;,7))</formula>
-      </calculatedViewAttribute>
-    </calculatedViewAttributes>
+    <calculatedViewAttributes/>
     <input node="ECC_COEPR"/>
     <filter>(&quot;KOKRS&quot; ='$$IP_KOKRS$$')</filter>
   </calculationView>
-  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1">
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+    <viewAttributes>
+      <viewAttribute id="OBJNR"/>
+      <viewAttribute id="KOKRS"/>
+      <viewAttribute id="KOSTL"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="ECC_ONRKS"/></calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="KOKRS"/>
       <viewAttribute id="BELNR"/>
@@ -137,111 +152,96 @@
       <viewAttribute id="GEBER"/>
       <viewAttribute id="GRANT_NBR"/>
       <viewAttribute id="BUDGET_PD"/>
-      <viewAttribute id="CC_1"/>
+      <viewAttribute id="KOSTL"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Projection_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERIO" source="PERIO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SMEBTR" source="SMEBTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SMABTR" source="SMABTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MEINH" source="MEINH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GRTYP" source="GRTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SGTXT" source="SGTXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LEDNR" source="LEDNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OBJNR" source="OBJNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WRTTP" source="WRTTP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSN" source="VERSN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAGR" source="STAGR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HRKFT" source="HRKFT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VRGNG" source="VRGNG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZLENR" source="ZLENR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERNR" source="PERNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DABRZ" source="DABRZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FKBER" source="FKBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GEBER" source="GEBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GRANT_NBR" source="GRANT_NBR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUDGET_PD" source="BUDGET_PD"/>
+    </input>
+    <input node="Projection_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OBJNR" source="OBJNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+    </input>
+    <joinAttribute name="OBJNR"/>
+    <joinAttribute name="KOKRS"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1">
+    <viewAttributes>
+      <viewAttribute id="KOKRS"/>
+      <viewAttribute id="PERIO"/>
+      <viewAttribute id="SMEBTR" aggregationType="sum"/>
+      <viewAttribute id="SMABTR" aggregationType="sum"/>
+      <viewAttribute id="GJAHR"/>
+      <viewAttribute id="VERSN"/>
+      <viewAttribute id="STAGR"/>
+      <viewAttribute id="KOSTL"/>
+      <viewAttribute id="GEBER"/>
+    
+      <viewAttribute id="OBJNR"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
-    <input node="Projection_1"/>
+    <input node="Join_1"/>
   </calculationView>
 </calculationViews>
   <logicalModel id="Aggregation_1">
     <descriptions/>
     <attributes>
-      <attribute id="BELNR" order="3" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="BELNR"/>
-        <keyMapping columnObjectName="Aggregation_1" columnName="BELNR"/>
-      </attribute>
-      <attribute id="BUZEI" order="4" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="BUZEI"/>
-        <keyMapping columnObjectName="Aggregation_1" columnName="BUZEI"/>
-      </attribute>
-      <attribute id="PERIO" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <attribute id="PERIO" order="3" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="PERIO"/>
         <keyMapping columnObjectName="Aggregation_1" columnName="PERIO"/>
       </attribute>
-      <attribute id="MEINH" order="8" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="MEINH"/>
-        <keyMapping columnObjectName="Aggregation_1" columnName="MEINH"/>
-      </attribute>
-      <attribute id="GRTYP" order="9" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="GRTYP"/>
-        <keyMapping columnObjectName="Aggregation_1" columnName="GRTYP"/>
-      </attribute>
-      <attribute id="SGTXT" order="10" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="SGTXT"/>
-        <keyMapping columnObjectName="Aggregation_1" columnName="SGTXT"/>
-      </attribute>
-      <attribute id="LEDNR" order="11" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="LEDNR"/>
-        <keyMapping columnObjectName="Aggregation_1" columnName="LEDNR"/>
-      </attribute>
-      <attribute id="OBJNR" order="12" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="OBJNR"/>
-        <keyMapping columnObjectName="Aggregation_1" columnName="OBJNR"/>
-      </attribute>
-      <attribute id="GJAHR" order="13" displayAttribute="false" attributeHierarchyActive="false">
+      <attribute id="GJAHR" order="6" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="GJAHR"/>
+        <localVariable>Fiscal_Year</localVariable>
         <keyMapping columnObjectName="Aggregation_1" columnName="GJAHR"/>
       </attribute>
-      <attribute id="WRTTP" order="14" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="WRTTP"/>
-        <keyMapping columnObjectName="Aggregation_1" columnName="WRTTP"/>
-      </attribute>
-      <attribute id="VERSN" order="15" displayAttribute="false" attributeHierarchyActive="false">
+      <attribute id="VERSN" order="7" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="VERSN"/>
         <keyMapping columnObjectName="Aggregation_1" columnName="VERSN"/>
       </attribute>
-      <attribute id="STAGR" order="16" displayAttribute="false" attributeHierarchyActive="false">
+      <attribute id="STAGR" order="8" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="STAGR"/>
         <keyMapping columnObjectName="Aggregation_1" columnName="STAGR"/>
       </attribute>
-      <attribute id="HRKFT" order="17" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="HRKFT"/>
-        <keyMapping columnObjectName="Aggregation_1" columnName="HRKFT"/>
-      </attribute>
-      <attribute id="VRGNG" order="18" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="VRGNG"/>
-        <keyMapping columnObjectName="Aggregation_1" columnName="VRGNG"/>
-      </attribute>
-      <attribute id="ZLENR" order="19" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="ZLENR"/>
-        <keyMapping columnObjectName="Aggregation_1" columnName="ZLENR"/>
-      </attribute>
-      <attribute id="PERNR" order="20" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="PERNR"/>
-        <keyMapping columnObjectName="Aggregation_1" columnName="PERNR"/>
-      </attribute>
-      <attribute id="DABRZ" order="21" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="DABRZ"/>
-        <keyMapping columnObjectName="Aggregation_1" columnName="DABRZ"/>
-      </attribute>
-      <attribute id="FKBER" order="22" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="FKBER"/>
-        <keyMapping columnObjectName="Aggregation_1" columnName="FKBER"/>
-      </attribute>
-      <attribute id="GEBER" order="23" displayAttribute="false" attributeHierarchyActive="false">
+      <attribute id="GEBER" order="9" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="GEBER"/>
+        <localVariable>Business_Area</localVariable>
         <keyMapping columnObjectName="Aggregation_1" columnName="GEBER"/>
       </attribute>
-      <attribute id="GRANT_NBR" order="24" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="GRANT_NBR"/>
-        <keyMapping columnObjectName="Aggregation_1" columnName="GRANT_NBR"/>
-      </attribute>
-      <attribute id="BUDGET_PD" order="25" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="BUDGET_PD"/>
-        <keyMapping columnObjectName="Aggregation_1" columnName="BUDGET_PD"/>
-      </attribute>
-      <attribute id="CC_1" order="26" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="CC_1"/>
-        <keyMapping columnObjectName="Aggregation_1" columnName="CC_1"/>
+      <attribute id="OBJNR" order="10" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="OBJNR"/>
+        <keyMapping columnObjectName="Aggregation_1" columnName="OBJNR"/>
       </attribute>
       <attribute id="KOKRS$local">
-        <descriptions defaultDescription="KOKRS"/>
         <keyMapping columnObjectName="Aggregation_1" columnName="KOKRS"/>
       </attribute>
-      <attribute id="CC_1$local">
-        <descriptions defaultDescription="CC_1"/>
-        <keyMapping columnObjectName="Aggregation_1" columnName="CC_1"/>
+      <attribute id="KOSTL$local">
+        <keyMapping columnObjectName="Aggregation_1" columnName="KOSTL"/>
       </attribute>
     </attributes>
     <calculatedAttributes/>
@@ -253,11 +253,11 @@
       </layout>
     </privateDataFoundation>
     <baseMeasures>
-      <measure id="SMEBTR" order="6" aggregationType="sum" measureType="simple">
+      <measure id="SMEBTR" order="4" aggregationType="sum" measureType="simple">
         <descriptions defaultDescription="SMEBTR"/>
         <measureMapping columnObjectName="Aggregation_1" columnName="SMEBTR"/>
       </measure>
-      <measure id="SMABTR" order="7" aggregationType="sum" measureType="simple">
+      <measure id="SMABTR" order="5" aggregationType="sum" measureType="simple">
         <descriptions defaultDescription="SMABTR"/>
         <measureMapping columnObjectName="Aggregation_1" columnName="SMABTR"/>
       </measure>
@@ -267,7 +267,6 @@
         <descriptions defaultDescription="Difference"/>
         <formula>&quot;SMEBTR&quot;</formula>
       
-        
         
         
         
@@ -285,7 +284,6 @@
         
         
         
-        
         </measure>
     </calculatedMeasures>
     <restrictedMeasures/>
@@ -294,7 +292,7 @@
       <logicalJoin associatedObjectUri="plx_analytics::CA_DIM_CC_HIERARCHY_ALL">
         <attributes>
           <attributeRef>KOKRS$local</attributeRef>
-          <attributeRef>CC_1$local</attributeRef>
+          <attributeRef>KOSTL$local</attributeRef>
         </attributes>
         <associatedAttributeNames>
           <attributeName>CONTROLLING_AREA</attributeName>
@@ -312,8 +310,24 @@
         <rectangleSize height="0" width="160"/>
       </shape>
     <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="238" y="478"/>
+      <upperLeftCorner x="102" y="501"/>
       <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302" y="501"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="222" y="341"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="136"/>
+    </shape>
+    <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="136"/>
     </shape>
     <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="222" y="236"/>
@@ -324,8 +338,8 @@
       <rectangleSize width="250"/>
     </shape>
     <shape modelObjectName="plx_analytics::CA_DIM_CC_HIERARCHY_ALL" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
-      <upperLeftCorner x="273" y="146"/>
-      <rectangleSize width="325.38671875"/>
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="325"/>
     </shape>
   </shapes>
 </layout>
