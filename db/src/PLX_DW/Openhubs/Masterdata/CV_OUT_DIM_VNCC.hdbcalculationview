@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_OUT_DIM_VNCC" applyPrivilegeType="NONE" dataCategory="DIMENSION" dimensionType="STANDARD" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="CV_OUT_DIM_VNCC"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="ECC_LFA1_GENERAL">
+    <resourceUri>ECC_LFA1_GENERAL</resourceUri>
+  </DataSource>
+  <DataSource id="ECC_LFB1">
+    <resourceUri>ECC_LFB1</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <viewAttributes>
+      <viewAttribute id="LIFNR"/>
+      <viewAttribute id="NAME1"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="ECC_LFA1_GENERAL"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+    <viewAttributes>
+      <viewAttribute id="BUKRS"/>
+      <viewAttribute id="LIFNR"/>
+    
+      <viewAttribute id="ZTERM"/>
+      <viewAttribute id="AKONT"/>
+    
+      <viewAttribute id="LNRZB"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="RECORDMODE" datatype="NVARCHAR" length="1" expressionLanguage="SQL">
+        <formula>''</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="EMPLOYEE" datatype="NVARCHAR" length="8" expressionLanguage="SQL">
+        <formula>'0'</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CHRT_ACCTS" datatype="NVARCHAR" length="4" expressionLanguage="SQL">
+    
+        <formula>''</formula>
+    
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="ECC_LFB1"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" cardinality="CN_N" joinType="fullOuter">
+    <viewAttributes>
+      <viewAttribute id="BUKRS"/>
+      <viewAttribute id="LIFNR"/>
+      <viewAttribute id="RECORDMODE"/>
+      <viewAttribute id="EMPLOYEE"/>
+      <viewAttribute id="ZTERM"/>
+      <viewAttribute id="CHRT_ACCTS"/>
+      <viewAttribute id="AKONT"/>
+      <viewAttribute id="NAME1"/>
+    
+      <viewAttribute id="LNRZB"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Projection_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RECORDMODE" source="RECORDMODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMPLOYEE" source="EMPLOYEE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZTERM" source="ZTERM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHRT_ACCTS" source="CHRT_ACCTS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AKONT" source="AKONT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="LNRZB" source="LNRZB"/>
+    </input>
+    <input node="Projection_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="NAME1" source="NAME1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+    </input>
+    <joinAttribute name="LIFNR"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Join_1">
+  <attributes>
+    <attribute id="BUKRS" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="BUKRS"/>
+      <keyMapping columnObjectName="Join_1" columnName="BUKRS"/>
+    </attribute>
+    <attribute id="LIFNR" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LIFNR"/>
+      <keyMapping columnObjectName="Join_1" columnName="LIFNR"/>
+    </attribute>
+    <attribute id="RECORDMODE" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="RECORDMODE"/>
+      <keyMapping columnObjectName="Join_1" columnName="RECORDMODE"/>
+    </attribute>
+    <attribute id="EMPLOYEE" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="EMPLOYEE"/>
+      <keyMapping columnObjectName="Join_1" columnName="EMPLOYEE"/>
+    </attribute>
+    <attribute id="ZTERM" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ZTERM"/>
+      <keyMapping columnObjectName="Join_1" columnName="ZTERM"/>
+    </attribute>
+    <attribute id="CHRT_ACCTS" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHRT_ACCTS"/>
+      <keyMapping columnObjectName="Join_1" columnName="CHRT_ACCTS"/>
+    </attribute>
+    <attribute id="AKONT" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="AKONT"/>
+      <keyMapping columnObjectName="Join_1" columnName="AKONT"/>
+    </attribute>
+    <attribute id="NAME1" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="NAME1"/>
+      <keyMapping columnObjectName="Join_1" columnName="NAME1"/>
+    </attribute>
+  
+    <attribute id="LNRZB" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LNRZB"/>
+      <keyMapping columnObjectName="Join_1" columnName="LNRZB"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-60" y="388"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="260" y="388"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="290"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

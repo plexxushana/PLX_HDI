@@ -1,0 +1,1359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:DataFoundation="http://www.sap.com/ndb/BiModelDataFoundation.ecore" xmlns:Dimension="http://www.sap.com/ndb/BiModelDimension.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="3.0" id="CA_CO_ZOPA_H40" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="true" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation">
+  <descriptions defaultDescription="CA_CO_ELEM_HIERARCHY"/>
+  <metadata changedAt="2021-07-07 15:49:20.898"/>
+  <localVariables>
+    <variable id="P_GROUP_NODE" parameter="true">
+      <descriptions defaultDescription="Cost Element Group:"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="undefined" length="24" mandatory="false" scale="0">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_CE_VALUE_HELP_BROADER</externalLikeStructureName>
+          <externalLikeElementName>Z_SETNAME</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="P_CHART_ACCOUNTS" parameter="true">
+      <descriptions defaultDescription="Chart of Accounts"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="undefined" length="4" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="IP_KOKRS" parameter="true">
+      <descriptions defaultDescription="Controlling Area"/>
+      <variableProperties datatype="NVARCHAR" length="4" mandatory="false" scale="0" defaultValue="undefined">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_CONTROLLING_AREAS</externalLikeStructureName>
+          <externalLikeElementName>KOKRS</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="IO_GROUP" parameter="true">
+      <descriptions defaultDescription="Internal Order Group"/>
+      <variableProperties datatype="NVARCHAR" length="24" mandatory="false" scale="0" defaultValue="undefined">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_IO_VALUE_HELP</externalLikeStructureName>
+          <externalLikeElementName>Z_SETNAME</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="FISCAL_YEAR">
+      <descriptions defaultDescription="FISCAL_YEAR"/>
+      <variableProperties datatype="VARCHAR" defaultValue="" mandatory="true">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_FISC_CAL</externalLikeStructureName>
+          <externalLikeElementName>ZFISCAL_YEAR</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="true" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="V_COSTELEM">
+      <descriptions defaultDescription="Cost Element"/>
+      <variableProperties datatype="VARCHAR" defaultValue="" mandatory="false">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_CE_VALUE_HELP_BROADER</externalLikeStructureName>
+          <externalLikeElementName>Z_SETNAME</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="true" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="V_IO_NUMBER">
+      <descriptions defaultDescription="Internal Order "/>
+      <variableProperties datatype="NVARCHAR" mandatory="false" length="12" scale="NaN">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>ECC_AUFK</externalLikeStructureName>
+          <externalLikeElementName>AUFNR</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="Posting_Date">
+      <descriptions defaultDescription="Posting Date"/>
+      <variableProperties datatype="DATE" mandatory="false">
+        <valueDomain type="AttributeValue">
+          <attribute name="BUDAT_SQL"/>
+        </valueDomain>
+        <selection multiLine="false" type="Range"/>
+        <defaultRange including="true"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="CA_DIM_COST_ELEMENT_HIERARCHY_CONSOLIDATED">
+      <targetVariable name="P_GROUP_NODE" resourceUri="plx_analytics::CA_DIM_COST_ELEMENT_HIERARCHY_CONSOLIDATED"/>
+      <localVariable>P_GROUP_NODE</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="CA_DIM_COST_ELEMENT_HIERARCHY_CONSOLIDATED">
+      <targetVariable name="P_CHART_OF_ACCOUNTS" resourceUri="plx_analytics::CA_DIM_COST_ELEMENT_HIERARCHY_CONSOLIDATED"/>
+      <localVariable>P_CHART_ACCOUNTS</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="FN_HIERARCHY_AUFNR_IO">
+      <targetVariable name="ControllingArea" resourceUri="plx_analytics::FN_HIERARCHY_AUFNR_IO"/>
+      <localVariable>IP_KOKRS</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="FN_HIERARCHY_AUFNR_IO">
+      <targetVariable name="Order_Group_Root_Node" resourceUri="plx_analytics::FN_HIERARCHY_AUFNR_IO"/>
+      <localVariable>IO_GROUP</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="FN_HIERARCHY_AUFNR_IO">
+      <targetVariable name="CHART_OF_ACCOUNTS" resourceUri="plx_analytics::FN_HIERARCHY_AUFNR_IO"/>
+      <localVariable>P_CHART_ACCOUNTS</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="46"/>
+  <dataSources>
+    <DataSource id="ECC_COBK">
+      <resourceUri>ECC_COBK</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_COEP">
+      <resourceUri>ECC_COEP</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_ONRKS">
+      <resourceUri>ECC_ONRKS</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_AUFK">
+      <resourceUri>ECC_AUFK</resourceUri>
+    </DataSource>
+    <DataSource id="CA_DIM_COST_ELEMENT_HIERARCHY_CONSOLIDATED">
+      <resourceUri>plx_analytics::CA_DIM_COST_ELEMENT_HIERARCHY_CONSOLIDATED</resourceUri>
+    </DataSource>
+    <DataSource id="FN_HIERARCHY_AUFNR_IO" type="TABLE_FUNCTION">
+      <resourceUri>plx_analytics::FN_HIERARCHY_AUFNR_IO</resourceUri>
+    </DataSource>
+  </dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2" filterExpressionLanguage="COLUMN_ENGINE">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="VRGNG"/>
+        <viewAttribute id="TIMESTMP"/>
+        <viewAttribute id="PERAB"/>
+        <viewAttribute id="PERBI"/>
+        <viewAttribute id="BLDAT"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="USNAM"/>
+        <viewAttribute id="BLTXT"/>
+        <viewAttribute id="STFLG"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="SUMBZ"/>
+        <viewAttribute id="DELBZ"/>
+        <viewAttribute id="KURST"/>
+        <viewAttribute id="VARNR"/>
+        <viewAttribute id="KWAER"/>
+        <viewAttribute id="AWTYP"/>
+        <viewAttribute id="AWORG"/>
+        <viewAttribute id="LOGSYSTEM"/>
+        <viewAttribute id="AWSYS"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="ECC_COBK"/>
+    <filter>&quot;KOKRS&quot;='$$IP_KOKRS$$'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3" filterExpressionLanguage="COLUMN_ENGINE">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="PERIO"/>
+        <viewAttribute id="WTGBTR"/>
+        <viewAttribute id="WOGBTR"/>
+        <viewAttribute id="WKGBTR"/>
+        <viewAttribute id="LEDNR"/>
+        <viewAttribute id="OBJNR"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="WRTTP"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="BEKNZ"/>
+        <viewAttribute id="ZLENR"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="GJAHR_1"/>
+        <viewAttribute id="GKONT"/>
+        <viewAttribute id="GKOAR"/>
+        <viewAttribute id="VRGNG"/>
+        <viewAttribute id="GSBER"/>
+        <viewAttribute id="GEBER"/>
+        <viewAttribute id="PGEBER"/>
+        <viewAttribute id="GRANT_NBR"/>
+        <viewAttribute id="PERNR"/>
+        <viewAttribute id="FKBER"/>
+        <viewAttribute id="PGRANT_NBR"/>
+        <viewAttribute id="PFKBER"/>
+        <viewAttribute id="PSCOPE"/>
+        <viewAttribute id="SGTXT"/>
+        <viewAttribute id="OWAER"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IO_NUMBER" length="20" expressionLanguage="COLUMN_ENGINE">
+          <formula>MIDSTR( TRIM(&quot;OBJNR&quot;) , 3)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="WTGBTR_CALC" length="15" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;WTGBTR&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="ECC_COEP">
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR_1" source="GJAHR"/></input>
+    <filter>(match(&quot;OBJNR&quot;,'*OR*')) AND (&quot;GJAHR&quot; &gt;='2020') and &quot;KOKRS&quot; = '$$IP_KOKRS$$'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinType="rightOuter">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="VRGNG"/>
+        <viewAttribute id="TIMESTMP"/>
+        <viewAttribute id="PERAB"/>
+        <viewAttribute id="PERBI"/>
+        <viewAttribute id="BLDAT"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="USNAM"/>
+        <viewAttribute id="BLTXT"/>
+        <viewAttribute id="STFLG"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="SUMBZ"/>
+        <viewAttribute id="DELBZ"/>
+        <viewAttribute id="KURST"/>
+        <viewAttribute id="VARNR"/>
+        <viewAttribute id="KWAER"/>
+        <viewAttribute id="AWTYP"/>
+        <viewAttribute id="AWORG"/>
+        <viewAttribute id="LOGSYSTEM"/>
+        <viewAttribute id="AWSYS"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="PERIO"/>
+        <viewAttribute id="WTGBTR"/>
+        <viewAttribute id="WOGBTR"/>
+        <viewAttribute id="WKGBTR"/>
+        <viewAttribute id="LEDNR"/>
+        <viewAttribute id="OBJNR"/>
+        <viewAttribute id="GJAHR_1"/>
+        <viewAttribute id="WRTTP"/>
+        <viewAttribute id="VERSN_1"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="ZLENR"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="BEKNZ"/>
+        <viewAttribute id="IO_NUMBER"/>
+        <viewAttribute id="GKOAR"/>
+        <viewAttribute id="GKONT"/>
+        <viewAttribute id="GSBER"/>
+        <viewAttribute id="GEBER"/>
+        <viewAttribute id="PGEBER"/>
+        <viewAttribute id="GRANT_NBR"/>
+        <viewAttribute id="PERNR"/>
+        <viewAttribute id="FKBER"/>
+        <viewAttribute id="PGRANT_NBR"/>
+        <viewAttribute id="PFKBER"/>
+        <viewAttribute id="PSCOPE"/>
+        <viewAttribute id="SGTXT"/>
+        <viewAttribute id="OWAER"/>
+        <viewAttribute id="WTGBTR_CALC"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="Projection_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VERSN" source="VERSN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VRGNG" source="VRGNG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIMESTMP" source="TIMESTMP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERAB" source="PERAB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERBI" source="PERBI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT" source="CPUDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="USNAM" source="USNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLTXT" source="BLTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STFLG" source="STFLG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUMBZ" source="SUMBZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DELBZ" source="DELBZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KURST" source="KURST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VARNR" source="VARNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KWAER" source="KWAER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWTYP" source="AWTYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWORG" source="AWORG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOGSYSTEM" source="LOGSYSTEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWSYS" source="AWSYS"/>
+      </input>
+      <input node="Projection_3">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERIO" source="PERIO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTGBTR" source="WTGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WOGBTR" source="WOGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WKGBTR" source="WKGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LEDNR" source="LEDNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OBJNR" source="OBJNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR_1" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WRTTP" source="WRTTP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VERSN_1" source="VERSN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="KSTAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZLENR" source="ZLENR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEKNZ" source="BEKNZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IO_NUMBER" source="IO_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GKOAR" source="GKOAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GKONT" source="GKONT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GSBER" source="GSBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GEBER" source="GEBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PGEBER" source="PGEBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GRANT_NBR" source="GRANT_NBR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERNR" source="PERNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FKBER" source="FKBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PGRANT_NBR" source="PGRANT_NBR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PFKBER" source="PFKBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PSCOPE" source="PSCOPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SGTXT" source="SGTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OWAER" source="OWAER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTGBTR_CALC" source="WTGBTR_CALC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+      </input>
+    <joinAttribute name="KOKRS"/>
+    <joinAttribute name="BELNR"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="OBJNR"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="KOSTL"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="ECC_ONRKS"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2" joinType="leftOuter">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="VRGNG"/>
+        <viewAttribute id="TIMESTMP"/>
+        <viewAttribute id="PERAB"/>
+        <viewAttribute id="PERBI"/>
+        <viewAttribute id="BLDAT"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="USNAM"/>
+        <viewAttribute id="BLTXT"/>
+        <viewAttribute id="STFLG"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="SUMBZ"/>
+        <viewAttribute id="DELBZ"/>
+        <viewAttribute id="KURST"/>
+        <viewAttribute id="VARNR"/>
+        <viewAttribute id="KWAER"/>
+        <viewAttribute id="AWTYP"/>
+        <viewAttribute id="AWORG"/>
+        <viewAttribute id="LOGSYSTEM"/>
+        <viewAttribute id="AWSYS"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="PERIO"/>
+        <viewAttribute id="WTGBTR"/>
+        <viewAttribute id="WOGBTR"/>
+        <viewAttribute id="WKGBTR"/>
+        <viewAttribute id="LEDNR"/>
+        <viewAttribute id="OBJNR"/>
+        <viewAttribute id="WRTTP"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="ZLENR"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="BEKNZ"/>
+        <viewAttribute id="OBJNR_1"/>
+        <viewAttribute id="KOKRS_1"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="IO_NUMBER"/>
+        <viewAttribute id="GKOAR"/>
+        <viewAttribute id="GKONT"/>
+        <viewAttribute id="GSBER"/>
+        <viewAttribute id="GEBER"/>
+        <viewAttribute id="PGEBER"/>
+        <viewAttribute id="GRANT_NBR"/>
+        <viewAttribute id="PERNR"/>
+        <viewAttribute id="FKBER"/>
+        <viewAttribute id="PGRANT_NBR"/>
+        <viewAttribute id="PFKBER"/>
+        <viewAttribute id="PSCOPE"/>
+        <viewAttribute id="SGTXT"/>
+        <viewAttribute id="OWAER"/>
+        <viewAttribute id="WTGBTR_CALC"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="REVERSE" length="7" expressionLanguage="COLUMN_ENGINE">
+          <formula>TRIM(&quot;GJAHR&quot;)+TRIM(&quot;PERIO&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="Join_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VERSN" source="VERSN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VRGNG" source="VRGNG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIMESTMP" source="TIMESTMP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERAB" source="PERAB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERBI" source="PERBI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT" source="CPUDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="USNAM" source="USNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLTXT" source="BLTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STFLG" source="STFLG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUMBZ" source="SUMBZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DELBZ" source="DELBZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KURST" source="KURST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VARNR" source="VARNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KWAER" source="KWAER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWTYP" source="AWTYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWORG" source="AWORG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOGSYSTEM" source="LOGSYSTEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWSYS" source="AWSYS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERIO" source="PERIO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTGBTR" source="WTGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WOGBTR" source="WOGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WKGBTR" source="WKGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LEDNR" source="LEDNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OBJNR" source="OBJNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WRTTP" source="WRTTP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="KSTAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZLENR" source="ZLENR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEKNZ" source="BEKNZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IO_NUMBER" source="IO_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GKOAR" source="GKOAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GKONT" source="GKONT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GSBER" source="GSBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GEBER" source="GEBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PGEBER" source="PGEBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GRANT_NBR" source="GRANT_NBR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERNR" source="PERNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FKBER" source="FKBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PGRANT_NBR" source="PGRANT_NBR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PFKBER" source="PFKBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PSCOPE" source="PSCOPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SGTXT" source="SGTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OWAER" source="OWAER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTGBTR_CALC" source="WTGBTR_CALC"/>
+      </input>
+      <input node="Projection_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="OBJNR_1" source="OBJNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS_1" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OBJNR" source="OBJNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+      </input>
+    <joinAttribute name="OBJNR"/>
+    <joinAttribute name="KOKRS"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_4">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="AUFNR"/>
+        <viewAttribute id="AUART"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="LTEXT"/>
+        <viewAttribute id="KTEXT"/>
+        <viewAttribute id="AUTYP"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="ECC_AUFK"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_5" joinType="leftOuter">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="VRGNG"/>
+        <viewAttribute id="TIMESTMP"/>
+        <viewAttribute id="PERAB"/>
+        <viewAttribute id="PERBI"/>
+        <viewAttribute id="BLDAT"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="USNAM"/>
+        <viewAttribute id="BLTXT"/>
+        <viewAttribute id="STFLG"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="SUMBZ"/>
+        <viewAttribute id="DELBZ"/>
+        <viewAttribute id="KURST"/>
+        <viewAttribute id="VARNR"/>
+        <viewAttribute id="KWAER"/>
+        <viewAttribute id="AWTYP"/>
+        <viewAttribute id="AWORG"/>
+        <viewAttribute id="LOGSYSTEM"/>
+        <viewAttribute id="AWSYS"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="PERIO"/>
+        <viewAttribute id="WTGBTR"/>
+        <viewAttribute id="WOGBTR"/>
+        <viewAttribute id="WKGBTR"/>
+        <viewAttribute id="LEDNR"/>
+        <viewAttribute id="OBJNR"/>
+        <viewAttribute id="WRTTP"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="ZLENR"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="BEKNZ"/>
+        <viewAttribute id="OBJNR_1"/>
+        <viewAttribute id="KOKRS_1"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="REVERSE"/>
+        <viewAttribute id="IO_NUMBER"/>
+        <viewAttribute id="AUART"/>
+        <viewAttribute id="KTEXT"/>
+        <viewAttribute id="LTEXT"/>
+        <viewAttribute id="GKOAR"/>
+        <viewAttribute id="GKONT"/>
+        <viewAttribute id="GSBER"/>
+        <viewAttribute id="GEBER"/>
+        <viewAttribute id="PGEBER"/>
+        <viewAttribute id="GRANT_NBR"/>
+        <viewAttribute id="PERNR"/>
+        <viewAttribute id="FKBER"/>
+        <viewAttribute id="PGRANT_NBR"/>
+        <viewAttribute id="PFKBER"/>
+        <viewAttribute id="PSCOPE"/>
+        <viewAttribute id="SGTXT"/>
+        <viewAttribute id="OWAER"/>
+        <viewAttribute id="WTGBTR_CALC"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="Join_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VERSN" source="VERSN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VRGNG" source="VRGNG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIMESTMP" source="TIMESTMP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERAB" source="PERAB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERBI" source="PERBI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT" source="CPUDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="USNAM" source="USNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLTXT" source="BLTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STFLG" source="STFLG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUMBZ" source="SUMBZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DELBZ" source="DELBZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KURST" source="KURST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VARNR" source="VARNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KWAER" source="KWAER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWTYP" source="AWTYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWORG" source="AWORG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOGSYSTEM" source="LOGSYSTEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWSYS" source="AWSYS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERIO" source="PERIO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTGBTR" source="WTGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WOGBTR" source="WOGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WKGBTR" source="WKGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LEDNR" source="LEDNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OBJNR" source="OBJNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WRTTP" source="WRTTP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="KSTAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZLENR" source="ZLENR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEKNZ" source="BEKNZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OBJNR_1" source="OBJNR_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS_1" source="KOKRS_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVERSE" source="REVERSE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IO_NUMBER" source="IO_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GKOAR" source="GKOAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GKONT" source="GKONT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GSBER" source="GSBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GEBER" source="GEBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PGEBER" source="PGEBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GRANT_NBR" source="GRANT_NBR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERNR" source="PERNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FKBER" source="FKBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PGRANT_NBR" source="PGRANT_NBR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PFKBER" source="PFKBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PSCOPE" source="PSCOPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SGTXT" source="SGTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OWAER" source="OWAER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTGBTR_CALC" source="WTGBTR_CALC"/>
+      </input>
+      <input node="Projection_4">
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUART" source="AUART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KTEXT" source="KTEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LTEXT" source="LTEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IO_NUMBER" source="AUFNR"/>
+      </input>
+    <joinAttribute name="IO_NUMBER"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_6">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="CHART_OF_ACCOUNTS_CE"/>
+        <viewAttribute id="LEVEL_CE"/>
+        <viewAttribute id="PARENT_CE"/>
+        <viewAttribute id="CHILD_CE"/>
+        <viewAttribute id="GROUP_TEXT_CE"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="CA_DIM_COST_ELEMENT_HIERARCHY_CONSOLIDATED"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_6" cardinality="CN_N" joinType="rightOuter">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="CHART_OF_ACCOUNTS_CE"/>
+        <viewAttribute id="LEVEL_CE"/>
+        <viewAttribute id="PARENT_CE"/>
+        <viewAttribute id="CHILD_CE"/>
+        <viewAttribute id="GROUP_TEXT_CE"/>
+        <viewAttribute id="IO_NUMBER"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="VRGNG"/>
+        <viewAttribute id="TIMESTMP"/>
+        <viewAttribute id="PERAB"/>
+        <viewAttribute id="PERBI"/>
+        <viewAttribute id="BLDAT"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="USNAM"/>
+        <viewAttribute id="BLTXT"/>
+        <viewAttribute id="STFLG"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="SUMBZ"/>
+        <viewAttribute id="DELBZ"/>
+        <viewAttribute id="KURST"/>
+        <viewAttribute id="VARNR"/>
+        <viewAttribute id="KWAER"/>
+        <viewAttribute id="AWTYP"/>
+        <viewAttribute id="AWORG"/>
+        <viewAttribute id="LOGSYSTEM"/>
+        <viewAttribute id="AWSYS"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="PERIO"/>
+        <viewAttribute id="WTGBTR"/>
+        <viewAttribute id="WOGBTR"/>
+        <viewAttribute id="WKGBTR"/>
+        <viewAttribute id="LEDNR"/>
+        <viewAttribute id="OBJNR"/>
+        <viewAttribute id="WRTTP"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="ZLENR"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="BEKNZ"/>
+        <viewAttribute id="OBJNR_1"/>
+        <viewAttribute id="KOKRS_1"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="REVERSE"/>
+        <viewAttribute id="IO_NUMBER_1"/>
+        <viewAttribute id="AUART"/>
+        <viewAttribute id="KTEXT"/>
+        <viewAttribute id="LTEXT"/>
+        <viewAttribute id="GKOAR"/>
+        <viewAttribute id="GKONT"/>
+        <viewAttribute id="GSBER"/>
+        <viewAttribute id="GEBER"/>
+        <viewAttribute id="PGEBER"/>
+        <viewAttribute id="GRANT_NBR"/>
+        <viewAttribute id="PERNR"/>
+        <viewAttribute id="FKBER"/>
+        <viewAttribute id="PGRANT_NBR"/>
+        <viewAttribute id="PFKBER"/>
+        <viewAttribute id="PSCOPE"/>
+        <viewAttribute id="SGTXT"/>
+        <viewAttribute id="OWAER"/>
+        <viewAttribute id="WTGBTR_CALC"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="Join_5">
+        <mapping xsi:type="Calculation:AttributeMapping" target="IO_NUMBER" source="IO_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VERSN" source="VERSN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VRGNG" source="VRGNG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIMESTMP" source="TIMESTMP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERAB" source="PERAB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERBI" source="PERBI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT" source="CPUDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="USNAM" source="USNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLTXT" source="BLTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STFLG" source="STFLG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUMBZ" source="SUMBZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DELBZ" source="DELBZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KURST" source="KURST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VARNR" source="VARNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KWAER" source="KWAER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWTYP" source="AWTYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWORG" source="AWORG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOGSYSTEM" source="LOGSYSTEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWSYS" source="AWSYS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERIO" source="PERIO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTGBTR" source="WTGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WOGBTR" source="WOGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WKGBTR" source="WKGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LEDNR" source="LEDNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OBJNR" source="OBJNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WRTTP" source="WRTTP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="KSTAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZLENR" source="ZLENR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEKNZ" source="BEKNZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OBJNR_1" source="OBJNR_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS_1" source="KOKRS_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVERSE" source="REVERSE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IO_NUMBER_1" source="IO_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUART" source="AUART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KTEXT" source="KTEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LTEXT" source="LTEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GKOAR" source="GKOAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GKONT" source="GKONT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GSBER" source="GSBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GEBER" source="GEBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PGEBER" source="PGEBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GRANT_NBR" source="GRANT_NBR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERNR" source="PERNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FKBER" source="FKBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PGRANT_NBR" source="PGRANT_NBR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PFKBER" source="PFKBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PSCOPE" source="PSCOPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SGTXT" source="SGTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OWAER" source="OWAER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTGBTR_CALC" source="WTGBTR_CALC"/>
+      </input>
+      <input node="Projection_6">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHART_OF_ACCOUNTS_CE" source="CHART_OF_ACCOUNTS_CE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LEVEL_CE" source="LEVEL_CE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_CE" source="PARENT_CE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHILD_CE" source="CHILD_CE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GROUP_TEXT_CE" source="GROUP_TEXT_CE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="CHILD_CE"/>
+      </input>
+    <joinAttribute name="KSTAR"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_5">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="CONTROLLING_AREA"/>
+        <viewAttribute id="LEVEL"/>
+        <viewAttribute id="PARENT"/>
+        <viewAttribute id="CHILD"/>
+        <viewAttribute id="LEN"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="FN_HIERARCHY_AUFNR_IO"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_3" joinType="leftOuter">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="CHART_OF_ACCOUNTS_CE"/>
+        <viewAttribute id="LEVEL_CE"/>
+        <viewAttribute id="PARENT_CE"/>
+        <viewAttribute id="CHILD_CE"/>
+        <viewAttribute id="GROUP_TEXT_CE"/>
+        <viewAttribute id="BELNR"/>
+        <viewAttribute id="GJAHR"/>
+        <viewAttribute id="VERSN"/>
+        <viewAttribute id="VRGNG"/>
+        <viewAttribute id="PERAB"/>
+        <viewAttribute id="PERBI"/>
+        <viewAttribute id="BLDAT"/>
+        <viewAttribute id="BUDAT"/>
+        <viewAttribute id="CPUDT"/>
+        <viewAttribute id="USNAM"/>
+        <viewAttribute id="BLTXT"/>
+        <viewAttribute id="STFLG"/>
+        <viewAttribute id="BLART"/>
+        <viewAttribute id="SUMBZ"/>
+        <viewAttribute id="DELBZ"/>
+        <viewAttribute id="KURST"/>
+        <viewAttribute id="VARNR"/>
+        <viewAttribute id="KWAER"/>
+        <viewAttribute id="AWTYP"/>
+        <viewAttribute id="AWORG"/>
+        <viewAttribute id="LOGSYSTEM"/>
+        <viewAttribute id="AWSYS"/>
+        <viewAttribute id="BUZEI"/>
+        <viewAttribute id="PERIO"/>
+        <viewAttribute id="LEDNR"/>
+        <viewAttribute id="OBJNR"/>
+        <viewAttribute id="WRTTP"/>
+        <viewAttribute id="KSTAR"/>
+        <viewAttribute id="ZLENR"/>
+        <viewAttribute id="WERKS"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="EBELN"/>
+        <viewAttribute id="EBELP"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="BEKNZ"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="REVERSE"/>
+        <viewAttribute id="AUART"/>
+        <viewAttribute id="KTEXT"/>
+        <viewAttribute id="LTEXT"/>
+        <viewAttribute id="GKOAR"/>
+        <viewAttribute id="GKONT"/>
+        <viewAttribute id="GSBER"/>
+        <viewAttribute id="GEBER"/>
+        <viewAttribute id="PGEBER"/>
+        <viewAttribute id="GRANT_NBR"/>
+        <viewAttribute id="PERNR"/>
+        <viewAttribute id="FKBER"/>
+        <viewAttribute id="PGRANT_NBR"/>
+        <viewAttribute id="PFKBER"/>
+        <viewAttribute id="PSCOPE"/>
+        <viewAttribute id="SGTXT"/>
+        <viewAttribute id="OWAER"/>
+        <viewAttribute id="IO_NUMBER"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="TIMESTMP"/>
+        <viewAttribute id="WTGBTR"/>
+        <viewAttribute id="WOGBTR"/>
+        <viewAttribute id="WKGBTR"/>
+        <viewAttribute id="WTGBTR_CALC"/>
+        <viewAttribute id="CONTROLLING_AREA"/>
+        <viewAttribute id="LEVEL"/>
+        <viewAttribute id="PARENT"/>
+        <viewAttribute id="CHILD"/>
+        <viewAttribute id="LEN"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="Join_6">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHART_OF_ACCOUNTS_CE" source="CHART_OF_ACCOUNTS_CE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LEVEL_CE" source="LEVEL_CE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_CE" source="PARENT_CE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHILD_CE" source="CHILD_CE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GROUP_TEXT_CE" source="GROUP_TEXT_CE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VERSN" source="VERSN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VRGNG" source="VRGNG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERAB" source="PERAB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERBI" source="PERBI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT" source="CPUDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="USNAM" source="USNAM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLTXT" source="BLTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STFLG" source="STFLG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BLART" source="BLART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUMBZ" source="SUMBZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DELBZ" source="DELBZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KURST" source="KURST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VARNR" source="VARNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KWAER" source="KWAER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWTYP" source="AWTYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWORG" source="AWORG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOGSYSTEM" source="LOGSYSTEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWSYS" source="AWSYS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERIO" source="PERIO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LEDNR" source="LEDNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OBJNR" source="OBJNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WRTTP" source="WRTTP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KSTAR" source="KSTAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZLENR" source="ZLENR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BEKNZ" source="BEKNZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVERSE" source="REVERSE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUART" source="AUART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KTEXT" source="KTEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LTEXT" source="LTEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GKOAR" source="GKOAR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GKONT" source="GKONT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GSBER" source="GSBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GEBER" source="GEBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PGEBER" source="PGEBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GRANT_NBR" source="GRANT_NBR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PERNR" source="PERNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FKBER" source="FKBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PGRANT_NBR" source="PGRANT_NBR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PFKBER" source="PFKBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PSCOPE" source="PSCOPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SGTXT" source="SGTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OWAER" source="OWAER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IO_NUMBER" source="IO_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIMESTMP" source="TIMESTMP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTGBTR" source="WTGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WOGBTR" source="WOGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WKGBTR" source="WKGBTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTGBTR_CALC" source="WTGBTR_CALC"/>
+      </input>
+      <input node="Projection_5">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTROLLING_AREA" source="CONTROLLING_AREA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LEVEL" source="LEVEL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT" source="PARENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHILD" source="CHILD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LEN" source="LEN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="CONTROLLING_AREA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IO_NUMBER" source="CHILD"/>
+      </input>
+    <joinAttribute name="KOKRS"/>
+    <joinAttribute name="IO_NUMBER"/>
+  </calculationView>
+</calculationViews>
+  <logicalModel id="Join_3">
+    <descriptions/>
+    <attributes>
+      <attribute id="CHART_OF_ACCOUNTS_CE" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Chart of Accounts"/>
+        <keyMapping columnObjectName="Join_3" columnName="CHART_OF_ACCOUNTS_CE"/>
+      </attribute>
+      <attribute id="LEVEL_CE" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Level"/>
+        <keyMapping columnObjectName="Join_3" columnName="LEVEL_CE"/>
+      </attribute>
+      <attribute id="PARENT_CE" order="5" attributeHierarchyActive="false" descriptionColumnName="GROUP_TEXT_CE" displayAttribute="false">
+        <descriptions defaultDescription="Parent"/>
+        <keyMapping columnObjectName="Join_3" columnName="PARENT_CE"/>
+      </attribute>
+      <attribute id="CHILD_CE" order="6" semanticType="empty" attributeHierarchyActive="false" descriptionColumnName="GROUP_TEXT_CE" displayAttribute="false">
+        <descriptions defaultDescription="Hierarchy"/>
+        <keyMapping columnObjectName="Join_3" columnName="CHILD_CE"/>
+      </attribute>
+      <attribute id="GROUP_TEXT_CE" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Group CE Description"/>
+        <keyMapping columnObjectName="Join_3" columnName="GROUP_TEXT_CE"/>
+      </attribute>
+      <attribute id="BELNR" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Document Number"/>
+        <keyMapping columnObjectName="Join_3" columnName="BELNR"/>
+      </attribute>
+      <attribute id="GJAHR" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Year"/>
+        <localVariable>FISCAL_YEAR</localVariable>
+        <keyMapping columnObjectName="Join_3" columnName="GJAHR"/>
+      </attribute>
+      <attribute id="VERSN" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Version in CO Document Header"/>
+        <keyMapping columnObjectName="Join_3" columnName="VERSN"/>
+      </attribute>
+      <attribute id="VRGNG" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CO Business Transaction"/>
+        <keyMapping columnObjectName="Join_3" columnName="VRGNG"/>
+      </attribute>
+      <attribute id="PERAB" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="From Period"/>
+        <keyMapping columnObjectName="Join_3" columnName="PERAB"/>
+      </attribute>
+      <attribute id="PERBI" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="To period"/>
+        <keyMapping columnObjectName="Join_3" columnName="PERBI"/>
+      </attribute>
+      <attribute id="BLDAT" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Document Date"/>
+        <keyMapping columnObjectName="Join_3" columnName="BLDAT"/>
+      </attribute>
+      <attribute id="BUDAT" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Posting Date"/>
+        <keyMapping columnObjectName="Join_3" columnName="BUDAT"/>
+      </attribute>
+      <attribute id="CPUDT" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Date Document Was Created"/>
+        <keyMapping columnObjectName="Join_3" columnName="CPUDT"/>
+      </attribute>
+      <attribute id="USNAM" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="User Name"/>
+        <keyMapping columnObjectName="Join_3" columnName="USNAM"/>
+      </attribute>
+      <attribute id="BLTXT" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Document Header Text"/>
+        <keyMapping columnObjectName="Join_3" columnName="BLTXT"/>
+      </attribute>
+      <attribute id="STFLG" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Identifier for reversal document"/>
+        <keyMapping columnObjectName="Join_3" columnName="STFLG"/>
+      </attribute>
+      <attribute id="BLART" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Document type of FI reference document"/>
+        <keyMapping columnObjectName="Join_3" columnName="BLART"/>
+      </attribute>
+      <attribute id="SUMBZ" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Number of posting lines for local objects"/>
+        <keyMapping columnObjectName="Join_3" columnName="SUMBZ"/>
+      </attribute>
+      <attribute id="DELBZ" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Number of deleted line items"/>
+        <keyMapping columnObjectName="Join_3" columnName="DELBZ"/>
+      </attribute>
+      <attribute id="KURST" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Exchange Rate Type"/>
+        <keyMapping columnObjectName="Join_3" columnName="KURST"/>
+      </attribute>
+      <attribute id="VARNR" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CO actual postings fast input: Variant"/>
+        <keyMapping columnObjectName="Join_3" columnName="VARNR"/>
+      </attribute>
+      <attribute id="KWAER" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Controlling area currency"/>
+        <keyMapping columnObjectName="Join_3" columnName="KWAER"/>
+      </attribute>
+      <attribute id="AWTYP" order="26" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Reference Transaction"/>
+        <keyMapping columnObjectName="Join_3" columnName="AWTYP"/>
+      </attribute>
+      <attribute id="AWORG" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Reference Organizational Units"/>
+        <keyMapping columnObjectName="Join_3" columnName="AWORG"/>
+      </attribute>
+      <attribute id="LOGSYSTEM" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Logical System"/>
+        <keyMapping columnObjectName="Join_3" columnName="LOGSYSTEM"/>
+      </attribute>
+      <attribute id="AWSYS" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Logical system of source document"/>
+        <keyMapping columnObjectName="Join_3" columnName="AWSYS"/>
+      </attribute>
+      <attribute id="BUZEI" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Posting row"/>
+        <keyMapping columnObjectName="Join_3" columnName="BUZEI"/>
+      </attribute>
+      <attribute id="PERIO" order="31" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Period"/>
+        <keyMapping columnObjectName="Join_3" columnName="PERIO"/>
+      </attribute>
+      <attribute id="LEDNR" order="32" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Ledger for Controlling objects"/>
+        <keyMapping columnObjectName="Join_3" columnName="LEDNR"/>
+      </attribute>
+      <attribute id="OBJNR" order="33" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Object number"/>
+        <keyMapping columnObjectName="Join_3" columnName="OBJNR"/>
+      </attribute>
+      <attribute id="WRTTP" order="34" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Value Type"/>
+        <keyMapping columnObjectName="Join_3" columnName="WRTTP"/>
+      </attribute>
+      <attribute id="KSTAR" order="35" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cost Element"/>
+        <localVariable>V_COSTELEM</localVariable>
+        <keyMapping columnObjectName="Join_3" columnName="KSTAR"/>
+      </attribute>
+      <attribute id="ZLENR" order="36" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Document Item Number"/>
+        <keyMapping columnObjectName="Join_3" columnName="ZLENR"/>
+      </attribute>
+      <attribute id="WERKS" order="37" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Plant"/>
+        <keyMapping columnObjectName="Join_3" columnName="WERKS"/>
+      </attribute>
+      <attribute id="MATNR" order="38" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Number"/>
+        <keyMapping columnObjectName="Join_3" columnName="MATNR"/>
+      </attribute>
+      <attribute id="EBELN" order="39" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchasing Document Number"/>
+        <keyMapping columnObjectName="Join_3" columnName="EBELN"/>
+      </attribute>
+      <attribute id="EBELP" order="40" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Item Number of Purchasing Document"/>
+        <keyMapping columnObjectName="Join_3" columnName="EBELP"/>
+      </attribute>
+      <attribute id="BUKRS" order="41" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Company Code"/>
+        <keyMapping columnObjectName="Join_3" columnName="BUKRS"/>
+      </attribute>
+      <attribute id="BEKNZ" order="42" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Debit/credit indicator"/>
+        <keyMapping columnObjectName="Join_3" columnName="BEKNZ"/>
+      </attribute>
+      <attribute id="KOSTL" order="43" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cost Center"/>
+        <keyMapping columnObjectName="Join_3" columnName="KOSTL"/>
+      </attribute>
+      <attribute id="REVERSE" order="44" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REVERSE"/>
+        <keyMapping columnObjectName="Join_3" columnName="REVERSE"/>
+      </attribute>
+      <attribute id="AUART" order="45" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="AUART"/>
+        <keyMapping columnObjectName="Join_3" columnName="AUART"/>
+      </attribute>
+      <attribute id="KTEXT" order="46" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="KTEXT"/>
+        <keyMapping columnObjectName="Join_3" columnName="KTEXT"/>
+      </attribute>
+      <attribute id="LTEXT" order="47" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="LTEXT"/>
+        <keyMapping columnObjectName="Join_3" columnName="LTEXT"/>
+      </attribute>
+      <attribute id="GKOAR" order="48" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Offsetting Account Type"/>
+        <keyMapping columnObjectName="Join_3" columnName="GKOAR"/>
+      </attribute>
+      <attribute id="GKONT" order="49" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Offsetting Account Number"/>
+        <keyMapping columnObjectName="Join_3" columnName="GKONT"/>
+      </attribute>
+      <attribute id="GSBER" order="50" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Business Area"/>
+        <keyMapping columnObjectName="Join_3" columnName="GSBER"/>
+      </attribute>
+      <attribute id="GEBER" order="51" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fund"/>
+        <keyMapping columnObjectName="Join_3" columnName="GEBER"/>
+      </attribute>
+      <attribute id="PGEBER" order="52" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Partner Fund"/>
+        <keyMapping columnObjectName="Join_3" columnName="PGEBER"/>
+      </attribute>
+      <attribute id="GRANT_NBR" order="53" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Grant"/>
+        <keyMapping columnObjectName="Join_3" columnName="GRANT_NBR"/>
+      </attribute>
+      <attribute id="PERNR" order="54" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Personnel Number"/>
+        <keyMapping columnObjectName="Join_3" columnName="PERNR"/>
+      </attribute>
+      <attribute id="FKBER" order="55" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Functional Area"/>
+        <keyMapping columnObjectName="Join_3" columnName="FKBER"/>
+      </attribute>
+      <attribute id="PGRANT_NBR" order="56" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Partner Grant"/>
+        <keyMapping columnObjectName="Join_3" columnName="PGRANT_NBR"/>
+      </attribute>
+      <attribute id="PFKBER" order="57" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Partner Functional Area"/>
+        <keyMapping columnObjectName="Join_3" columnName="PFKBER"/>
+      </attribute>
+      <attribute id="PSCOPE" order="58" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Partner object class"/>
+        <keyMapping columnObjectName="Join_3" columnName="PSCOPE"/>
+      </attribute>
+      <attribute id="SGTXT" order="59" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Segment text"/>
+        <keyMapping columnObjectName="Join_3" columnName="SGTXT"/>
+      </attribute>
+      <attribute id="OWAER" order="60" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Currency Key"/>
+        <keyMapping columnObjectName="Join_3" columnName="OWAER"/>
+      </attribute>
+      <attribute id="IO_NUMBER" order="61" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription=" IO Number"/>
+        <localVariable>V_IO_NUMBER</localVariable>
+        <keyMapping columnObjectName="Join_3" columnName="IO_NUMBER"/>
+      </attribute>
+      <attribute id="KOKRS" order="62" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Controlling Area"/>
+        <keyMapping columnObjectName="Join_3" columnName="KOKRS"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes>
+      <calculatedAttribute id="BUDAT_SQL" hidden="false" order="2" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Posting Date"/>
+        <localVariable>Posting_Date</localVariable>
+        <keyCalculation datatype="DATE" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;BUDAT&quot;</formula>
+        </keyCalculation>
+      </calculatedAttribute>
+    </calculatedAttributes>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="TIMESTMP" order="63" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Time created (Greenwich Meantime)"/>
+        <measureMapping columnObjectName="Join_3" columnName="TIMESTMP"/>
+      </measure>
+      <measure id="WTGBTR" order="64" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total Value in Transaction Currency"/>
+        <measureMapping columnObjectName="Join_3" columnName="WTGBTR"/>
+      </measure>
+      <measure id="WOGBTR" order="65" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total Value in Object Currency"/>
+        <measureMapping columnObjectName="Join_3" columnName="WOGBTR"/>
+      </measure>
+      <measure id="WKGBTR" order="66" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Total Value in Controlling Area Currency"/>
+        <measureMapping columnObjectName="Join_3" columnName="WKGBTR"/>
+      </measure>
+      <measure id="WTGBTR_CALC" order="67" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="WTGBTR_CALC"/>
+        <measureMapping columnObjectName="Join_3" columnName="WTGBTR_CALC"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures>
+      <measure id="VARIANCE" hidden="false" order="1" aggregationType="sum" measureType="simple" aggregatable="true" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="15" scale="2">
+        <descriptions defaultDescription="Actual vs. Plan ($) in Controlling Area Currency"/>
+        <formula>&quot;WKGBTR&quot;</formula>
+      </measure>
+    </calculatedMeasures>
+    <restrictedMeasures/>
+    <localDimensions>
+      <localDimension id="COST_ELEM">
+        <attributeRef xsi:type="DataFoundation:Attribute">CHILD_CE</attributeRef>
+        <attributeRef xsi:type="DataFoundation:Attribute">PARENT_CE</attributeRef>
+        <hierarchies>
+          <hierarchy xsi:type="Dimension:ParentChildHierarchy" id="COST_ELEM" aggregateAllNodes="true" cycleHandling="BREAKUP" rootNodeVisibility="ADD_ROOT_NODE_IF_DEFINED">
+            <descriptions defaultDescription="COST_ELEM"/>
+            <attributeParentPair attribute="CHILD_CE" parentAttribute="PARENT_CE">
+              <rootNode>
+                <localVariable>P_GROUP_NODE</localVariable>
+              </rootNode>
+            </attributeParentPair>
+          </hierarchy>
+        </hierarchies>
+      </localDimension>
+    </localDimensions></logicalModel>
+<layout>
+  <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="660" y="112"/>
+        <rectangleSize height="0" width="160"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="91" y="1016"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="302" y="1016"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="118" y="856"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+    <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_3" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="380" y="856"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="145" y="696"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+    <shape modelObjectName="Join_1" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="Projection_4" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="474" y="696"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_5" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="172" y="536"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+    <shape modelObjectName="Join_2" modelObjectNameSpace="Join_5" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_4" modelObjectNameSpace="Join_5" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="Projection_6" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="584" y="536"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_6" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="198" y="376"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+    <shape modelObjectName="Join_5" modelObjectNameSpace="Join_6" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_6" modelObjectNameSpace="Join_6" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+      <shape expanded="true" modelObjectName="Projection_5" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="708" y="376"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="660" y="217"/>
+        <rectangleSize height="0" width="160"/>
+      </shape>
+    <shape modelObjectName="Join_6" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_5" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
