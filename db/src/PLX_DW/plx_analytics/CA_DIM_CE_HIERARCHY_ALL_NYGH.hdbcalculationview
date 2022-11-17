@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Dimension="http://www.sap.com/ndb/BiModelDimension.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="3.0" id="plx_analytics::CA_DIM_CE_HIERARCHY_ALL_NYGH" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection" xscCompatibilityMode="true">
+<origin/>
+  <descriptions defaultDescription="CA_DIM_CE_HIERARCHY"/>
+  <metadata changedAt="2021-02-25 19:37:31.826"/>
+  <localVariables>
+    <variable id="IP_CE_GROUP_NODE" parameter="true">
+      <descriptions defaultDescription="IP_CE_GROUP_NODE"/>
+      <variableProperties datatype="NVARCHAR" length="24" mandatory="false" scale="0" defaultValue="undefined">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_CE_VALUE_HELP_BROADER</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>Z_SETNAME</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="IP_CHART" parameter="true">
+      <descriptions defaultDescription="IP_CHART"/>
+      <variableProperties datatype="NVARCHAR" length="4" mandatory="false" scale="0" defaultValue="undefined">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_CONTROLLING_AREAS</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>KTOPL</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="plx_analytics::CA_DIM_COST_ELEMENT_HIERARCHY_CONSOLIDATED_NYGH">
+      <targetVariable name="P_GROUP_NODE" resourceUri="plx_analytics::CA_DIM_COST_ELEMENT_HIERARCHY_CONSOLIDATED_NYGH"/>
+      <localVariable>IP_CE_GROUP_NODE</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="plx_analytics::CA_DIM_COST_ELEMENT_HIERARCHY_CONSOLIDATED_NYGH">
+      <targetVariable name="P_CHART_OF_ACCOUNTS" resourceUri="plx_analytics::CA_DIM_COST_ELEMENT_HIERARCHY_CONSOLIDATED_NYGH"/>
+      <localVariable>IP_CHART</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="28"/>
+  <dataSources>
+    <DataSource id="plx_analytics::CA_DIM_COST_ELEMENT_HIERARCHY_CONSOLIDATED_NYGH">
+      <resourceUri>plx_analytics::CA_DIM_COST_ELEMENT_HIERARCHY_CONSOLIDATED_NYGH</resourceUri>
+    </DataSource>
+  </dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="CHART_OF_ACCOUNTS_CE"/>
+        <viewAttribute id="LEVEL_CE"/>
+        <viewAttribute id="PARENT_CE"/>
+        <viewAttribute id="CHILD_CE"/>
+        <viewAttribute id="GROUP_TEXT_CE"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CD_GROUP_TEXT" datatype="NVARCHAR" length="40" expressionLanguage="SQL">
+        <formula>case when &quot;GROUP_TEXT_CE&quot; = 'Nygh Operating Statements' then 'NYGH Operating Statements'
+ when &quot;GROUP_TEXT_CE&quot; = 'Total Expenses_200expal + 300expothr' then 'Total Expenses Expal + Expother'
+ else &quot;GROUP_TEXT_CE&quot;
+end </formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+      <input node="plx_analytics::CA_DIM_COST_ELEMENT_HIERARCHY_CONSOLIDATED_NYGH"/>
+    </calculationView>
+</calculationViews>
+  <inlineHierarchy xsi:type="Dimension:ParentChildHierarchy" id="CE_HIERARCHY" aggregateAllNodes="true" cycleHandling="BREAKUP" rootNodeVisibility="ADD_ROOT_NODE_IF_DEFINED">
+    <descriptions defaultDescription="CE_HIERARCHY"/>
+    <unassignedMemberProperties/>
+    <attributeParentPair attribute="CHILD_CE" parentAttribute="PARENT_CE">
+      <rootNode>
+        <localVariable>IP_CE_GROUP_NODE</localVariable>
+      </rootNode>
+    </attributeParentPair>
+  </inlineHierarchy>
+  <logicalModel id="Projection_1">
+    <descriptions/>
+    <attributes>
+      <attribute id="CHART_OF_ACCOUNTS_CE" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Chart of Accounts"/>
+        <keyMapping columnObjectName="Projection_1" columnName="CHART_OF_ACCOUNTS_CE"/>
+      </attribute>
+      <attribute id="LEVEL_CE" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Level"/>
+        <keyMapping columnObjectName="Projection_1" columnName="LEVEL_CE"/>
+      </attribute>
+      <attribute id="PARENT_CE" order="3" attributeHierarchyActive="false" descriptionColumnName="GROUP_TEXT_CE" displayAttribute="false">
+        <descriptions defaultDescription="Parent"/>
+        <keyMapping columnObjectName="Projection_1" columnName="PARENT_CE"/>
+      </attribute>
+      <attribute id="CHILD_CE" order="4" attributeHierarchyActive="false" descriptionColumnName="GROUP_TEXT_CE" displayAttribute="false">
+        <descriptions defaultDescription="Hierarchy CE"/>
+        <keyMapping columnObjectName="Projection_1" columnName="CHILD_CE"/>
+      </attribute>
+      <attribute id="GROUP_TEXT_CE" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Group CE Description"/>
+        <keyMapping columnObjectName="Projection_1" columnName="CD_GROUP_TEXT"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+<layout>
+  <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="22" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+</layout>
+</Calculation:scenario>
