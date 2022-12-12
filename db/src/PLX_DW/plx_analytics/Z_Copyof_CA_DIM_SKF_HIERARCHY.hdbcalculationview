@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Dimension="http://www.sap.com/ndb/BiModelDimension.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="3.0" id="Z_Copyof_CA_DIM_SKF_HIERARCHY" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection" rowCounterName="LEVEL" xscCompatibilityMode="true">
+  <descriptions defaultDescription="CA_CO_ELEM_HIERARCHY"/>
+  <metadata changedAt="2021-04-21 14:21:17.545"/>
+  <localVariables>
+    <variable id="P_GROUP_NODE" parameter="true">
+      <descriptions defaultDescription="Group Node"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="undefined" length="24" mandatory="true">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="IP_KOKRS" parameter="true">
+      <descriptions defaultDescription=""/>
+      <variableProperties datatype="NVARCHAR" length="4" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="FN_HIERARCHY_SKF">
+      <targetVariable name="GROUP_ROOT_NODE" resourceUri="plx_analytics::FN_HIERARCHY_SKF"/>
+      <localVariable>P_GROUP_NODE</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="FN_HIERARCHY_SKF">
+      <targetVariable name="CONTROLLING_AREA" resourceUri="plx_analytics::FN_HIERARCHY_SKF"/>
+      <localVariable>IP_KOKRS</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="46"/>
+  <dataSources>
+    <DataSource id="FN_HIERARCHY_SKF" type="TABLE_FUNCTION">
+      <resourceUri>plx_analytics::FN_HIERARCHY_SKF</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_TKT03">
+      <resourceUri>ECC_TKT03</resourceUri>
+    </DataSource>
+  </dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="LEVEL"/>
+        <viewAttribute id="PARENT"/>
+        <viewAttribute id="CHILD"/>
+        <viewAttribute id="CO_AREA"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="FN_HIERARCHY_SKF"/>
+    </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="SKF_DESC"/>
+        <viewAttribute id="STAGR"/>
+        <viewAttribute id="KOKRS"/>
+        <viewAttribute id="SPRAS"/>
+      </viewAttributes>
+    <calculatedViewAttributes/>
+      <input node="ECC_TKT03">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SKF_DESC" source="BEZEI"/></input>
+    <filter>(&quot;SPRAS&quot; ='E')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinType="leftOuter">
+    <descriptions/>
+    <viewAttributes>
+        <viewAttribute id="LEVEL"/>
+        <viewAttribute id="PARENT"/>
+        <viewAttribute id="CHILD"/>
+        <viewAttribute id="CO_AREA"/>
+        <viewAttribute id="SKF_DESC"/>
+      </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="ZCONCATE" datatype="NVARCHAR" length="30" expressionLanguage="SQL">
+        <formula>concat(&quot;CO_AREA&quot;,concat(&quot;CHILD&quot;,&quot;PARENT&quot;))</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+      <input node="Projection_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="LEVEL" source="LEVEL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT" source="PARENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHILD" source="CHILD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_AREA" source="CO_AREA"/>
+      </input>
+      <input node="Projection_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SKF_DESC" source="SKF_DESC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHILD" source="STAGR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_AREA" source="KOKRS"/>
+      </input>
+    <joinAttribute name="CHILD"/>
+    <joinAttribute name="CO_AREA"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:RankView" id="Rank_1">
+    <viewAttributes>
+      <viewAttribute id="LEVEL"/>
+      <viewAttribute id="PARENT"/>
+      <viewAttribute id="CHILD"/>
+      <viewAttribute id="CO_AREA"/>
+      <viewAttribute id="SKF_DESC"/>
+      <viewAttribute id="ZCONCATE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_1"/>
+    <rankingFilter type="RANK" offset="0" offsetReference="FRONT" dynamicPartitionAttributes="false">
+      <partitionViewAttributeName id="ZCONCATE"/>
+      <order byViewAttributeName="LEVEL" direction="ASC"/>
+      <rankThreshold>
+        <value>1</value>
+      </rankThreshold>
+    </rankingFilter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
+    <viewAttributes>
+      <viewAttribute id="LEVEL"/>
+      <viewAttribute id="PARENT"/>
+      <viewAttribute id="CHILD"/>
+      <viewAttribute id="CO_AREA"/>
+      <viewAttribute id="SKF_DESC"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Rank_1"/>
+  </calculationView>
+</calculationViews>
+  <inlineHierarchy xsi:type="Dimension:ParentChildHierarchy" id="SKF_H" aggregateAllNodes="true" cycleHandling="BREAKUP" rootNodeVisibility="ADD_ROOT_NODE_IF_DEFINED" orphanedNodesHandling="ROOT_NODES">
+    <descriptions defaultDescription="SKF_H"/>
+    <unassignedMemberProperties mode="FALSE">
+      <caption label=""/>
+      <nullCaption label=""/>
+    </unassignedMemberProperties>
+    <attributeParentPair attribute="CHILD" parentAttribute="PARENT">
+      <rootNode>
+        <localVariable>P_GROUP_NODE</localVariable>
+      </rootNode>
+    </attributeParentPair>
+  </inlineHierarchy>
+  <logicalModel id="Projection_3">
+    <descriptions/>
+    <attributes>
+      <attribute id="LEVEL" order="1" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="LEVEL"/>
+        <keyMapping columnObjectName="Projection_3" columnName="LEVEL"/>
+      </attribute>
+      <attribute id="PARENT" order="2" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="PARENT"/>
+        <keyMapping columnObjectName="Projection_3" columnName="PARENT"/>
+      </attribute>
+      <attribute id="CHILD" order="3" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="CHILD"/>
+        <keyMapping columnObjectName="Projection_3" columnName="CHILD"/>
+      </attribute>
+      <attribute id="CO_AREA" order="4" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="CO_AREA"/>
+        <keyMapping columnObjectName="Projection_3" columnName="CO_AREA"/>
+      </attribute>
+      <attribute id="SKF_DESC" order="5" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="SKF_DESC"/>
+        <keyMapping columnObjectName="Projection_3" columnName="SKF_DESC"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+<layout>
+  <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="243.4012701828858" y="112"/>
+        <rectangleSize height="0" width="160"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="92" y="606.9999976158142"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="302.00000000000006" y="606.9999976158142"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="222.9845370985018" y="446.9999988079071"/>
+        <rectangleSize height="-1" width="160"/>
+      </shape>
+    
+    <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Rank_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="222.98453709850176" y="341.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="243.4012701828858" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
