@@ -77,8 +77,8 @@
     <DataSource id="ECC_LFA1">
       <resourceUri>ECC_LFA1</resourceUri>
     </DataSource>
-    <DataSource id="plx_analytics::CA_LO_CART_LOG">
-      <resourceUri>plx_analytics::CA_LO_CART_LOG</resourceUri>
+    <DataSource id="plx_analytics::CA_LO_CART_ANALYSIS_TREND_LOG_WM">
+      <resourceUri>plx_analytics::CA_LO_CART_ANALYSIS_TREND_LOG_WM</resourceUri>
     </DataSource>
   </dataSources>
 <calculationViews>
@@ -483,8 +483,7 @@
       <viewAttribute id="WAERS"/>
       <viewAttribute id="MAT_BIN_NUM"/>
       <viewAttribute id="PROF_MAXQTY"/>
-      <viewAttribute id="MATNR"/>
-    </viewAttributes>
+      <viewAttribute id="MATNR"/></viewAttributes>
     <calculatedViewAttributes/>
       <input node="Join_2">
         <mapping xsi:type="Calculation:AttributeMapping" target="MFRNR" source="MFRNR"/>
@@ -683,8 +682,6 @@
       <viewAttribute id="MFRNR"/>
       <viewAttribute id="NAME1"/>
       <viewAttribute id="MATKL"/>
-      <viewAttribute id="Z_NR_SCANS" aggregationType="sum"/>
-      <viewAttribute id="Z_STOCKOUT_NO" aggregationType="sum"/>
       <viewAttribute id="PROF_UOM"/>
       <viewAttribute id="CART_LI_PLATE"/>
       <viewAttribute id="BUKRS"/>
@@ -727,6 +724,8 @@
       <viewAttribute id="PROF_MAXQTY"/>
       <viewAttribute id="MATNR"/>
       <viewAttribute id="Rank_Column" aggregationType="sum"/>
+      <viewAttribute id="Z_NR_SCANS" aggregationType="sum"/>
+      <viewAttribute id="Z_STOCKOUT_NO" aggregationType="sum"/>
     </viewAttributes>
     <calculatedViewAttributes>
         <calculatedViewAttribute aggregationType="sum" datatype="INTEGER" id="TOTAL_QTY" expressionLanguage="COLUMN_ENGINE">
@@ -736,91 +735,11 @@
     <restrictedViewAttributes/>
     <input node="Join_4"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_6">
-    <viewAttributes>
-      <viewAttribute id="BUKRS"/>
-      <viewAttribute id="MATNR"/>
-      <viewAttribute id="WERKS"/>
-      <viewAttribute id="LGORT"/>
-      <viewAttribute id="CART_LI_PLATE"/>
-      <viewAttribute id="Z_NR_SCANS"/>
-      <viewAttribute id="Z_STOCKOUT_NO"/>
-      <viewAttribute id="Z_STOCKOUT_DETERMINE"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="plx_analytics::CA_LO_CART_LOG"/>
-  </calculationView>
-  <calculationView xsi:type="Calculation:RankView" id="Rank_1">
+  <calculationView xsi:type="Calculation:JoinView" id="Join_4" cardinality="CN_N" joinType="inner">
     <viewAttributes>
       <viewAttribute id="MFRNR"/>
       <viewAttribute id="NAME1"/>
       <viewAttribute id="MATKL"/>
-      <viewAttribute id="Z_NR_SCANS" aggregationType="sum"/>
-      <viewAttribute id="Z_STOCKOUT_NO" aggregationType="sum"/>
-      <viewAttribute id="PROF_UOM"/>
-      <viewAttribute id="CART_LI_PLATE"/>
-      <viewAttribute id="BUKRS"/>
-      <viewAttribute id="WERKS"/>
-      <viewAttribute id="LGORT"/>
-      <viewAttribute id="ROP"/>
-      <viewAttribute id="MAKTX"/>
-      <viewAttribute id="CURRENT_PERIOD"/>
-      <viewAttribute id="STATUS"/>
-      <viewAttribute id="CART_TYPE"/>
-      <viewAttribute id="KOKRS"/>
-      <viewAttribute id="KOSTL"/>
-      <viewAttribute id="AUFNR"/>
-      <viewAttribute id="Z_COUNTER" aggregationType="sum"/>
-      <viewAttribute id="DEPT"/>
-      <viewAttribute id="COST_CEN"/>
-      <viewAttribute id="DTLASTSCAN"/>
-      <viewAttribute id="Z_QTY_PROFUOM" aggregationType="sum"/>
-      <viewAttribute id="INT_SUP_LOC"/>
-      <viewAttribute id="MFRPN"/>
-      <viewAttribute id="IDNLF"/>
-      <viewAttribute id="Z_CONTRACT_PRICE" aggregationType="sum"/>
-      <viewAttribute id="PROF_ROP" aggregationType="sum"/>
-      <viewAttribute id="PROF_RNDVAL" aggregationType="sum"/>
-      <viewAttribute id="QTY_PERIOD1" aggregationType="sum"/>
-      <viewAttribute id="QTY_PERIOD2" aggregationType="sum"/>
-      <viewAttribute id="QTY_PERIOD3" aggregationType="sum"/>
-      <viewAttribute id="QTY_PERIOD4" aggregationType="sum"/>
-      <viewAttribute id="QTY_PERIOD5" aggregationType="sum"/>
-      <viewAttribute id="QTY_PERIOD6" aggregationType="sum"/>
-      <viewAttribute id="QTY_PERIOD7" aggregationType="sum"/>
-      <viewAttribute id="QTY_PERIOD8" aggregationType="sum"/>
-      <viewAttribute id="QTY_PERIOD9" aggregationType="sum"/>
-      <viewAttribute id="QTY_PERIOD10" aggregationType="sum"/>
-      <viewAttribute id="QTY_PERIOD11" aggregationType="sum"/>
-      <viewAttribute id="QTY_PERIOD12" aggregationType="sum"/>
-      <viewAttribute id="ROUND_VALUE" aggregationType="sum"/>
-      <viewAttribute id="WAERS"/>
-      <viewAttribute id="MAT_BIN_NUM"/>
-      <viewAttribute id="PROF_MAXQTY"/>
-      <viewAttribute id="MATNR"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="Join_3"/>
-    <rankingFilter type="RANK" offset="0" offsetReference="FRONT" dynamicPartitionAttributes="false">
-      <partitionViewAttributeName id="MATNR"/>
-      <partitionViewAttributeName id="BUKRS"/>
-      <partitionViewAttributeName id="WERKS"/>
-      <partitionViewAttributeName id="LGORT"/>
-      <partitionViewAttributeName id="CART_LI_PLATE"/>
-      <order byViewAttributeName="PROF_UOM" direction="DESC"/>
-      <rankThreshold>
-        <value>1</value>
-      </rankThreshold>
-      <rankViewAttributeName>Rank_Column</rankViewAttributeName>
-    </rankingFilter>
-  </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="Join_4" cardinality="CN_N" joinType="leftOuter">
-    <viewAttributes>
-      <viewAttribute id="MFRNR"/>
-      <viewAttribute id="NAME1"/>
-      <viewAttribute id="MATKL"/>
-      <viewAttribute id="Z_NR_SCANS" aggregationType="sum"/>
-      <viewAttribute id="Z_STOCKOUT_NO" aggregationType="sum"/>
       <viewAttribute id="PROF_UOM"/>
       <viewAttribute id="CART_LI_PLATE"/>
       <viewAttribute id="BUKRS"/>
@@ -863,6 +782,8 @@
       <viewAttribute id="PROF_MAXQTY"/>
       <viewAttribute id="MATNR"/>
       <viewAttribute id="Rank_Column" aggregationType="sum"/>
+      <viewAttribute id="Z_NR_SCANS" aggregationType="sum"/>
+      <viewAttribute id="Z_STOCKOUT_NO" aggregationType="sum"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="Rank_1">
@@ -912,127 +833,231 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="Rank_Column" source="Rank_Column"/>
     </input>
-    <input node="Projection_6">
+    <input node="Aggregation_4">
       <mapping xsi:type="Calculation:AttributeMapping" target="Z_NR_SCANS" source="Z_NR_SCANS"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="Z_STOCKOUT_NO" source="Z_STOCKOUT_NO"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CART_LI_PLATE" source="CART_LI_PLATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR_LPAD"/>
     </input>
-    <joinAttribute name="MATNR"/>
     <joinAttribute name="BUKRS"/>
     <joinAttribute name="WERKS"/>
     <joinAttribute name="LGORT"/>
-    <joinAttribute name="CART_LI_PLATE"/>
+    <joinAttribute name="MATNR"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:RankView" id="Rank_1">
+    <viewAttributes>
+      <viewAttribute id="MFRNR"/>
+      <viewAttribute id="NAME1"/>
+      <viewAttribute id="MATKL"/>
+      <viewAttribute id="PROF_UOM"/>
+      <viewAttribute id="CART_LI_PLATE"/>
+      <viewAttribute id="BUKRS"/>
+      <viewAttribute id="WERKS"/>
+      <viewAttribute id="LGORT"/>
+      <viewAttribute id="ROP"/>
+      <viewAttribute id="MAKTX"/>
+      <viewAttribute id="CURRENT_PERIOD"/>
+      <viewAttribute id="STATUS"/>
+      <viewAttribute id="CART_TYPE"/>
+      <viewAttribute id="KOKRS"/>
+      <viewAttribute id="KOSTL"/>
+      <viewAttribute id="AUFNR"/>
+      <viewAttribute id="Z_COUNTER" aggregationType="sum"/>
+      <viewAttribute id="DEPT"/>
+      <viewAttribute id="COST_CEN"/>
+      <viewAttribute id="DTLASTSCAN"/>
+      <viewAttribute id="Z_QTY_PROFUOM" aggregationType="sum"/>
+      <viewAttribute id="INT_SUP_LOC"/>
+      <viewAttribute id="MFRPN"/>
+      <viewAttribute id="IDNLF"/>
+      <viewAttribute id="Z_CONTRACT_PRICE" aggregationType="sum"/>
+      <viewAttribute id="PROF_ROP" aggregationType="sum"/>
+      <viewAttribute id="PROF_RNDVAL" aggregationType="sum"/>
+      <viewAttribute id="QTY_PERIOD1" aggregationType="sum"/>
+      <viewAttribute id="QTY_PERIOD2" aggregationType="sum"/>
+      <viewAttribute id="QTY_PERIOD3" aggregationType="sum"/>
+      <viewAttribute id="QTY_PERIOD4" aggregationType="sum"/>
+      <viewAttribute id="QTY_PERIOD5" aggregationType="sum"/>
+      <viewAttribute id="QTY_PERIOD6" aggregationType="sum"/>
+      <viewAttribute id="QTY_PERIOD7" aggregationType="sum"/>
+      <viewAttribute id="QTY_PERIOD8" aggregationType="sum"/>
+      <viewAttribute id="QTY_PERIOD9" aggregationType="sum"/>
+      <viewAttribute id="QTY_PERIOD10" aggregationType="sum"/>
+      <viewAttribute id="QTY_PERIOD11" aggregationType="sum"/>
+      <viewAttribute id="QTY_PERIOD12" aggregationType="sum"/>
+      <viewAttribute id="ROUND_VALUE" aggregationType="sum"/>
+      <viewAttribute id="WAERS"/>
+      <viewAttribute id="MAT_BIN_NUM"/>
+      <viewAttribute id="PROF_MAXQTY"/>
+      <viewAttribute id="MATNR"/>
+    
+      <viewAttribute id="Z_NR_SCANS" aggregationType="sum"/>
+      <viewAttribute id="Z_STOCKOUT_NO" aggregationType="sum"/></viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_3"/>
+    <rankingFilter type="RANK" offset="0" offsetReference="FRONT" dynamicPartitionAttributes="false">
+      <partitionViewAttributeName id="MATNR"/>
+      <partitionViewAttributeName id="BUKRS"/>
+      <partitionViewAttributeName id="WERKS"/>
+      <partitionViewAttributeName id="LGORT"/>
+      <partitionViewAttributeName id="CART_LI_PLATE"/>
+      <order byViewAttributeName="PROF_UOM" direction="DESC"/>
+      <rankThreshold>
+        <value>6</value>
+      </rankThreshold>
+      <rankViewAttributeName>Rank_Column</rankViewAttributeName>
+    </rankingFilter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_6" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="Z_NR_SCANS"/>
+      <viewAttribute id="Z_STOCKOUT_NO"/>
+      <viewAttribute id="PROF_MAXQTY"/>
+      <viewAttribute id="PROF_UOM"/>
+      <viewAttribute id="CART_LI_PLATE"/>
+      <viewAttribute id="BUKRS"/>
+      <viewAttribute id="WERKS"/>
+      <viewAttribute id="MATNR"/>
+      <viewAttribute id="LGORT"/>
+      <viewAttribute id="CREA_DATE"/>
+      <viewAttribute id="MATNR_LPAD"/>
+      <viewAttribute id="ZCALENDAR_YEAR"/>
+      <viewAttribute id="ZCAL_MONTH"/>
+      <viewAttribute id="ROP"/>
+      <viewAttribute id="MAKTX"/>
+      <viewAttribute id="CURRENT_PERIOD_M"/>
+      <viewAttribute id="FIRST_PERIOD_M"/>
+      <viewAttribute id="PERIOD1_M"/>
+      <viewAttribute id="PERIOD12_M"/>
+      <viewAttribute id="IN_PERIOD_M"/>
+      <viewAttribute id="CC_1"/>
+      <viewAttribute id="CC_12"/>
+      <viewAttribute id="IN_PERIOD_W"/>
+      <viewAttribute id="STATUS"/>
+      <viewAttribute id="CART_TYPE"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CURRENT_PERIOD" datatype="NVARCHAR" length="7" expressionLanguage="SQL">
+        <formula>&quot;CURRENT_PERIOD_M&quot;</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="plx_analytics::CA_LO_CART_ANALYSIS_TREND_LOG_WM"/>
+    <filter>if ('$$IP_TREND_TYPE$$'='M', &quot;IN_PERIOD_M&quot;='Y',&quot;IN_PERIOD_W&quot;='Y')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_4">
+    <viewAttributes>
+      <viewAttribute id="Z_NR_SCANS" aggregationType="sum"/>
+      <viewAttribute id="Z_STOCKOUT_NO" aggregationType="sum"/>
+      <viewAttribute id="PROF_MAXQTY"/>
+      <viewAttribute id="PROF_UOM"/>
+      <viewAttribute id="CART_LI_PLATE"/>
+      <viewAttribute id="BUKRS"/>
+      <viewAttribute id="WERKS"/>
+      <viewAttribute id="MATNR"/>
+      <viewAttribute id="LGORT"/>
+      <viewAttribute id="MATNR_LPAD"/>
+      <viewAttribute id="ROP"/>
+      <viewAttribute id="MAKTX"/>
+      <viewAttribute id="STATUS"/>
+      <viewAttribute id="CART_TYPE"/>
+      <viewAttribute id="CURRENT_PERIOD"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="Projection_6"/>
   </calculationView>
 </calculationViews>
   <logicalModel id="Aggregation_2">
     <descriptions/>
     <attributes>
       <attribute id="MFRNR" order="9" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="MFRNR"/>
+        <descriptions defaultDescription="Cost Center"/>
         <keyMapping columnObjectName="Aggregation_2" columnName="MFRNR"/>
       </attribute>
       <attribute id="NAME1" order="10" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="NAME1"/>
+        <descriptions defaultDescription="Maunfacturer Name"/>
         <keyMapping columnObjectName="Aggregation_2" columnName="NAME1"/>
       </attribute>
       <attribute id="MATKL" order="11" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="MATKL"/>
+        <descriptions defaultDescription="Material Group"/>
         <keyMapping columnObjectName="Aggregation_2" columnName="MATKL"/>
       </attribute>
-      <attribute id="PROF_UOM" order="14" displayAttribute="false" attributeHierarchyActive="false">
+      <attribute id="PROF_UOM" order="12" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="PROF_UOM"/>
         <keyMapping columnObjectName="Aggregation_2" columnName="PROF_UOM"/>
       </attribute>
-      <attribute id="CART_LI_PLATE" order="15" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="CART_LI_PLATE"/>
+      <attribute id="CART_LI_PLATE" order="13" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Cart License Plate"/>
         <keyMapping columnObjectName="Aggregation_2" columnName="CART_LI_PLATE"/>
       </attribute>
-      <attribute id="BUKRS" order="16" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="BUKRS"/>
+      <attribute id="BUKRS" order="14" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Company Code"/>
+        <localVariable>V_BUKRS</localVariable>
         <keyMapping columnObjectName="Aggregation_2" columnName="BUKRS"/>
       </attribute>
-      <attribute id="WERKS" order="17" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="WERKS"/>
+      <attribute id="WERKS" order="15" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Plant"/>
+        <localVariable>P_WERKS</localVariable>
         <keyMapping columnObjectName="Aggregation_2" columnName="WERKS"/>
       </attribute>
-      <attribute id="LGORT" order="18" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="LGORT"/>
+      <attribute id="LGORT" order="16" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Storage Location"/>
+        <localVariable>P_LGORT</localVariable>
         <keyMapping columnObjectName="Aggregation_2" columnName="LGORT"/>
       </attribute>
-      <attribute id="ROP" order="19" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="ROP"/>
-        <keyMapping columnObjectName="Aggregation_2" columnName="ROP"/>
-      </attribute>
-      <attribute id="MAKTX" order="20" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="MAKTX"/>
+      <attribute id="MAKTX" order="18" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Material Description"/>
         <keyMapping columnObjectName="Aggregation_2" columnName="MAKTX"/>
       </attribute>
-      <attribute id="CURRENT_PERIOD" order="21" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="CURRENT_PERIOD"/>
-        <keyMapping columnObjectName="Aggregation_2" columnName="CURRENT_PERIOD"/>
-      </attribute>
-      <attribute id="STATUS" order="22" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="STATUS"/>
-        <keyMapping columnObjectName="Aggregation_2" columnName="STATUS"/>
-      </attribute>
-      <attribute id="CART_TYPE" order="23" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="CART_TYPE"/>
-        <keyMapping columnObjectName="Aggregation_2" columnName="CART_TYPE"/>
-      </attribute>
-      <attribute id="KOKRS" order="24" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="KOKRS"/>
+      <attribute id="KOKRS" order="22" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Controlling Area"/>
         <keyMapping columnObjectName="Aggregation_2" columnName="KOKRS"/>
       </attribute>
-      <attribute id="KOSTL" order="25" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="KOSTL"/>
+      <attribute id="KOSTL" order="23" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Cost Centre"/>
         <keyMapping columnObjectName="Aggregation_2" columnName="KOSTL"/>
       </attribute>
-      <attribute id="AUFNR" order="26" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="AUFNR"/>
+      <attribute id="AUFNR" order="24" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Order Number"/>
         <keyMapping columnObjectName="Aggregation_2" columnName="AUFNR"/>
       </attribute>
-      <attribute id="DEPT" order="28" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="DEPT"/>
+      <attribute id="DEPT" order="26" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Cart Header Department"/>
         <keyMapping columnObjectName="Aggregation_2" columnName="DEPT"/>
       </attribute>
-      <attribute id="COST_CEN" order="29" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="COST_CEN"/>
+      <attribute id="COST_CEN" order="27" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Cost Center"/>
         <keyMapping columnObjectName="Aggregation_2" columnName="COST_CEN"/>
       </attribute>
-      <attribute id="DTLASTSCAN" order="30" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="DTLASTSCAN"/>
+      <attribute id="DTLASTSCAN" order="28" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Dt Last Scan"/>
         <keyMapping columnObjectName="Aggregation_2" columnName="DTLASTSCAN"/>
       </attribute>
-      <attribute id="INT_SUP_LOC" order="32" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="INT_SUP_LOC"/>
+      <attribute id="INT_SUP_LOC" order="30" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Internal Supplier Location"/>
         <keyMapping columnObjectName="Aggregation_2" columnName="INT_SUP_LOC"/>
       </attribute>
-      <attribute id="MFRPN" order="33" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="MFRPN"/>
+      <attribute id="MFRPN" order="31" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Manufacturer Part #"/>
         <keyMapping columnObjectName="Aggregation_2" columnName="MFRPN"/>
       </attribute>
-      <attribute id="IDNLF" order="34" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="IDNLF"/>
+      <attribute id="IDNLF" order="32" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Material Number Used by Vendor"/>
         <keyMapping columnObjectName="Aggregation_2" columnName="IDNLF"/>
       </attribute>
-      <attribute id="WAERS" order="51" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="WAERS"/>
+      <attribute id="WAERS" order="49" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Currency"/>
         <keyMapping columnObjectName="Aggregation_2" columnName="WAERS"/>
       </attribute>
-      <attribute id="MAT_BIN_NUM" order="52" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="MAT_BIN_NUM"/>
+      <attribute id="MAT_BIN_NUM" order="50" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Material BIN Number"/>
         <keyMapping columnObjectName="Aggregation_2" columnName="MAT_BIN_NUM"/>
       </attribute>
-      <attribute id="PROF_MAXQTY" order="53" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="PROF_MAXQTY"/>
-        <keyMapping columnObjectName="Aggregation_2" columnName="PROF_MAXQTY"/>
-      </attribute>
-      <attribute id="MATNR" order="54" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="MATNR"/>
+      <attribute id="MATNR" order="52" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="SAP #"/>
+        <localVariable>P_MATNR</localVariable>
         <keyMapping columnObjectName="Aggregation_2" columnName="MATNR"/>
       </attribute>
     </attributes>
@@ -1046,92 +1071,112 @@
     </privateDataFoundation>
     <baseMeasures>
       <measure id="TOTAL_QTY" order="8" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="TOTAL_QTY"/>
+        <descriptions defaultDescription="Total Qty (Prof UOM)"/>
         <measureMapping columnObjectName="Aggregation_2" columnName="TOTAL_QTY"/>
       </measure>
-      <measure id="Z_NR_SCANS" order="12" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="Z_NR_SCANS"/>
-        <measureMapping columnObjectName="Aggregation_2" columnName="Z_NR_SCANS"/>
+      <measure id="ROP" order="17" aggregationType="max" measureType="simple">
+        <descriptions defaultDescription="ROP"/>
+        <measureMapping columnObjectName="Aggregation_2" columnName="ROP"/>
       </measure>
-      <measure id="Z_STOCKOUT_NO" order="13" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="Z_STOCKOUT_NO"/>
-        <measureMapping columnObjectName="Aggregation_2" columnName="Z_STOCKOUT_NO"/>
+      <measure id="CURRENT_PERIOD" order="19" aggregationType="max" measureType="simple">
+        <descriptions defaultDescription="Current Period"/>
+        <measureMapping columnObjectName="Aggregation_2" columnName="CURRENT_PERIOD"/>
       </measure>
-      <measure id="Z_COUNTER" order="27" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="Z_COUNTER"/>
+      <measure id="STATUS" order="20" aggregationType="max" measureType="simple">
+        <descriptions defaultDescription="Status"/>
+        <measureMapping columnObjectName="Aggregation_2" columnName="STATUS"/>
+      </measure>
+      <measure id="CART_TYPE" order="21" aggregationType="max" measureType="simple">
+        <descriptions defaultDescription="Cart Type"/>
+        <measureMapping columnObjectName="Aggregation_2" columnName="CART_TYPE"/>
+      </measure>
+      <measure id="Z_COUNTER" order="25" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Nr Trans"/>
         <measureMapping columnObjectName="Aggregation_2" columnName="Z_COUNTER"/>
       </measure>
-      <measure id="Z_QTY_PROFUOM" order="31" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="Z_QTY_PROFUOM"/>
+      <measure id="Z_QTY_PROFUOM" order="29" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Qty PROFUOM"/>
         <measureMapping columnObjectName="Aggregation_2" columnName="Z_QTY_PROFUOM"/>
       </measure>
-      <measure id="Z_CONTRACT_PRICE" order="35" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="Z_CONTRACT_PRICE"/>
+      <measure id="Z_CONTRACT_PRICE" order="33" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Contract Price"/>
         <measureMapping columnObjectName="Aggregation_2" columnName="Z_CONTRACT_PRICE"/>
       </measure>
-      <measure id="PROF_ROP" order="36" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="PROF_ROP"/>
+      <measure id="PROF_ROP" order="34" aggregationType="max" measureType="simple">
+        <descriptions defaultDescription="ROP"/>
         <measureMapping columnObjectName="Aggregation_2" columnName="PROF_ROP"/>
       </measure>
-      <measure id="PROF_RNDVAL" order="37" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="PROF_RNDVAL"/>
+      <measure id="PROF_RNDVAL" order="35" aggregationType="max" measureType="simple">
+        <descriptions defaultDescription="Rounding Value (Profile UOM)"/>
         <measureMapping columnObjectName="Aggregation_2" columnName="PROF_RNDVAL"/>
       </measure>
-      <measure id="QTY_PERIOD1" order="38" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="QTY_PERIOD1"/>
+      <measure id="QTY_PERIOD1" order="36" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Period 1 Quantity"/>
         <measureMapping columnObjectName="Aggregation_2" columnName="QTY_PERIOD1"/>
       </measure>
-      <measure id="QTY_PERIOD2" order="39" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="QTY_PERIOD2"/>
+      <measure id="QTY_PERIOD2" order="37" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Period 2 Quantity"/>
         <measureMapping columnObjectName="Aggregation_2" columnName="QTY_PERIOD2"/>
       </measure>
-      <measure id="QTY_PERIOD3" order="40" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="QTY_PERIOD3"/>
+      <measure id="QTY_PERIOD3" order="38" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Period 3 Quantity"/>
         <measureMapping columnObjectName="Aggregation_2" columnName="QTY_PERIOD3"/>
       </measure>
-      <measure id="QTY_PERIOD4" order="41" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="QTY_PERIOD4"/>
+      <measure id="QTY_PERIOD4" order="39" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Period 4 Quantity"/>
         <measureMapping columnObjectName="Aggregation_2" columnName="QTY_PERIOD4"/>
       </measure>
-      <measure id="QTY_PERIOD5" order="42" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="QTY_PERIOD5"/>
+      <measure id="QTY_PERIOD5" order="40" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Period 5 Quantity"/>
         <measureMapping columnObjectName="Aggregation_2" columnName="QTY_PERIOD5"/>
       </measure>
-      <measure id="QTY_PERIOD6" order="43" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="QTY_PERIOD6"/>
+      <measure id="QTY_PERIOD6" order="41" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Period 6 Quantity"/>
         <measureMapping columnObjectName="Aggregation_2" columnName="QTY_PERIOD6"/>
       </measure>
-      <measure id="QTY_PERIOD7" order="44" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="QTY_PERIOD7"/>
+      <measure id="QTY_PERIOD7" order="42" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Period 7 Quantity"/>
         <measureMapping columnObjectName="Aggregation_2" columnName="QTY_PERIOD7"/>
       </measure>
-      <measure id="QTY_PERIOD8" order="45" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="QTY_PERIOD8"/>
+      <measure id="QTY_PERIOD8" order="43" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Period 8 Quantity"/>
         <measureMapping columnObjectName="Aggregation_2" columnName="QTY_PERIOD8"/>
       </measure>
-      <measure id="QTY_PERIOD9" order="46" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="QTY_PERIOD9"/>
+      <measure id="QTY_PERIOD9" order="44" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Period 9 Quantity"/>
         <measureMapping columnObjectName="Aggregation_2" columnName="QTY_PERIOD9"/>
       </measure>
-      <measure id="QTY_PERIOD10" order="47" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="QTY_PERIOD10"/>
+      <measure id="QTY_PERIOD10" order="45" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Period 10 Quantity"/>
         <measureMapping columnObjectName="Aggregation_2" columnName="QTY_PERIOD10"/>
       </measure>
-      <measure id="QTY_PERIOD11" order="48" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="QTY_PERIOD11"/>
+      <measure id="QTY_PERIOD11" order="46" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Period 11 Quantity"/>
         <measureMapping columnObjectName="Aggregation_2" columnName="QTY_PERIOD11"/>
       </measure>
-      <measure id="QTY_PERIOD12" order="49" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="QTY_PERIOD12"/>
+      <measure id="QTY_PERIOD12" order="47" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Period 12 Quantity"/>
         <measureMapping columnObjectName="Aggregation_2" columnName="QTY_PERIOD12"/>
       </measure>
-      <measure id="ROUND_VALUE" order="50" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="ROUND_VALUE"/>
+      <measure id="ROUND_VALUE" order="48" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Round Value"/>
         <measureMapping columnObjectName="Aggregation_2" columnName="ROUND_VALUE"/>
       </measure>
-      <measure id="Rank_Column" order="55" aggregationType="max" measureType="simple">
-        <descriptions defaultDescription="Rank_Column"/>
+      <measure id="PROF_MAXQTY" order="51" aggregationType="max" measureType="simple">
+        <descriptions defaultDescription="Max Qty (Profile UOM)"/>
+        <measureMapping columnObjectName="Aggregation_2" columnName="PROF_MAXQTY"/>
+      </measure>
+      <measure id="Rank_Column" order="53" aggregationType="max" measureType="simple">
+        <descriptions defaultDescription="Rank Column"/>
         <measureMapping columnObjectName="Aggregation_2" columnName="Rank_Column"/>
+      </measure>
+      <measure id="Z_NR_SCANS" order="54" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Nr Scans"/>
+        <measureMapping columnObjectName="Aggregation_2" columnName="Z_NR_SCANS"/>
+      </measure>
+      <measure id="Z_STOCKOUT_NO" order="55" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Stockouts Nr"/>
+        <measureMapping columnObjectName="Aggregation_2" columnName="Z_STOCKOUT_NO"/>
       </measure>
     </baseMeasures>
     <calculatedMeasures>
@@ -1141,6 +1186,8 @@
       
         
         
+        
+        
         </measure>
       <measure id="AVG_SCAN" hidden="false" order="2" aggregationType="sum" measureType="simple" aggregatable="true" datatype="DOUBLE" expressionLanguage="COLUMN_ENGINE">
         <descriptions defaultDescription="Avg per Scan"/>
@@ -1148,39 +1195,51 @@
       
         
         
+        
+        
         </measure>
       <measure id="SCANS_WEEK" hidden="false" order="3" aggregationType="sum" measureType="simple" aggregatable="true" datatype="DOUBLE" expressionLanguage="COLUMN_ENGINE">
-        <descriptions defaultDescription="SCANS per WEEK"/>
+        <descriptions defaultDescription="Scans per Week"/>
         <formula>IF('$$IP_TREND_TYPE$$'='M',double(&quot;Z_NR_SCANS&quot;)/12, double(&quot;Z_NR_SCANS&quot;)/52) </formula>
       
         
         
+        
+        
         </measure>
       <measure id="RECM_MAX" hidden="false" order="4" aggregationType="sum" measureType="simple" aggregatable="true" datatype="DOUBLE" expressionLanguage="COLUMN_ENGINE">
-        <descriptions defaultDescription="RECM_MAX"/>
+        <descriptions defaultDescription="Recm Max"/>
         <formula>round(double(if(&quot;PROF_RNDVAL&quot;&gt;&quot;WEEKLY_AVG&quot; AND &quot;PROF_RNDVAL&quot;&gt;1,  DOUBLE( &quot;PROF_RNDVAL&quot;), DOUBLE(&quot;WEEKLY_AVG&quot;) +1.5)), 0)</formula>
       
         
         
+        
+        
         </measure>
       <measure id="RECM_MIN" hidden="false" order="5" aggregationType="sum" measureType="simple" aggregatable="true" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="34" scale="7">
-        <descriptions defaultDescription="RECM_MIN"/>
+        <descriptions defaultDescription="Recm Min"/>
         <formula>round(double(( &quot;WEEKLY_AVG&quot;*43 /100 ) + 0.5), 0)</formula>
       
         
         
+        
+        
         </measure>
       <measure id="AVG_ON_HAND" hidden="false" order="6" aggregationType="sum" measureType="simple" aggregatable="true" datatype="DOUBLE" expressionLanguage="COLUMN_ENGINE">
-        <descriptions defaultDescription="AVG_ON_HAND"/>
+        <descriptions defaultDescription="Avg on Hand"/>
         <formula>double((double(&quot;PROF_MAXQTY&quot;) - double(&quot;PROF_ROP&quot;))/2+double(&quot;PROF_ROP&quot;))  *double(&quot;Z_CONTRACT_PRICE&quot;)</formula>
       
         
         
+        
+        
         </measure>
       <measure id="RECM_AVG_VALUE" hidden="false" order="7" aggregationType="sum" measureType="simple" aggregatable="true" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="34" scale="7">
-        <descriptions defaultDescription="RECM_AVG_VALUE"/>
+        <descriptions defaultDescription="Recm Avg Value"/>
         <formula>double(((&quot;RECM_MAX&quot;-&quot;RECM_MIN&quot;)/2+&quot;RECM_MIN&quot;)*&quot;Z_CONTRACT_PRICE&quot;)</formula>
       
+        
+        
         
         
         </measure>
@@ -1191,39 +1250,39 @@
 <layout>
   <shapes>
       <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-        <upperLeftCorner x="584.0372641593547" y="112"/>
+        <upperLeftCorner x="549.4134146167335" y="112"/>
         <rectangleSize height="0" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="680.5150148803054" y="1196.9999928474426"/>
+        <upperLeftCorner x="113.4255106953035" y="1216.9999916553497"/>
         <rectangleSize height="0" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="488.3554855845339" y="1051.9999940395355"/>
+        <upperLeftCorner x="323.4255106953035" y="1071.9999928474426"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="511.9999999999999" y="926.9999952316284"/>
+        <upperLeftCorner x="301.99999999999983" y="946.9999940395355"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Projection_5" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="698.3554855845339" y="1061.9999940395355"/>
+        <upperLeftCorner x="92" y="1081.9999928474426"/>
         <rectangleSize height="0" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Aggregation_3" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="722" y="926.9999952316284"/>
+        <upperLeftCorner x="92" y="946.9999940395355"/>
         <rectangleSize height="0" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="91.99999999999996" y="926.9999952316284"/>
+        <upperLeftCorner x="721.9999999999999" y="946.9999940395355"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Projection_4" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="301.9999999999999" y="926.9999952316284"/>
+        <upperLeftCorner x="511.9999999999999" y="946.9999940395355"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="275.3333333333332" y="766.9999964237213"/>
+        <upperLeftCorner x="538.6666666666665" y="786.9999952316284"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
     <shape modelObjectName="Projection_3" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
@@ -1235,7 +1294,7 @@
       <rectangleSize width="250"/>
     </shape>
       <shape expanded="true" modelObjectName="Join_3" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="426.4930647039668" y="606.9999976158142"/>
+        <upperLeftCorner x="301.9999999999998" y="626.9999964237213"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
     <shape modelObjectName="Join_2" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
@@ -1248,33 +1307,38 @@
     </shape>
     
     <shape expanded="true" modelObjectName="Union_1" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="538.6666666666665" y="780.3333297570546"/>
+      <upperLeftCorner x="275.33333333333314" y="800.3333285649617"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
       <shape expanded="true" modelObjectName="Aggregation_2" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="571.9680197129221" y="236.9999988079071"/>
+        <upperLeftCorner x="538.6182116659472" y="236.9999988079071"/>
         <rectangleSize height="0" width="160"/>
       </shape>
-    <shape expanded="true" modelObjectName="Projection_6" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="636.4930647039668" y="501.9999976158142"/>
-      <rectangleSize height="30" width="257"/>
-    </shape>
-    <shape expanded="true" modelObjectName="Rank_1" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="426.49306470396675" y="501.9999976158142"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
     <shape expanded="true" modelObjectName="Join_4" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="571.9680197129221" y="341.9999988079071"/>
+      <upperLeftCorner x="538.6182116659472" y="341.9999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="Rank_1" modelObjectNameSpace="Join_4" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="199.67919921875"/>
+      <rectangleSize width="199"/>
     </shape>
-    <shape modelObjectName="Projection_6" modelObjectNameSpace="Join_4" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="321" y="457"/>
-      <rectangleSize width="230.64892578125"/>
+    <shape modelObjectName="Aggregation_4" modelObjectNameSpace="Join_4" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="348" y="183"/>
+      <rectangleSize width="188.06689453125"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Rank_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="301.9999999999998" y="501.9999976158142"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_6" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="604.3942451197308" y="626.9999964237213"/>
+      <rectangleSize height="30" width="257"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_4" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="633.6907135780268" y="501.9999976158142"/>
+      <rectangleSize height="30" width="160"/>
     </shape>
   </shapes>
 </layout>

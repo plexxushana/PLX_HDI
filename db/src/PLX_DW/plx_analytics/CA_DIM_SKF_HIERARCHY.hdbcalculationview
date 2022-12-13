@@ -71,7 +71,11 @@
         <viewAttribute id="CO_AREA"/>
         <viewAttribute id="SKF_DESC"/>
       </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="ZCONCATE" datatype="NVARCHAR" length="30" expressionLanguage="SQL">
+        <formula>concat(&quot;CO_AREA&quot;,concat(&quot;CHILD&quot;,&quot;PARENT&quot;))</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
       <input node="Projection_1">
         <mapping xsi:type="Calculation:AttributeMapping" target="LEVEL" source="LEVEL"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="PARENT" source="PARENT"/>
@@ -86,6 +90,39 @@
     <joinAttribute name="CHILD"/>
     <joinAttribute name="CO_AREA"/>
   </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="LEVEL"/>
+      <viewAttribute id="PARENT"/>
+      <viewAttribute id="CHILD"/>
+      <viewAttribute id="CO_AREA"/>
+      <viewAttribute id="SKF_DESC"/>
+      <viewAttribute id="Rank_Column"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Rank_1"/>
+    <filter>&quot;Rank_Column&quot;=1</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:RankView" id="Rank_1">
+    <viewAttributes>
+      <viewAttribute id="LEVEL"/>
+      <viewAttribute id="PARENT"/>
+      <viewAttribute id="CHILD"/>
+      <viewAttribute id="CO_AREA"/>
+      <viewAttribute id="SKF_DESC"/>
+      <viewAttribute id="ZCONCATE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_1"/>
+    <rankingFilter type="RANK" offset="0" offsetReference="FRONT" dynamicPartitionAttributes="false">
+      <partitionViewAttributeName id="ZCONCATE"/>
+      <order byViewAttributeName="LEVEL" direction="ASC"/>
+      <rankThreshold>
+        <value>1</value>
+      </rankThreshold>
+      <rankViewAttributeName>Rank_Column</rankViewAttributeName>
+    </rankingFilter>
+  </calculationView>
 </calculationViews>
   <inlineHierarchy xsi:type="Dimension:ParentChildHierarchy" id="SKF_H" aggregateAllNodes="true" cycleHandling="BREAKUP" rootNodeVisibility="ADD_ROOT_NODE_IF_DEFINED" orphanedNodesHandling="ROOT_NODES">
     <descriptions defaultDescription="SKF_H"/>
@@ -99,28 +136,28 @@
       </rootNode>
     </attributeParentPair>
   </inlineHierarchy>
-  <logicalModel id="Join_1">
+  <logicalModel id="Projection_3">
     <descriptions/>
     <attributes>
-      <attribute id="LEVEL" order="1" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="LEVEL" order="1" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="LEVEL"/>
-        <keyMapping columnObjectName="Join_1" columnName="LEVEL"/>
+        <keyMapping columnObjectName="Projection_3" columnName="LEVEL"/>
       </attribute>
-      <attribute id="PARENT" order="2" attributeHierarchyActive="false" descriptionColumnName="SKF_DESC" displayAttribute="false">
+      <attribute id="PARENT" order="2" descriptionColumnName="SKF_DESC" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="PARENT"/>
-        <keyMapping columnObjectName="Join_1" columnName="PARENT"/>
+        <keyMapping columnObjectName="Projection_3" columnName="PARENT"/>
       </attribute>
-      <attribute id="CHILD" order="3" attributeHierarchyActive="false" descriptionColumnName="SKF_DESC" displayAttribute="false">
+      <attribute id="CHILD" order="3" descriptionColumnName="SKF_DESC" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="CHILD"/>
-        <keyMapping columnObjectName="Join_1" columnName="CHILD"/>
+        <keyMapping columnObjectName="Projection_3" columnName="CHILD"/>
       </attribute>
-      <attribute id="CO_AREA" order="4" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="CO_AREA" order="4" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="CO_AREA"/>
-        <keyMapping columnObjectName="Join_1" columnName="CO_AREA"/>
+        <keyMapping columnObjectName="Projection_3" columnName="CO_AREA"/>
       </attribute>
-      <attribute id="SKF_DESC" order="5" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="SKF_DESC" order="5" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="SKF_DESC"/>
-        <keyMapping columnObjectName="Join_1" columnName="SKF_DESC"/>
+        <keyMapping columnObjectName="Projection_3" columnName="SKF_DESC"/>
       </attribute>
     </attributes>
     <calculatedAttributes/>
@@ -139,19 +176,19 @@
 <layout>
   <shapes>
       <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-        <upperLeftCorner x="221" y="112"/>
+        <upperLeftCorner x="243.4012701828858" y="112"/>
         <rectangleSize height="0" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="92" y="376"/>
+        <upperLeftCorner x="92" y="626.9999976158142"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="302" y="376"/>
+        <upperLeftCorner x="302.00000000000006" y="626.9999976158142"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="221" y="217"/>
+        <upperLeftCorner x="222.98453709850176" y="466.9999988079071"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
     
@@ -162,6 +199,15 @@
     <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="243.4012701828858" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Rank_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="222.98453709850173" y="361.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
     </shape>
   </shapes>
 </layout>
