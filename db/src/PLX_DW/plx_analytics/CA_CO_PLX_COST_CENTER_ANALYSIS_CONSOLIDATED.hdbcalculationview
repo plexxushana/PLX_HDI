@@ -76,7 +76,7 @@
     </variable>
     <variable id="V_FISCAL_YEAR">
       <descriptions defaultDescription="Fiscal Year"/>
-      <variableProperties datatype="NVARCHAR" length="4" scale="null" defaultValue="">
+      <variableProperties datatype="NVARCHAR" length="4" scale="NaN" defaultValue="">
         <valueDomain type="AttributeValue">
           <externalLikeStructureName>plx_analytics::CA_DIM_FISC_CAL</externalLikeStructureName>
           <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
@@ -104,11 +104,11 @@
       <localVariable>IP_CE_GROUP_NODE</localVariable>
     </mapping>
     <mapping xsi:type="Variable:VariableMapping" forStarJoin="true">
-      <targetVariable name="IP_CHART" resourceUri="plx_analytics::CA_DIM_CE_HIERARCHY_ALL"/>
+      <targetVariable name="IP_CHART" resourceUri="plx_analytics::CA_DIM_CE_HIERARCHY_ALL_NYGH"/>
       <localVariable>IP_CHART</localVariable>
     </mapping>
     <mapping xsi:type="Variable:VariableMapping" forStarJoin="true">
-      <targetVariable name="IP_CE_GROUP_NODE" resourceUri="plx_analytics::CA_DIM_CE_HIERARCHY_ALL"/>
+      <targetVariable name="IP_CE_GROUP_NODE" resourceUri="plx_analytics::CA_DIM_CE_HIERARCHY_ALL_NYGH"/>
       <localVariable>IP_CE_GROUP_NODE</localVariable>
     </mapping>
     <mapping xsi:type="Variable:VariableMapping" forStarJoin="true">
@@ -2679,7 +2679,11 @@
         </calculatedViewAttribute>
         <calculatedViewAttribute datatype="NVARCHAR" id="CURR_PERIOD_B" length="1" expressionLanguage="COLUMN_ENGINE">
           <formula>IF(&quot;LONG_PAST_MONTH&quot;=&quot;Z_PERIOD&quot;,'X','')</formula>
-        </calculatedViewAttribute></calculatedViewAttributes>
+        </calculatedViewAttribute>
+      <calculatedViewAttribute id="CD_COST_ELMNT" datatype="NVARCHAR" length="10" expressionLanguage="SQL">
+        <formula>LTRIM(&quot;KSTAR&quot;,0)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
       <input node="Join_8">
         <mapping xsi:type="Calculation:AttributeMapping" target="WKGBTR" source="WKGBTR"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="WOGBTR" source="WOGBTR"/>
@@ -2803,6 +2807,10 @@
         <descriptions defaultDescription="SETNAME"/>
         <keyMapping columnObjectName="Join_6" columnName="SETNAME"/>
       </attribute>
+      <attribute id="COST_ELMNT" order="34" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Cost Element"/>
+        <keyMapping columnObjectName="Join_6" columnName="CD_COST_ELMNT"/>
+      </attribute>
       <attribute id="KSTAR$local">
         <descriptions defaultDescription="Cost Elem"/>
         <keyMapping columnObjectName="Join_6" columnName="KSTAR"/>
@@ -2822,14 +2830,14 @@
         <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="25">
           <formula>midstr(&quot;OBJNR&quot;, 3) </formula>
         </keyCalculation>
-        </calculatedAttribute>
+      </calculatedAttribute>
       <calculatedAttribute id="PARTNER_OBEJCT_TYPE" hidden="false" order="2" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="Partner Object Type"/>
         <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="10">
           <formula>CASE(leftstr(&quot;OBJNR&quot;, 2), 'OR', 'Order',
 'PR', 'WBS Element', 'Not Assigned')</formula>
         </keyCalculation>
-        </calculatedAttribute>
+      </calculatedAttribute>
     </calculatedAttributes>
     <privateDataFoundation>
       <tableProxies/>
@@ -2881,12 +2889,13 @@
         <formula>&quot;WKG001&quot; - &quot;WKGBTR&quot;</formula>
       
         
+        
         </measure>
     </calculatedMeasures>
     <restrictedMeasures/>
     <localDimensions/>
     <sharedDimensions>
-      <logicalJoin associatedObjectUri="plx_analytics::CA_DIM_CE_HIERARCHY_ALL">
+      <logicalJoin associatedObjectUri="plx_analytics::CA_DIM_CE_HIERARCHY_ALL_NYGH">
         <attributes>
           <attributeRef>KSTAR$local</attributeRef>
         </attributes>
@@ -3112,9 +3121,10 @@
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="250"/>
     </shape>
-      <shape modelObjectName="plx_analytics::CA_DIM_CE_HIERARCHY_ALL" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
-        <upperLeftCorner x="464" y="60"/>
-      </shape>
+    <shape modelObjectName="plx_analytics::CA_DIM_CE_HIERARCHY_ALL_NYGH" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
+      <upperLeftCorner x="464" y="60"/>
+      <rectangleSize width="366"/>
+    </shape>
       <shape modelObjectName="plx_analytics::CA_DIM_CC_HIERARCHY_ALL" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
         <upperLeftCorner x="496" y="273"/>
       </shape>
