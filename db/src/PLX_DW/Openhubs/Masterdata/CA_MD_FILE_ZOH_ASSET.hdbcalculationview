@@ -3,7 +3,17 @@
 <origin/>
   <descriptions defaultDescription="CA_MD_FILE_ZOH_ASSET"/>
   <metadata changedAt="2021-12-08 09:13:21.272"/>
-  <localVariables/>
+  <localVariables>
+    <variable id="IP_COMPANY" parameter="true">
+      <descriptions defaultDescription="Company Code"/>
+      <variableProperties datatype="NVARCHAR" length="4" scale="null" mandatory="true">
+        <valueDomain type="AttributeValue">
+          <attribute name="BUKRS"/>
+        </valueDomain>
+        <selection multiLine="true" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
   <variableMappings/>
   <informationModelLayout relativeWidthScenario="29"/>
   <dataSources>
@@ -15,7 +25,7 @@
     </DataSource>
   </dataSources>
 <calculationViews>
-  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2" filterExpressionLanguage="SQL">
     <descriptions/>
     <viewAttributes>
         <viewAttribute id="BUKRS"/>
@@ -178,7 +188,9 @@
         </calculatedViewAttribute>
       </calculatedViewAttributes>
       <input node="ECC_ANLA"/>
-    </calculationView>
+    
+    <filter>&quot;BUKRS&quot; IN ($$IP_COMPANY$$)</filter>
+  </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
     <descriptions/>
     <viewAttributes>
