@@ -3,7 +3,17 @@
 <origin/>
   <descriptions defaultDescription="CA_MD_FILE_ZOH_STKFG"/>
   <metadata changedAt="2021-12-17 16:32:51.56"/>
-  <localVariables/>
+  <localVariables>
+    <variable id="IP_KOKRS" parameter="true">
+      <descriptions defaultDescription=""/>
+      <variableProperties datatype="NVARCHAR" length="4" scale="null" mandatory="true">
+        <valueDomain type="AttributeValue">
+          <attribute name="KOKRS"/>
+        </valueDomain>
+        <selection multiLine="true" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
   <variableMappings/>
   <informationModelLayout relativeWidthScenario="36"/>
   <dataSources>
@@ -13,9 +23,12 @@
     <DataSource id="ECC_TKT03">
       <resourceUri>ECC_TKT03</resourceUri>
     </DataSource>
+    <DataSource id="ECC_ZTFI_MIS_SKF">
+      <resourceUri>ECC_ZTFI_MIS_SKF</resourceUri>
+    </DataSource>
   </dataSources>
 <calculationViews>
-  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2" filterExpressionLanguage="SQL">
     <descriptions/>
     <viewAttributes>
         <viewAttribute id="KOKRS"/>
@@ -32,16 +45,11 @@
     <calculatedViewAttributes>
         <calculatedViewAttribute datatype="VARCHAR" id="RECORDMODE" length="1" expressionLanguage="COLUMN_ENGINE">
           <formula>''</formula>
-        </calculatedViewAttribute>
-        <calculatedViewAttribute datatype="NVARCHAR" id="ENTRYDATE" length="8" expressionLanguage="COLUMN_ENGINE">
-          <formula>'00000000'</formula>
-        </calculatedViewAttribute>
-        <calculatedViewAttribute datatype="VARCHAR" id="USERNAME" length="12" expressionLanguage="COLUMN_ENGINE">
-          <formula>''</formula>
-        </calculatedViewAttribute>
-      </calculatedViewAttributes>
+        </calculatedViewAttribute></calculatedViewAttributes>
       <input node="ECC_TKA03"/>
-    </calculationView>
+    
+    <filter>&quot;KOKRS&quot; in ($$IP_KOKRS$$)</filter>
+  </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
     <descriptions/>
     <viewAttributes>
@@ -85,10 +93,7 @@
         <viewAttribute id="ZMISOPCOD"/>
         <viewAttribute id="ZMISMOHCD"/>
         <viewAttribute id="ZSTATUS"/>
-        <viewAttribute id="ZMISLONGD"/>
-        <viewAttribute id="ENTRYDATE"/>
-        <viewAttribute id="USERNAME"/>
-      </viewAttributes>
+        <viewAttribute id="ZMISLONGD"/></viewAttributes>
     <calculatedViewAttributes/>
       <input node="Projection_2">
         <mapping xsi:type="Calculation:AttributeMapping" target="RECORDMODE" source="RECORDMODE"/>
@@ -101,10 +106,7 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="KENNZ" source="KENNZ"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="W_FLAG" source="W_FLAG"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="M_PLAN" source="M_PLAN"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="M_IST" source="M_IST"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ENTRYDATE" source="ENTRYDATE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="USERNAME" source="USERNAME"/>
-      </input>
+        <mapping xsi:type="Calculation:AttributeMapping" target="M_IST" source="M_IST"/></input>
       <input node="Projection_3">
         <mapping xsi:type="Calculation:AttributeMapping" target="SPRAS" source="SPRAS"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="BEZEI" source="BEZEI"/>
@@ -118,61 +120,123 @@
     <joinAttribute name="KOKRS"/>
     <joinAttribute name="STAGR"/>
   </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_4">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="KOKRS"/>
+      <viewAttribute id="STAGR"/>
+      <viewAttribute id="DATE_MODIFIED"/>
+      <viewAttribute id="USERNAME"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="ECC_ZTFI_MIS_SKF"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2" cardinality="CN_N" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="RECORDMODE"/>
+      <viewAttribute id="KOKRS"/>
+      <viewAttribute id="STAGR"/>
+      <viewAttribute id="MSEHI"/>
+      <viewAttribute id="GRTYP"/>
+      <viewAttribute id="HKTYP"/>
+      <viewAttribute id="STRUCT"/>
+      <viewAttribute id="KENNZ"/>
+      <viewAttribute id="W_FLAG"/>
+      <viewAttribute id="M_PLAN"/>
+      <viewAttribute id="M_IST"/>
+      <viewAttribute id="SPRAS"/>
+      <viewAttribute id="BEZEI"/>
+      <viewAttribute id="ZMISOPCOD"/>
+      <viewAttribute id="ZMISMOHCD"/>
+      <viewAttribute id="ZSTATUS"/>
+      <viewAttribute id="ZMISLONGD"/>
+      <viewAttribute id="DATE_MODIFIED"/>
+      <viewAttribute id="USERNAME"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="RECORDMODE" source="RECORDMODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAGR" source="STAGR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MSEHI" source="MSEHI"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GRTYP" source="GRTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HKTYP" source="HKTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STRUCT" source="STRUCT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KENNZ" source="KENNZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="W_FLAG" source="W_FLAG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="M_PLAN" source="M_PLAN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="M_IST" source="M_IST"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SPRAS" source="SPRAS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BEZEI" source="BEZEI"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZMISOPCOD" source="ZMISOPCOD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZMISMOHCD" source="ZMISMOHCD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZSTATUS" source="ZSTATUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZMISLONGD" source="ZMISLONGD"/>
+    </input>
+    <input node="Projection_4">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DATE_MODIFIED" source="DATE_MODIFIED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="USERNAME" source="USERNAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAGR" source="STAGR"/>
+    </input>
+    <joinAttribute name="KOKRS"/>
+    <joinAttribute name="STAGR"/>
+  </calculationView>
 </calculationViews>
-  <logicalModel id="Join_1">
+  <logicalModel id="Join_2">
     <descriptions/>
     <attributes>
       <attribute id="KOKRS" order="1" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="KOKRS"/>
-        <keyMapping columnObjectName="Join_1" columnName="KOKRS"/>
+        <keyMapping columnObjectName="Join_2" columnName="KOKRS"/>
       </attribute>
       <attribute id="STAGR" order="2" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="STAGR"/>
-        <keyMapping columnObjectName="Join_1" columnName="STAGR"/>
+        <keyMapping columnObjectName="Join_2" columnName="STAGR"/>
       </attribute>
       <attribute id="MSEHI" order="3" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="MSEHI"/>
-        <keyMapping columnObjectName="Join_1" columnName="MSEHI"/>
+        <keyMapping columnObjectName="Join_2" columnName="MSEHI"/>
       </attribute>
       <attribute id="GRTYP" order="4" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="GRTYP"/>
-        <keyMapping columnObjectName="Join_1" columnName="GRTYP"/>
+        <keyMapping columnObjectName="Join_2" columnName="GRTYP"/>
       </attribute>
       <attribute id="ZSTATUS" order="5" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="ZSTATUS"/>
-        <keyMapping columnObjectName="Join_1" columnName="ZSTATUS"/>
+        <keyMapping columnObjectName="Join_2" columnName="ZSTATUS"/>
       </attribute>
       <attribute id="ZMISOPCOD" order="6" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="ZMISOPCOD"/>
-        <keyMapping columnObjectName="Join_1" columnName="ZMISOPCOD"/>
+        <keyMapping columnObjectName="Join_2" columnName="ZMISOPCOD"/>
       </attribute>
       <attribute id="ZMISMOHCD" order="7" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="ZMISMOHCD"/>
-        <keyMapping columnObjectName="Join_1" columnName="ZMISMOHCD"/>
+        <keyMapping columnObjectName="Join_2" columnName="ZMISMOHCD"/>
       </attribute>
-      <attribute id="ENTRYDATE" order="8" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions/>
-        <keyMapping columnObjectName="Join_1" columnName="ENTRYDATE"/>
+      <attribute id="ENTRYDATE" order="8" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="ENTRYDATE"/>
+        <keyMapping columnObjectName="Join_2" columnName="DATE_MODIFIED"/>
       </attribute>
-      <attribute id="USERNAME" order="9" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions/>
-        <keyMapping columnObjectName="Join_1" columnName="USERNAME"/>
+      <attribute id="USERNAME" order="9" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="USERNAME"/>
+        <keyMapping columnObjectName="Join_2" columnName="USERNAME"/>
       </attribute>
       <attribute id="SPRAS" order="10" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="SPRAS"/>
-        <keyMapping columnObjectName="Join_1" columnName="SPRAS"/>
+        <keyMapping columnObjectName="Join_2" columnName="SPRAS"/>
       </attribute>
       <attribute id="BEZEI" order="11" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="BEZEI"/>
-        <keyMapping columnObjectName="Join_1" columnName="BEZEI"/>
+        <keyMapping columnObjectName="Join_2" columnName="BEZEI"/>
       </attribute>
       <attribute id="RECORDMODE" order="12" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="RECORDMODE"/>
-        <keyMapping columnObjectName="Join_1" columnName="RECORDMODE"/>
+        <keyMapping columnObjectName="Join_2" columnName="RECORDMODE"/>
       </attribute>
       <attribute id="ZMISLONGD" order="13" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="ZMISLONGD"/>
-        <keyMapping columnObjectName="Join_1" columnName="ZMISLONGD"/>
+        <keyMapping columnObjectName="Join_2" columnName="ZMISLONGD"/>
       </attribute>
     </attributes>
     <calculatedAttributes/>
@@ -191,20 +255,20 @@
 <layout>
   <shapes>
       <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-        <upperLeftCorner x="99" y="87"/>
-        <rectangleSize height="0" width="0"/>
+        <upperLeftCorner x="221.11302679000914" y="112"/>
+        <rectangleSize height="0" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="22" y="261"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="92.00000000000001" y="376.9999988079071"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="176" y="261"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="302.00000000000006" y="376.9999988079071"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="99" y="165"/>
-        <rectangleSize height="-1" width="-1"/>
+        <upperLeftCorner x="221.11302679000914" y="217"/>
+        <rectangleSize height="-1" width="160"/>
       </shape>
     
     <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
@@ -214,6 +278,23 @@
     <shape modelObjectName="Projection_3" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_4" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="438" y="261"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="382" y="95"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Join_1" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_4" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="136.0234375"/>
     </shape>
   </shapes>
 </layout>
