@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CA_MD_FILE_GRFND" applyPrivilegeType="NONE" dataCategory="DIMENSION" dimensionType="STANDARD" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
 <descriptions defaultDescription="CA_MD_FILE_GRFND"/>
-<localVariables/>
+<localVariables>
+  <variable id="IP_COMPANY" parameter="true">
+    <descriptions defaultDescription=""/>
+    <variableProperties datatype="NVARCHAR" length="4" scale="NaN" mandatory="true">
+      <valueDomain type="AttributeValue">
+        <attribute name="COMPANY_CODE"/>
+      </valueDomain>
+      <selection multiLine="true" type="SingleValue"/>
+    </variableProperties>
+  </variable>
+</localVariables>
 <variableMappings/>
 <dataSources>
   <DataSource id="ECC_GMGRSPONSOREDOBJ">
     <resourceUri>ECC_GMGRSPONSOREDOBJ</resourceUri>
+  </DataSource>
+  <DataSource id="ECC_GMGR">
+    <resourceUri>ECC_GMGR</resourceUri>
   </DataSource>
 </dataSources>
 <calculationViews>
@@ -24,46 +37,61 @@
     <calculatedViewAttributes/>
     <input node="ECC_GMGRSPONSOREDOBJ"/>
   </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="GRANT_NBR"/>
+      <viewAttribute id="COMPANY_CODE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="ECC_GMGR"/>
+    <filter>&quot;COMPANY_CODE&quot; IN ($$IP_COMPANY$$)</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" cardinality="CN_N" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="GRANT_NBR"/>
+      <viewAttribute id="SPONSORED_PROG"/>
+      <viewAttribute id="SPONSORED_CLASS"/>
+      <viewAttribute id="FM_AREA"/>
+      <viewAttribute id="FUND"/>
+      <viewAttribute id="PLAN_ALLOWED"/>
+      <viewAttribute id="BUDGET_ALLOWED"/>
+      <viewAttribute id="ACTUALS_ALLOWED"/>
+      <viewAttribute id="COMPANY_CODE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Projection_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GRANT_NBR" source="GRANT_NBR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SPONSORED_PROG" source="SPONSORED_PROG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SPONSORED_CLASS" source="SPONSORED_CLASS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FM_AREA" source="FM_AREA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FUND" source="FUND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PLAN_ALLOWED" source="PLAN_ALLOWED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUDGET_ALLOWED" source="BUDGET_ALLOWED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUALS_ALLOWED" source="ACTUALS_ALLOWED"/>
+    </input>
+    <input node="Projection_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CODE" source="COMPANY_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GRANT_NBR" source="GRANT_NBR"/>
+    </input>
+    <joinAttribute name="GRANT_NBR"/>
+  </calculationView>
 </calculationViews>
-<logicalModel id="Projection_1">
+<logicalModel id="Join_1">
   <attributes>
-    <attribute id="CLIENT" order="1" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="CLIENT"/>
-      <keyMapping columnObjectName="Projection_1" columnName="CLIENT"/>
-    </attribute>
-    <attribute id="GRANT_NBR" order="2" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="GRANT_NBR" order="1" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="GRANT_NBR"/>
-      <keyMapping columnObjectName="Projection_1" columnName="GRANT_NBR"/>
+      <keyMapping columnObjectName="Join_1" columnName="GRANT_NBR"/>
     </attribute>
-    <attribute id="SPONSORED_PROG" order="3" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="SPONSORED_PROG"/>
-      <keyMapping columnObjectName="Projection_1" columnName="SPONSORED_PROG"/>
+    <attribute id="COMPANY_CODE" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="COMPANY_CODE"/>
+      <keyMapping columnObjectName="Join_1" columnName="COMPANY_CODE"/>
     </attribute>
-    <attribute id="SPONSORED_CLASS" order="4" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="SPONSORED_CLASS"/>
-      <keyMapping columnObjectName="Projection_1" columnName="SPONSORED_CLASS"/>
-    </attribute>
-    <attribute id="FM_AREA" order="5" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="FM_AREA"/>
-      <keyMapping columnObjectName="Projection_1" columnName="FM_AREA"/>
-    </attribute>
-    <attribute id="FUND" order="6" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="FUND" order="3" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="FUND"/>
-      <keyMapping columnObjectName="Projection_1" columnName="FUND"/>
-    </attribute>
-    <attribute id="PLAN_ALLOWED" order="7" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="PLAN_ALLOWED"/>
-      <keyMapping columnObjectName="Projection_1" columnName="PLAN_ALLOWED"/>
-    </attribute>
-    <attribute id="BUDGET_ALLOWED" order="8" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="BUDGET_ALLOWED"/>
-      <keyMapping columnObjectName="Projection_1" columnName="BUDGET_ALLOWED"/>
-    </attribute>
-    <attribute id="ACTUALS_ALLOWED" order="9" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="ACTUALS_ALLOWED"/>
-      <keyMapping columnObjectName="Projection_1" columnName="ACTUALS_ALLOWED"/>
-    </attribute>
-  </attributes>
+      <keyMapping columnObjectName="Join_1" columnName="FUND"/>
+    </attribute></attributes>
   <calculatedAttributes/>
   <baseMeasures/>
   <calculatedMeasures/>
@@ -72,12 +100,31 @@
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="40" y="85"/>
+      <upperLeftCorner x="221.11302679000914" y="112"/>
+    
+      <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="100" y="234"/>
+      <upperLeftCorner x="92.00000000000001" y="376.9999988079071"/>
       <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302.00000000000006" y="376.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="221.11302679000914" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="178"/>
     </shape>
   </shapes>
 </layout>
