@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" id="CV_OUT_DIM_GRPGM" applyPrivilegeType="NONE" dataCategory="DIMENSION" dimensionType="STANDARD" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
-<descriptions defaultDescription="CV_OUT_DIM_GRPGM"/>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CA_MD_FILE_GRFND" applyPrivilegeType="NONE" dataCategory="DIMENSION" dimensionType="STANDARD" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="CA_MD_FILE_GRFND"/>
 <localVariables>
   <variable id="IP_COMPANY" parameter="true">
     <descriptions defaultDescription=""/>
     <variableProperties datatype="NVARCHAR" length="4" scale="NaN" mandatory="true">
       <valueDomain type="AttributeValue">
-        <externalLikeStructureName>ECC_T001</externalLikeStructureName>
-        <externalLikeElementName>BUKRS</externalLikeElementName>
+        <attribute name="COMPANY_CODE"/>
       </valueDomain>
       <selection multiLine="true" type="SingleValue"/>
     </variableProperties>
@@ -25,8 +24,15 @@
 <calculationViews>
   <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
     <viewAttributes>
+      <viewAttribute id="CLIENT"/>
       <viewAttribute id="GRANT_NBR"/>
       <viewAttribute id="SPONSORED_PROG"/>
+      <viewAttribute id="SPONSORED_CLASS"/>
+      <viewAttribute id="FM_AREA"/>
+      <viewAttribute id="FUND"/>
+      <viewAttribute id="PLAN_ALLOWED"/>
+      <viewAttribute id="BUDGET_ALLOWED"/>
+      <viewAttribute id="ACTUALS_ALLOWED"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="ECC_GMGRSPONSOREDOBJ"/>
@@ -42,14 +48,28 @@
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="Join_1" cardinality="CN_N" joinType="leftOuter">
     <viewAttributes>
+      <viewAttribute id="CLIENT"/>
       <viewAttribute id="GRANT_NBR"/>
-      <viewAttribute id="COMPANY_CODE"/>
       <viewAttribute id="SPONSORED_PROG"/>
+      <viewAttribute id="SPONSORED_CLASS"/>
+      <viewAttribute id="FM_AREA"/>
+      <viewAttribute id="FUND"/>
+      <viewAttribute id="PLAN_ALLOWED"/>
+      <viewAttribute id="BUDGET_ALLOWED"/>
+      <viewAttribute id="ACTUALS_ALLOWED"/>
+      <viewAttribute id="COMPANY_CODE"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="Projection_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="GRANT_NBR" source="GRANT_NBR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="SPONSORED_PROG" source="SPONSORED_PROG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SPONSORED_CLASS" source="SPONSORED_CLASS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FM_AREA" source="FM_AREA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FUND" source="FUND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PLAN_ALLOWED" source="PLAN_ALLOWED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUDGET_ALLOWED" source="BUDGET_ALLOWED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUALS_ALLOWED" source="ACTUALS_ALLOWED"/>
     </input>
     <input node="Projection_2">
       <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CODE" source="COMPANY_CODE"/>
@@ -68,40 +88,43 @@
       <descriptions defaultDescription="COMPANY_CODE"/>
       <keyMapping columnObjectName="Join_1" columnName="COMPANY_CODE"/>
     </attribute>
-    <attribute id="SPONSORED_PROG" order="3" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="SPONSORED_PROG"/>
-      <keyMapping columnObjectName="Join_1" columnName="SPONSORED_PROG"/>
-    </attribute>
-  </attributes>
+    <attribute id="FUND" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="FUND"/>
+      <keyMapping columnObjectName="Join_1" columnName="FUND"/>
+    </attribute></attributes>
   <calculatedAttributes/>
   <baseMeasures/>
   <calculatedMeasures/>
-  <restrictedMeasures/></logicalModel>
+  <restrictedMeasures/>
+</logicalModel>
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="40" y="85"/>
+      <upperLeftCorner x="221.11302679000914" y="112"/>
+    
+      <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="-107" y="297"/>
-      <rectangleSize height="30" width="227"/>
+      <upperLeftCorner x="92.00000000000001" y="376.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
     </shape>
+  
     <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="186" y="314"/>
+      <upperLeftCorner x="302.00000000000006" y="376.9999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="183"/>
+      <upperLeftCorner x="221.11302679000914" y="217"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="136"/>
+      <rectangleSize width="250"/>
     </shape>
     <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
-      <rectangleSize width="136"/>
+      <rectangleSize width="178"/>
     </shape>
   </shapes>
 </layout>
