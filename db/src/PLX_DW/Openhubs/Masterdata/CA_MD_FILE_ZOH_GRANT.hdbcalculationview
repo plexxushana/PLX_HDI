@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="3.0" id="plx_analytics::CA_MD_FILE_ZOH_GRANT" applyPrivilegeType="NONE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection" xscCompatibilityMode="true">
   <descriptions defaultDescription="CA_DIM_GRANTS"/>
-  <localVariables/>
+  <localVariables>
+    <variable id="IP_COMPANY" parameter="true">
+      <descriptions defaultDescription=""/>
+      <variableProperties datatype="NVARCHAR" length="4" scale="NaN" mandatory="true">
+        <valueDomain type="AttributeValue">
+          <attribute name="COMPANY_CODE"/>
+        </valueDomain>
+        <selection multiLine="true" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
   <variableMappings/>
   <informationModelLayout relativeWidthScenario="27"/>
   <dataSources>
@@ -88,71 +98,71 @@
     <input node="ECC_GMGR"/>
   </calculationView>
 </calculationViews>
-  <logicalModel id="Join_1">
+  <logicalModel id="Join_1" filterExpressionLanguage="SQL">
     <descriptions/>
     <attributes>
       <attribute id="GRANT_NBR" order="1" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="GRANT_NBR"/>
+        <descriptions defaultDescription="Grant"/>
         <keyMapping columnObjectName="Join_1" columnName="GRANT_NBR"/>
       </attribute>
       <attribute id="PARTNER" order="2" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="PARTNER"/>
+        <descriptions defaultDescription="Sponsor"/>
         <keyMapping columnObjectName="Join_1" columnName="PARTNER"/>
       </attribute>
       <attribute id="COMPANY_CODE" order="3" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="COMPANY_CODE"/>
+        <descriptions defaultDescription="Company Code"/>
         <keyMapping columnObjectName="Join_1" columnName="COMPANY_CODE"/>
       </attribute>
       <attribute id="SHORT_DESC" order="4" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="SHORT_DESC"/>
+        <descriptions defaultDescription="Short Description"/>
         <keyMapping columnObjectName="Join_1" columnName="SHORT_DESC"/>
       </attribute>
       <attribute id="DESCRIPTION" order="5" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="DESCRIPTION"/>
+        <descriptions defaultDescription="Long Description"/>
         <keyMapping columnObjectName="Join_1" columnName="DESCRIPTION"/>
       </attribute>
       <attribute id="AWARD_TYPE" order="6" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="AWARD_TYPE"/>
+        <descriptions defaultDescription="Award Type"/>
         <keyMapping columnObjectName="Join_1" columnName="AWARD_TYPE"/>
       </attribute>
       <attribute id="ZZAVC_IND_CODE" order="7" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="ZZAVC_IND_CODE"/>
+        <descriptions defaultDescription="AVC Indicator"/>
         <keyMapping columnObjectName="Join_1" columnName="ZZAVC_IND_CODE"/>
       </attribute>
       <attribute id="ZZTOLPROF" order="8" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="ZZTOLPROF"/>
+        <descriptions defaultDescription="AVC Profile"/>
         <keyMapping columnObjectName="Join_1" columnName="ZZTOLPROF"/>
       </attribute>
       <attribute id="EXT_REFERENCE" order="9" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="EXT_REFERENCE"/>
+        <descriptions defaultDescription="Grant Ident. - Ext"/>
         <keyMapping columnObjectName="Join_1" columnName="EXT_REFERENCE"/>
       </attribute>
       <attribute id="INT_REFERENCE" order="10" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="INT_REFERENCE"/>
+        <descriptions defaultDescription="Grant Ident. - Int"/>
         <keyMapping columnObjectName="Join_1" columnName="INT_REFERENCE"/>
       </attribute>
       <attribute id="GRANT_FY_VARIANT" order="11" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="GRANT_FY_VARIANT"/>
+        <descriptions defaultDescription="Fiscal Year Variant"/>
         <keyMapping columnObjectName="Join_1" columnName="GRANT_FY_VARIANT"/>
       </attribute>
       <attribute id="SPLITTING_RULE" order="12" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="SPLITTING_RULE"/>
+        <descriptions defaultDescription="Splitting Rule"/>
         <keyMapping columnObjectName="Join_1" columnName="SPLITTING_RULE"/>
       </attribute>
       <attribute id="VALID_FROM" order="13" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="VALID_FROM"/>
+        <descriptions defaultDescription="Valid-from Date"/>
         <keyMapping columnObjectName="Join_1" columnName="VALID_FROM"/>
       </attribute>
       <attribute id="VALID_TO" order="14" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="VALID_TO"/>
+        <descriptions defaultDescription="Valid-To Date"/>
         <keyMapping columnObjectName="Join_1" columnName="VALID_TO"/>
       </attribute>
       <attribute id="GRANT_TOTAL" order="15" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="GRANT_TOTAL"/>
+        <descriptions defaultDescription="Total Grant Value"/>
         <keyMapping columnObjectName="Join_1" columnName="GRANT_TOTAL"/>
       </attribute>
       <attribute id="ORDERID" order="16" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="ORDERID"/>
+        <descriptions defaultDescription="Internal Order"/>
         <keyMapping columnObjectName="Join_1" columnName="ORDERID"/>
       </attribute>
     </attributes>
@@ -168,32 +178,34 @@
     <calculatedMeasures/>
     <restrictedMeasures/>
     <localDimensions/>
+  
+    <filter>&quot;COMPANY_CODE&quot; IN ($$IP_COMPANY$$)</filter>
   </logicalModel>
 <layout>
   <shapes>
       <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-        <upperLeftCorner x="92.00000000000009" y="112"/>
+        <upperLeftCorner x="221" y="112"/>
         <rectangleSize height="0" width="160"/>
       </shape>
     
     <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="527" y="248"/>
+      <upperLeftCorner x="92" y="376"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="104" y="203"/>
+      <upperLeftCorner x="221" y="217"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="136.0234375"/>
+      <rectangleSize width="136"/>
     </shape>
     <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
-      <rectangleSize width="161.173828125"/>
+      <rectangleSize width="161"/>
     </shape>
     <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="297" y="256"/>
+      <upperLeftCorner x="302" y="376"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   </shapes>
