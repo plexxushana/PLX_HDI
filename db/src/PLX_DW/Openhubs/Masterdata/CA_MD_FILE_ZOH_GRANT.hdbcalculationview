@@ -21,6 +21,9 @@
     <DataSource id="ECC_GMGR">
       <resourceUri>ECC_GMGR</resourceUri>
     </DataSource>
+    <DataSource id="ECC_AUFK">
+      <resourceUri>ECC_AUFK</resourceUri>
+    </DataSource>
   </dataSources>
 <calculationViews>
   <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1" filterExpressionLanguage="SQL">
@@ -34,7 +37,7 @@
     <input node="ECC_GMGRTEXTS"/>
     <filter>&quot;LANGUAGE&quot; = 'E'</filter>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="Join_1" cardinality="CN_N" joinType="leftOuter">
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" cardinality="CN_N" joinType="leftOuter" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="GRANT_NBR"/>
       <viewAttribute id="SHORT_DESC"/>
@@ -75,6 +78,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="DESCRIPTION" source="DESCRIPTION"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="GRANT_NBR" source="GRANT_NBR"/>
     </input>
+    <filter>&quot;COMPANY_CODE&quot; IN ($$IP_COMPANY$$)</filter>
     <joinAttribute name="GRANT_NBR"/>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
@@ -97,73 +101,124 @@
     <calculatedViewAttributes/>
     <input node="ECC_GMGR"/>
   </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
+    <viewAttributes>
+      <viewAttribute id="AUFNR"/>
+      <viewAttribute id="ZZGRANT"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="ECC_AUFK"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2" cardinality="CN_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="GRANT_NBR"/>
+      <viewAttribute id="SHORT_DESC"/>
+      <viewAttribute id="DESCRIPTION"/>
+      <viewAttribute id="PARTNER"/>
+      <viewAttribute id="COMPANY_CODE"/>
+      <viewAttribute id="AWARD_TYPE"/>
+      <viewAttribute id="ZZAVC_IND_CODE"/>
+      <viewAttribute id="ZZTOLPROF"/>
+      <viewAttribute id="EXT_REFERENCE"/>
+      <viewAttribute id="INT_REFERENCE"/>
+      <viewAttribute id="GRANT_FY_VARIANT"/>
+      <viewAttribute id="SPLITTING_RULE"/>
+      <viewAttribute id="VALID_FROM"/>
+      <viewAttribute id="VALID_TO"/>
+      <viewAttribute id="GRANT_TOTAL"/>
+      <viewAttribute id="AUFNR"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="GRANT_NBR" source="GRANT_NBR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SHORT_DESC" source="SHORT_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DESCRIPTION" source="DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CODE" source="COMPANY_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AWARD_TYPE" source="AWARD_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZAVC_IND_CODE" source="ZZAVC_IND_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZTOLPROF" source="ZZTOLPROF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EXT_REFERENCE" source="EXT_REFERENCE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INT_REFERENCE" source="INT_REFERENCE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GRANT_FY_VARIANT" source="GRANT_FY_VARIANT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SPLITTING_RULE" source="SPLITTING_RULE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GRANT_TOTAL" source="GRANT_TOTAL"/>
+    </input>
+    <input node="Projection_3">
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUFNR" source="AUFNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GRANT_NBR" source="ZZGRANT"/>
+    </input>
+    <joinAttribute name="GRANT_NBR"/>
+  </calculationView>
 </calculationViews>
-  <logicalModel id="Join_1" filterExpressionLanguage="SQL">
+  <logicalModel id="Join_2" filterExpressionLanguage="SQL">
     <descriptions/>
     <attributes>
       <attribute id="GRANT_NBR" order="1" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="Grant"/>
-        <keyMapping columnObjectName="Join_1" columnName="GRANT_NBR"/>
+        <keyMapping columnObjectName="Join_2" columnName="GRANT_NBR"/>
       </attribute>
       <attribute id="PARTNER" order="2" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="Sponsor"/>
-        <keyMapping columnObjectName="Join_1" columnName="PARTNER"/>
+        <keyMapping columnObjectName="Join_2" columnName="PARTNER"/>
       </attribute>
       <attribute id="COMPANY_CODE" order="3" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="Company Code"/>
-        <keyMapping columnObjectName="Join_1" columnName="COMPANY_CODE"/>
+        <keyMapping columnObjectName="Join_2" columnName="COMPANY_CODE"/>
       </attribute>
       <attribute id="SHORT_DESC" order="4" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="Short Description"/>
-        <keyMapping columnObjectName="Join_1" columnName="SHORT_DESC"/>
+        <keyMapping columnObjectName="Join_2" columnName="SHORT_DESC"/>
       </attribute>
       <attribute id="DESCRIPTION" order="5" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="Long Description"/>
-        <keyMapping columnObjectName="Join_1" columnName="DESCRIPTION"/>
+        <keyMapping columnObjectName="Join_2" columnName="DESCRIPTION"/>
       </attribute>
       <attribute id="AWARD_TYPE" order="6" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="Award Type"/>
-        <keyMapping columnObjectName="Join_1" columnName="AWARD_TYPE"/>
+        <keyMapping columnObjectName="Join_2" columnName="AWARD_TYPE"/>
       </attribute>
       <attribute id="ZZAVC_IND_CODE" order="7" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="AVC Indicator"/>
-        <keyMapping columnObjectName="Join_1" columnName="ZZAVC_IND_CODE"/>
+        <keyMapping columnObjectName="Join_2" columnName="ZZAVC_IND_CODE"/>
       </attribute>
       <attribute id="ZZTOLPROF" order="8" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="AVC Profile"/>
-        <keyMapping columnObjectName="Join_1" columnName="ZZTOLPROF"/>
+        <keyMapping columnObjectName="Join_2" columnName="ZZTOLPROF"/>
       </attribute>
       <attribute id="EXT_REFERENCE" order="9" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="Grant Ident. - Ext"/>
-        <keyMapping columnObjectName="Join_1" columnName="EXT_REFERENCE"/>
+        <keyMapping columnObjectName="Join_2" columnName="EXT_REFERENCE"/>
       </attribute>
       <attribute id="INT_REFERENCE" order="10" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="Grant Ident. - Int"/>
-        <keyMapping columnObjectName="Join_1" columnName="INT_REFERENCE"/>
+        <keyMapping columnObjectName="Join_2" columnName="INT_REFERENCE"/>
       </attribute>
       <attribute id="GRANT_FY_VARIANT" order="11" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="Fiscal Year Variant"/>
-        <keyMapping columnObjectName="Join_1" columnName="GRANT_FY_VARIANT"/>
+        <keyMapping columnObjectName="Join_2" columnName="GRANT_FY_VARIANT"/>
       </attribute>
       <attribute id="SPLITTING_RULE" order="12" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="Splitting Rule"/>
-        <keyMapping columnObjectName="Join_1" columnName="SPLITTING_RULE"/>
+        <keyMapping columnObjectName="Join_2" columnName="SPLITTING_RULE"/>
       </attribute>
       <attribute id="VALID_FROM" order="13" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="Valid-from Date"/>
-        <keyMapping columnObjectName="Join_1" columnName="VALID_FROM"/>
+        <keyMapping columnObjectName="Join_2" columnName="VALID_FROM"/>
       </attribute>
       <attribute id="VALID_TO" order="14" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="Valid-To Date"/>
-        <keyMapping columnObjectName="Join_1" columnName="VALID_TO"/>
+        <keyMapping columnObjectName="Join_2" columnName="VALID_TO"/>
       </attribute>
       <attribute id="GRANT_TOTAL" order="15" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="Total Grant Value"/>
-        <keyMapping columnObjectName="Join_1" columnName="GRANT_TOTAL"/>
+        <keyMapping columnObjectName="Join_2" columnName="GRANT_TOTAL"/>
       </attribute>
-      <attribute id="ORDERID" order="16" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="Internal Order"/>
-        <keyMapping columnObjectName="Join_1" columnName="ORDERID"/>
+      <attribute id="AUFNR" order="16" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Order Number"/>
+        <keyMapping columnObjectName="Join_2" columnName="AUFNR"/>
       </attribute>
     </attributes>
     <calculatedAttributes/>
@@ -176,24 +231,20 @@
     </privateDataFoundation>
     <baseMeasures/>
     <calculatedMeasures/>
-    <restrictedMeasures/>
-    <localDimensions/>
-  
-    <filter>&quot;COMPANY_CODE&quot; IN ($$IP_COMPANY$$)</filter>
-  </logicalModel>
+    <restrictedMeasures/></logicalModel>
 <layout>
   <shapes>
       <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-        <upperLeftCorner x="221" y="112"/>
+        <upperLeftCorner x="328.6900820831794" y="112"/>
         <rectangleSize height="0" width="160"/>
       </shape>
     
     <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="376"/>
+      <upperLeftCorner x="92" y="536.9999976158142"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="221" y="217"/>
+      <upperLeftCorner x="118.66666666666666" y="376.9999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
@@ -205,8 +256,25 @@
       <rectangleSize width="161"/>
     </shape>
     <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="302" y="376"/>
+      <upperLeftCorner x="302" y="536.9999976158142"/>
       <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="395.83468516943316" y="376.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="328.6900820831794" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Join_1" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_3" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="136.0234375"/>
     </shape>
   </shapes>
 </layout>
