@@ -20,6 +20,9 @@
   <DataSource id="ECC_GMGR">
     <resourceUri>ECC_GMGR</resourceUri>
   </DataSource>
+  <DataSource id="ECC_FMFINCODE">
+    <resourceUri>ECC_FMFINCODE</resourceUri>
+  </DataSource>
 </dataSources>
 <calculationViews>
   <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
@@ -75,47 +78,118 @@
     </input>
     <joinAttribute name="GRANT_NBR"/>
   </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
+    <viewAttributes>
+      <viewAttribute id="MANDT"/>
+      <viewAttribute id="FIKRS"/>
+      <viewAttribute id="FINCODE"/>
+      <viewAttribute id="TYPE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="ECC_FMFINCODE"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_4" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="GRANT_NBR"/>
+      <viewAttribute id="SPONSORED_PROG"/>
+      <viewAttribute id="SPONSORED_CLASS"/>
+      <viewAttribute id="FM_AREA"/>
+      <viewAttribute id="FUND"/>
+      <viewAttribute id="PLAN_ALLOWED"/>
+      <viewAttribute id="BUDGET_ALLOWED"/>
+      <viewAttribute id="ACTUALS_ALLOWED"/>
+      <viewAttribute id="COMPANY_CODE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_1"/>
+    <filter>&quot;COMPANY_CODE&quot; IN ($$IP_COMPANY$$)</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2" cardinality="CN_N" joinType="inner" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="CLIENT"/>
+      <viewAttribute id="GRANT_NBR"/>
+      <viewAttribute id="SPONSORED_PROG"/>
+      <viewAttribute id="SPONSORED_CLASS"/>
+      <viewAttribute id="FM_AREA"/>
+      <viewAttribute id="FUND"/>
+      <viewAttribute id="PLAN_ALLOWED"/>
+      <viewAttribute id="BUDGET_ALLOWED"/>
+      <viewAttribute id="ACTUALS_ALLOWED"/>
+      <viewAttribute id="COMPANY_CODE"/>
+      <viewAttribute id="TYPE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Projection_4">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GRANT_NBR" source="GRANT_NBR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SPONSORED_PROG" source="SPONSORED_PROG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SPONSORED_CLASS" source="SPONSORED_CLASS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FM_AREA" source="FM_AREA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FUND" source="FUND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PLAN_ALLOWED" source="PLAN_ALLOWED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUDGET_ALLOWED" source="BUDGET_ALLOWED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUALS_ALLOWED" source="ACTUALS_ALLOWED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CODE" source="COMPANY_CODE"/>
+    </input>
+    <input node="Projection_3">
+      <mapping xsi:type="Calculation:AttributeMapping" target="TYPE" source="TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="MANDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FM_AREA" source="FIKRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FUND" source="FINCODE"/>
+    </input>
+    <filter>&quot;TYPE&quot; = 'EXT'</filter>
+    <joinAttribute name="CLIENT"/>
+    <joinAttribute name="FM_AREA"/>
+    <joinAttribute name="FUND"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1">
+    <viewAttributes>
+      <viewAttribute id="GRANT_NBR"/>
+      <viewAttribute id="FUND"/>
+      <viewAttribute id="COMPANY_CODE"/></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="Join_2"/>
+  </calculationView>
 </calculationViews>
-<logicalModel id="Join_1" filterExpressionLanguage="SQL">
+<logicalModel id="Aggregation_1">
   <attributes>
     <attribute id="GRANT_NBR" order="1" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Grant"/>
-      <keyMapping columnObjectName="Join_1" columnName="GRANT_NBR"/>
+      <keyMapping columnObjectName="Aggregation_1" columnName="GRANT_NBR"/>
     </attribute>
     <attribute id="COMPANY_CODE" order="2" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Company Code"/>
-      <keyMapping columnObjectName="Join_1" columnName="COMPANY_CODE"/>
+      <keyMapping columnObjectName="Aggregation_1" columnName="COMPANY_CODE"/>
     </attribute>
     <attribute id="FUND" order="3" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Fund"/>
-      <keyMapping columnObjectName="Join_1" columnName="FUND"/>
+      <keyMapping columnObjectName="Aggregation_1" columnName="FUND"/>
     </attribute></attributes>
   <calculatedAttributes/>
   <baseMeasures/>
   <calculatedMeasures/>
-  <restrictedMeasures/>
-
-  <filter>&quot;COMPANY_CODE&quot; IN ($$IP_COMPANY$$)</filter>
-</logicalModel>
+  <restrictedMeasures/></logicalModel>
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="221" y="112"/>
+      <upperLeftCorner x="254" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="376"/>
+      <upperLeftCorner x="113" y="806"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="302" y="376"/>
+      <upperLeftCorner x="323" y="806"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="221" y="217"/>
+      <upperLeftCorner x="232" y="646"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
@@ -125,6 +199,31 @@
     <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="178"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="501"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_4" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302" y="501"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="232" y="341"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Projection_4" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="31" y="35"/>
+      <rectangleSize width="198"/>
+    </shape>
+    <shape modelObjectName="Projection_3" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="136"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="232" y="236"/>
+      <rectangleSize height="30" width="160"/>
     </shape>
   </shapes>
 </layout>
