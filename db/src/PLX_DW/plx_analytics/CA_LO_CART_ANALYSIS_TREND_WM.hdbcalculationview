@@ -336,6 +336,8 @@
       <viewAttribute id="MAT_BIN_NUM"/>
     
       <viewAttribute id="MAKTX_TREND_TRANS"/>
+    
+      <viewAttribute id="CURRENT_PERIOD"/>
     </viewAttributes>
     <calculatedViewAttributes/>
       <input node="Projection_1"/>
@@ -382,6 +384,8 @@
       <viewAttribute id="MAT_BIN_NUM"/>
     
       <viewAttribute id="MAKTX_TREND_TRANS"/>
+    
+      <viewAttribute id="CURRENT_PERIOD"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -475,15 +479,10 @@
       <viewAttribute id="MAT_BIN_NUM"/>
       <viewAttribute id="PROF_MAXQTY"/>
       <viewAttribute id="MATNR"/>
+      <viewAttribute hidden="true" id="JOIN$MATNR_LPAD$MATNR"/>
     </viewAttributes>
     <calculatedViewAttributes/>
-      <input node="Join_2">
-        <mapping xsi:type="Calculation:AttributeMapping" target="MFRNR" source="MFRNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="NAME1" source="NAME1"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
-      </input>
-    <input node="Union_1">
+    <input node="Join_4">
       <mapping xsi:type="Calculation:AttributeMapping" target="Z_NR_SCANS" source="Z_NR_SCANS"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="Z_STOCKOUT_NO" source="Z_STOCKOUT_NO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PROF_UOM" source="PROF_UOM"/>
@@ -526,11 +525,18 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MAT_BIN_NUM" source="MAT_BIN_NUM"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PROF_MAXQTY" source="PROF_MAXQTY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MATNR_LPAD$MATNR" source="MATNR_LPAD"/>
     </input>
-    <joinAttribute name="MATNR"/>
+      <input node="Join_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MFRNR" source="MFRNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NAME1" source="NAME1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MATNR_LPAD$MATNR" source="MATNR"/>
+      </input>
+    <joinAttribute name="JOIN$MATNR_LPAD$MATNR"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:UnionView" id="Union_1">
+  <calculationView xsi:type="Calculation:JoinView" id="Join_4" joinType="fullOuter">
     <viewAttributes>
       <viewAttribute id="Z_NR_SCANS" aggregationType="sum"/>
       <viewAttribute id="Z_STOCKOUT_NO" aggregationType="sum"/>
@@ -574,67 +580,15 @@
       <viewAttribute id="WAERS"/>
       <viewAttribute id="MAT_BIN_NUM"/>
       <viewAttribute id="PROF_MAXQTY"/>
-    
-      <viewAttribute id="MATNR"/></viewAttributes>
+      <viewAttribute id="MATNR_LPAD"/>
+      <viewAttribute id="MATNR"/>
+      <viewAttribute hidden="true" id="JOIN$CART_LI_PLATE$CART_LI_PLATE"/>
+      <viewAttribute hidden="true" id="JOIN$CURRENT_PERIOD$CURRENT_PERIOD"/>
+    </viewAttributes>
     <calculatedViewAttributes/>
-    <input node="Aggregation_1" emptyUnionBehavior="NO_ROW">
-      <mapping xsi:type="Calculation:AttributeMapping" target="Z_NR_SCANS" source="Z_NR_SCANS"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="Z_STOCKOUT_NO" source="Z_STOCKOUT_NO"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PROF_UOM" source="PROF_UOM"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CART_LI_PLATE" source="CART_LI_PLATE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+    <input node="Aggregation_3">
       <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ROP" source="ROP"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MAKTX" source="MAKTX"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CURRENT_PERIOD" source="CURRENT_PERIOD"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STATUS" source="STATUS"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CART_TYPE" source="CART_TYPE"/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="KOKRS" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="KOSTL" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="AUFNR" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Z_COUNTER" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="DEPT" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="COST_CEN" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="DTLASTSCAN" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Z_QTY_PROFUOM" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="INT_SUP_LOC" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="MFRPN" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IDNLF" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Z_CONTRACT_PRICE" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PROF_ROP" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PROF_RNDVAL" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="QTY_PERIOD1" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="QTY_PERIOD2" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="QTY_PERIOD3" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="QTY_PERIOD4" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="QTY_PERIOD5" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="QTY_PERIOD6" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="QTY_PERIOD7" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="QTY_PERIOD8" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="QTY_PERIOD9" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="QTY_PERIOD10" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="QTY_PERIOD11" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="QTY_PERIOD12" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ROUND_VALUE" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="WAERS" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="MAT_BIN_NUM" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PROF_MAXQTY" null="true" value=""/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR_LPAD"/>
-    </input>
-    <input node="Aggregation_3" emptyUnionBehavior="NO_ROW">
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Z_NR_SCANS" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Z_STOCKOUT_NO" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PROF_UOM" null="true" value=""/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CART_LI_PLATE" source="CART_LI_PLATE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ROP" null="true" value=""/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MAKTX" source="MAKTX_TREND_TRANS"/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CURRENT_PERIOD" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="STATUS" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CART_TYPE" null="true" value=""/>
       <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="AUFNR" source="AUFNR"/>
@@ -664,9 +618,34 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="ROUND_VALUE" source="ROUND_VALUE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MAT_BIN_NUM" source="MAT_BIN_NUM"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PROF_MAXQTY" source="PROF_MAXQTY"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CART_LI_PLATE$CART_LI_PLATE" source="CART_LI_PLATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CURRENT_PERIOD$CURRENT_PERIOD" source="CURRENT_PERIOD"/>
     </input>
+    <input node="Aggregation_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CURRENT_PERIOD" source="CURRENT_PERIOD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Z_NR_SCANS" source="Z_NR_SCANS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Z_STOCKOUT_NO" source="Z_STOCKOUT_NO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROF_UOM" source="PROF_UOM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CART_LI_PLATE" source="CART_LI_PLATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ROP" source="ROP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAKTX" source="MAKTX"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STATUS" source="STATUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CART_TYPE" source="CART_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATNR_LPAD" source="MATNR_LPAD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROF_MAXQTY" source="PROF_MAXQTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR_LPAD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LGORT" source="LGORT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CART_LI_PLATE$CART_LI_PLATE" source="CART_LI_PLATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CURRENT_PERIOD$CURRENT_PERIOD" source="CURRENT_PERIOD"/>
+    </input>
+    <joinAttribute name="WERKS"/>
+    <joinAttribute name="MATNR"/>
+    <joinAttribute name="LGORT"/>
+    <joinAttribute name="JOIN$CART_LI_PLATE$CART_LI_PLATE"/>
+    <joinAttribute name="JOIN$CURRENT_PERIOD$CURRENT_PERIOD"/>
   </calculationView>
   <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_2">
     <descriptions/>
@@ -761,9 +740,25 @@
         <localVariable>P_LGORT</localVariable>
         <keyMapping columnObjectName="Aggregation_2" columnName="LGORT"/>
       </attribute>
+      <attribute id="ROP" order="18" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="ROP"/>
+        <keyMapping columnObjectName="Aggregation_2" columnName="ROP"/>
+      </attribute>
       <attribute id="MAKTX" order="19" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="MAKTX"/>
         <keyMapping columnObjectName="Aggregation_2" columnName="MAKTX"/>
+      </attribute>
+      <attribute id="CURRENT_PERIOD" order="20" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="CURRENT_PERIOD"/>
+        <keyMapping columnObjectName="Aggregation_2" columnName="CURRENT_PERIOD"/>
+      </attribute>
+      <attribute id="STATUS" order="21" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="STATUS"/>
+        <keyMapping columnObjectName="Aggregation_2" columnName="STATUS"/>
+      </attribute>
+      <attribute id="CART_TYPE" order="22" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="CART_TYPE"/>
+        <keyMapping columnObjectName="Aggregation_2" columnName="CART_TYPE"/>
       </attribute>
       <attribute id="KOKRS" order="23" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="KOKRS"/>
@@ -809,10 +804,21 @@
         <descriptions defaultDescription="MAT_BIN_NUM"/>
         <keyMapping columnObjectName="Aggregation_2" columnName="MAT_BIN_NUM"/>
       </attribute>
+      <attribute id="PROF_MAXQTY" order="52" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="PROF_MAXQTY"/>
+        <keyMapping columnObjectName="Aggregation_2" columnName="PROF_MAXQTY"/>
+      </attribute>
       <attribute id="MATNR" order="53" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
         <descriptions defaultDescription="SAP #"/>
         <localVariable>P_MATNR</localVariable>
         <keyMapping columnObjectName="Aggregation_2" columnName="MATNR"/>
+      </attribute>
+    
+      <attribute id="MFRNR" order="54" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="MFRNR"/>
+    
+        <keyMapping columnObjectName="Aggregation_2" columnName="MFRNR"/>
+    
       </attribute>
     </attributes>
     <calculatedAttributes/>
@@ -835,22 +841,6 @@
       <measure id="Z_STOCKOUT_NO" order="12" aggregationType="sum" measureType="simple">
         <descriptions defaultDescription="Z_STOCKOUT_NO"/>
         <measureMapping columnObjectName="Aggregation_2" columnName="Z_STOCKOUT_NO"/>
-      </measure>
-      <measure id="ROP" order="18" aggregationType="max" measureType="simple">
-        <descriptions defaultDescription="ROP"/>
-        <measureMapping columnObjectName="Aggregation_2" columnName="ROP"/>
-      </measure>
-      <measure id="CURRENT_PERIOD" order="20" aggregationType="max" measureType="simple">
-        <descriptions defaultDescription="CURRENT_PERIOD"/>
-        <measureMapping columnObjectName="Aggregation_2" columnName="CURRENT_PERIOD"/>
-      </measure>
-      <measure id="STATUS" order="21" aggregationType="max" measureType="simple">
-        <descriptions defaultDescription="STATUS"/>
-        <measureMapping columnObjectName="Aggregation_2" columnName="STATUS"/>
-      </measure>
-      <measure id="CART_TYPE" order="22" aggregationType="max" measureType="simple">
-        <descriptions defaultDescription="CART_TYPE"/>
-        <measureMapping columnObjectName="Aggregation_2" columnName="CART_TYPE"/>
       </measure>
       <measure id="Z_COUNTER" order="26" aggregationType="sum" measureType="simple">
         <descriptions defaultDescription="Z_COUNTER"/>
@@ -923,17 +913,13 @@
       <measure id="ROUND_VALUE" order="49" aggregationType="sum" measureType="simple">
         <descriptions defaultDescription="ROUND_VALUE"/>
         <measureMapping columnObjectName="Aggregation_2" columnName="ROUND_VALUE"/>
-      </measure>
-      <measure id="PROF_MAXQTY" order="52" aggregationType="max" measureType="simple">
-        <descriptions defaultDescription="PROF_MAXQTY"/>
-        <measureMapping columnObjectName="Aggregation_2" columnName="PROF_MAXQTY"/>
-      </measure>
-    </baseMeasures>
+      </measure></baseMeasures>
     <calculatedMeasures>
       <measure id="WEEKLY_AVG" hidden="false" order="1" aggregationType="sum" measureType="simple" aggregatable="true" datatype="DOUBLE" expressionLanguage="COLUMN_ENGINE">
         <descriptions defaultDescription="Weekly Avg"/>
         <formula>IF('$$IP_TREND_TYPE$$'='M', double(&quot;TOTAL_QTY&quot;) / DOUBLE(12), double(&quot;TOTAL_QTY&quot;) / DOUBLE(52))</formula>
       
+        
         
         
         </measure>
@@ -943,11 +929,13 @@
       
         
         
+        
         </measure>
       <measure id="SCANS_WEEK" hidden="false" order="3" aggregationType="sum" measureType="simple" aggregatable="true" datatype="DOUBLE" expressionLanguage="COLUMN_ENGINE">
         <descriptions defaultDescription="SCANS per WEEK"/>
         <formula>IF('$$IP_TREND_TYPE$$'='M',double(&quot;Z_NR_SCANS&quot;)/12, double(&quot;Z_NR_SCANS&quot;)/52) </formula>
       
+        
         
         
         </measure>
@@ -957,11 +945,13 @@
       
         
         
+        
         </measure>
       <measure id="RECM_MIN" hidden="false" order="5" aggregationType="sum" measureType="simple" aggregatable="true" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="34" scale="7">
         <descriptions defaultDescription="RECM_MIN"/>
         <formula>round(double(( &quot;WEEKLY_AVG&quot;*43 /100 ) + 0.5), 0)</formula>
       
+        
         
         
         </measure>
@@ -971,11 +961,13 @@
       
         
         
+        
         </measure>
       <measure id="RECM_AVG_VALUE" hidden="false" order="7" aggregationType="sum" measureType="simple" aggregatable="true" datatype="DECIMAL" expressionLanguage="COLUMN_ENGINE" length="34" scale="7">
         <descriptions defaultDescription="RECM_AVG_VALUE"/>
         <formula>double(((&quot;RECM_MAX&quot;-&quot;RECM_MIN&quot;)/2+&quot;RECM_MIN&quot;)*&quot;Z_CONTRACT_PRICE&quot;)</formula>
       
+        
         
         
         </measure>
@@ -990,35 +982,35 @@
         <rectangleSize height="0" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="348" y="886"/>
+        <upperLeftCorner x="348" y="911"/>
         <rectangleSize height="0" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="92" y="761"/>
+        <upperLeftCorner x="92" y="786"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="91" y="636"/>
+        <upperLeftCorner x="91" y="661"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Projection_5" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="348" y="771"/>
+        <upperLeftCorner x="348" y="796"/>
         <rectangleSize height="0" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Aggregation_3" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="307" y="636"/>
+        <upperLeftCorner x="307" y="661"/>
         <rectangleSize height="0" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="727" y="636"/>
+        <upperLeftCorner x="727" y="661"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Projection_4" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="517" y="636"/>
+        <upperLeftCorner x="517" y="661"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="544" y="476"/>
+        <upperLeftCorner x="544" y="501"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
     <shape modelObjectName="Projection_3" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
@@ -1030,25 +1022,33 @@
       <rectangleSize width="250"/>
     </shape>
       <shape expanded="true" modelObjectName="Join_3" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="465" y="316"/>
+        <upperLeftCorner x="465" y="341"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
-    <shape modelObjectName="Join_2" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="-84" y="-172"/>
-      <rectangleSize width="188"/>
-    </shape>
-    <shape modelObjectName="Union_1" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="353" y="-84"/>
+    <shape modelObjectName="Join_4" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="90" y="468"/>
       <rectangleSize width="125"/>
     </shape>
-    
-    <shape expanded="true" modelObjectName="Union_1" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="280" y="490"/>
+    <shape modelObjectName="Join_2" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="426" y="451"/>
+      <rectangleSize width="125"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_4" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="280" y="515"/>
       <rectangleSize height="30" width="160"/>
     </shape>
+    <shape modelObjectName="Aggregation_3" modelObjectNameSpace="Join_4" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="211"/>
+    </shape>
+    <shape modelObjectName="Aggregation_1" modelObjectNameSpace="Join_4" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="642" y="326"/>
+      <rectangleSize width="188"/>
+    </shape>
+  
   
       <shape expanded="true" modelObjectName="Aggregation_2" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="465" y="211"/>
+        <upperLeftCorner x="465" y="236"/>
         <rectangleSize height="0" width="160"/>
       </shape></shapes>
 </layout>
