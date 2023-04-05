@@ -8,7 +8,7 @@
       <descriptions defaultDescription=""/>
       <variableProperties datatype="NVARCHAR" length="4" scale="NaN" mandatory="true">
         <valueDomain type="AttributeValue">
-          <attribute name="KOKRS"/>
+          <attribute name="CO_AREA"/>
         </valueDomain>
         <selection multiLine="true" type="SingleValue"/>
       </variableProperties>
@@ -126,6 +126,9 @@
       <viewAttribute id="STAGR"/>
       <viewAttribute id="DATE_MODIFIED"/>
       <viewAttribute id="USERNAME"/>
+    
+      <viewAttribute id="MIS_OPER_CODE"/>
+      <viewAttribute id="MIS_MOH_CODE"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="ECC_ZTFI_MIS_SKF"/>
@@ -152,7 +155,17 @@
       <viewAttribute id="DATE_MODIFIED"/>
       <viewAttribute id="USERNAME"/>
     </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CD_ZMISOPCOD" datatype="NVARCHAR" length="7" expressionLanguage="SQL">
+        <formula>ifnull(&quot;ZMISOPCOD&quot;, '0000000')</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CD_ZMISMOHCD" datatype="NVARCHAR" length="7" expressionLanguage="SQL">
+        <formula>ifnull(&quot;ZMISMOHCD&quot;, '0000000')</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CD_DATE_MODIFIED" datatype="NVARCHAR" length="8" expressionLanguage="SQL">
+        <formula>ifnull(&quot;DATE_MODIFIED&quot;, '00000000')</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <input node="Join_1">
       <mapping xsi:type="Calculation:AttributeMapping" target="RECORDMODE" source="RECORDMODE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
@@ -167,37 +180,35 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="M_IST" source="M_IST"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="SPRAS" source="SPRAS"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BEZEI" source="BEZEI"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ZMISOPCOD" source="ZMISOPCOD"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ZMISMOHCD" source="ZMISMOHCD"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ZSTATUS" source="ZSTATUS"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ZMISLONGD" source="ZMISLONGD"/>
     </input>
     <input node="Projection_4">
       <mapping xsi:type="Calculation:AttributeMapping" target="DATE_MODIFIED" source="DATE_MODIFIED"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="USERNAME" source="USERNAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="KOKRS" source="KOKRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZMISOPCOD" source="MIS_OPER_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZMISMOHCD" source="MIS_MOH_CODE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STAGR" source="STAGR"/>
     </input>
-    <joinAttribute name="KOKRS"/>
     <joinAttribute name="STAGR"/>
   </calculationView>
 </calculationViews>
   <logicalModel id="Join_2">
     <descriptions/>
     <attributes>
-      <attribute id="KOKRS" order="1" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="CO_AREA" order="1" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="Controlling Area"/>
         <keyMapping columnObjectName="Join_2" columnName="KOKRS"/>
       </attribute>
-      <attribute id="STAGR" order="2" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="STKEYFIG" order="2" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="Stat. Key Figure"/>
         <keyMapping columnObjectName="Join_2" columnName="STAGR"/>
       </attribute>
-      <attribute id="MSEHI" order="3" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="UNIT" order="3" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="Unit of Measure"/>
         <keyMapping columnObjectName="Join_2" columnName="MSEHI"/>
       </attribute>
-      <attribute id="GRTYP" order="4" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="STKFTYPE" order="4" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="Type of keyfigure"/>
         <keyMapping columnObjectName="Join_2" columnName="GRTYP"/>
       </attribute>
@@ -207,15 +218,15 @@
       </attribute>
       <attribute id="ZMISOPCOD" order="6" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="MIS Operational Code"/>
-        <keyMapping columnObjectName="Join_2" columnName="ZMISOPCOD"/>
+        <keyMapping columnObjectName="Join_2" columnName="CD_ZMISOPCOD"/>
       </attribute>
       <attribute id="ZMISMOHCD" order="7" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="MIS MOH Code"/>
-        <keyMapping columnObjectName="Join_2" columnName="ZMISMOHCD"/>
+        <keyMapping columnObjectName="Join_2" columnName="CD_ZMISMOHCD"/>
       </attribute>
       <attribute id="ENTRYDATE" order="8" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="Entry Date"/>
-        <keyMapping columnObjectName="Join_2" columnName="DATE_MODIFIED"/>
+        <keyMapping columnObjectName="Join_2" columnName="CD_DATE_MODIFIED"/>
       </attribute>
       <attribute id="USERNAME" order="9" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="User Name"/>
@@ -225,7 +236,7 @@
         <descriptions defaultDescription="Language Key"/>
         <keyMapping columnObjectName="Join_2" columnName="SPRAS"/>
       </attribute>
-      <attribute id="BEZEI" order="11" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="TXTMD" order="11" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="Medium description"/>
         <keyMapping columnObjectName="Join_2" columnName="BEZEI"/>
       </attribute>
@@ -254,19 +265,19 @@
 <layout>
   <shapes>
       <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-        <upperLeftCorner x="328.6900820831794" y="112"/>
+        <upperLeftCorner x="328" y="112"/>
         <rectangleSize height="0" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="92" y="536.9999976158142"/>
+        <upperLeftCorner x="92" y="536"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="302" y="536.9999976158142"/>
+        <upperLeftCorner x="302" y="536"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="118.66666666666666" y="376.9999988079071"/>
+        <upperLeftCorner x="118" y="376"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
     
@@ -280,11 +291,11 @@
     </shape>
   
     <shape expanded="true" modelObjectName="Projection_4" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="395.83468516943316" y="376.9999988079071"/>
+      <upperLeftCorner x="395" y="376"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="328.6900820831794" y="217"/>
+      <upperLeftCorner x="328" y="217"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="Join_1" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
