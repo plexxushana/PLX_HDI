@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_OUT_DIM_VNCC" applyPrivilegeType="NONE" dataCategory="DIMENSION" dimensionType="STANDARD" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
 <descriptions defaultDescription="CV_OUT_DIM_VNCC"/>
-<localVariables/>
+<localVariables>
+  <variable id="IP_COMPANY" parameter="true">
+    <descriptions defaultDescription=""/>
+    <variableProperties datatype="NVARCHAR" length="4" scale="NaN" mandatory="true">
+      <valueDomain type="AttributeValue">
+        <attribute name="COMP_CODE"/>
+      </valueDomain>
+      <selection multiLine="true" type="SingleValue"/>
+    </variableProperties>
+  </variable>
+</localVariables>
 <variableMappings/>
 <dataSources>
   <DataSource id="ECC_LFA1_GENERAL">
@@ -35,7 +45,7 @@
         <formula>''</formula>
       </calculatedViewAttribute>
       <calculatedViewAttribute id="EMPLOYEE" datatype="NVARCHAR" length="8" expressionLanguage="SQL">
-        <formula>'0'</formula>
+        <formula>'00000000'</formula>
       </calculatedViewAttribute>
     
       <calculatedViewAttribute id="CHRT_ACCTS" datatype="NVARCHAR" length="4" expressionLanguage="SQL">
@@ -77,46 +87,62 @@
     </input>
     <joinAttribute name="LIFNR"/>
   </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="BUKRS"/>
+      <viewAttribute id="LIFNR"/>
+      <viewAttribute id="RECORDMODE"/>
+      <viewAttribute id="EMPLOYEE"/>
+      <viewAttribute id="ZTERM"/>
+      <viewAttribute id="CHRT_ACCTS"/>
+      <viewAttribute id="AKONT"/>
+      <viewAttribute id="NAME1"/>
+      <viewAttribute id="LNRZB"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_1"/>
+    <filter>&quot;COMPANY_CODE&quot; IN ($$IP_COMPANY$$)</filter>
+  </calculationView>
 </calculationViews>
-<logicalModel id="Join_1">
+<logicalModel id="Projection_3">
   <attributes>
     <attribute id="COMP_CODE" order="1" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Company code"/>
-      <keyMapping columnObjectName="Join_1" columnName="BUKRS"/>
+      <keyMapping columnObjectName="Projection_3" columnName="BUKRS"/>
     </attribute>
     <attribute id="VEN_COMPC" order="2" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Vendor"/>
-      <keyMapping columnObjectName="Join_1" columnName="LIFNR"/>
+      <keyMapping columnObjectName="Projection_3" columnName="LIFNR"/>
     </attribute>
     <attribute id="RECORDMODE" order="3" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Update mode"/>
-      <keyMapping columnObjectName="Join_1" columnName="RECORDMODE"/>
+      <keyMapping columnObjectName="Projection_3" columnName="RECORDMODE"/>
     </attribute>
     <attribute id="EMPLOYEE" order="4" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Employee"/>
-      <keyMapping columnObjectName="Join_1" columnName="EMPLOYEE"/>
+      <keyMapping columnObjectName="Projection_3" columnName="EMPLOYEE"/>
     </attribute>
     <attribute id="PMNTTRMS" order="5" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Terms of payment"/>
-      <keyMapping columnObjectName="Join_1" columnName="ZTERM"/>
+      <keyMapping columnObjectName="Projection_3" columnName="ZTERM"/>
     </attribute>
     <attribute id="CHRT_ACCTS" order="6" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Chart of Accounts"/>
-      <keyMapping columnObjectName="Join_1" columnName="CHRT_ACCTS"/>
+      <keyMapping columnObjectName="Projection_3" columnName="CHRT_ACCTS"/>
     </attribute>
     <attribute id="RC_ACCOUNT" order="7" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Reconciliation Acct"/>
-      <keyMapping columnObjectName="Join_1" columnName="AKONT"/>
+      <keyMapping columnObjectName="Projection_3" columnName="AKONT"/>
     </attribute>
     <attribute id="TXTMD" order="8" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Medium description"/>
-      <keyMapping columnObjectName="Join_1" columnName="NAME1"/>
+      <keyMapping columnObjectName="Projection_3" columnName="NAME1"/>
     </attribute>
   
     <attribute id="ZIO_ALTPY" order="9" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Alternate payee"/>
   
-      <keyMapping columnObjectName="Join_1" columnName="LNRZB"/>
+      <keyMapping columnObjectName="Projection_3" columnName="LNRZB"/>
   
     </attribute>
   </attributes>
@@ -152,6 +178,11 @@
     <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="103" y="199"/>
+      <rectangleSize height="30" width="160"/>
     </shape>
   </shapes>
 </layout>
