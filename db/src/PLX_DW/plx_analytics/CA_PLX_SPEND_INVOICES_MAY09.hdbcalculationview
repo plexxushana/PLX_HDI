@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Dimension="http://www.sap.com/ndb/BiModelDimension.ecore" schemaVersion="3.0" id="plx_analytics::CA_PLX_SPEND_INVOICES" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="true" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Dimension="http://www.sap.com/ndb/BiModelDimension.ecore" schemaVersion="3.0" id="CA_PLX_SPEND_INVOICES_MAY09" applyPrivilegeType="SQL_ANALYTIC_PRIVILEGE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="true" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
 <origin/>
   <descriptions defaultDescription="CA_PLX_SPEND_INVOICES"/>
   <metadata changedAt="2021-10-20 21:12:59.185"/>
@@ -2337,7 +2337,7 @@
     <calculatedViewAttributes/>
     <input node="ECC_AUFK"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="Join_11" cardinality="CN_N" joinType="leftOuter">
+  <calculationView xsi:type="Calculation:NonEquiJoinView" id="NonEquiJoin_1" cardinality="CN_N" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="COMMODITY"/>
       <viewAttribute id="SEGMENT"/>
@@ -2534,338 +2534,347 @@
     </input>
     <input node="Projection_14">
       <mapping xsi:type="Calculation:AttributeMapping" target="KTEXT" source="KTEXT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AUFNR" source="AUFNR"/>
     </input>
-    <joinAttribute name="BUKRS"/>
-    <joinAttribute name="AUFNR"/>
+    <joinAttribute leftColumn="BUKRS" rightColumn="BUKRS" operator="NE"/>
+    <joinAttribute leftColumn="AUFNR" rightColumn="AUFNR" operator="NE"/>
   </calculationView>
 </calculationViews>
-  <logicalModel id="Join_11">
+  <logicalModel id="NonEquiJoin_1">
     <descriptions/>
     <attributes>
-      <attribute id="COMMODITY" order="6" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="COMMODITY"/>
-        <keyMapping columnObjectName="Join_11" columnName="COMMODITY"/>
+      <attribute id="COMMODITY" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="UNSPSC Commodity ID"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="COMMODITY"/>
       </attribute>
-      <attribute id="SEGMENT" order="7" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="SEGMENT"/>
-        <keyMapping columnObjectName="Join_11" columnName="SEGMENT"/>
+      <attribute id="SEGMENT" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="UNSPSC Segment ID"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="SEGMENT"/>
       </attribute>
-      <attribute id="FAMILY" order="8" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="FAMILY"/>
-        <keyMapping columnObjectName="Join_11" columnName="FAMILY"/>
+      <attribute id="FAMILY" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="UNSPSC Family ID"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="FAMILY"/>
       </attribute>
-      <attribute id="CLASS" order="9" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="CLASS"/>
-        <keyMapping columnObjectName="Join_11" columnName="CLASS"/>
+      <attribute id="CLASS" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="UNSPSC Class ID"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="CLASS"/>
       </attribute>
-      <attribute id="LTEXT" order="10" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="LTEXT"/>
-        <keyMapping columnObjectName="Join_11" columnName="LTEXT"/>
+      <attribute id="LTEXT" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cost Center Desc."/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="LTEXT"/>
       </attribute>
-      <attribute id="MEMBER" order="11" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="MEMBER"/>
-        <keyMapping columnObjectName="Join_11" columnName="MEMBER"/>
+      <attribute id="MEMBER" order="11" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Org ID"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="MEMBER"/>
       </attribute>
-      <attribute id="BUTXT" order="12" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="BUTXT"/>
-        <keyMapping columnObjectName="Join_11" columnName="BUTXT"/>
+      <attribute id="BUTXT" order="12" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Company Code Name"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="BUTXT"/>
       </attribute>
-      <attribute id="BUKRS" order="13" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="BUKRS"/>
+      <attribute id="BUKRS" order="13" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Company Code"/>
         <localVariable>PA_ORGID</localVariable>
-        <keyMapping columnObjectName="Join_11" columnName="BUKRS"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="BUKRS"/>
       </attribute>
-      <attribute id="Z_ORDER_TYPE" order="14" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="Z_ORDER_TYPE"/>
-        <keyMapping columnObjectName="Join_11" columnName="Z_ORDER_TYPE"/>
+      <attribute id="Z_ORDER_TYPE" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Order Type"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="Z_ORDER_TYPE"/>
       </attribute>
-      <attribute id="BSART" order="15" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="BSART"/>
-        <keyMapping columnObjectName="Join_11" columnName="BSART"/>
+      <attribute id="BSART" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchasing Document Type"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="BSART"/>
       </attribute>
-      <attribute id="MFRNR" order="16" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="MFRNR"/>
-        <keyMapping columnObjectName="Join_11" columnName="MFRNR"/>
+      <attribute id="MFRNR" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Manufacturer ID"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="MFRNR"/>
       </attribute>
-      <attribute id="KONNR" order="17" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="KONNR"/>
-        <keyMapping columnObjectName="Join_11" columnName="KONNR"/>
+      <attribute id="KONNR" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SAP Contract Reference"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="KONNR"/>
       </attribute>
-      <attribute id="KDATB" order="18" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="KDATB"/>
-        <keyMapping columnObjectName="Join_11" columnName="KDATB"/>
+      <attribute id="KDATB" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Start of Validity Period"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="KDATB"/>
       </attribute>
-      <attribute id="KDATE" order="19" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="KDATE"/>
-        <keyMapping columnObjectName="Join_11" columnName="KDATE"/>
+      <attribute id="KDATE" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="End of Validity Period"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="KDATE"/>
       </attribute>
-      <attribute id="ZTERM" order="20" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="ZTERM"/>
-        <keyMapping columnObjectName="Join_11" columnName="ZTERM"/>
+      <attribute id="ZTERM" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Terms of Payment Key"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="ZTERM"/>
       </attribute>
-      <attribute id="IDNLF" order="21" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="IDNLF"/>
-        <keyMapping columnObjectName="Join_11" columnName="IDNLF"/>
+      <attribute id="IDNLF" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Vendor Part Number"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="IDNLF"/>
       </attribute>
-      <attribute id="TXZ01" order="22" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="TXZ01"/>
-        <keyMapping columnObjectName="Join_11" columnName="TXZ01"/>
+      <attribute id="TXZ01" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Product/Service Description"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="TXZ01"/>
       </attribute>
-      <attribute id="EBELN" order="23" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="EBELN"/>
-        <keyMapping columnObjectName="Join_11" columnName="EBELN"/>
+      <attribute id="EBELN" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Order Number"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="EBELN"/>
       </attribute>
-      <attribute id="EBELP" order="24" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="EBELP"/>
-        <keyMapping columnObjectName="Join_11" columnName="EBELP"/>
+      <attribute id="EBELP" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Order/PO Line Number"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="EBELP"/>
       </attribute>
-      <attribute id="GJAHR" order="25" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="GJAHR"/>
-        <keyMapping columnObjectName="Join_11" columnName="GJAHR"/>
+      <attribute id="GJAHR" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Document Year"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="GJAHR"/>
       </attribute>
-      <attribute id="BUZEI" order="26" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="BUZEI"/>
-        <keyMapping columnObjectName="Join_11" columnName="BUZEI"/>
+      <attribute id="BUZEI" order="26" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Item in Material Document"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="BUZEI"/>
       </attribute>
-      <attribute id="BUDAT" order="27" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="BUDAT"/>
-        <keyMapping columnObjectName="Join_11" columnName="BUDAT"/>
+      <attribute id="BUDAT" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Posting Date"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="BUDAT"/>
       </attribute>
-      <attribute id="BLDAT" order="28" displayAttribute="false" attributeHierarchyActive="false">
+      <attribute id="BLDAT" order="28" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="BLDAT"/>
-        <keyMapping columnObjectName="Join_11" columnName="BLDAT"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="BLDAT"/>
       </attribute>
-      <attribute id="WEMPF" order="29" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="WEMPF"/>
-        <keyMapping columnObjectName="Join_11" columnName="WEMPF"/>
+      <attribute id="WEMPF" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Recipient/Deliver To"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="WEMPF"/>
       </attribute>
-      <attribute id="Z_INV_TC" order="30" displayAttribute="false" attributeHierarchyActive="false">
+      <attribute id="Z_INV_TC" order="30" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="Z_INV_TC"/>
-        <keyMapping columnObjectName="Join_11" columnName="Z_INV_TC"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="Z_INV_TC"/>
       </attribute>
-      <attribute id="Z_INV_LC" order="31" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="Z_INV_LC"/>
-        <keyMapping columnObjectName="Join_11" columnName="Z_INV_LC"/>
+      <attribute id="Z_INV_LC" order="31" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Invoice Local Currency"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="Z_INV_LC"/>
       </attribute>
-      <attribute id="SHKZG" order="32" displayAttribute="false" attributeHierarchyActive="false">
+      <attribute id="SHKZG" order="32" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="SHKZG"/>
-        <keyMapping columnObjectName="Join_11" columnName="SHKZG"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="SHKZG"/>
       </attribute>
-      <attribute id="MFRPN" order="33" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="MFRPN"/>
-        <keyMapping columnObjectName="Join_11" columnName="MFRPN"/>
+      <attribute id="MFRPN" order="33" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Manufacturer Part Number"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="MFRPN"/>
       </attribute>
-      <attribute id="GSBER" order="34" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="GSBER"/>
-        <keyMapping columnObjectName="Join_11" columnName="GSBER"/>
+      <attribute id="GSBER" order="34" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Business Area"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="GSBER"/>
       </attribute>
-      <attribute id="KOKRS" order="35" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="KOKRS"/>
-        <keyMapping columnObjectName="Join_11" columnName="KOKRS"/>
+      <attribute id="KOKRS" order="35" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Controlling Area"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="KOKRS"/>
       </attribute>
-      <attribute id="KOSTL" order="36" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="KOSTL"/>
-        <keyMapping columnObjectName="Join_11" columnName="KOSTL"/>
+      <attribute id="KOSTL" order="36" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cost Center"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="KOSTL"/>
       </attribute>
-      <attribute id="AUFNR" order="37" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="AUFNR"/>
-        <keyMapping columnObjectName="Join_11" columnName="AUFNR"/>
+      <attribute id="AUFNR" order="37" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Internal Order Number"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="AUFNR"/>
       </attribute>
-      <attribute id="SAKNR" order="38" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="SAKNR"/>
-        <keyMapping columnObjectName="Join_11" columnName="SAKNR"/>
+      <attribute id="SAKNR" order="38" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GL Account Number"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="SAKNR"/>
       </attribute>
-      <attribute id="ANLN1" order="39" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="ANLN1"/>
-        <keyMapping columnObjectName="Join_11" columnName="ANLN1"/>
+      <attribute id="ANLN1" order="39" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Main Asset Number"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="ANLN1"/>
       </attribute>
-      <attribute id="ANLN2" order="40" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="ANLN2"/>
-        <keyMapping columnObjectName="Join_11" columnName="ANLN2"/>
+      <attribute id="ANLN2" order="40" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Asset Subnumber"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="ANLN2"/>
       </attribute>
-      <attribute id="MATNR" order="41" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="MATNR"/>
-        <keyMapping columnObjectName="Join_11" columnName="MATNR"/>
+      <attribute id="MATNR" order="41" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material ID"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="MATNR"/>
       </attribute>
-      <attribute id="WERKS" order="42" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="WERKS"/>
-        <keyMapping columnObjectName="Join_11" columnName="WERKS"/>
+      <attribute id="WERKS" order="42" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Plant"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="WERKS"/>
       </attribute>
-      <attribute id="Z_INV_BUOM" order="43" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="Z_INV_BUOM"/>
-        <keyMapping columnObjectName="Join_11" columnName="Z_INV_BUOM"/>
+      <attribute id="Z_INV_BUOM" order="43" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Base Unit of Measure"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="Z_INV_BUOM"/>
       </attribute>
-      <attribute id="ZFISCAL_YEAR_QUARTER" order="44" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="ZFISCAL_YEAR_QUARTER"/>
-        <keyMapping columnObjectName="Join_11" columnName="ZFISCAL_YEAR_QUARTER"/>
+      <attribute id="ZFISCAL_YEAR_QUARTER" order="44" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Yr / Qtr"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="ZFISCAL_YEAR_QUARTER"/>
       </attribute>
-      <attribute id="ZFISCAL_MONTH" order="45" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="ZFISCAL_MONTH"/>
-        <keyMapping columnObjectName="Join_11" columnName="ZFISCAL_MONTH"/>
+      <attribute id="ZFISCAL_MONTH" order="45" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Month"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="ZFISCAL_MONTH"/>
       </attribute>
-      <attribute id="ZFISCAL_QUARTER" order="46" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="ZFISCAL_QUARTER"/>
-        <keyMapping columnObjectName="Join_11" columnName="ZFISCAL_QUARTER"/>
+      <attribute id="ZFISCAL_QUARTER" order="46" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Qtr"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="ZFISCAL_QUARTER"/>
       </attribute>
-      <attribute id="ZFISCAL_PERIOD" order="47" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="ZFISCAL_PERIOD"/>
+      <attribute id="ZFISCAL_PERIOD" order="47" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Period"/>
         <localVariable>PA_FISCAL_PERIOD</localVariable>
-        <keyMapping columnObjectName="Join_11" columnName="ZFISCAL_PERIOD"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="ZFISCAL_PERIOD"/>
       </attribute>
-      <attribute id="ZFISCAL_YEAR" order="48" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="ZFISCAL_YEAR"/>
+      <attribute id="ZFISCAL_YEAR" order="48" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Fiscal Yr"/>
         <localVariable>PA_FISCAL_YEAR</localVariable>
-        <keyMapping columnObjectName="Join_11" columnName="ZFISCAL_YEAR"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="ZFISCAL_YEAR"/>
       </attribute>
-      <attribute id="Z_ESTIMATED_CONTRACT" order="49" displayAttribute="false" attributeHierarchyActive="false">
+      <attribute id="Z_ESTIMATED_CONTRACT" order="49" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="Z_ESTIMATED_CONTRACT"/>
-        <keyMapping columnObjectName="Join_11" columnName="Z_ESTIMATED_CONTRACT"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="Z_ESTIMATED_CONTRACT"/>
       </attribute>
-      <attribute id="Z_MANIPULATED_CONTRACT" order="50" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="Z_MANIPULATED_CONTRACT"/>
-        <keyMapping columnObjectName="Join_11" columnName="Z_MANIPULATED_CONTRACT"/>
+      <attribute id="Z_MANIPULATED_CONTRACT" order="50" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Estimated Contract Number"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="Z_MANIPULATED_CONTRACT"/>
       </attribute>
-      <attribute id="Z_LIFNR" order="51" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="Z_LIFNR"/>
-        <keyMapping columnObjectName="Join_11" columnName="Z_LIFNR"/>
+      <attribute id="Z_LIFNR" order="51" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Vendor ID"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="Z_LIFNR"/>
       </attribute>
-      <attribute id="Z_VENDOR_NAME" order="52" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="Z_VENDOR_NAME"/>
-        <keyMapping columnObjectName="Join_11" columnName="Z_VENDOR_NAME"/>
+      <attribute id="Z_VENDOR_NAME" order="52" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Vendor Name"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="Z_VENDOR_NAME"/>
       </attribute>
-      <attribute id="Z_INVOICE_OUOM" order="53" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="Z_INVOICE_OUOM"/>
-        <keyMapping columnObjectName="Join_11" columnName="Z_INVOICE_OUOM"/>
+      <attribute id="Z_INVOICE_OUOM" order="53" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Order Unit of Measure"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="Z_INVOICE_OUOM"/>
       </attribute>
-      <attribute id="BEDNR" order="54" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="BEDNR"/>
-        <keyMapping columnObjectName="Join_11" columnName="BEDNR"/>
+      <attribute id="BEDNR" order="54" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Shopping Cart Number"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="BEDNR"/>
       </attribute>
-      <attribute id="ZCALENDAR_YEAR" order="55" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="ZCALENDAR_YEAR"/>
-        <keyMapping columnObjectName="Join_11" columnName="ZCALENDAR_YEAR"/>
+      <attribute id="ZCALENDAR_YEAR" order="55" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Calendar Yr"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="ZCALENDAR_YEAR"/>
       </attribute>
-      <attribute id="ZCAL_MONTH" order="56" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="ZCAL_MONTH"/>
-        <keyMapping columnObjectName="Join_11" columnName="ZCAL_MONTH"/>
+      <attribute id="ZCAL_MONTH" order="56" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Calendar Month"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="ZCAL_MONTH"/>
       </attribute>
-      <attribute id="SGTXT" order="57" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="SGTXT"/>
-        <keyMapping columnObjectName="Join_11" columnName="SGTXT"/>
+      <attribute id="SGTXT" order="57" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Invoice Comment"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="SGTXT"/>
       </attribute>
-      <attribute id="EXTWG" order="58" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="EXTWG"/>
-        <keyMapping columnObjectName="Join_11" columnName="EXTWG"/>
+      <attribute id="EXTWG" order="58" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="External Material Group"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="EXTWG"/>
       </attribute>
-      <attribute id="Z_COMMODITY" order="59" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="Z_COMMODITY"/>
-        <keyMapping columnObjectName="Join_11" columnName="Z_COMMODITY"/>
+      <attribute id="Z_COMMODITY" order="59" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="UNSPSC Commodity Desc."/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="Z_COMMODITY"/>
       </attribute>
-      <attribute id="BANFN" order="60" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="BANFN"/>
-        <keyMapping columnObjectName="Join_11" columnName="BANFN"/>
+      <attribute id="BANFN" order="60" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Purchase Requisition"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="BANFN"/>
       </attribute>
-      <attribute id="TXT20" order="61" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="TXT20"/>
-        <keyMapping columnObjectName="Join_11" columnName="TXT20"/>
+      <attribute id="TXT20" order="61" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="G/L account short text"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="TXT20"/>
       </attribute>
-      <attribute id="TXT20_1" order="62" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="TXT20_1"/>
-        <keyMapping columnObjectName="Join_11" columnName="TXT20_1"/>
+      <attribute id="TXT20_1" order="62" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="G/L account short text"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="TXT20_1"/>
       </attribute>
-      <attribute id="Z_SEGMENT_TITLE_EN" order="63" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="Z_SEGMENT_TITLE_EN"/>
-        <keyMapping columnObjectName="Join_11" columnName="Z_SEGMENT_TITLE_EN"/>
+      <attribute id="Z_SEGMENT_TITLE_EN" order="63" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="UNSPSC Segment Desc."/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="Z_SEGMENT_TITLE_EN"/>
       </attribute>
-      <attribute id="Z_FAMILE_TITLE_EN" order="64" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="Z_FAMILE_TITLE_EN"/>
-        <keyMapping columnObjectName="Join_11" columnName="Z_FAMILE_TITLE_EN"/>
+      <attribute id="Z_FAMILE_TITLE_EN" order="64" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="UNSPSC Family Desc."/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="Z_FAMILE_TITLE_EN"/>
       </attribute>
-      <attribute id="Z_CLASS_TITLE_EN" order="65" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="Z_CLASS_TITLE_EN"/>
-        <keyMapping columnObjectName="Join_11" columnName="Z_CLASS_TITLE_EN"/>
+      <attribute id="Z_CLASS_TITLE_EN" order="65" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="UNSPSC Class Desc."/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="Z_CLASS_TITLE_EN"/>
       </attribute>
-      <attribute id="KTOKK" order="66" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="KTOKK"/>
-        <keyMapping columnObjectName="Join_11" columnName="KTOKK"/>
+      <attribute id="KTOKK" order="66" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Vendor account group"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="KTOKK"/>
       </attribute>
-      <attribute id="Z_COSTELEM" order="67" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="Z_COSTELEM"/>
-        <keyMapping columnObjectName="Join_11" columnName="Z_COSTELEM"/>
+      <attribute id="Z_COSTELEM" order="67" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Cost Element"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="Z_COSTELEM"/>
       </attribute>
-      <attribute id="KTPNR" order="68" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="KTPNR"/>
-        <keyMapping columnObjectName="Join_11" columnName="KTPNR"/>
+      <attribute id="KTPNR" order="68" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SAP Contract Reference Line"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="KTPNR"/>
       </attribute>
-      <attribute id="BLART" order="69" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="BLART"/>
-        <keyMapping columnObjectName="Join_11" columnName="BLART"/>
+      <attribute id="BLART" order="69" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FI Document Type"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="BLART"/>
       </attribute>
-      <attribute id="XBLNR" order="70" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="XBLNR"/>
-        <keyMapping columnObjectName="Join_11" columnName="XBLNR"/>
+      <attribute id="XBLNR" order="70" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Reference Document Number"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="XBLNR"/>
       </attribute>
-      <attribute id="XBLNR_ItemRef" order="71" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="XBLNR_ItemRef"/>
-        <keyMapping columnObjectName="Join_11" columnName="XBLNR_ItemRef"/>
+      <attribute id="XBLNR_ItemRef" order="71" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Reference Item Number"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="XBLNR_ItemRef"/>
       </attribute>
-      <attribute id="ZPR_PKGSTR" order="72" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="ZPR_PKGSTR"/>
-        <keyMapping columnObjectName="Join_11" columnName="ZPR_PKGSTR"/>
+      <attribute id="ZPR_PKGSTR" order="72" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Packaging String"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="ZPR_PKGSTR"/>
       </attribute>
-      <attribute id="WGBEZ" order="73" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="WGBEZ"/>
-        <keyMapping columnObjectName="Join_11" columnName="WGBEZ"/>
+      <attribute id="WGBEZ" order="73" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Group Description"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="WGBEZ"/>
       </attribute>
-      <attribute id="MANUFACTURER_NAME" order="74" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="MANUFACTURER_NAME"/>
-        <keyMapping columnObjectName="Join_11" columnName="MANUFACTURER_NAME"/>
+      <attribute id="MANUFACTURER_NAME" order="74" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Manufacturer Name"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="MANUFACTURER_NAME"/>
       </attribute>
-      <attribute id="MAKTX" order="76" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="MAKTX"/>
-        <keyMapping columnObjectName="Join_11" columnName="MAKTX"/>
+      <attribute id="Z_EKPO_NETWR" order="75" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Net Order Value in PO Currency"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="Z_EKPO_NETWR"/>
       </attribute>
-      <attribute id="MATKL" order="77" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="MATKL"/>
-        <keyMapping columnObjectName="Join_11" columnName="MATKL"/>
+      <attribute id="MAKTX" order="76" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Description (Short Text)"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="MAKTX"/>
       </attribute>
-      <attribute id="POSID" order="78" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="POSID"/>
-        <keyMapping columnObjectName="Join_11" columnName="POSID"/>
+      <attribute id="MATKL" order="77" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Group"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="MATKL"/>
       </attribute>
-      <attribute id="PCW_Project_Name" order="79" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="[PCW]Project_(Project_Name)"/>
-        <keyMapping columnObjectName="Join_11" columnName="[PCW]Project_(Project_Name)"/>
+      <attribute id="POSID" order="78" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="WBS"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="POSID"/>
       </attribute>
-      <attribute id="MTART" order="80" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="MTART"/>
-        <keyMapping columnObjectName="Join_11" columnName="MTART"/>
+      <attribute id="PCW_Project_Name" order="79" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PCW_Project_Name"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="[PCW]Project_(Project_Name)"/>
       </attribute>
-      <attribute id="MTBEZ" order="81" displayAttribute="false" attributeHierarchyActive="false">
+      <attribute id="MTART" order="80" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Material Type"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="MTART"/>
+      </attribute>
+      <attribute id="MTBEZ" order="81" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="MTBEZ"/>
-        <keyMapping columnObjectName="Join_11" columnName="MTBEZ"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="MTBEZ"/>
       </attribute>
-      <attribute id="DATE_SQL" order="82" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="DATE_SQL"/>
-        <keyMapping columnObjectName="Join_11" columnName="DATE_SQL"/>
+      <attribute id="DATE_SQL" order="82" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Posting Date (Date Format)"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="DATE_SQL"/>
       </attribute>
-      <attribute id="ZCAL_MONTH_NUM" order="83" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="ZCAL_MONTH_NUM"/>
-        <keyMapping columnObjectName="Join_11" columnName="ZCAL_MONTH_NUM"/>
+      <attribute id="ZCAL_MONTH_NUM" order="83" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Calendar Month Number"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="ZCAL_MONTH_NUM"/>
       </attribute>
-      <attribute id="ATWRT" order="84" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="ATWRT"/>
-        <keyMapping columnObjectName="Join_11" columnName="ATWRT"/>
+      <attribute id="ATWRT" order="84" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Medical Device License Number"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="ATWRT"/>
       </attribute>
-      <attribute id="Z_NEW_KOSTL" order="97" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="Z_NEW_KOSTL"/>
-        <keyMapping columnObjectName="Join_11" columnName="Z_NEW_KOSTL"/>
+      <attribute id="SERIAL_NUMBER" order="97" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Serial Number"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="SERIAL_NUMBER"/>
       </attribute>
-      <attribute id="KTEXT" order="100" displayAttribute="false" attributeHierarchyActive="false">
-        <descriptions defaultDescription="KTEXT"/>
-        <keyMapping columnObjectName="Join_11" columnName="KTEXT"/>
+      <attribute id="LOT_NUMBER" order="98" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Lot Number"/>
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="LOT_NUMBER"/>
+      </attribute>
+    
+      <attribute id="KTEXT" order="99" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="IO Description"/>
+    
+        <keyMapping columnObjectName="NonEquiJoin_1" columnName="KTEXT"/>
+    
       </attribute>
     </attributes>
     <calculatedAttributes/>
@@ -2877,65 +2886,53 @@
       </layout>
     </privateDataFoundation>
     <baseMeasures>
-      <measure id="Z_EKPO_NETWR" order="75" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="Z_EKPO_NETWR"/>
-        <measureMapping columnObjectName="Join_11" columnName="Z_EKPO_NETWR"/>
-      </measure>
       <measure id="Z_INV_TAMT" order="85" aggregationType="sum" measureType="simple">
         <descriptions defaultDescription="Z_INV_TAMT"/>
-        <measureMapping columnObjectName="Join_11" columnName="Z_INV_TAMT"/>
+        <measureMapping columnObjectName="NonEquiJoin_1" columnName="Z_INV_TAMT"/>
       </measure>
       <measure id="Z_INV_LAMT" order="86" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="Z_INV_LAMT"/>
-        <measureMapping columnObjectName="Join_11" columnName="Z_INV_LAMT"/>
+        <descriptions defaultDescription="Spend Amount"/>
+        <measureMapping columnObjectName="NonEquiJoin_1" columnName="Z_INV_LAMT"/>
       </measure>
       <measure id="BEZNK" order="87" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="BEZNK"/>
-        <measureMapping columnObjectName="Join_11" columnName="BEZNK"/>
+        <descriptions defaultDescription="Unplanned delivery costs"/>
+        <measureMapping columnObjectName="NonEquiJoin_1" columnName="BEZNK"/>
       </measure>
       <measure id="REFWR" order="88" aggregationType="sum" measureType="simple">
         <descriptions defaultDescription="REFWR"/>
-        <measureMapping columnObjectName="Join_11" columnName="REFWR"/>
+        <measureMapping columnObjectName="NonEquiJoin_1" columnName="REFWR"/>
       </measure>
       <measure id="WRBTR" order="89" aggregationType="sum" measureType="simple">
         <descriptions defaultDescription="WRBTR"/>
-        <measureMapping columnObjectName="Join_11" columnName="WRBTR"/>
+        <measureMapping columnObjectName="NonEquiJoin_1" columnName="WRBTR"/>
       </measure>
       <measure id="DMBTR" order="90" aggregationType="sum" measureType="simple">
         <descriptions defaultDescription="DMBTR"/>
-        <measureMapping columnObjectName="Join_11" columnName="DMBTR"/>
+        <measureMapping columnObjectName="NonEquiJoin_1" columnName="DMBTR"/>
       </measure>
       <measure id="REEWR" order="91" aggregationType="sum" measureType="simple">
         <descriptions defaultDescription="REEWR"/>
-        <measureMapping columnObjectName="Join_11" columnName="REEWR"/>
+        <measureMapping columnObjectName="NonEquiJoin_1" columnName="REEWR"/>
       </measure>
       <measure id="UMREZ" order="92" aggregationType="sum" measureType="simple">
         <descriptions defaultDescription="UMREZ"/>
-        <measureMapping columnObjectName="Join_11" columnName="UMREZ"/>
+        <measureMapping columnObjectName="NonEquiJoin_1" columnName="UMREZ"/>
       </measure>
       <measure id="Z_INV_BQTY" order="93" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="Z_INV_BQTY"/>
-        <measureMapping columnObjectName="Join_11" columnName="Z_INV_BQTY"/>
+        <descriptions defaultDescription="Spend Qty (Base Unit)"/>
+        <measureMapping columnObjectName="NonEquiJoin_1" columnName="Z_INV_BQTY"/>
       </measure>
       <measure id="Z_INVOICE_QTY" order="94" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="Z_INVOICE_QTY"/>
-        <measureMapping columnObjectName="Join_11" columnName="Z_INVOICE_QTY"/>
+        <descriptions defaultDescription="Spend Qty (Order Unit)"/>
+        <measureMapping columnObjectName="NonEquiJoin_1" columnName="Z_INVOICE_QTY"/>
       </measure>
       <measure id="Z_EKPO_MENGE" order="95" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="Z_EKPO_MENGE"/>
-        <measureMapping columnObjectName="Join_11" columnName="Z_EKPO_MENGE"/>
+        <descriptions defaultDescription="PO Qty"/>
+        <measureMapping columnObjectName="NonEquiJoin_1" columnName="Z_EKPO_MENGE"/>
       </measure>
       <measure id="NETPR" order="96" aggregationType="sum" measureType="simple">
-        <descriptions defaultDescription="NETPR"/>
-        <measureMapping columnObjectName="Join_11" columnName="NETPR"/>
-      </measure>
-      <measure id="SERIAL_NUMBER" order="98" aggregationType="max" measureType="simple">
-        <descriptions defaultDescription="SERIAL_NUMBER"/>
-        <measureMapping columnObjectName="Join_11" columnName="SERIAL_NUMBER"/>
-      </measure>
-      <measure id="LOT_NUMBER" order="99" aggregationType="max" measureType="simple">
-        <descriptions defaultDescription="LOT_NUMBER"/>
-        <measureMapping columnObjectName="Join_11" columnName="LOT_NUMBER"/>
+        <descriptions defaultDescription="PO Net Price"/>
+        <measureMapping columnObjectName="NonEquiJoin_1" columnName="NETPR"/>
       </measure>
     </baseMeasures>
     <calculatedMeasures>
@@ -2945,8 +2942,7 @@
           <attribute attributeName="MEMBER"/>
         </exceptionAggregation>
         <formula>1</formula>
-      
-        </measure>
+      </measure>
       <measure id="Z_ORDER_COUNT" hidden="false" order="2" aggregationType="sum" measureType="simple" aggregatable="true" calculatedMeasureType="counter" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
         <descriptions defaultDescription="Order Document Count"/>
         <exceptionAggregation exceptionAggregationType="countDistinct">
@@ -2954,8 +2950,7 @@
           <attribute attributeName="ZFISCAL_YEAR"/>
         </exceptionAggregation>
         <formula>1</formula>
-      
-        </measure>
+      </measure>
       <measure id="Z_ORD_LINE_CNT" hidden="false" order="3" aggregationType="sum" measureType="simple" aggregatable="true" calculatedMeasureType="counter" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
         <descriptions defaultDescription="Order Line Count"/>
         <exceptionAggregation exceptionAggregationType="countDistinct">
@@ -2964,24 +2959,21 @@
           <attribute attributeName="ZFISCAL_YEAR"/>
         </exceptionAggregation>
         <formula>1</formula>
-      
-        </measure>
+      </measure>
       <measure id="Z_VENDOR_CNT" hidden="false" order="4" aggregationType="sum" measureType="simple" aggregatable="true" calculatedMeasureType="counter" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
         <descriptions defaultDescription="Vendor Count"/>
         <exceptionAggregation exceptionAggregationType="countDistinct">
           <attribute attributeName="Z_LIFNR"/>
         </exceptionAggregation>
         <formula>1</formula>
-      
-        </measure>
+      </measure>
       <measure id="Z_MATNR_CNT" hidden="false" order="5" aggregationType="sum" measureType="simple" aggregatable="true" calculatedMeasureType="counter" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
         <descriptions defaultDescription="Material Count"/>
         <exceptionAggregation exceptionAggregationType="countDistinct">
           <attribute attributeName="MATNR"/>
         </exceptionAggregation>
         <formula>1</formula>
-      
-        </measure>
+      </measure>
     </calculatedMeasures>
     <restrictedMeasures/>
     <localDimensions/>
@@ -3165,17 +3157,17 @@
     <shape expanded="true" modelObjectName="Projection_14" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="301" y="356"/>
       <rectangleSize height="30" width="160"/>
-    </shape><shape><upperLeftCorner/><rectangleSize/></shape>
-    <shape expanded="true" modelObjectName="Join_11" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="402" y="204"/>
+    </shape>
+    <shape expanded="true" modelObjectName="NonEquiJoin_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="402" y="217"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape modelObjectName="Join_8" modelObjectNameSpace="Join_11" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="Join_8" modelObjectNameSpace="NonEquiJoin_1" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="243"/>
+      <rectangleSize width="250"/>
     </shape>
-    <shape modelObjectName="Projection_14" modelObjectNameSpace="Join_11" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="370" y="476"/>
+    <shape modelObjectName="Projection_14" modelObjectNameSpace="NonEquiJoin_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="372" y="307"/>
       <rectangleSize width="142"/>
     </shape>
   </shapes>
