@@ -63,7 +63,7 @@ BEGIN
     hierarchy_is_cycle AS is_cycle,
     hierarchy_is_orphan AS is_orphan,
     PARENT_ID,
-    NODE_ID    , node_id  as child_id
+    NODE_ID    , node_id  as child_id, '' AS "/BIC/ZIO_OBJNM", '' AS "/BIC/ZIO_HIEID"
 FROM HIERARCHY (
     SOURCE :lt_all_hier
    )
@@ -84,17 +84,26 @@ ORDER BY hierarchy_rank;
 		
 		ARR_LEVEL1  := ARRAY_AGG(:lt_LEVEL1."/BIC/ZIO_NODNM" ORDER BY "/BIC/ZIO_NODNM");
 	
-	lv_count    := CARDINALITY(:arr_level1);
+	lv_count    := CARDINALITY(:ARR_LEVEL1);
 	lv_row_count := 1; 
-	lv_step :=1;
+	lv_step := 1;
 	lv_counter := 1; 
 	
 	--FOR lv_row_count IN 1..lv_count  do
 --FOR lv_row_count IN 1..lv_count  do
 
  while 1 = 1 do 
-lv_crt_setname := 	:ARR_LEVEL1[lv_row_count]; 
-select "/BIC/ZIO_HIEID" into lv_guid from "OH_HIERARCHY" WHERE "/BIC/ZIO_NODNM" = :lv_crt_setname; 
+lv_crt_setname := 	:ARR_LEVEL1[:lv_row_count]; 
+
+LT_HIEID = select "/BIC/ZIO_HIEID"  from "OH_HIERARCHY" WHERE "/BIC/ZIO_NODNM" = :lv_crt_setname; 
+
+select count(*) INTO lv_crt_found FROM :LT_HIEID;
+
+IF :lv_crt_found > 0  then 
+          select "/BIC/ZIO_HIEID"  into lv_guid  from "OH_HIERARCHY" WHERE "/BIC/ZIO_NODNM" = :lv_crt_setname; 
+  else 
+    lv_guid := LEFT(NEWUID(),25) ;
+end if ; 
 
 --lv_crt_setname :=  '1700_PAYIO';
 lt_first_hier =  SELECT CONTROLLING_AREA AS KOKRS, LEVEL AS "LEVEL", 
@@ -120,7 +129,7 @@ FROM HIERARCHY (
 ORDER BY hierarchy_rank;
 
 
-----so far have 2 fields populated. NODID, NODNM, TNLVL, PRTID
+----so far have 4 fields populated. NODID, NODNM, TNLVL, PRTID
 -- GET childid
 
 lt_children = SELECT  MIN(rank) as "CHILD_ID" , parent_rank as "PARENT_ID"  FROM :LT_HIERARCHY GROUP BY parent_rank  ORDER BY  parent_rank ; 
@@ -134,14 +143,28 @@ lt_hierarchy_ch = select a.rank AS rank,
 										a.is_orphan AS is_orphan,
 									    a.PARENT_ID,
 									    a.NODE_ID, 
-									    to_nvarchar(b.child_id) as child_id from :lt_hierarchy as a INNER  join :lt_children as b on a.parent_rank = b.parent_id;
+									    to_nvarchar(b.child_id) as child_id from :lt_hierarchy as a left outer   join :lt_children as b on a.rank = b.parent_id;
 
+lt_hierarchy_OBJNM = select a.rank AS rank,
+										a.tree_size AS tree_size,
+									    a.parent_rank AS parent_rank,
+									    a.level AS level,
+									    a.root_rank AS root_rank,
+										a.is_cycle AS is_cycle,
+										a.is_orphan AS is_orphan,
+									    a.PARENT_ID,
+									    a.NODE_ID, 
+									    a.child_id ,  (case when child_id is null then  '0COORDER' ELSE '0HIER_NODE' END ) AS "/BIC/ZIO_OBJNM" , 
+									    :LV_GUID AS "/BIC/ZIO_HIEID"
+									    FROM :lt_hierarchy_ch as a  ; 
+									    
+/* NEED TO WRITE A LOOP IN ARRAY TO GET THE NEXT ID*/	    
+									    
 
-
-lt_hierarchy_ch  =   SELECT rank, tree_size, parent_rank, level, root_rank, is_cycle, is_orphan, parent_id, node_id, child_id FROM :lt_hierarchy_ch
+lt_hierarchy_top  =   SELECT rank, tree_size, parent_rank, level, root_rank, is_cycle, is_orphan, parent_id, node_id, child_id, "/BIC/ZIO_OBJNM" , "/BIC/ZIO_HIEID"  FROM :lt_hierarchy_OBJNM
 
 								UNION 
-								SELECT rank, tree_size, parent_rank, level, root_rank, is_cycle, is_orphan, parent_id, node_id, child_id   FROM :lt_hierarchy_top ; 
+								SELECT rank, tree_size, parent_rank, level, root_rank, is_cycle, is_orphan, parent_id, node_id, child_id, "/BIC/ZIO_OBJNM", "/BIC/ZIO_HIEID"   FROM :lt_hierarchy_top ; 
 								
 lv_row_count := :lv_row_count + 1 ; 
 if lv_row_count > :lv_count then 
@@ -162,17 +185,17 @@ t =   SELECT
     is_orphan AS is_orphan,
     PARENT_ID AS PARENT_ID,
     NODE_ID AS NODE_ID
-    ,     left(CHILD_ID,8) AS CHILD_ID
-FROM  :lt_hierarchy_ch ;
+    ,     left(CHILD_ID,8) AS CHILD_ID, "/BIC/ZIO_OBJNM", "/BIC/ZIO_HIEID"
+FROM  :lt_hierarchy_top ;
   
   
   
-   RETURN  (select  ''   as "/BIC/ZIO_HIEID" ,  
-                       '' as "/BIC/ZIO_OBJNM" , 
+   RETURN  (select  "/BIC/ZIO_HIEID"  as "/BIC/ZIO_HIEID" ,  
+                       "/BIC/ZIO_OBJNM" as "/BIC/ZIO_OBJNM" , 
                        rank as "/BIC/ZIO_NODID" ,
                        NODE_ID as  "/BIC/ZIO_NODNM" ,  
                        level as "/BIC/ZIO_TNLVL", 
-                       ''  as "/BIC/ZIO_OBJVS" ,
+                       'A'  as "/BIC/ZIO_OBJVS" ,
     					parent_rank as "/BIC/ZIO_PRTID" , 
     					'' as "/BIC/ZIO_LINK" ,
     					CHILD_ID as "/BIC/ZIO_CLDID" , 
