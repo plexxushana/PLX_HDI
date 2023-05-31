@@ -1,202 +1,232 @@
 FUNCTION "plx_analytics::FN_HIERARCHY_IO"(in_kokrs nvarchar(4) )
        
        RETURNS table(
-		 "/BIC/ZIO_HIEID" NVARCHAR(32)
+		 "/BIC/ZIO_HIEID" NVARCHAR(25)
 		,"/BIC/ZIO_OBJNM" nvarchar(30) 
 		,"/BIC/ZIO_NODID"  nvarchar(08)
 		, "/BIC/ZIO_NODNM" NVARCHAR(60)
 		, "/BIC/ZIO_TNLVL" NVARCHAR(02)
 		,"/BIC/ZIO_OBJVS"  nvarchar(01)
-		,"/BIC/ZIO_PRTID"  nvarchar(60)
+		,"/BIC/ZIO_PRTID"  nvarchar(08)
 		,"/BIC/ZIO_LINK"   nvarchar(01)
-		,"/BIC/ZIO_CLDID"  nvarchar(60)
+		,"/BIC/ZIO_CLDID"  nvarchar(08)
 		,"/BIC/ZIO_NXTID"  nvarchar(08)
 		,"/BIC/ZIO_INTRL"  nvarchar(01)
-		, "RECORDMODE"NVARCHAR(01)  ) 
+		, "RECORDMODE"     NVARCHAR(01)  
+	) 
        LANGUAGE SQLSCRIPT 
        SQL SECURITY INVOKER AS 
 BEGIN 
     /*****************************
         Write your function logic
     ****************************/
-    declare lv_zio_hieid, LV_ZIO_CRT_HIEID nvarchar(32) := 'XXXXX';
-    DECLARE lv_zio_nodnm, lv_loop_zio_nodnm, lv_loop_prtid, lv_loop_ancestorid, lv_sibling   nvarchar(60) := 'AAAA'; 
-    DECLARE lv_zio_tnlvl integer := 1; 
+    declare lv_zio_hieid, LV_ZIO_CRT_HIEID , LV_GUID  nvarchar(25) := 'XXXXX';
+    DECLARE lv_zio_nodnm, lv_crt_nodnm, lv_crt_prtid, lv_crt_ancestorid, lv_siblingid,lv_cldid, lv_nxtid,lv_crt_setname,
+    lv_crt_setname_next , lv_prt_back_up  nvarchar(60) := 'AAAA'; 
+    DECLARE lv_skip_check, lv_is_parent, lv_det_parent, lv_first_time, lv_is_child, lv_go_up, lv_go_down , lv_enter_it   boolean :=True; 
+    DECLARE lv_crt_tnlvl , lv_crt_set_cnt , lv_crt_recordid, lv_crt_nodid , lv_crt_found  integer := 1; 
     DECLARE ARR_LEVEL1  NVARCHAR(60) ARRAY;
+    DECLARE ARR_HIEID NVARCHAR(25)  ARRAY;
+	 DECLARE ARR_OBJNM nvarchar(30)   ARRAY;
+	 DECLARE ARR_NODID  nvarchar(08)  ARRAY;
+	 DECLARE ARR_NODNM NVARCHAR(60)  ARRAY;
+	 DECLARE ARR_TNLVL NVARCHAR(02)  ARRAY;
+	 DECLARE ARR_OBJVS  nvarchar(01)  ARRAY;
+	 DECLARE ARR_PRTID  nvarchar(08)  ARRAY;
+	 DECLARE ARR_LINK   nvarchar(01)  ARRAY;
+	 DECLARE ARR_CLDID  nvarchar(08)  ARRAY;
+	 DECLARE ARR_NXTID  nvarchar(08)  ARRAY;
+	 DECLARE ARR_INTRL  NVARCHAR(01) ARRAY; 
+    
     declare lv_class nvarchar(04) := '0103';
     DECLARE lv_count,lv_row_count, lv_step, lv_counter, lv_num , LV_NODID  integer;
+    declare lv_comp_code nvarchar(4) :='1000';
     
     
- --SELECT NODES THAT ARE TOP NODES 
+ --SELECT NODES THAT ARE TOP NODES , for ex for comp 1700 select 1700_PAYIO and no subnodes are selected . Only top ones to start the journey. :-) 
     VAR_OUT =     SELECT DISTINCT SETNAME  FROM  "ECC_SETNODE"    WHERE SETCLASS = :lv_class  and  left(setname,4)= :in_kokrs AND SETNAME NOT IN ( SELECT 
                   SUBSETNAME   FROM  "ECC_SETNODE"    WHERE SETCLASS = :lv_class  and left(setname,4)= :in_kokrs) ORDER BY SETNAME ;
+   -- var_out = select setname from :var_out1 where setname = '1700_PAYIO';
+    
+    LT_LINEID = SELECT DISTINCT SUBSETNAME, LINEID  FROM  "ECC_SETNODE"    WHERE SETCLASS = :lv_class  and  left(setname,4)= :in_kokrs AND SETNAME NOT IN ( SELECT 
+                  SUBSETNAME   FROM  "ECC_SETNODE"    WHERE SETCLASS = :lv_class  and left(setname,4)= :in_kokrs) ORDER BY SUBSETNAME ;
                   
---selct first nodes and their children. 
-    var_out_child = SELECT DISTINCT SETNAME, subsetname FROM  "ECC_SETNODE"    WHERE SETCLASS = :lv_class  and  left(setname,4)= :in_kokrs AND SETNAME NOT IN ( SELECT 
-                  SUBSETNAME   FROM  "ECC_SETNODE"    WHERE SETCLASS = :lv_class  and left(setname,4)= :in_kokrs ) ORDER BY SETNAME ;
-
---lv_zio_hieid := NEWUID();
---these are the top nodes. 
-lv_zio_tnlvl :=1; 
-LV_SIBLING :='';
-
-LT_LEVEL1 =  SELECT   LEFT(NEWUID(),32) AS   "/BIC/ZIO_HIEID" 		, '0HIER_NODE' AS "/BIC/ZIO_OBJNM" 		,'1' AS "/BIC/ZIO_NODID"  
+    lt_all_hier = select top 1 CONTROLLING_AREA AS KOKRS, LEVEL AS "LEVEL",  PARENT AS PARENT_ID, CHILD AS NODE_ID  FROM  
+                                  "plx_analytics::FN_HIERARCHY_AUFNR_IO" ('1700', '1700_PAYIO', 'HOSP')  ; 
+                                  
+    lt_hierarchy_top=    SELECT
+    hierarchy_rank AS rank,
+    hierarchy_tree_size AS tree_size,
+    hierarchy_parent_rank AS parent_rank,
+    hierarchy_level AS level,
+    hierarchy_root_rank AS root_rank,
+    hierarchy_is_cycle AS is_cycle,
+    hierarchy_is_orphan AS is_orphan,
+    PARENT_ID,
+    NODE_ID    , node_id  as child_id, '' AS "/BIC/ZIO_OBJNM", '' AS "/BIC/ZIO_HIEID"
+FROM HIERARCHY (
+    SOURCE :lt_all_hier
+   )
+ORDER BY hierarchy_rank;
+    
+    
+    LT_LEVEL1 =  SELECT   LEFT(NEWUID(),25) AS   "/BIC/ZIO_HIEID" 		, '0HIER_NODE' AS "/BIC/ZIO_OBJNM" 		,'1' AS "/BIC/ZIO_NODID"  
 		,SETNAME AS  "/BIC/ZIO_NODNM" 
-		, to_nvarchar(lv_zio_tnlvl,999)  AS "/BIC/ZIO_TNLVL" 
+		, to_nvarchar(lv_crt_tnlvl,999)  AS "/BIC/ZIO_TNLVL" 
 		,'A' AS "/BIC/ZIO_OBJVS" 
 		,'0'  AS "/BIC/ZIO_PRTID"  
 		,'A' AS "/BIC/ZIO_LINK"   
-		,SETNAME AS  "/BIC/ZIO_CLDID"  
-		,'A' AS "/BIC/ZIO_NXTID"  
+		, lv_cldid  AS  "/BIC/ZIO_CLDID"  
+		, lv_nxtid  AS "/BIC/ZIO_NXTID"  
 		,'A' AS "/BIC/ZIO_INTRL"  
 		, 'A' AS "RECORDMODE"
 		FROM :var_out ; 
 		
-LT_LEVEL1_CHILD =  SELECT   LEFT(NEWUID(),32) AS   "/BIC/ZIO_HIEID" 		, '0COORDER' AS "/BIC/ZIO_OBJNM" 		,'1' AS "/BIC/ZIO_NODID"  
-		,SETNAME AS  "/BIC/ZIO_NODNM" 
-		, to_nvarchar(lv_zio_tnlvl, 999)  AS "/BIC/ZIO_TNLVL" 
-		,'A' AS "/BIC/ZIO_OBJVS" 
-		,'0'  AS "/BIC/ZIO_PRTID"  
-		,'A' AS "/BIC/ZIO_LINK"   
-		,SETNAME AS  "/BIC/ZIO_CLDID"  
-		,'A' AS "/BIC/ZIO_NXTID"  
-		,'A' AS "/BIC/ZIO_INTRL"  
-		, 'A' AS "RECORDMODE"
-		FROM :var_out_CHILD ; 
-
-	ARR_LEVEL1  := ARRAY_AGG(:lt_LEVEL1."/BIC/ZIO_NODNM" ORDER BY "/BIC/ZIO_NODNM");
+		ARR_LEVEL1  := ARRAY_AGG(:lt_LEVEL1."/BIC/ZIO_NODNM" ORDER BY "/BIC/ZIO_NODNM");
 	
-	lv_count    := CARDINALITY(:arr_level1);
+	lv_count    := CARDINALITY(:ARR_LEVEL1);
 	lv_row_count := 1; 
-	lv_step :=1;
+	lv_step := 1;
 	lv_counter := 1; 
--- let's find  the children
--- there might be entries in SETLEAF only and not in SETNODE. Will add them later. for ex: Node 123 has only 3 leafs and no subnodes. 
-LV_ZIO_CRT_HIEID := '' ; 
-
-LT_HIERARCHY_SIBLINGS = SELECT  ''  AS "/BIC/ZIO_PRTID" , 	'' AS "/BIC/ZIO_CLDID"  FROM DUMMY ; 
-
-
+	
+	--FOR lv_row_count IN 1..lv_count  do
 --FOR lv_row_count IN 1..lv_count  do
-FOR lv_row_count IN 1..1  do
-lv_zio_nodnm := 	:ARR_LEVEL1[lv_counter]; 
-lv_loop_zio_nodnm := 	:ARR_LEVEL1[lv_counter]; 
-LV_NODID :=1;  
-lv_loop_prtid := '1700_PAYIO';
---this loop will take each setname and it will find the parent-child rows in teh table. we need to have the Top SetName in array so we can search one by one. 
 
---lt_hierarchy = select * from :lt_level1 where "/BIC/ZIO_NODNM"  = ARR_LEVEL1[lv_counter];
-lt_hierarchy = select * from :lt_level1 where "/BIC/ZIO_NODNM"  = :lv_zio_nodnm;
-SELECT "/BIC/ZIO_HIEID" INTO LV_ZIO_CRT_HIEID  FROM :LT_LEVEL1 WHERE "/BIC/ZIO_NODNM"  = :lv_zio_nodnm;
+ while 1 = 1 do 
+lv_crt_setname := 	:ARR_LEVEL1[:lv_row_count]; 
 
-	while 1 = 1 do
+LT_HIEID = select "/BIC/ZIO_HIEID"  from "OH_HIERARCHY" WHERE "/BIC/ZIO_NODNM" = :lv_crt_setname; 
 
-		LT_HIERARCHY_TMP = 
-		    SELECT  top 1 
-		    	 LV_ZIO_CRT_HIEID AS  "/BIC/ZIO_HIEID" 		,
-		    	 '0HIER_NODE' AS "/BIC/ZIO_OBJNM" 		,
-		    	 :lv_nodid AS "/BIC/ZIO_NODID"  , 
-			     :lv_loop_zio_nodnm AS "/BIC/ZIO_NODNM" , 
-		         to_nvarchar(:lv_zio_tnlvl + 1,999) AS "/BIC/ZIO_TNLVL"  ,
-		        'A' AS "/BIC/ZIO_OBJVS" ,
-			    B.SETNAME AS "/BIC/ZIO_PRTID" , 	
-			    'A' AS "/BIC/ZIO_LINK"  ,
-			    B.SUBSETNAME AS "/BIC/ZIO_CLDID", 
-			    'A' AS "/BIC/ZIO_NXTID"  	,
-			    'A' AS "/BIC/ZIO_INTRL"  ,
-				'A' AS "RECORDMODE"
-			    
-		    FROM "ECC_SETNODE" as B
-			WHERE B.SETCLASS =  :lv_class 
-		    and  b.setname =  :lv_loop_prtid
-		    and  b.subsetname not in (select "/BIC/ZIO_CLDID" from :LT_HIERARCHY_SIBLINGS where "/BIC/ZIO_PRTID" = :lv_loop_prtid ) 
-		    order by b.lineid;
-		    
--- builds the siblings table to be used backward once the last heir has been found. :-) 
--- for ex: if the top node has 3 nodes (node1, node2, node3), it will go down node1 and find any children, then it has to go to node2 which is a sibling meaning it has to go back up 
--- and start getting the children of node2 and so on. this can be achieved by keeping track of siblings in another table
-LT_HIERARCHY_SIBLINGS = 
-		    SELECT 
-		    	
-			    B.SETNAME AS "/BIC/ZIO_PRTID" , 	
-			    B.SUBSETNAME AS "/BIC/ZIO_CLDID" 
-			   
-		    FROM "ECC_SETNODE" as B
-			WHERE B.SETCLASS =  :lv_class 
-		    and  b.setname =  :lv_loop_prtid
-		    and  b.subsetname not in (select "/BIC/ZIO_CLDID" from :LT_HIERARCHY where "/BIC/ZIO_PRTID" = :lv_loop_prtid ) 
-		    order by b.lineid;
-	
-	    SELECT COUNT(*) INTO lv_NUM FROM :LT_HIERARCHY_TMP;
-	
-	    if :LV_NUM = 0 then 
-	--go to previous child/brother if any ancestor exist, until it reaches the top node.  lol...second heir in throne :-)   the search has to back up.
-    	select top 1 "/BIC/ZIO_CLDID" into lv_sibling from :LT_HIERARCHY_SIBLINGS WHERE "/BIC/ZIO_PRTID" = :lv_loop_ancestorid  ; 
-    	--and subsetname not in ( 	--	   select "/BIC/ZIO_CLDID" from :LT_HIERARCHY where "/BIC/ZIO_PRTID" = :lv_loop_ancestorid 	); 
-		    if :lv_sibling = '' then 
-	               break;
-	          end if; 
-	    end if;
---this become the child now.
-IF :lv_sibling = '' THEN 
-  lv_loop_ancestorid := :lv_loop_prtid;
-  LV_NODID := :LV_NODID + 1 ; 
--- hold into a variable the name of the new parent. 
+select count(*) INTO lv_crt_found FROM :LT_HIEID;
 
-   select top 1 subsetname  into  lv_loop_prtid  from "ECC_SETNODE" as B WHERE B.SETCLASS =  :lv_class  and  b.setname =  :lv_loop_ancestorid  
---and subsetname not in (		   select "/BIC/ZIO_CLDID" from :LT_HIERARCHY where "/BIC/ZIO_PRTID" = :lv_loop_ancestorid 	)  
-   order by b.lineid;
+IF :lv_crt_found > 0  then 
+          select "/BIC/ZIO_HIEID"  into lv_guid  from "OH_HIERARCHY" WHERE "/BIC/ZIO_NODNM" = :lv_crt_setname; 
+  else 
+    lv_guid := LEFT(NEWUID(),25) ;
+end if ; 
 
-ELSE 
-   lv_loop_prtid:= :lv_loop_ancestorid;
-END IF ; 
+--lv_crt_setname :=  '1700_PAYIO';
+lt_first_hier =  SELECT CONTROLLING_AREA AS KOKRS, LEVEL AS "LEVEL", 
+                 PARENT AS PARENT_ID, CHILD AS NODE_ID  FROM  "plx_analytics::FN_HIERARCHY_AUFNR_IO" (:in_kokrs, :lv_crt_setname, 'HOSP')  ; 
 
-	    LT_HIERARCHY =
-		    SELECT 	   "/BIC/ZIO_HIEID" 		,
-		    	  "/BIC/ZIO_OBJNM" 		,
-		    	 "/BIC/ZIO_NODID"  , 
-			      "/BIC/ZIO_NODNM" , 
-		         "/BIC/ZIO_TNLVL"  ,
-		         "/BIC/ZIO_OBJVS" ,
-			   "/BIC/ZIO_PRTID" , 	
-			    "/BIC/ZIO_LINK"  ,
-			    "/BIC/ZIO_CLDID", 
-			    "/BIC/ZIO_NXTID"  	,
-			     "/BIC/ZIO_INTRL"  ,
-				 "RECORDMODE"
-		    from :LT_HIERARCHY
-	        
-	        UNION
-		    
-		    SELECT    "/BIC/ZIO_HIEID" 		,
-		    	  "/BIC/ZIO_OBJNM" 		,
-		    	 "/BIC/ZIO_NODID"  , 
-			      "/BIC/ZIO_NODNM" , 
-		         "/BIC/ZIO_TNLVL"  ,
-		         "/BIC/ZIO_OBJVS" ,
-			   "/BIC/ZIO_PRTID" , 	
-			    "/BIC/ZIO_LINK"  ,
-			    "/BIC/ZIO_CLDID", 
-			    "/BIC/ZIO_NXTID"  	,
-			     "/BIC/ZIO_INTRL"  ,
-				 "RECORDMODE"
-		    from :LT_HIERARCHY_TMP;
-		    
-		    LT_HIERARCHY_SIBLINGS = SELECT * fROM :LT_HIERARCHY_SIBLINGS 
-		                            UNION 
-		                            SELECT * fROM :LT_HIERARCHY_SIBLINGS;
-	
---	    lv_zio_tnlvl := lv_zio_tnlvl + 1;
-
-	end while;
---  lv_counter := lv_counter + 1 ;
-       
-	END FOR;
+lt_source = select a.kokrs, a.level, a.parent_id, a.node_id, b.lineid from :lt_first_hier as a inner join :LT_LINEID as b  ON A.NODE_ID = B.SUBSETNAME ; 
 
 
--- LETS'EXCLUDE THE BOTTOM ONES.  IF THEY HAVE AN ENTRY IN SETLEAF THEN IT MEANS THEY ARE BOTTOMS AND NEED TO BE EXCLUDED
-RETURN   
+
+lt_hierarchy =   SELECT
+    hierarchy_rank AS rank,
+    hierarchy_tree_size AS tree_size,
+    hierarchy_parent_rank AS parent_rank,
+    hierarchy_level AS level,
+    hierarchy_root_rank AS root_rank,
+    hierarchy_is_cycle AS is_cycle,
+    hierarchy_is_orphan AS is_orphan,
+    PARENT_ID,
+    NODE_ID
+FROM HIERARCHY (
+    SOURCE :lt_first_hier 
+   )
+ORDER BY hierarchy_rank;
+
+
+----so far have 4 fields populated. NODID, NODNM, TNLVL, PRTID
+-- GET childid
+
+lt_children = SELECT  MIN(rank) as "CHILD_ID" , parent_rank as "PARENT_ID"  FROM :LT_HIERARCHY GROUP BY parent_rank  ORDER BY  parent_rank ; 
+
+lt_hierarchy_ch = select a.rank AS rank,
+										a.tree_size AS tree_size,
+									    a.parent_rank AS parent_rank,
+									    a.level AS level,
+									    a.root_rank AS root_rank,
+										a.is_cycle AS is_cycle,
+										a.is_orphan AS is_orphan,
+									    a.PARENT_ID,
+									    a.NODE_ID, 
+									    to_nvarchar(b.child_id) as child_id from :lt_hierarchy as a left outer   join :lt_children as b on a.rank = b.parent_id;
+
+lt_hierarchy_OBJNM = select a.rank AS rank,
+										a.tree_size AS tree_size,
+									    a.parent_rank AS parent_rank,
+									    a.level AS level,
+									    a.root_rank AS root_rank,
+										a.is_cycle AS is_cycle,
+										a.is_orphan AS is_orphan,
+									    a.PARENT_ID,
+									    a.NODE_ID, 
+									    a.child_id ,  (case when child_id is null then  '0COORDER' ELSE '0HIER_NODE' END ) AS "/BIC/ZIO_OBJNM" , 
+									    :LV_GUID AS "/BIC/ZIO_HIEID"
+									    FROM :lt_hierarchy_ch as a  ; 
+									    
+/* NEED TO WRITE A LOOP IN ARRAY TO GET THE NEXT ID*/	    
+									    
+
+lt_hierarchy_top  =   SELECT rank, tree_size, parent_rank, level, root_rank, is_cycle, is_orphan, parent_id, node_id, child_id, "/BIC/ZIO_OBJNM" , "/BIC/ZIO_HIEID"  FROM :lt_hierarchy_OBJNM
+
+								UNION 
+								SELECT rank, tree_size, parent_rank, level, root_rank, is_cycle, is_orphan, parent_id, node_id, child_id, "/BIC/ZIO_OBJNM", "/BIC/ZIO_HIEID"   FROM :lt_hierarchy_top ; 
+								
+lv_row_count := :lv_row_count + 1 ; 
+if lv_row_count > :lv_count then 
+  break;
+end if;
+
+end while ; 
+
+
+  
+t =   SELECT
+    rank AS rank,
+    tree_size AS tree_size,
+    parent_rank AS parent_rank,
+    level AS level,
+    root_rank AS root_rank,
+    is_cycle AS is_cycle,
+    is_orphan AS is_orphan,
+    PARENT_ID AS PARENT_ID,
+    NODE_ID AS NODE_ID
+    ,     left(CHILD_ID,8) AS CHILD_ID, "/BIC/ZIO_OBJNM", "/BIC/ZIO_HIEID"
+FROM  :lt_hierarchy_top ;
+  
+  
+  
+   RETURN  (select  "/BIC/ZIO_HIEID"  as "/BIC/ZIO_HIEID" ,  
+                       "/BIC/ZIO_OBJNM" as "/BIC/ZIO_OBJNM" , 
+                       rank as "/BIC/ZIO_NODID" ,
+                       NODE_ID as  "/BIC/ZIO_NODNM" ,  
+                       level as "/BIC/ZIO_TNLVL", 
+                       'A'  as "/BIC/ZIO_OBJVS" ,
+    					parent_rank as "/BIC/ZIO_PRTID" , 
+    					'' as "/BIC/ZIO_LINK" ,
+    					CHILD_ID as "/BIC/ZIO_CLDID" , 
+    					'' as "/BIC/ZIO_NXTID"  	,
+    					''  as "/BIC/ZIO_INTRL" , '' AS RECORDMODE  from :t)  ; 
+  
+  
     
- SELECT   * 
-		FROM :LT_HIERARCHY ; 
+/*  t = unnest(:ARR_HIEID,:ARR_OBJNM,:ARR_NODID, :ARR_NODNM, :ARR_TNLVL,:ARR_OBJVS,:ARR_PRTID,:ARR_LINK,:ARR_CLDID,:ARR_NXTID, :ARR_INTRL) 
+          as (	 HIEID ,OBJNM ,NODID ,  NODNM , TNLVL	,OBJVS ,PRTID ,LINK ,CLDID 	,NXTID  	,INTRL   )   ;  
+  
+  
+     RETURN  (select  HIEID as "/BIC/ZIO_HIEID" ,  
+                       OBJNM as "/BIC/ZIO_OBJNM" , 
+                       NODID as "/BIC/ZIO_NODID" ,
+                       NODNM as  "/BIC/ZIO_NODNM" ,  
+                       TNLVL as "/BIC/ZIO_TNLVL", 
+                       OBJVS as "/BIC/ZIO_OBJVS" ,
+    					PRTID as "/BIC/ZIO_PRTID" , 
+    					LINK as "/BIC/ZIO_LINK" ,
+    					CLDID as "/BIC/ZIO_CLDID" , 
+    					NXTID as "/BIC/ZIO_NXTID"  	,
+    					INTRL  as "/BIC/ZIO_INTRL"   from :t)  ;  */
+    					
+/*    RETURN  (select  '' as "/BIC/ZIO_HIEID" ,  '' as "/BIC/ZIO_OBJNM" ,  '' as "/BIC/ZIO_NODID" , SUBSETNAME as  "/BIC/ZIO_NODNM" ,   '' as "/BIC/ZIO_TNLVL", 
+                       '' as "/BIC/ZIO_OBJVS" ,	'' as "/BIC/ZIO_PRTID" , 	'' as "/BIC/ZIO_LINK" ,'' as "/BIC/ZIO_CLDID" , 	'' as "/BIC/ZIO_NXTID"  	,
+    					''  as "/BIC/ZIO_INTRL"   from :lt_found_setname)  ;   		*/			
+    					
+    					
+    					
+    	
+    					
+    					
 END;
