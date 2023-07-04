@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CA_CO_ZCCA_H40" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="CA_CO_ZCCA_H40"/>
+<localVariables>
+  <variable id="IP_KOKRS" parameter="true">
+    <descriptions defaultDescription=""/>
+    <variableProperties datatype="NVARCHAR" length="4" scale="null" mandatory="true">
+      <valueDomain type="AttributeValue">
+        <attribute name="CO_AREA"/>
+      </valueDomain>
+      <selection multiLine="true" type="SingleValue"/>
+    </variableProperties>
+  </variable>
+</localVariables>
+<variableMappings/>
+<dataSources>
+  <DataSource id="ECC_CO_OM_CCA_40">
+    <resourceUri>ECC_CO_OM_CCA_40</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="REQ_ID"/>
+      <viewAttribute id="KOKRS"/>
+      <viewAttribute id="BELNR"/>
+      <viewAttribute id="BUZEI"/>
+      <viewAttribute id="FISCVAR"/>
+      <viewAttribute id="FISCPER"/>
+      <viewAttribute id="KOSTL"/>
+      <viewAttribute id="LSTAR"/>
+      <viewAttribute id="VTYPE"/>
+      <viewAttribute id="VTDETAIL"/>
+      <viewAttribute id="VTSTAT"/>
+      <viewAttribute id="MEASTYPE"/>
+      <viewAttribute id="VERSN"/>
+      <viewAttribute id="VALUTYP"/>
+      <viewAttribute id="CORRTYPE"/>
+      <viewAttribute id="KSTAR"/>
+      <viewAttribute id="SEKNZ"/>
+      <viewAttribute id="RSPOBART"/>
+      <viewAttribute id="RSPAROBVAL"/>
+      <viewAttribute id="CCTR_IBV"/>
+      <viewAttribute id="SWG"/>
+      <viewAttribute id="SWF"/>
+      <viewAttribute id="SWV"/>
+      <viewAttribute id="SMEF"/>
+      <viewAttribute id="SMEV"/>
+      <viewAttribute id="WAERS"/>
+      <viewAttribute id="CURTYPE"/>
+      <viewAttribute id="MEINH"/>
+      <viewAttribute id="BLDAT"/>
+      <viewAttribute id="BUDAT"/>
+      <viewAttribute id="SGTXT"/>
+      <viewAttribute id="RSAUXACCTYPE"/>
+      <viewAttribute id="RSAUXACCVAL"/>
+      <viewAttribute id="BUKRS"/>
+      <viewAttribute id="GSBER"/>
+      <viewAttribute id="FKBER"/>
+      <viewAttribute id="PBUKRS"/>
+      <viewAttribute id="PFKBER"/>
+      <viewAttribute id="WERKS"/>
+      <viewAttribute id="MATNR"/>
+      <viewAttribute id="PERNR"/>
+      <viewAttribute id="KTOPL"/>
+      <viewAttribute id="SAKNR"/>
+      <viewAttribute id="LIFNR"/>
+      <viewAttribute id="KUNNR"/>
+      <viewAttribute id="QMNUM"/>
+      <viewAttribute id="GEBER"/>
+      <viewAttribute id="PGEBER"/>
+      <viewAttribute id="GRANT_NBR"/>
+      <viewAttribute id="PGRANT_NBR"/>
+      <viewAttribute id="FIKRS"/>
+      <viewAttribute id="BUDGET_PD"/>
+      <viewAttribute id="PBUDGET_PD"/>
+      <viewAttribute id="ZZMEINB"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CD_PART_CCTR" datatype="NVARCHAR" length="10" expressionLanguage="SQL">
+        <formula>case when &quot;RSPOBART&quot; in ('0CCT', '0ATY')
+     then substr(&quot;RSPAROBVAL&quot;,5,10)
+    else ''
+end </formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CD_PART_ACTTY" datatype="NVARCHAR" length="6" expressionLanguage="SQL">
+        <formula>case when &quot;RSPOBART&quot;  = '0ATY'
+     then substr(&quot;RSPAROBVAL&quot;,15,6)
+    else ''
+end </formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CD_PART_WBSEL" datatype="NVARCHAR" length="24" expressionLanguage="SQL">
+        <formula>case when &quot;RSPOBART&quot;  = '0POS'
+     then &quot;RSPAROBVAL&quot;
+    else ''
+end </formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CD_PART_ABCPR" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>case when &quot;RSPOBART&quot;  = '0ABC'
+     then substr(&quot;RSPAROBVAL&quot;,5,12)
+    else ''
+end </formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CD_CO_ITEM_TX" datatype="NVARCHAR" length="50" expressionLanguage="SQL">
+        <formula>UPPER(&quot;SGTXT&quot;)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CD_DATAORIGIN" datatype="NVARCHAR" length="1" expressionLanguage="SQL">
+        <formula>'1'</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CD_CO_REPLINE" datatype="NVARCHAR" length="15" expressionLanguage="SQL">
+        <formula>''</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CD_FISCAL_YEAR" datatype="NVARCHAR" length="4" expressionLanguage="SQL">
+        <formula>'2024'</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CD_PART_COORD" datatype="NVARCHAR" length="12" expressionLanguage="SQL">
+        <formula>case when &quot;RSPOBART&quot;  = '0COR'
+     then &quot;RSPAROBVAL&quot;
+    else ''
+end </formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="ECC_CO_OM_CCA_40"/>
+  
+    <filter>&quot;KOKRS&quot; IN ($$IP_KOKRS$$)</filter>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Projection_1">
+  <attributes>
+    <attribute id="CO_AREA" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="KOKRS"/>
+      <keyMapping columnObjectName="Projection_1" columnName="KOKRS"/>
+    </attribute>
+    <attribute id="CO_DOC_NO" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="BELNR"/>
+      <keyMapping columnObjectName="Projection_1" columnName="BELNR"/>
+    </attribute>
+    <attribute id="CO_ITEM_NO" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="BUZEI"/>
+      <keyMapping columnObjectName="Projection_1" columnName="BUZEI"/>
+    </attribute>
+    <attribute id="CURTYPE" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CURTYPE"/>
+      <keyMapping columnObjectName="Projection_1" columnName="CURTYPE"/>
+    </attribute>
+    <attribute id="METYPE" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MEASTYPE"/>
+      <keyMapping columnObjectName="Projection_1" columnName="MEASTYPE"/>
+    </attribute>
+    <attribute id="VTYPE" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="VTYPE"/>
+      <keyMapping columnObjectName="Projection_1" columnName="VTYPE"/>
+    </attribute>
+    <attribute id="FISCVAR" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="FISCVAR"/>
+      <keyMapping columnObjectName="Projection_1" columnName="FISCVAR"/>
+    </attribute>
+    <attribute id="COSTCENTER" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="KOSTL"/>
+      <keyMapping columnObjectName="Projection_1" columnName="KOSTL"/>
+    </attribute>
+    <attribute id="FISCPER" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="FISCPER"/>
+      <keyMapping columnObjectName="Projection_1" columnName="FISCPER"/>
+    </attribute>
+    <attribute id="CURRENCY" order="14" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="WAERS"/>
+      <keyMapping columnObjectName="Projection_1" columnName="WAERS"/>
+    </attribute>
+    <attribute id="UNIT" order="15" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ZZMEINB"/>
+      <keyMapping columnObjectName="Projection_1" columnName="ZZMEINB"/>
+    </attribute>
+    <attribute id="PART_CCTR" order="16" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CD_PART_CCTR"/>
+      <keyMapping columnObjectName="Projection_1" columnName="CD_PART_CCTR"/>
+    </attribute>
+    <attribute id="PART_ACTTY" order="17" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CD_PART_ACTTY"/>
+      <keyMapping columnObjectName="Projection_1" columnName="CD_PART_ACTTY"/>
+    </attribute>
+    <attribute id="PART_COORD" order="18" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CD_PART_COORD"/>
+      <keyMapping columnObjectName="Projection_1" columnName="CD_PART_COORD"/>
+    </attribute>
+    <attribute id="PART_WBSEL" order="19" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CD_PART_WBSEL"/>
+      <keyMapping columnObjectName="Projection_1" columnName="CD_PART_WBSEL"/>
+    </attribute>
+    <attribute id="PART_ABCPR" order="20" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CD_PART_ABCPR"/>
+      <keyMapping columnObjectName="Projection_1" columnName="CD_PART_ABCPR"/>
+    </attribute>
+    <attribute id="AUXACCTYPE" order="21" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="RSAUXACCTYPE"/>
+      <keyMapping columnObjectName="Projection_1" columnName="RSAUXACCTYPE"/>
+    </attribute>
+    <attribute id="AUXACCVAL" order="22" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="RSAUXACCVAL"/>
+      <keyMapping columnObjectName="Projection_1" columnName="RSAUXACCVAL"/>
+    </attribute>
+    <attribute id="COMP_CODE" order="23" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="BUKRS"/>
+      <keyMapping columnObjectName="Projection_1" columnName="BUKRS"/>
+    </attribute>
+    <attribute id="BUS_AREA" order="24" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="GSBER"/>
+      <keyMapping columnObjectName="Projection_1" columnName="GSBER"/>
+    </attribute>
+    <attribute id="FUNC_AREA" order="25" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="FKBER"/>
+      <keyMapping columnObjectName="Projection_1" columnName="FKBER"/>
+    </attribute>
+    <attribute id="PCOMP_CODE" order="26" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PBUKRS"/>
+      <keyMapping columnObjectName="Projection_1" columnName="PBUKRS"/>
+    </attribute>
+    <attribute id="PFUNC_AREA" order="27" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PFKBER"/>
+      <keyMapping columnObjectName="Projection_1" columnName="PFKBER"/>
+    </attribute>
+    <attribute id="CHRT_ACCTS" order="28" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="KTOPL"/>
+      <keyMapping columnObjectName="Projection_1" columnName="KTOPL"/>
+    </attribute>
+    <attribute id="GL_ACCOUNT" order="29" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SAKNR"/>
+      <keyMapping columnObjectName="Projection_1" columnName="SAKNR"/>
+    </attribute>
+    <attribute id="CREDITOR" order="30" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LIFNR"/>
+      <keyMapping columnObjectName="Projection_1" columnName="LIFNR"/>
+    </attribute>
+    <attribute id="DEBITOR" order="31" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="KUNNR"/>
+      <keyMapping columnObjectName="Projection_1" columnName="KUNNR"/>
+    </attribute>
+    <attribute id="PLANT" order="32" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="WERKS"/>
+      <keyMapping columnObjectName="Projection_1" columnName="WERKS"/>
+    </attribute>
+    <attribute id="MATERIAL" order="33" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATNR"/>
+      <keyMapping columnObjectName="Projection_1" columnName="MATNR"/>
+    </attribute>
+    <attribute id="EMPLOYEE" order="34" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PERNR"/>
+      <keyMapping columnObjectName="Projection_1" columnName="PERNR"/>
+    </attribute>
+    <attribute id="NOTIFICATN" order="35" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="QMNUM"/>
+      <keyMapping columnObjectName="Projection_1" columnName="QMNUM"/>
+    </attribute>
+    <attribute id="CO_ITEM_TX" order="36" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CD_CO_ITEM_TX"/>
+      <keyMapping columnObjectName="Projection_1" columnName="CD_CO_ITEM_TX"/>
+    </attribute>
+    <attribute id="DOC_DATE" order="37" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="BLDAT"/>
+      <keyMapping columnObjectName="Projection_1" columnName="BLDAT"/>
+    </attribute>
+    <attribute id="PSTNG_DATE" order="38" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="BUDAT"/>
+      <keyMapping columnObjectName="Projection_1" columnName="BUDAT"/>
+    </attribute>
+    <attribute id="VTDETAIL" order="39" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="VTDETAIL"/>
+      <keyMapping columnObjectName="Projection_1" columnName="VTDETAIL"/>
+    </attribute>
+    <attribute id="VTSTAT" order="40" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="VTSTAT"/>
+      <keyMapping columnObjectName="Projection_1" columnName="VTSTAT"/>
+    </attribute>
+    <attribute id="VERSION" order="41" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="VERSN"/>
+      <keyMapping columnObjectName="Projection_1" columnName="VERSN"/>
+    </attribute>
+    <attribute id="VALUATION" order="42" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="VALUTYP"/>
+      <keyMapping columnObjectName="Projection_1" columnName="VALUTYP"/>
+    </attribute>
+    <attribute id="COSTELMNT" order="43" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="KSTAR"/>
+      <keyMapping columnObjectName="Projection_1" columnName="KSTAR"/>
+    </attribute>
+    <attribute id="DB_CR_IND" order="44" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SEKNZ"/>
+      <keyMapping columnObjectName="Projection_1" columnName="SEKNZ"/>
+    </attribute>
+    <attribute id="PIOBJSV" order="45" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="RSPOBART"/>
+      <keyMapping columnObjectName="Projection_1" columnName="RSPOBART"/>
+    </attribute>
+    <attribute id="PIOVALUE" order="46" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="RSPAROBVAL"/>
+      <keyMapping columnObjectName="Projection_1" columnName="RSPAROBVAL"/>
+    </attribute>
+    <attribute id="FUND" order="47" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="GEBER"/>
+      <keyMapping columnObjectName="Projection_1" columnName="GEBER"/>
+    </attribute>
+    <attribute id="PFUND" order="48" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PGEBER"/>
+      <keyMapping columnObjectName="Projection_1" columnName="PGEBER"/>
+    </attribute>
+    <attribute id="GRANT_NBR" order="49" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="GRANT_NBR"/>
+      <keyMapping columnObjectName="Projection_1" columnName="GRANT_NBR"/>
+    </attribute>
+    <attribute id="PGRANT_NBR" order="50" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PGRANT_NBR"/>
+      <keyMapping columnObjectName="Projection_1" columnName="PGRANT_NBR"/>
+    </attribute>
+    <attribute id="FM_AREA" order="51" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="FIKRS"/>
+      <keyMapping columnObjectName="Projection_1" columnName="FIKRS"/>
+    </attribute>
+    <attribute id="ACTTYPE" order="52" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LSTAR"/>
+      <keyMapping columnObjectName="Projection_1" columnName="LSTAR"/>
+    </attribute>
+    <attribute id="CORRTYPE" order="53" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CORRTYPE"/>
+      <keyMapping columnObjectName="Projection_1" columnName="CORRTYPE"/>
+    </attribute>
+    <attribute id="PU_BDGTID" order="54" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="BUDGET_PD"/>
+      <keyMapping columnObjectName="Projection_1" columnName="BUDGET_PD"/>
+    </attribute>
+    <attribute id="PBDGTID" order="55" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PBUDGET_PD"/>
+      <keyMapping columnObjectName="Projection_1" columnName="PBUDGET_PD"/>
+    </attribute>
+    <attribute id="DATAORIGIN" order="56" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CD_DATAORIGIN"/>
+      <keyMapping columnObjectName="Projection_1" columnName="CD_DATAORIGIN"/>
+    </attribute>
+    <attribute id="CO_REPLINE" order="57" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CD_CO_REPLINE"/>
+      <keyMapping columnObjectName="Projection_1" columnName="CD_CO_REPLINE"/>
+    </attribute>
+    <attribute id="FISCALYEAR" order="58" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CD_FISCAL_YEAR"/>
+      <keyMapping columnObjectName="Projection_1" columnName="CD_FISCAL_YEAR"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="AMOUNT" order="10" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="SWG"/>
+      <measureMapping columnObjectName="Projection_1" columnName="SWG"/>
+    </measure>
+    <measure id="AMOUNTFX" order="11" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="SWF"/>
+      <measureMapping columnObjectName="Projection_1" columnName="SWF"/>
+    </measure>
+    <measure id="AMOUNTVR" order="12" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="SWV"/>
+      <measureMapping columnObjectName="Projection_1" columnName="SWV"/>
+    </measure>
+    <measure id="QUANTITYVR" order="13" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="SMEV"/>
+      <measureMapping columnObjectName="Projection_1" columnName="SMEV"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="false" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="100" y="105"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="259"/>
+      <rectangleSize height="30" width="194"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
