@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CA_CO_ZCCA_H40" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
 <descriptions defaultDescription="CA_CO_ZCCA_H40"/>
-<localVariables/>
+<localVariables>
+  <variable id="IP_KOKRS" parameter="true">
+    <descriptions defaultDescription=""/>
+    <variableProperties datatype="NVARCHAR" length="4" scale="null" mandatory="true">
+      <valueDomain type="AttributeValue">
+        <attribute name="CO_AREA"/>
+      </valueDomain>
+      <selection multiLine="true" type="SingleValue"/>
+    </variableProperties>
+  </variable>
+</localVariables>
 <variableMappings/>
 <dataSources>
   <DataSource id="ECC_CO_OM_CCA_40">
@@ -9,7 +19,7 @@
   </DataSource>
 </dataSources>
 <calculationViews>
-  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="REQ_ID"/>
       <viewAttribute id="KOKRS"/>
@@ -111,6 +121,8 @@ end </formula>
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <input node="ECC_CO_OM_CCA_40"/>
+  
+    <filter>&quot;KOKRS&quot; IN ($$IP_KOKRS$$)</filter>
   </calculationView>
 </calculationViews>
 <logicalModel id="Projection_1">
