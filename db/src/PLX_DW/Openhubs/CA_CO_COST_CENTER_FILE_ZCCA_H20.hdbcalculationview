@@ -17,30 +17,22 @@
     </variable>
     <variable id="IP_YEAR" parameter="true">
       <descriptions defaultDescription="Fiscal Year"/>
-      <variableProperties datatype="VARCHAR" length="4" mandatory="true" scale="0">
-        <valueDomain type="AttributeValue">
-          <externalLikeStructureName>plx_analytics::CA_DIM_FISC_CAL_POC</externalLikeStructureName>
-          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
-          <externalLikeElementName>ZFISCAL_YEAR</externalLikeElementName>
-        </valueDomain>
+      <variableProperties datatype="NVARCHAR" length="4" mandatory="true" scale="0">
+        <valueDomain type="empty"/>
         <selection multiLine="true" type="SingleValue"/>
       </variableProperties>
     </variable>
     <variable id="IP_FISCVAR" parameter="true">
-      <descriptions defaultDescription="Fiscal Year Variant"/>
-      <variableProperties datatype="VARCHAR" length="2" mandatory="true" defaultValue="undefined">
+      <descriptions defaultDescription="Fiscal Variant"/>
+      <variableProperties datatype="NVARCHAR" length="2" mandatory="true" defaultValue="K4">
         <valueDomain type="empty"/>
         <selection multiLine="false" type="SingleValue"/>
       </variableProperties>
     </variable>
     <variable id="IP_CHART" parameter="true">
-      <descriptions defaultDescription="Chart of Accounts"/>
-      <variableProperties datatype="NVARCHAR" length="4" mandatory="true" scale="0" defaultValue="undefined">
-        <valueDomain type="AttributeValue">
-          <externalLikeStructureName>plx_analytics::CA_DIM_CHART_OF_ACCOUNTS</externalLikeStructureName>
-          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
-          <externalLikeElementName>KTOPL</externalLikeElementName>
-        </valueDomain>
+      <descriptions defaultDescription="Chart of Account"/>
+      <variableProperties datatype="NVARCHAR" length="4" mandatory="true" defaultValue="HOSP">
+        <valueDomain type="empty"/>
         <selection multiLine="false" type="SingleValue"/>
       </variableProperties>
     </variable>
@@ -73,7 +65,7 @@
     </DataSource>
   </dataSources>
 <calculationViews>
-  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1" filterExpressionLanguage="SQL">
     <descriptions/>
     <viewAttributes>
         <viewAttribute id="PART_CCTR"/>
@@ -211,8 +203,9 @@
         </calculatedViewAttribute>
       </calculatedViewAttributes>
       <input node="CA_CO_PLX_COST_CENTER_ANALYSIS_LINE_ITEM_ACTUAL"/>
-    </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+    <filter>&quot;FISCVAR&quot; in ('$$IP_FISCVAR$$') and &quot;CHART&quot; in ('$$IP_CHART$$')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2" filterExpressionLanguage="SQL">
     <descriptions/>
     <viewAttributes>
         <viewAttribute id="VTDETAIL_BIW"/>
@@ -271,7 +264,8 @@
         </calculatedViewAttribute>
       </calculatedViewAttributes>
       <input node="CA_CO_PLX_COST_CENTER_ANALYSIS_LINE_ITEM_INT_AND_EXT_POSTINGS"/>
-    </calculationView>
+    <filter>&quot;FISCVAR&quot; in ('$$IP_FISCVAR$$') and &quot;CHART&quot; in ('$$IP_CHART$$')</filter>
+  </calculationView>
   <calculationView xsi:type="Calculation:UnionView" id="Union_1">
     <descriptions/>
     <viewAttributes>
