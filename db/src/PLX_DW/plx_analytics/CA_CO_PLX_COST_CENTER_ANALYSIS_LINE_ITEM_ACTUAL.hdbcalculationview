@@ -43,7 +43,7 @@
     </DataSource>
   </dataSources>
 <calculationViews>
-  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1" filterExpressionLanguage="SQL">
     <descriptions/>
     <viewAttributes>
         <viewAttribute id="KOKRS"/>
@@ -90,9 +90,9 @@
       </viewAttributes>
     <calculatedViewAttributes/>
       <input node="ECC_COBK"/>
-    <filter>(in (&quot;KOKRS&quot;,'$$IP_KOKRS$$')) AND (in (&quot;GJAHR&quot;,'$$IP_YEAR$$'))</filter>
+    <filter>&quot;KOKRS&quot; IN ($$IP_KOKRS$$) AND &quot;GJAHR&quot; IN ($$IP_YEAR$$)</filter>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2" filterExpressionLanguage="SQL">
     <descriptions/>
     <viewAttributes>
         <viewAttribute id="KOKRS"/>
@@ -175,7 +175,7 @@
       </viewAttributes>
     <calculatedViewAttributes/>
       <input node="ECC_COEP"/>
-    <filter>(in (&quot;KOKRS&quot;,'$$IP_KOKRS$$')) AND (in (&quot;GJAHR&quot;,'$$IP_YEAR$$')) AND (&quot;WRTTP&quot; ='04')</filter>
+    <filter>&quot;KOKRS&quot; IN ($$IP_KOKRS$$) AND &quot;GJAHR&quot; IN ($$IP_YEAR$$) AND &quot;WRTTP&quot; = '04'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinType="inner">
     <descriptions/>
@@ -415,7 +415,7 @@
     <joinAttribute name="KOKRS"/>
     <joinAttribute name="BELNR"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3" filterExpressionLanguage="SQL">
     <descriptions/>
     <viewAttributes>
         <viewAttribute id="OBJNR"/>
@@ -424,7 +424,7 @@
       </viewAttributes>
     <calculatedViewAttributes/>
       <input node="ECC_ONRKS"/>
-    <filter>(in (&quot;KOKRS&quot;,'$$IP_KOKRS$$'))</filter>
+    <filter>&quot;KOKRS&quot; IN ($$IP_KOKRS$$)</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="Join_2" joinType="inner">
     <descriptions/>
@@ -1981,10 +1981,14 @@ else '' end</formula>
     
       <calculatedAttribute id="PART_WBSEL" order="131" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="PART_WBSEL"/>
+    
         <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="24">
+    
           <formula>case when left(&quot;PAROB1&quot;,2) = 'PR'then substr(&quot;PAROB1&quot;,2) 
  else '' end</formula>
+    
         </keyCalculation>
+    
       </calculatedAttribute>
     </calculatedAttributes>
     <privateDataFoundation>
