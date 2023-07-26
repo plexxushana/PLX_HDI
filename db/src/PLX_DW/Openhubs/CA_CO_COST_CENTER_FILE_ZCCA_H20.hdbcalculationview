@@ -17,30 +17,22 @@
     </variable>
     <variable id="IP_YEAR" parameter="true">
       <descriptions defaultDescription="Fiscal Year"/>
-      <variableProperties datatype="VARCHAR" length="4" mandatory="true" scale="0">
-        <valueDomain type="AttributeValue">
-          <externalLikeStructureName>plx_analytics::CA_DIM_FISC_CAL_POC</externalLikeStructureName>
-          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
-          <externalLikeElementName>ZFISCAL_YEAR</externalLikeElementName>
-        </valueDomain>
+      <variableProperties datatype="NVARCHAR" length="4" mandatory="true" scale="0">
+        <valueDomain type="empty"/>
         <selection multiLine="true" type="SingleValue"/>
       </variableProperties>
     </variable>
     <variable id="IP_FISCVAR" parameter="true">
-      <descriptions defaultDescription="Fiscal Year Variant"/>
-      <variableProperties datatype="VARCHAR" length="2" mandatory="true" defaultValue="undefined">
+      <descriptions defaultDescription="Fiscal Variant"/>
+      <variableProperties datatype="NVARCHAR" length="2" mandatory="true" defaultValue="K4">
         <valueDomain type="empty"/>
         <selection multiLine="false" type="SingleValue"/>
       </variableProperties>
     </variable>
     <variable id="IP_CHART" parameter="true">
-      <descriptions defaultDescription="Chart of Accounts"/>
-      <variableProperties datatype="NVARCHAR" length="4" mandatory="true" scale="0" defaultValue="undefined">
-        <valueDomain type="AttributeValue">
-          <externalLikeStructureName>plx_analytics::CA_DIM_CHART_OF_ACCOUNTS</externalLikeStructureName>
-          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
-          <externalLikeElementName>KTOPL</externalLikeElementName>
-        </valueDomain>
+      <descriptions defaultDescription="Chart of Account"/>
+      <variableProperties datatype="NVARCHAR" length="4" mandatory="true" defaultValue="HOSP">
+        <valueDomain type="empty"/>
         <selection multiLine="false" type="SingleValue"/>
       </variableProperties>
     </variable>
@@ -73,7 +65,7 @@
     </DataSource>
   </dataSources>
 <calculationViews>
-  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1" filterExpressionLanguage="SQL">
     <descriptions/>
     <viewAttributes>
         <viewAttribute id="PART_CCTR"/>
@@ -211,8 +203,9 @@
         </calculatedViewAttribute>
       </calculatedViewAttributes>
       <input node="CA_CO_PLX_COST_CENTER_ANALYSIS_LINE_ITEM_ACTUAL"/>
-    </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+    <filter>&quot;FISCVAR&quot; in ('$$IP_FISCVAR$$') and &quot;CHART&quot; in ('$$IP_CHART$$')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2" filterExpressionLanguage="SQL">
     <descriptions/>
     <viewAttributes>
         <viewAttribute id="VTDETAIL_BIW"/>
@@ -271,7 +264,8 @@
         </calculatedViewAttribute>
       </calculatedViewAttributes>
       <input node="CA_CO_PLX_COST_CENTER_ANALYSIS_LINE_ITEM_INT_AND_EXT_POSTINGS"/>
-    </calculationView>
+    <filter>&quot;FISCVAR&quot; in ('$$IP_FISCVAR$$') and &quot;CHART&quot; in ('$$IP_CHART$$')</filter>
+  </calculationView>
   <calculationView xsi:type="Calculation:UnionView" id="Union_1">
     <descriptions/>
     <viewAttributes>
@@ -1778,27 +1772,27 @@
         <descriptions/>
         <keyMapping columnObjectName="Projection_3" columnName="FISCPER"/>
       </attribute>
-      <attribute id="FISCVAR" order="2" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="FISCVARNT" order="2" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions/>
         <keyMapping columnObjectName="Projection_3" columnName="FISCVAR"/>
       </attribute>
-      <attribute id="GJAHR" order="3" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="FISCYEAR" order="3" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="GJAHR"/>
         <keyMapping columnObjectName="Projection_3" columnName="GJAHR"/>
       </attribute>
-      <attribute id="PERIO" order="4" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="FISCPER3" order="4" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="PERIO"/>
         <keyMapping columnObjectName="Projection_3" columnName="PERIO"/>
       </attribute>
-      <attribute id="KOSTL" order="5" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="COSTCENTER" order="5" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="KOSTL"/>
         <keyMapping columnObjectName="Projection_3" columnName="KOSTL"/>
       </attribute>
-      <attribute id="KSTAR" order="6" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="COSTELMNT" order="6" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="KSTAR"/>
         <keyMapping columnObjectName="Projection_3" columnName="KSTAR"/>
       </attribute>
-      <attribute id="KOKRS" order="7" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="CO_AREA" order="7" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="KOKRS"/>
         <keyMapping columnObjectName="Projection_3" columnName="KOKRS"/>
       </attribute>
@@ -1810,19 +1804,19 @@
         <descriptions/>
         <keyMapping columnObjectName="Projection_3" columnName="METYPE"/>
       </attribute>
-      <attribute id="VERSN" order="10" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="VERSION" order="10" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="VERSN"/>
         <keyMapping columnObjectName="Projection_3" columnName="VERSN"/>
       </attribute>
-      <attribute id="VTDETAIL_BIW" order="11" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="VTDETAIL" order="11" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="VTDETAIL_BIW"/>
         <keyMapping columnObjectName="Projection_3" columnName="VTDETAIL_BIW"/>
       </attribute>
-      <attribute id="VTYPE_BIW" order="12" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="VTYPE" order="12" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="VTYPE_BIW"/>
         <keyMapping columnObjectName="Projection_3" columnName="VTYPE_BIW"/>
       </attribute>
-      <attribute id="BEKNZ" order="13" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="DB_CR_IND" order="13" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="BEKNZ"/>
         <keyMapping columnObjectName="Projection_3" columnName="BEKNZ"/>
       </attribute>
@@ -1838,7 +1832,7 @@
         <descriptions defaultDescription="PIOVALUE"/>
         <keyMapping columnObjectName="Projection_3" columnName="PIOVALUE"/>
       </attribute>
-      <attribute id="VTSTAT_BIW" order="17" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="VTSTAT" order="17" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="VTSTAT_BIW"/>
         <keyMapping columnObjectName="Projection_3" columnName="VTSTAT_BIW"/>
       </attribute>
@@ -1854,7 +1848,7 @@
         <descriptions defaultDescription="PART_COORD"/>
         <keyMapping columnObjectName="Projection_3" columnName="PART_COORD"/>
       </attribute>
-      <attribute id="CHART" order="21" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="CHART_ACCTS" order="21" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions/>
         <keyMapping columnObjectName="Projection_3" columnName="CHART"/>
       </attribute>
@@ -1874,11 +1868,11 @@
         <descriptions/>
         <keyMapping columnObjectName="Projection_3" columnName="FM_AREA"/>
       </attribute>
-      <attribute id="GEBER" order="26" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="FUND" order="26" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="GEBER"/>
         <keyMapping columnObjectName="Projection_3" columnName="GEBER"/>
       </attribute>
-      <attribute id="FKBER" order="27" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="FUNC_AREA" order="27" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="FKBER"/>
         <keyMapping columnObjectName="Projection_3" columnName="FKBER"/>
       </attribute>
@@ -1886,11 +1880,11 @@
         <descriptions defaultDescription="GRANT_NBR"/>
         <keyMapping columnObjectName="Projection_3" columnName="GRANT_NBR"/>
       </attribute>
-      <attribute id="PFKBER" order="29" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="PFUNC_AREA" order="29" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="PFKBER"/>
         <keyMapping columnObjectName="Projection_3" columnName="PFKBER"/>
       </attribute>
-      <attribute id="PGEBER" order="30" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="PFUND" order="30" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="PGEBER"/>
         <keyMapping columnObjectName="Projection_3" columnName="PGEBER"/>
       </attribute>
@@ -1932,7 +1926,7 @@
         <descriptions defaultDescription="AMOUNT"/>
         <measureMapping columnObjectName="Projection_3" columnName="AMOUNT"/>
       </measure>
-      <measure id="MEGBTR" order="38" aggregationType="sum" measureType="simple">
+      <measure id="QUANTITY" order="38" aggregationType="sum" measureType="simple">
         <descriptions defaultDescription="MEGBTR"/>
         <measureMapping columnObjectName="Projection_3" columnName="MEGBTR"/>
       </measure>
