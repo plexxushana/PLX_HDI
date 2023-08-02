@@ -1,0 +1,131 @@
+PROCEDURE "plx_etl::SP_EXTRACT_DELTA" (in ip_bukrs nvarchar(4), out V_out  integer ) 
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+	--READS SQL DATA 
+	AS
+BEGIN
+/***************************** 
+	Write your procedure logic 
+ *****************************/
+ 
+	DECLARE lv_start_date VARCHAR(8) := '20180301';
+	DECLARE lv_end_date VARCHAR(8) := '20180301';
+	DECLARE lv_cpudt_start, lv_cpudt_end, lv_aedat_start, lv_aedat_end, lv_posting_Date VARCHAR(8) := '29990101';
+	DECLARE lv_cpudt_start1, lv_cpudt_end1, lv_aedat_start1, lv_aedat_end1 date := current_Date;
+	DECLARE lv_delta_flag nvarchar(5000);
+	
+	DECLARE lv_row_count, lv_step, lv_count_diff INTEGER;
+	DECLARE i, lv_mod, lv_rest,  lv_div , lv_first_time, lv_counter, lv_request  INTEGER;
+	declare lv_belnr,lv_belnr1       nvarchar(10):='9999999999';
+	declare lv_belnr10,lv_belnr11    nvarchar(10):='9999999999';
+	
+	DECLARE lv_bukrs nvarchar(4) := '9999'; 
+	DECLARE lv_gjahr nvarchar(4) := '9999'; 
+	DECLARE lv_buzei nvarchar(3) :='123';
+ 	DECLARE arr_dates  VARCHAR(8) ARRAY;
+ 	 
+	DECLARE ARR_BSIK_SEARCH  NVARCHAR(100) ARRAY;
+	DECLARE ARR_BSIK_BUZEI  NVARCHAR(3) ARRAY;
+	DECLARE ARR_BSIK_BUKRS  NVARCHAR(4) ARRAY;
+	DECLARE ARR_BSIK_GJAHR  VARCHAR(4) ARRAY;
+    DECLARE lv_string_rec1, lv_string_rec2  VARCHAR(1073741823) ;
+	     
+
+	select current_date into lv_cpudt_start1 from "SYS::DUMMY";
+	select to_nvarchar(ADD_DAYS(lv_cpudt_start1, -1), 'yyyymmdd') 	into lv_cpudt_start 	from "SYS::DUMMY";
+	 
+	select current_date  into lv_aedat_start1 from "SYS::DUMMY";
+	select to_nvarchar(ADD_DAYS(lv_aedat_start1, -1), 'yyyymmdd') 	into lv_aedat_start 	from "SYS::DUMMY";
+	
+--1. Generate Request ID
+--2. Get data from ECC_BSIK and copy into HANA Staging tbl with the newly generated Request Id
+--3. Determine Delta Flag
+--4. Populate the  HANA_DW cube
+
+--1. Generate Request ID
+ select max("REQUEST_ID")  INTO lv_request from "HANA_STAGING";
+ 
+ lv_request := :lv_request + 1 ; 
+ 
+ --2. Get data from ECC_BSIK and copy into HANA Staging tbl with the newly generated Request Id
+-- get list of docs in BSIK within this 
+-- start & end time frame
+	lt_bsik_doc_list = 
+	SELECT  BUKRS, LIFNR, GJAHR, BELNR, BUZEI, MONAT, BSCHL ,  DMBTR, WRBTR, GJAHR || BUKRS || BELNR || BUZEI AS "SEARCH_FIELD"
+	FROM    "ECC_BSIK" 
+	WHERE   ---("CPUDT" >= lv_cpudt_start  )  	and 
+	"BUKRS" = :ip_bukrs   and 	gjahr = '2023'; 
+   
+insert into "HANA_STAGING" (SELECT :lv_request AS "REQUEST_ID", "BUKRS" AS "COMP_CODE", LIFNR AS "CREDITOR",
+          GJAHR||'0'||MONAT AS "FISCPER", 'V3' AS "FISCVARNT",  BELNR AS "AC_DOC_NO" , BUZEI AS "ITEM_NUM" , 
+           'O' AS FI_DSBITEM, '' AS FI_DOCSTAT, '' AS C_CTR_AREA, '' AS DUNN_AREA, '' AS ACCT_TYPE, '' AS SP_GL_IND, '' AS AC_DOC_TYP,
+           '' AS POST_KEY, '' AS DOC_DATE, '' AS PSTNG_DATE, '' AS CREATEDON, '' AS CLEAR_DATE, '' AS LAST_DUNN, '' AS NETDUEDATE,
+           '' AS DSCT_DATE1, '' AS DSCT_DATE2, DMBTR AS DMBTR 
+           FROM :lt_bsik_doc_list); 
+ --2. End
+
+
+--3. Determine Delta Flag
+
+--4. Populate the  HANA_DW cube
+	ARR_BSIK_SEARCH  := ARRAY_AGG(:lt_bsik_doc_list.SEARCH_FIELD ORDER BY BUKRS, BELNR, GJAHR);
+	lv_rest := CARDINALITY(:arr_bsik_search);
+    FOR lv_row_count IN 1..lv_rest  do
+    -- find the latest record in HANA_DW and the latest record from HANA_STAGING 
+    lv_gjahr := substr(:ARR_BSIK_SEARCH[:lv_row_count], 1,4);
+    lv_bukrs := substr(:ARR_BSIK_SEARCH[:lv_row_count], 5,4);
+    lv_belnr := substr(:ARR_BSIK_SEARCH[:lv_row_count], 9,10);
+    lv_buzei := substr(:ARR_BSIK_SEARCH[:lv_row_count], 19,3);
+    
+    lt_rec1 = select TOP 1 * from "HANA_DW" WHERE COMP_CODE = :lv_bukrs and AC_DOC_NO = :lv_belnr and ITEM_NUM = :lv_buzei and LEFT(FISCPER,4)  = :lv_gjahr ORDER BY DELTA_FLAG DESC ; 
+--capture the delta flag.    
+    lv_delta_flag := IFNULL(:lt_rec1.delta_flag[1], '');
+    
+    lv_string_rec1 = IFNULL(:lt_rec1.COMP_CODE[1], '') || IFNULL(:lt_rec1.CREDITOR[1], '') || IFNULL(:lt_rec1.FISCPER[1], '')   || IFNULL(:lt_rec1.FISCVARNT[1], '')   
+              || IFNULL(:lt_rec1.AC_DOC_NO[1], '')  || IFNULL(:lt_rec1.ITEM_NUM[1], '')  || IFNULL(:lt_rec1.FI_DSBITEM[1], '')  || IFNULL(:lt_rec1.FI_DOCSTAT[1], '') 
+              || IFNULL(:lt_rec1.C_CTR_AREA[1], '')  || IFNULL(:lt_rec1.DUNN_AREA[1], '')  || IFNULL(:lt_rec1.ACCT_TYPE[1], '')  || IFNULL(:lt_rec1.SP_GL_IND[1], '')  
+              || IFNULL(:lt_rec1.AC_DOC_TYP[1], '')  || IFNULL(:lt_rec1.POST_KEY[1], '')  || IFNULL(:lt_rec1.DOC_DATE[1], '')   || IFNULL(:lt_rec1.PSTNG_DATE[1], '')  
+              || IFNULL(:lt_rec1.CREATEDON[1], '')  || IFNULL(:lt_rec1.CLEAR_DATE[1], '')  || IFNULL(:lt_rec1.LAST_DUNN[1], '') || IFNULL(:lt_rec1.NETDUEDATE[1], '')  
+              || IFNULL(:lt_rec1.DSCT_DATE1[1], '')  || IFNULL(:lt_rec1.DSCT_DATE2[1], '')  || IFNULL(:lt_rec1.DMBTR[1], 0)  ; 
+
+    lt_rec2 = select TOP 1 * from "HANA_STAGING" WHERE COMP_CODE = :lv_bukrs and AC_DOC_NO = :lv_belnr and ITEM_NUM = :lv_buzei and LEFT(FISCPER,4)  = :lv_gjahr  ORDER BY REQUEST_ID DESC; 
+     lv_string_rec2 = IFNULL(:lt_rec2.COMP_CODE[1], '') || IFNULL(:lt_rec2.CREDITOR[1], '') || IFNULL(:lt_rec2.FISCPER[1], '')   || IFNULL(:lt_rec2.FISCVARNT[1], '')   
+              || IFNULL(:lt_rec2.AC_DOC_NO[1], '')  || IFNULL(:lt_rec2.ITEM_NUM[1], '')  || IFNULL(:lt_rec2.FI_DSBITEM[1], '')  || IFNULL(:lt_rec2.FI_DOCSTAT[1], '') 
+              || IFNULL(:lt_rec2.C_CTR_AREA[1], '')  || IFNULL(:lt_rec2.DUNN_AREA[1], '')  || IFNULL(:lt_rec2.ACCT_TYPE[1], '')  || IFNULL(:lt_rec2.SP_GL_IND[1], '')  
+              || IFNULL(:lt_rec2.AC_DOC_TYP[1], '')  || IFNULL(:lt_rec2.POST_KEY[1], '')  || IFNULL(:lt_rec2.DOC_DATE[1], '')   || IFNULL(:lt_rec2.PSTNG_DATE[1], '')  
+              || IFNULL(:lt_rec2.CREATEDON[1], '')  || IFNULL(:lt_rec2.CLEAR_DATE[1], '')  || IFNULL(:lt_rec2.LAST_DUNN[1], '') || IFNULL(:lt_rec2.NETDUEDATE[1], '')  
+              || IFNULL(:lt_rec2.DSCT_DATE1[1], '')  || IFNULL(:lt_rec2.DSCT_DATE2[1], '')  || IFNULL(:lt_rec2.DMBTR[1], 0)  ; 
+    
+    LV_POSTING_DATE := ifnull(:lt_rec2.PSTNG_DATE[1],'');
+    
+    -- time to compare the record frm Staging table with the record from DW table. If they are different then reverese the old one from DW and insert the new one.
+    -- If they are not different don't do anything, just skip and move on to the next record.
+    
+    if lv_String_rec1 <> lv_String_rec2  then 
+    --reverse the old record 
+    update  "HANA_DW" 
+    set dmbtr = (-1) * dmbtr WHERE COMP_CODE = :lv_bukrs and AC_DOC_NO = :lv_belnr and ITEM_NUM = :lv_buzei and LEFT(FISCPER,4)  = :lv_gjahr and delta_flag = :lv_delta_flag ;
+    
+    --insert the new record. 
+    lv_delta_flag := 'R' || TO_NVARCHAR(:LV_REQUEST,'999') || '_' ||to_nvarchar(:LV_POSTING_DATE); 
+   -- lv_delta_flag := :LV_POSTING_DATE; 
+    INSERT INTO "HANA_DW" (SELECT COMP_CODE, CREDITOR, FISCPER,     FISCVARNT,    
+               AC_DOC_NO,    ITEM_NUM,    FI_DSBITEM,    FI_DOCSTAT,  
+               C_CTR_AREA,    DUNN_AREA,    ACCT_TYPE,    SP_GL_IND,   
+               AC_DOC_TYP,    POST_KEY,    DOC_DATE,     PSTNG_DATE,   
+               CREATEDON,    CLEAR_DATE,    LAST_DUNN, NETDUEDATE,   
+               DSCT_DATE1,    DSCT_DATE2,    :lv_delta_flag as delta_flag,  DMBTR  FROM :LT_REC2); 
+    
+    LV_COUNT_DIFF := :LV_COUNT_DIFF + 1 ;
+    
+    end if;
+    
+    
+    
+    
+    end for;
+
+
+V_OUT := 12;
+
+END;

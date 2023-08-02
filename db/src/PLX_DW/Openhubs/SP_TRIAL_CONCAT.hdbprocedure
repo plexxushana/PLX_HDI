@@ -1,0 +1,28 @@
+PROCEDURE "plx_etl::SP_TRIAL_CONCAT"(TEXT nvarchar(100))
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   --DEFAULT SCHEMA <default_schema_name>
+   READS SQL DATA AS
+BEGIN
+   /*************************************
+       Write your procedure logic 
+   *************************************/
+
+
+  declare _items nvarchar(100) ARRAY;
+  declare _text nvarchar(100);
+  declare _index integer;
+  _text := :TEXT;
+  _index := 1;
+
+  WHILE LOCATE(:_text,',') > 0 DO
+  _items[:_index] := SUBSTR_BEFORE(:_text,',');
+  _text := SUBSTR_AFTER(:_text,',');
+  _index := :_index + 1;
+  END WHILE;
+  _items[:_index] := :_text;
+
+  rst = UNNEST(:_items) AS ("items");
+  SELECT * FROM :rst;
+  END;
+  

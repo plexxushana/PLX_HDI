@@ -1,0 +1,58 @@
+FUNCTION "plx_analytics::FN_HIERARCHY_TXNODE_EXTRACT"(in_kokrs nvarchar(4) )
+       
+       RETURNS table(
+       	"LANGU"  NVARCHAR(01) 
+		, "/BIC/ZIO_HIEID" NVARCHAR(25)
+		, "/BIC/ZIO_NODNM" NVARCHAR(60)
+		, "/BIC/ZIO_OBJVS"  nvarchar(01)
+		, "/BIC/ZIO_TXTMD"  nvarchar(40)
+		, "/BIC/ZIO_TXTLG"   nvarchar(60)
+		, "/BIC/ZIO_TXTSH"  nvarchar(20)
+		, "RECORDMODE"     NVARCHAR(01)  
+	) 
+       LANGUAGE SQLSCRIPT 
+       SQL SECURITY INVOKER AS 
+BEGIN 
+    /*****************************
+        Write your function logic
+    ****************************/
+    declare lv_zio_hieid, LV_ZIO_CRT_HIEID , LV_GUID  nvarchar(25) := 'XXXXX';
+    DECLARE lv_zio_nodnm, lv_crt_nodnm, lv_crt_prtid, lv_crt_ancestorid, lv_siblingid,lv_cldid, lv_nxtid,lv_crt_setname,
+    lv_crt_setname_next , lv_prt_back_up , lv_node_id, lv_nodnm , c_object nvarchar(60) := 'AAAA'; 
+    DECLARE lv_skip_check, lv_is_parent, lv_det_parent, lv_first_time, lv_is_child, lv_go_up, lv_go_down , lv_enter_it   boolean :=True; 
+    DECLARE lv_crt_tnlvl , lv_crt_set_cnt , lv_crt_recordid, lv_crt_nodid , lv_crt_found  integer := 1; 
+    
+    
+    declare lv_class nvarchar(04) := '0104';
+    DECLARE lv_count,lv_count_nxtid, lv_row_count_nxtid, lv_row_count, lv_step, lv_counter, lv_num , LV_NODID  integer;
+    declare lv_comp_code nvarchar(4) :='1000';
+    
+    
+ -- getting cost center 
+    lt_tbl1 =    SELECT DISTINCT SETNAME , DESCRIPT   FROM  "ECC_SETHEADERT"  WHERE SETCLASS = '0101'  and  subclass= :in_kokrs  ;
+ -- getting cost elements
+    lt_tbl2 =    SELECT DISTINCT SETNAME , DESCRIPT   FROM "ECC_SETHEADERT"   WHERE SETCLASS = '0102'   AND SUBCLASS = 'HOSP' ;  
+ -- getting IO numbers 
+    lt_tbl3 =    SELECT DISTINCT SETNAME , DESCRIPT   FROM "ECC_SETHEADERT"   WHERE SETCLASS = '0103'  ;  
+ -- getting SKF  numbers 
+    lt_tbl4 =    SELECT DISTINCT SETNAME , DESCRIPT   FROM "ECC_SETHEADERT"   WHERE  SETCLASS = '0104'  and  subclass= :in_kokrs  ;
+    
+
+  
+t =   SELECT   'E' as "LANGU", LEFT(NEWUID(),25) AS   "/BIC/ZIO_HIEID" 	, "SETNAME" AS "/BIC/ZIO_NODNM" , 'A' as "/BIC/ZIO_OBJVS", "DESCRIPT" as "/BIC/ZIO_TXTMD", 
+               "DESCRIPT" as "/BIC/ZIO_TXTLG", LEFT("DESCRIPT" , 20) as "/BIC/ZIO_TXTSH", '' AS "RECORDMODE"
+
+      FROM  :lt_tbl1 
+      UNION 
+      SELECT   'E' as "LANGU", LEFT(NEWUID(),25) AS   "/BIC/ZIO_HIEID" 	, "SETNAME" AS "/BIC/ZIO_NODNM" , 'A' as "/BIC/ZIO_OBJVS", "DESCRIPT" as "/BIC/ZIO_TXTMD", 
+               "DESCRIPT" as "/BIC/ZIO_TXTLG", LEFT("DESCRIPT", 20) as "/BIC/ZIO_TXTSH", '' AS "RECORDMODE"
+      FROM  :lt_tbl2
+      ;
+  
+  
+  
+   RETURN  (select  *  from :t)  ; 
+  
+					
+    					
+END;
