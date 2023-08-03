@@ -1,0 +1,479 @@
+FUNCTION "plx_analytics::FN_HIERARCHY_SKF_SEQNR" (
+		
+	Group_Root_Node NVARCHAR(24), 
+	controlling_area nvarchar(4)
+) 
+ 	RETURNS table(
+		 --CHART_OF_ACCOUNTS NVARCHAR(4), 
+		   LEVEL	INTEGER
+		,  PARENT nvarchar(24)
+		, CHILD NVARCHAR(24) 
+		, CO_AREA NVARCHAR(24), SEQNR INTEGER
+		   
+	)
+
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER AS
+BEGIN
+
+/* Compute the  Standard Hierarchy */
+
+DECLARE NUM int := 0; 
+DECLARE LEV int := 1;
+declare v_org nvarchar(24) := '0000' ;  
+--declare v_org nvarchar(24) := TRIM(:ORG_UNIT) ;  
+
+declare STCLS nvarchar(4) := '0104';
+--ORG_UNIT := TRIM(ORG_UNIT) ;  
+Group_Root_Node := TRIM(Group_Root_Node) ;
+
+
+
+BEGIN
+
+  IF :Group_Root_Node LIKE '%ALL' THEN 
+	v_org := left(:Group_Root_Node,4);
+   ELSE 
+	SELECT MAX(SUBCLASS) into v_org FROM ECC_SETNODE 
+	WHERE SETNAME LIKE :Group_Root_Node AND SETCLASS = '0104' AND SUBCLASS=:controlling_area;
+END IF; 
+
+	
+	if :Group_Root_Node like '%ALL' then
+	
+		LT_ROOT = 
+			SELECT DISTINCT NULL AS PARENT, 
+							trim(SETNAME) AS CHILD, 
+							--NULL AS COST_ELEMENT, 
+							1 AS LEVEL,  
+							:v_org AS KOKRS	,  SEQNR 
+			FROM "ECC_SETNODE"
+			WHERE SETCLASS = :STCLS
+			and   trim(SUBCLASS)  = :v_org;
+			
+			
+			
+		LT_ROOT2 = 
+			SELECT DISTINCT NULL AS PARENT, 
+							trim(SETNAME) AS CHILD, 
+							--NULL AS COST_ELEMENT, 
+							1 AS LEVEL , 
+							:v_org AS KOKRS	,  SEQNR 
+			FROM "ECC_SETLEAF"
+			WHERE SETCLASS = :STCLS 
+			and   trim(SUBCLASS)  = :v_org
+			and setname in ( 
+				select subsetname FROM ECC_SETNODE 	WHERE SETCLASS = :STCLS
+							and   trim(SUBCLASS)  = :v_org );
+			
+		LT_HIERARCHY = 
+			SELECT PARENT, 
+				   CHILD, 
+				  -- COST_ELEMENT, 
+				   LEVEL, 
+				    KOKRS,  SEQNR 
+				   from :LT_ROOT
+	
+			UNION
+	
+			SELECT  PARENT, 
+					CHILD, 
+					--COST_ELEMENT, 
+					LEVEL, 
+					KOKRS,  SEQNR 
+					from :LT_ROOT2;
+	
+		while 1 = 1 do
+	
+			LT_HIERARCHY_TMP = 
+			    SELECT 
+				    part.SETNAME AS PARENT, 
+				    trim(part.SUBSETNAME) AS CHILD, 
+				   -- NULL AS COST_ELEMENT, 
+				    :LEV + 1 AS LEVEL  , 
+				    :v_org AS KOKRS	, PART.SEQNR
+			    FROM :LT_HIERARCHY as main 
+				    inner join "ECC_SETNODE" as part 
+				    ON (main.CHILD = part.SETNAME)
+			
+			    WHERE part.SETCLASS = :STCLS
+				    and   trim(part.SUBCLASS)  = :v_org
+				    and   main.LEVEL = :LEV;
+	
+		    SELECT COUNT(*) INTO NUM FROM :LT_HIERARCHY_TMP;
+		
+		    if :NUM = 0 then
+		        break;
+		    end if;
+	
+		    LT_HIERARCHY =
+			    SELECT PARENT,
+				    CHILD,
+			--	    COST_ELEMENT,
+				    LEVEL ,
+				    KOKRS,  SEQNR 
+			    from :LT_HIERARCHY
+		        
+		        UNION
+			    
+			    SELECT PARENT,
+				    CHILD,
+			--	    COST_ELEMENT,
+				    LEVEL ,
+				    KOKRS,  SEQNR 
+			    from :LT_HIERARCHY_TMP;
+		
+		    LEV := :LEV + 1;
+	
+		end while;
+	
+		LT_CE_TMP =
+		  	SELECT
+			  	CE.SETNAME AS PARENT,
+			  	NULL AS CHILD,
+			  	CE.VALOPTION AS VALOPTION,
+			  	CE.VALFROM as VALFROM,
+			  	CE.VALTO as VALTO,
+			  	CC_gr.LEVEL + 1 AS LEVEL ,
+			  	:v_org AS KOKRS	, ce.seqnr
+			FROM :LT_HIERARCHY as CC_gr
+		  	inner join "ECC_SETLEAF" as CE
+		  	ON (CC_gr.CHILD 	= CE.SETNAME)
+			WHERE CE.SETCLASS 		= :STCLS
+		  	and trim(CE.SUBCLASS) 		= :v_org;
+	
+	
+		LT_CE =
+			  SELECT PARENT,
+			        -- CHILD,
+			        -- VALFROM AS COST_ELEMENT,
+			        valfrom as child,
+			         LEVEL  ,
+			         :v_org AS KOKRS	,  SEQNR 
+				FROM :LT_CE_TMP;
+	
+		LT_CE_TMP2 =
+		  SELECT
+			  CE.PARENT AS PARENT,
+			 -- CE.CHILD AS CHILD,
+			 -- CSKU.KSTAR AS COST_ELEMENT,
+			 CSKU.STAGR as child ,
+			  CE.LEVEL AS LEVEL ,
+			  :v_org AS KOKRS	,  ce.SEQNR 
+		  FROM
+			  :LT_CE_TMP as CE
+			  inner join "ECC_TKT03" as CSKU
+			  ON (CSKU.STAGR >= CE.VALFROM
+		      and CSKU.STAGR <= CE.VALTO)
+		  WHERE trim(CSKU.KOKRS)  = :v_org;
+		
+		LT_CE =
+			SELECT
+				PARENT,
+				CHILD,
+			--	COST_ELEMENT,
+				LEVEL ,
+				:v_org AS KOKRS	,  SEQNR 
+			from :LT_CE
+		
+			UNION
+		
+			SELECT
+				  PARENT,
+				  CHILD,
+			--	  COST_ELEMENT,
+				  LEVEL ,
+				  KOKRS,  SEQNR 
+			from :LT_CE_TMP2;
+		
+			var_out =
+			  SELECT
+				  PARENT,
+				  CHILD,
+			--	  COST_ELEMENT,
+				  LEVEL  ,
+				  KOKRS,  SEQNR 
+			  from :LT_HIERARCHY
+		
+		    UNION  
+		
+				SELECT
+				  PARENT,
+				  CHILD,
+			--	  COST_ELEMENT,
+				  LEVEL ,
+				  KOKRS,  SEQNR 
+			  from :LT_CE;
+	
+	
+	else
+	/*In case Group_Root_Node is empty, retrieve only leaf(Cost element) node from SETLEAF table*/
+	
+		if :Group_Root_Node = '' then
+	
+		LT_CE_TMP = 
+		SELECT NULL AS PARENT, 
+			   NULL AS CHILD, 
+			   VALOPTION AS VALOPTION, 
+			   VALFROM as VALFROM, 
+			   VALTO as VALTO, 
+			   1 AS LEVEL , 
+			   :v_org AS KOKRS	,  SEQNR 
+		FROM "ECC_SETLEAF"
+		WHERE SETCLASS = :STCLS 
+		AND	  trim(SUBCLASS)  = :v_org;
+	
+		var_out = 
+		SELECT PARENT, 
+			   --CHILD, 
+			   --VALFROM AS COST_ELEMENT, 
+			   VALFROM as CHILD,
+			   LEVEL , 
+			   KOKRS,  SEQNR 	
+		FROM :LT_CE_TMP;
+	
+		LT_CE_TMP2 = 
+		SELECT NULL AS PARENT, 
+			   -- CE.CHILD AS CHILD, 
+			   TKT03.STAGR AS CHILD, 
+			   CE.LEVEL AS LEVEL , 
+			   :v_org AS KOKRS	,  ce.SEQNR 
+		FROM :LT_CE_TMP as CE 
+		inner join "ECC_TKT03" as TKT03 
+		ON (TKT03.STAGR >= CE.VALFROM 
+		and TKT03.STAGR <= CE.VALTO)
+		WHERE trim(TKT03.KOKRS)  = :v_org;
+	
+		var_out = 
+		SELECT  PARENT, 
+				CHILD, 
+				--COST_ELEMENT, 
+				LEVEL , 
+				KOKRS,  SEQNR 	 
+		  from :var_out
+		UNION
+		SELECT  PARENT, 
+				CHILD, 
+				--COST_ELEMENT, 
+				LEVEL , 
+				KOKRS,  SEQNR 	 
+		  from :LT_CE_TMP2;
+	
+		/*If Group_Root_Node is empty, empty cost element should also be considered*/
+	
+		LT_CE_TMP_2 = 
+			SELECT DISTINCT NULL AS PARENT, 
+					    	--NULL AS CHILD, 
+					    	--'' AS COST_ELEMENT, 
+					    	'' as child,
+					    	1 AS LEVEL , 
+					    	:v_org AS KOKRS	,  SEQNR 
+			FROM "ECC_SETLEAF"
+			WHERE SETCLASS = :STCLS
+			and   trim(SUBCLASS)  = :v_org;
+	
+		var_out = 
+			SELECT PARENT, 
+				   CHILD, 
+				   --COST_ELEMENT, 
+				   LEVEL , 
+				   KOKRS	,  SEQNR  
+			 from :var_out
+		UNION
+			SELECT  PARENT, 
+			    	CHILD, 
+			    	--COST_ELEMENT, 
+			    	LEVEL, 
+			    	KOKRS ,  SEQNR 
+			   from :LT_CE_TMP_2;
+	
+	
+	
+	
+	
+		/*Retrieve all hierarchy groups and the cost center from both SETNODE and SETLEAF, incase Group_Root_Node is not empty*/
+	
+		else
+	
+		LT_ROOT = 
+			SELECT DISTINCT NULL AS PARENT, 
+							trim(SETNAME) AS CHILD, 
+							--NULL AS COST_ELEMENT, 
+							1 AS LEVEL,  
+							:v_org AS KOKRS	,  SEQNR 
+			FROM "ECC_SETNODE"
+			WHERE SETCLASS = :STCLS
+			and   trim(SUBCLASS)  = :v_org
+			and   trim(SETNAME)  = :Group_Root_Node;
+	
+		/*inacase for a group node, there is no subgroup, then it will not be in SETNODE, but only in SETLEAF*/
+	
+		LT_ROOT2 = 
+			SELECT DISTINCT NULL AS PARENT, 
+							trim(SETNAME) AS CHILD, 
+							--NULL AS COST_ELEMENT, 
+							1 AS LEVEL , 
+							:v_org AS KOKRS	,  SEQNR 
+			FROM "ECC_SETLEAF"
+			WHERE SETCLASS = :STCLS 
+			and   trim(SUBCLASS)  = :v_org
+			and   trim(SETNAME)  = :Group_Root_Node;
+	
+		LT_HIERARCHY = 
+			SELECT PARENT, 
+				   CHILD, 
+				  -- COST_ELEMENT, 
+				   LEVEL, 
+				    KOKRS,  SEQNR 
+				   from :LT_ROOT
+	
+			UNION
+	
+			SELECT  PARENT, 
+					CHILD, 
+					--COST_ELEMENT, 
+					LEVEL, 
+					KOKRS,  SEQNR 
+					from :LT_ROOT2;
+	
+		while 1 = 1 do
+	
+			LT_HIERARCHY_TMP = 
+			    SELECT 
+				    part.SETNAME AS PARENT, 
+				    trim(part.SUBSETNAME) AS CHILD, 
+				   -- NULL AS COST_ELEMENT, 
+				    :LEV + 1 AS LEVEL  , 
+				    :v_org AS KOKRS	,  part.SEQNR 
+			    FROM :LT_HIERARCHY as main 
+				    inner join "ECC_SETNODE" as part 
+				    ON (main.CHILD = part.SETNAME)
+			
+			    WHERE part.SETCLASS = :STCLS
+				    and   trim(part.SUBCLASS)  = :v_org
+				    and   main.LEVEL = :LEV;
+	
+		    SELECT COUNT(*) INTO NUM FROM :LT_HIERARCHY_TMP;
+		
+		    if :NUM = 0 then
+		        break;
+		    end if;
+	
+		    LT_HIERARCHY =
+			    SELECT PARENT,
+				    CHILD,
+			--	    COST_ELEMENT,
+				    LEVEL ,
+				    KOKRS,  SEQNR 
+			    from :LT_HIERARCHY
+		        
+		        UNION
+			    
+			    SELECT PARENT,
+				    CHILD,
+			--	    COST_ELEMENT,
+				    LEVEL ,
+				    KOKRS,  SEQNR 
+			    from :LT_HIERARCHY_TMP;
+		
+		    LEV := :LEV + 1;
+	
+		end while;
+	
+		LT_CE_TMP =
+		  	SELECT
+			  	CE.SETNAME AS PARENT,
+			  	NULL AS CHILD,
+			  	CE.VALOPTION AS VALOPTION,
+			  	CE.VALFROM as VALFROM,
+			  	CE.VALTO as VALTO,
+			  	CC_gr.LEVEL + 1 AS LEVEL ,
+			  	:v_org AS KOKRS	,  ce.SEQNR 
+			FROM :LT_HIERARCHY as CC_gr
+		  	inner join "ECC_SETLEAF" as CE
+		  	ON (CC_gr.CHILD 	= CE.SETNAME)
+			WHERE CE.SETCLASS 		= :STCLS
+		  	and trim(CE.SUBCLASS) 		= :v_org;
+	
+	
+		LT_CE =
+			  SELECT PARENT,
+			        -- CHILD,
+			        -- VALFROM AS COST_ELEMENT,
+			        valfrom as child,
+			         LEVEL  ,
+			         :v_org AS KOKRS	,  SEQNR 
+				FROM :LT_CE_TMP;
+	
+		LT_CE_TMP2 =
+		  SELECT
+			  CE.PARENT AS PARENT,
+			 -- CE.CHILD AS CHILD,
+			 -- CSKU.KSTAR AS COST_ELEMENT,
+			 CSKU.STAGR as child ,
+			  CE.LEVEL AS LEVEL ,
+			  :v_org AS KOKRS	,  ce.SEQNR 
+		  FROM
+			  :LT_CE_TMP as CE
+			  inner join "ECC_TKT03" as CSKU
+			  ON (CSKU.STAGR >= CE.VALFROM
+		      and CSKU.STAGR <= CE.VALTO)
+		  WHERE trim(CSKU.KOKRS)  = :v_org;
+		
+		LT_CE =
+			SELECT
+				PARENT,
+				CHILD,
+			--	COST_ELEMENT,
+				LEVEL ,
+				:v_org AS KOKRS	,  SEQNR 
+			from :LT_CE
+		
+			UNION
+		
+			SELECT
+				  PARENT,
+				  CHILD,
+			--	  COST_ELEMENT,
+				  LEVEL ,
+				  KOKRS,  SEQNR 
+			from :LT_CE_TMP2;
+		
+			var_out =
+			  SELECT
+				  PARENT,
+				  CHILD,
+			--	  COST_ELEMENT,
+				  LEVEL  ,
+				  KOKRS,  SEQNR 
+			  from :LT_HIERARCHY
+		
+		    UNION  
+		
+				SELECT
+				  PARENT,
+				  CHILD,
+			--	  COST_ELEMENT,
+				  LEVEL ,
+				  KOKRS,  SEQNR 
+			  from :LT_CE;
+	
+		end if;
+	
+	end if;
+
+END;
+
+RETURN 
+
+--SELECT * FROM :VAR_OUT;
+select 
+ --(	trim(CHART_OF_ACCOUNTS) as chart_of_accounts , 	
+LEVEL	
+,	parent
+,	trim(child) as child, KOKRS AS CO_AREA,  SEQNR 
+
+from :var_out;
+
+
+end;
