@@ -1,0 +1,56 @@
+FUNCTION "plx_analytics::FN_HIERARCHY_SPCLS_EXTRACT"()
+       
+       RETURNS table(
+		 "GRANT_NBR"		NVARCHAR(20)
+		,"COMP_CODE"		nvarchar(04) 
+		,"GM_SPNCL"         nvarchar(20)
+		,"ZPSCTXT"          NVARCHAR(60)
+		
+	) 
+       LANGUAGE SQLSCRIPT 
+       SQL SECURITY INVOKER AS 
+BEGIN 
+    /*****************************
+        Write your function logic
+    ****************************/
+    declare lv_zio_hieid, LV_ZIO_CRT_HIEID , LV_GUID  nvarchar(25) := 'XXXXX';
+    DECLARE lv_zio_nodnm, lv_crt_nodnm, lv_crt_prtid, lv_crt_ancestorid, lv_siblingid,lv_cldid, lv_nxtid,lv_crt_setname,
+    lv_crt_setname_next , lv_prt_back_up , lv_node_id, lv_nodnm , c_object nvarchar(60) := 'AAAA'; 
+    DECLARE lv_skip_check, lv_is_parent, lv_det_parent, lv_first_time, lv_is_child, lv_go_up, lv_go_down , lv_enter_it   boolean :=True; 
+    DECLARE lv_crt_tnlvl , lv_crt_set_cnt , lv_crt_recordid, lv_crt_nodid , lv_crt_found  integer := 1; 
+    DECLARE ARR_LEVEL1  NVARCHAR(60) ARRAY;
+    DECLARE ARR_HIEID NVARCHAR(25)  ARRAY;
+	 DECLARE ARR_OBJNM nvarchar(30)   ARRAY;
+	 DECLARE ARR_NODID  nvarchar(08)  ARRAY;
+	 DECLARE ARR_NODNM NVARCHAR(60)  ARRAY;
+	 DECLARE ARR_TNLVL NVARCHAR(02)  ARRAY;
+	 DECLARE ARR_OBJVS  nvarchar(01)  ARRAY;
+	 DECLARE ARR_PRTID  nvarchar(08)  ARRAY;
+	 DECLARE ARR_LINK   nvarchar(01)  ARRAY;
+	 DECLARE ARR_CLDID  nvarchar(08)  ARRAY;
+	 DECLARE ARR_NODE_ID, ARR_RANK_ID  nvarchar(40)  ARRAY;
+	 DECLARE ARR_NXTID  nvarchar(08)  ARRAY;
+	 DECLARE ARR_INTRL  NVARCHAR(01) ARRAY; 
+    
+    declare lv_class nvarchar(04) := '0101';
+    DECLARE lv_count,lv_count_nxtid, lv_row_count_nxtid, lv_row_count, lv_step, lv_counter, lv_num , LV_NODID  integer;
+    declare lv_comp_code nvarchar(4) :='1000';
+    c_object = 'GRANT_SPCLS' ; 
+    
+    
+ --SELECT  GRANTS THAT ARE IN 1701 ,1706
+    VAR_OUT =     SELECT a.grant_nbr, a.company_code, b.sponsored_class   FROM  "ECC_GMGR"  as a  left join "ECC_GMGRSPONSOREDOBJ" as b 
+                                        on a.grant_nbr = b.grant_nbr     WHERE a.COMPANY_CODE IN ('1701','1706') ;
+    
+
+
+
+   RETURN  (select   DISTINCT    LPAD(grant_nbr,20,0)  as "GRANT_NBR" ,  
+                        COMPANY_CODE  as "COMP_CODE", 
+    				    sponsored_class  as "GM_SPNCL" , 
+    				    sponsored_class AS "ZPSCTXT"
+    				 from :var_out)  ; 
+  
+					
+    					
+END;

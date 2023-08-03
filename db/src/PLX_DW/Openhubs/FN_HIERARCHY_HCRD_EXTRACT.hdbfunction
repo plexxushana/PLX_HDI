@@ -1,0 +1,265 @@
+FUNCTION "plx_analytics::FN_HIERARCHY_HCRD_EXTRACT"(in_kokrs nvarchar(4) )
+       
+       RETURNS table(
+		 "/BIC/ZIO_HIEID" NVARCHAR(25)
+		,"/BIC/ZIO_OBJNM" nvarchar(30) 
+		,"/BIC/ZIO_NODID"  nvarchar(08)
+		, "/BIC/ZIO_NODNM" NVARCHAR(60)
+		, "/BIC/ZIO_TNLVL" NVARCHAR(02)
+		,"/BIC/ZIO_OBJVS"  nvarchar(01)
+		,"/BIC/ZIO_PRTID"  nvarchar(08)
+		,"/BIC/ZIO_LINK"   nvarchar(01)
+		,"/BIC/ZIO_CLDID"  nvarchar(08)
+		,"/BIC/ZIO_NXTID"  nvarchar(08)
+		,"/BIC/ZIO_INTRL"  nvarchar(01)
+		, "RECORDMODE"     NVARCHAR(01)  
+	) 
+       LANGUAGE SQLSCRIPT 
+       SQL SECURITY INVOKER AS 
+BEGIN 
+    /*****************************
+        Write your function logic
+    ****************************/
+    declare lv_zio_hieid, LV_ZIO_CRT_HIEID , LV_GUID  nvarchar(25) := 'XXXXX';
+    DECLARE lv_zio_nodnm, lv_crt_nodnm, lv_crt_prtid, lv_crt_ancestorid, lv_siblingid,lv_cldid, lv_nxtid,lv_crt_setname,
+    lv_crt_setname_next , lv_prt_back_up , lv_node_id, lv_nodnm  nvarchar(60) := 'AAAA'; 
+    DECLARE lv_skip_check, lv_is_parent, lv_det_parent, lv_first_time, lv_is_child, lv_go_up, lv_go_down , lv_enter_it   boolean :=True; 
+    DECLARE lv_crt_tnlvl , lv_crt_set_cnt , lv_crt_recordid, lv_crt_nodid , lv_crt_found  integer := 1; 
+    DECLARE ARR_LEVEL1  NVARCHAR(60) ARRAY;
+    DECLARE ARR_HIEID NVARCHAR(25)  ARRAY;
+	 DECLARE ARR_OBJNM nvarchar(30)   ARRAY;
+	 DECLARE ARR_NODID  nvarchar(08)  ARRAY;
+	 DECLARE ARR_NODNM NVARCHAR(60)  ARRAY;
+	 DECLARE ARR_TNLVL NVARCHAR(02)  ARRAY;
+	 DECLARE ARR_OBJVS  nvarchar(01)  ARRAY;
+	 DECLARE ARR_PRTID  nvarchar(08)  ARRAY;
+	 DECLARE ARR_LINK   nvarchar(01)  ARRAY;
+	 DECLARE ARR_CLDID  nvarchar(08)  ARRAY;
+	 DECLARE ARR_NODE_ID, ARR_RANK_ID  nvarchar(40)  ARRAY;
+	 DECLARE ARR_NXTID  nvarchar(08)  ARRAY;
+	 DECLARE ARR_INTRL  NVARCHAR(01) ARRAY; 
+    
+    declare lv_class nvarchar(04) := '0103';
+    DECLARE lv_count,lv_count_nxtid, lv_row_count_nxtid, lv_row_count, lv_step, lv_counter, lv_num , LV_NODID  integer;
+    declare lv_comp_code nvarchar(4) :='1000';
+    
+    
+ --SELECT NODES THAT ARE TOP NODES , for ex for comp 1700 select 1700_PAYIO and no subnodes are selected . Only top ones to start the journey. :-) 
+ --we need to do this bcz the FN FN_HIERARCHY_AUFNR_IO needs a top node as parameter. 
+    VAR_OUT =     SELECT DISTINCT SETNAME  FROM  "ECC_SETNODE"    WHERE SETCLASS = :lv_class  and  left(setname,4)= :in_kokrs AND SETNAME NOT IN ( SELECT 
+                  SUBSETNAME   FROM  "ECC_SETNODE"    WHERE SETCLASS = :lv_class  and left(setname,4)= :in_kokrs) ORDER BY SETNAME ;
+   -- var_out = select setname from :var_out1 where setname = '1700_PAYIO';
+   
+  -- this tbl was  once used but not anymore. maybe i should delete it. :-)   
+    LT_LINEID = SELECT DISTINCT SUBSETNAME, LINEID  FROM  "ECC_SETNODE"    WHERE SETCLASS = :lv_class  and  left(setname,4)= :in_kokrs AND SETNAME NOT IN ( SELECT 
+                  SUBSETNAME   FROM  "ECC_SETNODE"    WHERE SETCLASS = :lv_class  and left(setname,4)= :in_kokrs) ORDER BY SUBSETNAME ;
+                  
+    -- this is the firls ltbl that is needed to be passed as param to the Hierarchy select statement jsut below. 
+    lt_all_hier = select top 1 CONTROLLING_AREA AS KOKRS, LEVEL AS "LEVEL",  PARENT AS PARENT_ID, CHILD AS NODE_ID  FROM  
+                                  "plx_analytics::FN_HIERARCHY_AUFNR_IO" ('1700', 'DUMMY', 'HOSP')  ; 
+                                
+    -- this lt called lt_hierarchy_top will be the main table that will be unionized so many times and it will contain the fields that we need. fields are: rank that will be nodid, parent, child  
+    lt_hierarchy_top=    SELECT
+    hierarchy_rank ,
+    hierarchy_tree_size AS tree_size,
+    hierarchy_parent_rank AS parent_rank,
+    hierarchy_level AS level,
+    hierarchy_root_rank AS root_rank,
+    hierarchy_is_cycle AS is_cycle,
+    hierarchy_is_orphan AS is_orphan,
+    PARENT_ID,
+    NODE_ID    , node_id  as child_id, '' AS "/BIC/ZIO_OBJNM", '' AS "/BIC/ZIO_HIEID", '' as "/BIC/ZIO_NXTID"
+FROM HIERARCHY (
+    SOURCE :lt_all_hier
+   )
+ORDER BY hierarchy_rank;
+    
+ -- this LT_LEVEL1 contains many fields, but all we need is the field   SETNAME  that will be "/BIC/ZIO_NODNM"  and we need this field to save it into the array that later will be the base for the loop.
+ -- so basically all Top nodes like for ex: 1700_PAYIO (is a setname ) will be in the array and then for each of these top nodes the code will create the hierarchy as per the output file. 
+    LT_LEVEL1 =  SELECT   LEFT(NEWUID(),25) AS   "/BIC/ZIO_HIEID" 		, '0HIER_NODE' AS "/BIC/ZIO_OBJNM" 		,'1' AS "/BIC/ZIO_NODID"  
+		,SETNAME AS  "/BIC/ZIO_NODNM" 
+		, to_nvarchar(lv_crt_tnlvl,999)  AS "/BIC/ZIO_TNLVL" 
+		,'A' AS "/BIC/ZIO_OBJVS" 
+		,'0'  AS "/BIC/ZIO_PRTID"  
+		,'A' AS "/BIC/ZIO_LINK"   
+		, lv_cldid  AS  "/BIC/ZIO_CLDID"  
+		, lv_nxtid  AS "/BIC/ZIO_NXTID"  
+		,'A' AS "/BIC/ZIO_INTRL"  
+		, 'A' AS "RECORDMODE"
+		FROM :var_out ; 
+		
+		ARR_LEVEL1  := ARRAY_AGG(:lt_LEVEL1."/BIC/ZIO_NODNM" ORDER BY "/BIC/ZIO_NODNM");
+--now ARR_LEVEL1 contains top nodes like '1700_PAYIO',  '1700_TRST', '1700IOSALL' and we need each one of them to pass to the FN and get the detailed rows for hierarchy.
+--bcz i wanted to avoid a cursor i did this saving of nodnamee in the array. way faster the performance and everything. 
+
+	
+	lv_count    := CARDINALITY(:ARR_LEVEL1);
+	lv_row_count := 1; 
+	lv_step := 1;
+	lv_counter := 1; 
+	
+	--FOR lv_row_count IN 1..lv_count  do
+--FOR lv_row_count IN 1..lv_count  do
+
+ while 1 = 1 do 
+lv_crt_setname := 	:ARR_LEVEL1[:lv_row_count]; 
+-- as most of the hierarchies have a HIED like this:4KRA1HSFUD2KR1PUCLUXNKLTU as they are coming from BW we have saved those in the table OH_HIERARCHY and we can use them.
+-- if is a hierarchy created after the BW migration then this HIED number will be created here by the code by using NEWUID() function. 
+LT_HIEID = select "/BIC/ZIO_HIEID"  from "OH_HIERARCHY" WHERE "/BIC/ZIO_NODNM" = :lv_crt_setname; 
+
+select count(*) INTO lv_crt_found FROM :LT_HIEID;
+
+IF :lv_crt_found > 0  then 
+          select "/BIC/ZIO_HIEID"  into lv_guid  from "OH_HIERARCHY" WHERE "/BIC/ZIO_NODNM" = :lv_crt_setname; 
+  else 
+    lv_guid := LEFT(NEWUID(),25) ;
+end if ; 
+
+--lv_crt_setname :=  '1700_PAYIO';
+lt_first_hier =  SELECT CONTROLLING_AREA AS KOKRS, LEVEL AS "LEVEL", 
+                 PARENT AS PARENT_ID, CHILD AS NODE_ID  FROM  "plx_analytics::FN_HIERARCHY_AUFNR_IO" (:in_kokrs, :lv_crt_setname, 'HOSP')  ; 
+
+lt_source = select a.kokrs, a.level, a.parent_id, a.node_id, b.lineid from :lt_first_hier as a inner join :LT_LINEID as b  ON A.NODE_ID = B.SUBSETNAME ; 
+
+
+
+lt_hierarchy =   SELECT
+    hierarchy_rank ,
+    hierarchy_tree_size AS tree_size,
+    hierarchy_parent_rank AS parent_rank,
+    hierarchy_level AS level,
+    hierarchy_root_rank AS root_rank,
+    hierarchy_is_cycle AS is_cycle,
+    hierarchy_is_orphan AS is_orphan,
+    PARENT_ID,
+    NODE_ID
+FROM HIERARCHY (
+    SOURCE :lt_first_hier 
+   )
+ORDER BY hierarchy_rank;
+
+
+----so far have 4 fields populated. NODID, NODNM, TNLVL, PRTID
+-- GET childid
+-- this will get the first child of each parent. min(rank) is the nodid of the first child. 
+lt_children = SELECT  MIN(hierarchy_rank) as "CHILD_ID" , parent_rank as "PARENT_ID"  FROM :LT_HIERARCHY GROUP BY parent_rank  ORDER BY  parent_rank ; 
+--this will populate the field childid to the right record by going to each parent and storing the field childid. 
+lt_hierarchy_ch = select a.hierarchy_rank ,
+										a.tree_size AS tree_size,
+									    a.parent_rank AS parent_rank,
+									    a.level AS level,
+									    a.root_rank AS root_rank,
+										a.is_cycle AS is_cycle,
+										a.is_orphan AS is_orphan,
+									    a.PARENT_ID,
+									    a.NODE_ID, 
+									    to_nvarchar(b.child_id) as child_id from :lt_hierarchy as a left outer   join :lt_children as b on a.hierarchy_rank = b.parent_id;
+--this will popualte the field OBJNM to the right record. the values are either 0HIER_NODE, OR 0COORDER 
+lt_hierarchy_OBJNM = select a.hierarchy_rank ,
+										a.tree_size AS hierarchy_tree_size,
+									    a.parent_rank AS hierarchy_parent_rank,
+									    a.level AS hierarchy_level,
+									    a.root_rank AS hierarchy_root_rank,
+										a.is_cycle AS hierarchy_is_cycle,
+										a.is_orphan AS hierarchy_is_orphan,
+									    a.PARENT_ID,
+									    a.NODE_ID, 
+									    a.child_id ,  (case when child_id is null then  '0COORDER' ELSE '0HIER_NODE' END ) AS "/BIC/ZIO_OBJNM" , 
+									    :LV_GUID AS "/BIC/ZIO_HIEID"
+									    FROM :lt_hierarchy_ch as a  ; 
+									    
+/* NEED TO WRITE A LOOP IN ARRAY TO GET THE NEXT ID*/	
+--in order for us to find the values of field NXTID we need to use the hiearrchy_siblings. We need to pass each node and then find a siblings. Again in order to avoid the cursor , i will 
+--all the nodenames like 1700_payio, 1.TOP, 1.SRI in an array and will do a loop where we pass one by one the nodenames. :-) bingo-easy and beuatiful.lol. 
+
+ARR_NODE_ID  := ARRAY_AGG(:lt_hierarchy_OBJNM."NODE_ID" ORDER BY "HIERARCHY_RANK");
+ARR_RANK_ID  := ARRAY_AGG(:lt_hierarchy_OBJNM."HIERARCHY_RANK" ORDER BY "HIERARCHY_RANK");
+
+	lv_count_nxtid    := CARDINALITY(:ARR_NODE_ID);
+	lv_row_count_nxtid := 1; 
+
+FOR lv_row_count_nxtid IN 1..lv_count_nxtid  do
+--FOR lv_row_count_nxtid IN 1..100  do
+lv_nodnm := :arr_node_id[:lv_row_count_nxtid];
+
+LT_top1 =  SELECT TOP 1  hierarchy_rank 
+FROM HIERARCHY_SIBLINGS ( SOURCE :lt_hierarchy_OBJNM START WHERE node_id = :lv_nodnm  )
+WHERE hierarchy_sibling_distance > 0  ORDER BY hierarchy_sibling_distance ASC;
+
+select count(*) INTO lv_crt_found FROM :LT_top1;
+IF :lv_crt_found > 0  then 
+            SELECT   hierarchy_rank  INTO lv_node_id  from :lt_top1; 
+end if ; 
+
+lv_crt_found := 0 ;
+arr_nxtid[:lv_row_count_nxtid] := :lv_node_id;
+
+--arr_nxtid[:lv_row_count_nxtid] := :lv_row_count_nxtid;
+
+lv_nodnm :='';
+lv_node_id = ''; 
+--lv_row_count_nxtid := :lv_row_count_nxtid + 1; 
+
+END FOR;
+/* end of the loop to find Nxtid. Now we need to save it in a table and join with main table. */
+    lt_nxtid = unnest( :arr_rank_id, :arr_nxtid) as (HIERARCHY_RANK, NXTID);     
+    
+lt_hierarchy_nxtid = select a.hierarchy_rank ,
+										a.hierarchy_tree_size AS tree_size,
+									    a.hierarchy_parent_rank AS parent_rank,
+									    a.hierarchy_level AS level,
+									    a.hierarchy_root_rank AS root_rank,
+										a.hierarchy_is_cycle AS is_cycle,
+										a.hierarchy_is_orphan AS is_orphan,
+									    a.PARENT_ID,
+									    a.NODE_ID, 
+									    a.child_id ,  a."/BIC/ZIO_OBJNM" , b.nxtid as "/BIC/ZIO_NXTID",
+									    a."/BIC/ZIO_HIEID"  from :lt_hierarchy_OBJNM as a left outer join  :lt_nxtid as b 
+									    on a.hierarchy_rank = b.hierarchy_rank ;
+
+
+
+lt_hierarchy_top  =   SELECT hierarchy_rank, tree_size, parent_rank, level, root_rank, is_cycle, is_orphan, parent_id, node_id, child_id, "/BIC/ZIO_OBJNM" , "/BIC/ZIO_HIEID" , "/BIC/ZIO_NXTID" FROM :lt_hierarchy_nxtid
+
+								UNION 
+								SELECT hierarchy_rank, tree_size, parent_rank, level, root_rank, is_cycle, is_orphan, parent_id, node_id, child_id, "/BIC/ZIO_OBJNM", "/BIC/ZIO_HIEID", "/BIC/ZIO_NXTID"   FROM :lt_hierarchy_top ; 
+								
+lv_row_count := :lv_row_count + 1 ; 
+if lv_row_count > :lv_count then 
+  break;
+end if;
+
+end while ; 
+
+
+  
+t =   SELECT
+    hierarchy_rank AS rank,
+    tree_size AS tree_size,
+    parent_rank AS parent_rank,
+    level AS level,
+    root_rank AS root_rank,
+    is_cycle AS is_cycle,
+    is_orphan AS is_orphan,
+    PARENT_ID AS PARENT_ID,
+    NODE_ID AS NODE_ID
+    ,     left(CHILD_ID,8) AS CHILD_ID, "/BIC/ZIO_OBJNM", "/BIC/ZIO_HIEID", "/BIC/ZIO_NXTID"
+FROM  :lt_hierarchy_top ;
+  
+  
+  
+   RETURN  (select  "/BIC/ZIO_HIEID"  as "/BIC/ZIO_HIEID" ,  
+                       "/BIC/ZIO_OBJNM" as "/BIC/ZIO_OBJNM" , 
+                       lpad(rank,8,0) as "/BIC/ZIO_NODID" ,
+                       lpad(NODE_ID,60,0) as  "/BIC/ZIO_NODNM" ,  
+                       lpad(level,2,0) as "/BIC/ZIO_TNLVL", 
+                       'A'  as "/BIC/ZIO_OBJVS" ,
+    					lpad(parent_rank,8,0) as "/BIC/ZIO_PRTID" , 
+    					'' as "/BIC/ZIO_LINK" ,
+    					lpad(CHILD_ID,8,0) as "/BIC/ZIO_CLDID" , 
+    					lpad("/BIC/ZIO_NXTID",8,0) as "/BIC/ZIO_NXTID"  	,
+    					''  as "/BIC/ZIO_INTRL" , '' AS RECORDMODE  from :t)  ; 
+  
+					
+    					
+END;
