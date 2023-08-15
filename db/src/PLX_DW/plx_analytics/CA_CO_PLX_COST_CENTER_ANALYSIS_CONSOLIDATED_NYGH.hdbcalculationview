@@ -8,6 +8,7 @@
       <variableProperties datatype="NVARCHAR" defaultValue="" length="4" mandatory="false" scale="0">
         <valueDomain type="AttributeValue">
           <externalLikeStructureName>plx_analytics::CA_DIM_CONTROLLING_AREAS</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
           <externalLikeElementName>KOKRS</externalLikeElementName>
         </valueDomain>
         <selection multiLine="false" type="SingleValue"/>
@@ -18,6 +19,7 @@
       <variableProperties datatype="NVARCHAR" defaultValue="undefined" length="24" mandatory="true" scale="0">
         <valueDomain type="AttributeValue">
           <externalLikeStructureName>plx_analytics::CA_DIM_CE_VALUE_HELP_BROADER</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
           <externalLikeElementName>Z_SETNAME</externalLikeElementName>
         </valueDomain>
         <selection multiLine="false" type="SingleValue"/>
@@ -35,6 +37,7 @@
       <variableProperties datatype="NVARCHAR" length="40" mandatory="false" scale="0" defaultValue="undefined">
         <valueDomain type="AttributeValue">
           <externalLikeStructureName>plx_analytics::CA_DIM_CC_VALUE_HELP</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
           <externalLikeElementName>NODE</externalLikeElementName>
         </valueDomain>
         <selection multiLine="false" type="SingleValue"/>
@@ -54,6 +57,7 @@
       <variableProperties datatype="VARCHAR" defaultValue="" mandatory="false">
         <valueDomain type="AttributeValue">
           <externalLikeStructureName>plx_analytics::CA_DIM_CC_VALUE_HELP</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
           <externalLikeElementName>NODE</externalLikeElementName>
         </valueDomain>
         <selection multiLine="true" type="SingleValue"/>
@@ -64,6 +68,7 @@
       <variableProperties datatype="VARCHAR" mandatory="false">
         <valueDomain type="AttributeValue">
           <externalLikeStructureName>plx_analytics::CA_DIM_CONTROLLING_AREAS</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
           <externalLikeElementName>GSBER</externalLikeElementName>
         </valueDomain>
         <selection multiLine="false" type="SingleValue"/>
@@ -74,9 +79,22 @@
       <variableProperties datatype="NVARCHAR" length="4" scale="NaN" defaultValue="">
         <valueDomain type="AttributeValue">
           <externalLikeStructureName>plx_analytics::CA_DIM_FISC_CAL</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
           <externalLikeElementName>ZFISCAL_YEAR</externalLikeElementName>
         </valueDomain>
         <selection multiLine="true" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  
+    <variable id="Period" parameter="true">
+      <descriptions defaultDescription="Period"/>
+      <variableProperties datatype="NVARCHAR" length="2" scale="null" mandatory="false">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_FISC_CAL</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>ZFISCAL_PERIOD</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
       </variableProperties>
     </variable>
   </localVariables>
@@ -2663,7 +2681,7 @@
     </viewAttributes>
     <calculatedViewAttributes>
         <calculatedViewAttribute datatype="INTEGER" id="CURR_MONTH" expressionLanguage="SQL">
-          <formula>RIGHT(LEFT(current_date, 7) , 2) </formula>
+          <formula>TO_INTEGER('$$Period$$')</formula>
         </calculatedViewAttribute>
         <calculatedViewAttribute datatype="INTEGER" id="PAST_MONTH" expressionLanguage="COLUMN_ENGINE">
           <formula>IF(&quot;CURR_MONTH&quot;&gt;=1, &quot;CURR_MONTH&quot;-1, 12)</formula>
@@ -2824,14 +2842,14 @@
         <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="25">
           <formula>midstr(&quot;OBJNR&quot;, 3) </formula>
         </keyCalculation>
-      </calculatedAttribute>
+        </calculatedAttribute>
       <calculatedAttribute id="PARTNER_OBEJCT_TYPE" hidden="false" order="2" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="Partner Object Type"/>
         <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="10">
           <formula>CASE(leftstr(&quot;OBJNR&quot;, 2), 'OR', 'Order',
 'PR', 'WBS Element', 'Not Assigned')</formula>
         </keyCalculation>
-      </calculatedAttribute>
+        </calculatedAttribute>
     </calculatedAttributes>
     <privateDataFoundation>
       <tableProxies/>
@@ -2882,6 +2900,7 @@
         <descriptions defaultDescription="Variance"/>
         <formula>&quot;WKG001&quot; - &quot;WKGBTR&quot;</formula>
       
+        
         
         
         

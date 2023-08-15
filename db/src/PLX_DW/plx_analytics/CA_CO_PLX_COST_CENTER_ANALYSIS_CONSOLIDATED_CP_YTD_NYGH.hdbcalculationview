@@ -94,6 +94,18 @@
         <selection multiLine="false" type="SingleValue"/>
       </variableProperties>
     </variable>
+  
+    <variable id="Period" parameter="true">
+      <descriptions defaultDescription="Current Period"/>
+      <variableProperties datatype="NVARCHAR" length="2" scale="NaN" mandatory="false">
+        <valueDomain type="AttributeValue">
+          <externalLikeStructureName>plx_analytics::CA_DIM_FISC_CAL</externalLikeStructureName>
+          <externalLikeStructureType>CALCULATION_VIEW</externalLikeStructureType>
+          <externalLikeElementName>ZFISCAL_PERIOD</externalLikeElementName>
+        </valueDomain>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
   </localVariables>
   <variableMappings>
     <mapping xsi:type="Variable:VariableMapping" dataSource="FN_HIERARCHY_KOSTL_KSTAR_RESTRICT">
@@ -2574,10 +2586,10 @@
           <formula>case(&quot;LONG_PAST_MONTH&quot;, '001', '010', '002', '011', '003', '012', '004', '001', '005', '002', '006', '003', '007', '004', '008', '005', '009', '006', '010', '007', '011', '008', '009')</formula>
         </calculatedViewAttribute>
         <calculatedViewAttribute datatype="NVARCHAR" id="CURR_PERIOD" length="1" expressionLanguage="COLUMN_ENGINE">
-          <formula>IF(&quot;FISC_PAST_MONTH&quot;=&quot;Z_PERIOD&quot;,'X','')</formula>
+          <formula>IF(&quot;CC_1&quot; = &quot;Z_PERIOD&quot;,'X','')</formula>
         </calculatedViewAttribute>
         <calculatedViewAttribute datatype="NVARCHAR" id="CURR_YTD_PERIOD" length="1" expressionLanguage="COLUMN_ENGINE">
-          <formula>IF(&quot;Z_PERIOD&quot;&lt;=&quot;FISC_PAST_MONTH&quot;,'X','')</formula>
+          <formula>IF(&quot;Z_PERIOD&quot;&lt;=&quot;CC_1&quot;,'X','')</formula>
         </calculatedViewAttribute>
         <calculatedViewAttribute datatype="DECIMAL" id="PY_ACTUAL" length="13" scale="3" expressionLanguage="COLUMN_ENGINE">
           <formula>IF(&quot;GJAHR&quot;='$$FISCAL_YEAR$$'-1 , &quot;WKGBTR&quot;,0)</formula>
@@ -2591,7 +2603,11 @@
         <calculatedViewAttribute datatype="DECIMAL" id="CURR_BUDGET" length="13" scale="3" expressionLanguage="COLUMN_ENGINE">
           <formula>IF(&quot;GJAHR&quot;='$$FISCAL_YEAR$$' , &quot;WKG001&quot;,0)</formula>
         </calculatedViewAttribute>
-      </calculatedViewAttributes>
+      
+      <calculatedViewAttribute id="CC_1" datatype="NVARCHAR" length="3" expressionLanguage="SQL">
+        <formula>CONCAT('0', '$$Period$$')</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
       <input node="Projection_4">
         <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CHILD$KOSTL" source="CHILD"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CONTROLLING_AREA$CONT_AREA" source="CONTROLLING_AREA"/>
@@ -2884,87 +2900,87 @@
 <layout>
   <shapes>
       <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-        <upperLeftCorner x="1864.473286920793" y="112"/>
+        <upperLeftCorner x="1864" y="112"/>
         <rectangleSize height="0" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="period1" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="3032.000000000002" y="1646.9999916553497"/>
+        <upperLeftCorner x="3032" y="1646"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="period2" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="1982.0000000000018" y="1646.9999916553497"/>
+        <upperLeftCorner x="1982" y="1646"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="period3" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="722.0000000000009" y="1646.9999916553497"/>
+        <upperLeftCorner x="722" y="1646"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="period5" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="2192.000000000002" y="1646.9999916553497"/>
+        <upperLeftCorner x="2192" y="1646"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="period4" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="1352.000000000002" y="1646.9999916553497"/>
+        <upperLeftCorner x="1352" y="1646"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="period16" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="512.0000000000011" y="1646.9999916553497"/>
+        <upperLeftCorner x="512" y="1646"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="period15" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="2612.000000000002" y="1646.9999916553497"/>
+        <upperLeftCorner x="2612" y="1646"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="period14" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="3662.000000000001" y="1646.9999916553497"/>
+        <upperLeftCorner x="3662" y="1646"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="period13" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="1772.0000000000018" y="1646.9999916553497"/>
+        <upperLeftCorner x="1772" y="1646"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="period12" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="2402.000000000002" y="1646.9999916553497"/>
+        <upperLeftCorner x="2402" y="1646"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="period11" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="1562.0000000000018" y="1646.9999916553497"/>
+        <upperLeftCorner x="1562" y="1646"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="period10" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="932.0000000000011" y="1646.9999916553497"/>
+        <upperLeftCorner x="932" y="1646"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="period9" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="2822.000000000002" y="1646.9999916553497"/>
+        <upperLeftCorner x="2822" y="1646"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="period8" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="1142.0000000000016" y="1646.9999916553497"/>
+        <upperLeftCorner x="1142" y="1646"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="period7" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="3242.000000000001" y="1646.9999916553497"/>
+        <upperLeftCorner x="3242" y="1646"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="period6" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="3452.000000000001" y="1646.9999916553497"/>
+        <upperLeftCorner x="3452" y="1646"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Union_1" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="2055.4590043482467" y="1116.9999928474426"/>
+        <upperLeftCorner x="2055" y="1116"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="301.9999999999998" y="1646.9999916553497"/>
+        <upperLeftCorner x="301" y="1646"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="92.00000000000045" y="1646.9999916553497"/>
+        <upperLeftCorner x="92" y="1646"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="611.8293756347389" y="1243.6666595141094"/>
+        <upperLeftCorner x="611" y="1243"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
     <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
@@ -2976,11 +2992,11 @@
       <rectangleSize width="250"/>
     </shape>
       <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="401.8293756347389" y="1116.9999928474426"/>
+        <upperLeftCorner x="401" y="1116"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="585.1627089680721" y="956.9999940395355"/>
+        <upperLeftCorner x="585" y="956"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
     <shape modelObjectName="Join_1" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
@@ -2992,11 +3008,11 @@
       <rectangleSize width="250"/>
     </shape>
       <shape expanded="true" modelObjectName="Projection_5" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="1793.759098449513" y="1116.9999928474426"/>
+        <upperLeftCorner x="1793" y="1116"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Join_4" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="1820.4257651161797" y="956.9999940395355"/>
+        <upperLeftCorner x="1820" y="956"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
     <shape modelObjectName="Union_1" modelObjectNameSpace="Join_4" modelObjectType="JoinNodeInput">
@@ -3008,23 +3024,23 @@
       <rectangleSize width="250"/>
     </shape>
       <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="1570.7696656614394" y="831.9999952316284"/>
+        <upperLeftCorner x="1570" y="831"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Aggregation_2" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="585.1627089680721" y="831.9999952316284"/>
+        <upperLeftCorner x="585" y="831"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Union_2" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="1544.1029989947729" y="691.9999964237213"/>
+        <upperLeftCorner x="1544" y="691"/>
         <rectangleSize height="30" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Projection_7" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="1899.7212598827762" y="691.9999964237213"/>
+        <upperLeftCorner x="1899" y="691"/>
         <rectangleSize height="30" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Join_7" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="1873.0545932161094" y="531.9999976158142"/>
+        <upperLeftCorner x="1873" y="531"/>
         <rectangleSize height="30" width="160"/>
       </shape>
     <shape modelObjectName="Union_2" modelObjectNameSpace="Join_7" modelObjectType="JoinNodeInput">
@@ -3036,11 +3052,11 @@
       <rectangleSize width="250"/>
     </shape>
       <shape expanded="true" modelObjectName="Projection_4" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="1663.0545932161094" y="531.9999976158142"/>
+        <upperLeftCorner x="1663" y="531"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Join_3" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="1833.3670857335123" y="371.9999988079071"/>
+        <upperLeftCorner x="1833" y="371"/>
         <rectangleSize height="701" width="160"/>
       </shape>
     <shape modelObjectName="Projection_4" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
@@ -3052,7 +3068,7 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="P_Calcs" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1833.3670857335123" y="266.9999988079071"/>
+      <upperLeftCorner x="1833" y="266"/>
       <rectangleSize height="30" width="160"/>
     </shape>
       <shape modelObjectName="P_Calcs" modelObjectNameSpace="StarJoinViewNodeInput" modelObjectType="repository">
