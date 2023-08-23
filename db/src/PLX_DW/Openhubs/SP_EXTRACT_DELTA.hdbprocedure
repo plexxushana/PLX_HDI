@@ -15,9 +15,10 @@ BEGIN
 	DECLARE lv_delta_flag nvarchar(5000);
 	
 	DECLARE lv_row_count, lv_step, lv_count_diff INTEGER;
-	DECLARE i, lv_mod, lv_rest,  lv_div , lv_first_time, lv_counter, lv_request  INTEGER;
+	DECLARE i, lv_mod, lv_rest,  lv_div , lv_first_time, lv_counter   INTEGER;
 	declare lv_belnr,lv_belnr1       nvarchar(10):='9999999999';
 	declare lv_belnr10,lv_belnr11    nvarchar(10):='9999999999';
+	declare lv_packageid			nvarchar(50); 
 	
 	DECLARE lv_bukrs nvarchar(4) := '9999'; 
 	DECLARE lv_gjahr nvarchar(4) := '9999'; 
@@ -43,9 +44,12 @@ BEGIN
 --4. Populate the  HANA_DW cube
 
 --1. Generate Request ID
- select max("REQUEST_ID")  INTO lv_request from "HANA_STAGING";
+ --select max("REQUEST_ID")  INTO lv_request from "HANA_STAGING";
  
- lv_request := :lv_request + 1 ; 
+ --lv_request := :lv_request + 1 ; 
+-- lv_packageid = CURRENT_UTCTIMESTAMP;
+ 
+  lv_packageid = concat(to_nvarchar(current_date) , to_nvarchar(current_time) ) ; 
  
  --2. Get data from ECC_BSIK and copy into HANA Staging tbl with the newly generated Request Id
 -- get list of docs in BSIK within this 
@@ -56,16 +60,16 @@ BEGIN
 	WHERE   ---("CPUDT" >= lv_cpudt_start  )  	and 
 	"BUKRS" = :ip_bukrs   and 	gjahr = '2023'; 
    
-insert into "HANA_STAGING" (SELECT :lv_request AS "REQUEST_ID", "BUKRS" AS "COMP_CODE", LIFNR AS "CREDITOR",
+/* insert into "HANA_STAGING" (SELECT ifnull(:lv_packageid, '999') AS "REQUEST_ID", "BUKRS" AS "COMP_CODE", LIFNR AS "CREDITOR",
           GJAHR||'0'||MONAT AS "FISCPER", 'V3' AS "FISCVARNT",  BELNR AS "AC_DOC_NO" , BUZEI AS "ITEM_NUM" , 
            'O' AS FI_DSBITEM, '' AS FI_DOCSTAT, '' AS C_CTR_AREA, '' AS DUNN_AREA, '' AS ACCT_TYPE, '' AS SP_GL_IND, '' AS AC_DOC_TYP,
            '' AS POST_KEY, '' AS DOC_DATE, '' AS PSTNG_DATE, '' AS CREATEDON, '' AS CLEAR_DATE, '' AS LAST_DUNN, '' AS NETDUEDATE,
            '' AS DSCT_DATE1, '' AS DSCT_DATE2, DMBTR AS DMBTR 
            FROM :lt_bsik_doc_list); 
+           */
  --2. End
-
-
---3. Determine Delta Flag
+ 
+ --3. Determine Delta Flag
 
 --4. Populate the  HANA_DW cube
 	ARR_BSIK_SEARCH  := ARRAY_AGG(:lt_bsik_doc_list.SEARCH_FIELD ORDER BY BUKRS, BELNR, GJAHR);
@@ -98,7 +102,7 @@ insert into "HANA_STAGING" (SELECT :lv_request AS "REQUEST_ID", "BUKRS" AS "COMP
     
     LV_POSTING_DATE := ifnull(:lt_rec2.PSTNG_DATE[1],'');
     
-    -- time to compare the record frm Staging table with the record from DW table. If they are different then reverese the old one from DW and insert the new one.
+    -- time to compare the record from Staging table with the record from DW table. If they are different then reverese the old one from DW and insert the new one.
     -- If they are not different don't do anything, just skip and move on to the next record.
     
     if lv_String_rec1 <> lv_String_rec2  then 
@@ -107,7 +111,7 @@ insert into "HANA_STAGING" (SELECT :lv_request AS "REQUEST_ID", "BUKRS" AS "COMP
     set dmbtr = (-1) * dmbtr WHERE COMP_CODE = :lv_bukrs and AC_DOC_NO = :lv_belnr and ITEM_NUM = :lv_buzei and LEFT(FISCPER,4)  = :lv_gjahr and delta_flag = :lv_delta_flag ;
     
     --insert the new record. 
-    lv_delta_flag := 'R' || TO_NVARCHAR(:LV_REQUEST,'999') || '_' ||to_nvarchar(:LV_POSTING_DATE); 
+    lv_delta_flag := 'R' || TO_NVARCHAR(:LV_PACKAGEID,'999') || '_' ||to_nvarchar(:LV_POSTING_DATE); 
    -- lv_delta_flag := :LV_POSTING_DATE; 
     INSERT INTO "HANA_DW" (SELECT COMP_CODE, CREDITOR, FISCPER,     FISCVARNT,    
                AC_DOC_NO,    ITEM_NUM,    FI_DSBITEM,    FI_DOCSTAT,  
