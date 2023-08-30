@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CA_GM_H01N" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
 <descriptions defaultDescription="CV_GM_H01N"/>
-<localVariables/>
+<localVariables>
+  <variable id="IP_COMPANY" parameter="true">
+    <descriptions defaultDescription="Company Code"/>
+    <variableProperties datatype="NVARCHAR" length="4" scale="null" mandatory="true">
+      <valueDomain type="AttributeValue">
+        <attribute name="COMP_CODE"/>
+      </valueDomain>
+      <selection multiLine="true" type="SingleValue"/>
+    </variableProperties>
+  </variable>
+</localVariables>
 <variableMappings/>
 <dataSources>
   <DataSource id="ECC_GM_DO01">
@@ -9,7 +19,7 @@
   </DataSource>
 </dataSources>
 <calculationViews>
-  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="RVERS"/>
       <viewAttribute id="RYEAR"/>
@@ -112,6 +122,8 @@
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <input node="ECC_GM_DO01"/>
+  
+    <filter>&quot;RBUKRS&quot; IN ($$IP_COMPANY$$)</filter>
   </calculationView>
 </calculationViews>
 <logicalModel id="Projection_1">
@@ -194,7 +206,9 @@
   
     <attribute id="OBJ_POS_P" order="19" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="OBJ_POS_P"/>
+  
       <keyMapping columnObjectName="Projection_1" columnName="OBJ_POS_P"/>
+  
     </attribute>
   </attributes>
   <calculatedAttributes/>

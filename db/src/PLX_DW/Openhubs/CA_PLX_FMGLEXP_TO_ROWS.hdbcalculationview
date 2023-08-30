@@ -4,7 +4,7 @@
 <localVariables>
   <variable id="IP_KOKRS" parameter="true">
     <descriptions defaultDescription=""/>
-    <variableProperties datatype="NVARCHAR" length="4" scale="NaN" mandatory="false">
+    <variableProperties datatype="NVARCHAR" length="4" scale="NaN" mandatory="true" defaultValue="">
       <valueDomain type="AttributeValue">
         <externalLikeStructureName>ECC_FMGLFLEXT</externalLikeStructureName>
         <externalLikeElementName>KOKRS</externalLikeElementName>
@@ -14,19 +14,19 @@
   </variable>
   <variable id="IP_YEAR" parameter="true">
     <descriptions defaultDescription=""/>
-    <variableProperties datatype="NVARCHAR" length="4" scale="NaN" mandatory="true">
+    <variableProperties datatype="NVARCHAR" length="4" scale="NaN" mandatory="true" defaultValue="">
       <valueDomain type="AttributeValue">
         <externalLikeStructureName>ECC_FMGLFLEXT</externalLikeStructureName>
         <externalLikeElementName>RYEAR</externalLikeElementName>
       </valueDomain>
-      <selection multiLine="true" type="SingleValue"/>
+      <selection multiLine="false" type="SingleValue"/>
     </variableProperties>
   </variable>
 </localVariables>
 <variableMappings/>
 <dataSources>
-  <DataSource id="V_ECC_FMGLFLEXP">
-    <resourceUri>V_ECC_FMGLFLEXP</resourceUri>
+  <DataSource id="ECC_FMGLFLEXP">
+    <resourceUri>ECC_FMGLFLEXP</resourceUri>
   </DataSource>
 </dataSources>
 <calculationViews>
@@ -934,7 +934,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="MSLXX" source="MSL16"/>
     </input>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="Period_1" filterExpressionLanguage="SQL">
+  <calculationView xsi:type="Calculation:ProjectionView" id="Period_1">
     <viewAttributes>
       <viewAttribute id="RCLNT"/>
       <viewAttribute id="RYEAR"/>
@@ -3206,10 +3206,8 @@
       <viewAttribute id="MSL15"/>
       <viewAttribute id="MSL16"/></viewAttributes>
     <calculatedViewAttributes/>
-    <input node="V_ECC_FMGLFLEXP"/>
-  
-    <filter>&quot;RYEAR&quot; IN('$$IP_YEAR$$') AND
-&quot;KOKRS&quot; IN('$$IP_KOKRS$$')</filter>
+    <input node="ECC_FMGLFLEXP"/>
+    <filter>&quot;KOKRS&quot; = '$$IP_KOKRS$$' ANd &quot;RYEAR&quot; = '$$IP_YEAR$$'</filter>
   </calculationView>
 </calculationViews>
 <logicalModel id="Union_1">
@@ -3366,6 +3364,10 @@
       <descriptions defaultDescription="USNAM"/>
       <keyMapping columnObjectName="Union_1" columnName="USNAM"/>
     </attribute>
+    <attribute id="TIMESTAMP" order="44" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TIMESTAMP"/>
+      <keyMapping columnObjectName="Union_1" columnName="TIMESTAMP"/>
+    </attribute>
     <attribute id="ZPERIOD" order="45" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ZPERIOD"/>
       <keyMapping columnObjectName="Union_1" columnName="ZPERIOD"/>
@@ -3412,12 +3414,7 @@
     <measure id="MSLVT" order="36" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="MSLVT"/>
       <measureMapping columnObjectName="Union_1" columnName="MSLVT"/>
-    </measure>
-    <measure id="TIMESTAMP" order="44" aggregationType="sum" measureType="simple">
-      <descriptions defaultDescription="TIMESTAMP"/>
-      <measureMapping columnObjectName="Union_1" columnName="TIMESTAMP"/>
-    </measure>
-  </baseMeasures>
+    </measure></baseMeasures>
   <calculatedMeasures/>
   <restrictedMeasures/>
   <localDimensions/>
@@ -3425,83 +3422,83 @@
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="1740.07509755539" y="112"/>
+      <upperLeftCorner x="1740" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="Union_1" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1740.07509755539" y="217"/>
+      <upperLeftCorner x="1740" y="217"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="Period_1" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="2402.000000000001" y="706.9999988079071"/>
+      <upperLeftCorner x="2402" y="706"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Period_2" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="3032.000000000001" y="706.9999988079071"/>
+      <upperLeftCorner x="3032" y="706"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Period_3" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="2192.000000000001" y="706.9999988079071"/>
+      <upperLeftCorner x="2192" y="706"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Period_4" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1562.0000000000007" y="706.9999988079071"/>
+      <upperLeftCorner x="1562" y="706"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Period_5" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92.00000000000045" y="706.9999988079071"/>
+      <upperLeftCorner x="92" y="706"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Period_6" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1352.0000000000007" y="706.9999988079071"/>
+      <upperLeftCorner x="1352" y="706"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Period_7" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="3242" y="706.9999988079071"/>
+      <upperLeftCorner x="3242" y="706"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Period_8" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="2822.000000000001" y="706.9999988079071"/>
+      <upperLeftCorner x="2822" y="706"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Period_9" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="302.0000000000007" y="706.9999988079071"/>
+      <upperLeftCorner x="302" y="706"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Period_10" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="2612.000000000001" y="706.9999988079071"/>
+      <upperLeftCorner x="2612" y="706"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Period_11" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="722.0000000000007" y="706.9999988079071"/>
+      <upperLeftCorner x="722" y="706"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Period_12" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1772.0000000000007" y="706.9999988079071"/>
+      <upperLeftCorner x="1772" y="706"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Period_13" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="512.0000000000007" y="706.9999988079071"/>
+      <upperLeftCorner x="512" y="706"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Period_14" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1142.0000000000007" y="706.9999988079071"/>
+      <upperLeftCorner x="1142" y="706"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Period_15" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="932.0000000000007" y="706.9999988079071"/>
+      <upperLeftCorner x="932" y="706"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Period_16" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1982.0000000000007" y="706.9999988079071"/>
+      <upperLeftCorner x="1982" y="706"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1566.705882352942" y="971.9999976158142"/>
+      <upperLeftCorner x="1566" y="971"/>
       <rectangleSize height="30" width="160"/>
     </shape></shapes>
 </layout>
