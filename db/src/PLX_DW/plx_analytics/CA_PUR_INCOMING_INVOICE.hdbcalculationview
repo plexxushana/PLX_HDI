@@ -19,14 +19,14 @@
     <DataSource id="CA_DIM_VENDORS">
       <resourceUri>plx_analytics::CA_DIM_VENDORS</resourceUri>
     </DataSource>
+    <DataSource id="ECC_EKKO">
+      <resourceUri>ECC_EKKO</resourceUri>
+    </DataSource>
     <DataSource id="ECC_EKPO">
       <resourceUri>ECC_EKPO</resourceUri>
     </DataSource>
     <DataSource id="ECC_LFA1">
       <resourceUri>ECC_LFA1</resourceUri>
-    </DataSource>
-    <DataSource id="ECC_EKKO">
-      <resourceUri>ECC_EKKO</resourceUri>
     </DataSource>
     <DataSource id="Projection_8$$$$ECC_LFA1$$">
       <resourceUri>ECC_LFA1</resourceUri>
@@ -1628,7 +1628,6 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="ZCALENDAR_YEAR" source="ZCALENDAR_YEAR"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR_ItemRef" source="XBLNR_ItemRef"/>
-      
         <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LIFNR$LIFNR" source="LIFNR"/>
       </input>
       <input node="Projection_4">
@@ -1867,6 +1866,8 @@
       <viewAttribute id="TXZ01"/>
       <viewAttribute id="LIFNR_EKPO"/>
       <viewAttribute id="BEDAT"/>
+    
+      <viewAttribute id="BPUMN" aggregationType="sum"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="Join_3">
@@ -2099,6 +2100,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="TXZ01" source="TXZ01"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR_EKPO" source="LIFNR_EKPO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BEDAT" source="BEDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BPUMN" source="BPUMN"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
@@ -2106,6 +2108,61 @@
     <joinAttribute name="EBELN"/>
     <joinAttribute name="EBELP"/>
     <joinAttribute name="WERKS"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_6" cardinality="CN_N" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="IDNLF"/>
+      <viewAttribute id="NETPR" aggregationType="sum"/>
+      <viewAttribute id="NETWR" aggregationType="sum"/>
+      <viewAttribute id="MFRNR"/>
+      <viewAttribute id="MFRPN"/>
+      <viewAttribute id="MENGE" aggregationType="sum"/>
+      <viewAttribute id="MEINS"/>
+      <viewAttribute id="TXZ01"/>
+      <viewAttribute id="LIFNR_EKPO"/>
+      <viewAttribute id="BEDAT"/>
+      <viewAttribute id="BPUMN" aggregationType="sum"/>
+      <viewAttribute id="EBELN"/>
+      <viewAttribute id="EBELP"/>
+      <viewAttribute id="WERKS"/>
+      <viewAttribute id="BUKRS"/>
+      <viewAttribute id="MATNR"/>
+      <viewAttribute hidden="true" id="JOIN$EBELN$EBELN"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Projection_7">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR_EKPO" source="LIFNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BEDAT" source="BEDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$EBELN$EBELN" source="EBELN"/>
+    </input>
+    <input node="Projection_5">
+      <mapping xsi:type="Calculation:AttributeMapping" target="IDNLF" source="IDNLF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NETPR" source="NETPR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NETWR" source="NETWR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MFRNR" source="MFRNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MFRPN" source="MFRPN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MENGE" source="MENGE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TXZ01" source="TXZ01"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BPUMN" source="BPUMN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$EBELN$EBELN" source="EBELN"/>
+    </input>
+    <joinAttribute name="JOIN$EBELN$EBELN"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_7">
+    <viewAttributes>
+      <viewAttribute id="LIFNR"/>
+      <viewAttribute id="BEDAT"/>
+    
+      <viewAttribute id="EBELN"/>
+      <viewAttribute id="BUKRS"/></viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="ECC_EKKO"/>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="Projection_5">
     <viewAttributes>
@@ -2123,6 +2180,8 @@
       <viewAttribute id="BUKRS"/>
       <viewAttribute id="MATNR"/>
       <viewAttribute id="TXZ01"/>
+    
+      <viewAttribute id="BPUMN"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="ECC_EKPO"/>
@@ -2359,6 +2418,8 @@
       <viewAttribute id="TXZ01"/>
       <viewAttribute id="LIFNR_EKPO"/>
       <viewAttribute id="BEDAT"/>
+    
+      <viewAttribute id="BPUMN" aggregationType="sum"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="Join_4">
@@ -2591,6 +2652,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="TXZ01" source="TXZ01"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR_EKPO" source="LIFNR_EKPO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BEDAT" source="BEDAT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="BPUMN" source="BPUMN"/>
     </input>
     <input node="Projection_6">
       <mapping xsi:type="Calculation:AttributeMapping" target="NAME1_MFRNR" source="NAME1"/>
@@ -2605,59 +2668,6 @@
       <viewAttribute id="LIFNR"/></viewAttributes>
     <calculatedViewAttributes/>
     <input node="ECC_LFA1"/>
-  </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_7">
-    <viewAttributes>
-      <viewAttribute id="BUKRS"/>
-      <viewAttribute id="LIFNR"/>
-      <viewAttribute id="EBELN"/>
-      <viewAttribute id="BEDAT"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="ECC_EKKO"/>
-  </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="Join_6" cardinality="CN_N" joinType="leftOuter">
-    <viewAttributes>
-      <viewAttribute id="IDNLF"/>
-      <viewAttribute id="NETPR" aggregationType="sum"/>
-      <viewAttribute id="NETWR" aggregationType="sum"/>
-      <viewAttribute id="MFRNR"/>
-      <viewAttribute id="MFRPN"/>
-      <viewAttribute id="MENGE" aggregationType="sum"/>
-      <viewAttribute id="MEINS"/>
-      <viewAttribute id="EBELN"/>
-      <viewAttribute id="EBELP"/>
-      <viewAttribute id="WERKS"/>
-      <viewAttribute id="BUKRS"/>
-      <viewAttribute id="MATNR"/>
-      <viewAttribute id="LIFNR_EKPO"/>
-      <viewAttribute id="TXZ01"/>
-      <viewAttribute id="BEDAT"/>
-      <viewAttribute hidden="true" id="JOIN$EBELN$EBELN"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="Projection_7">
-      <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR_EKPO" source="LIFNR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BEDAT" source="BEDAT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$EBELN$EBELN" source="EBELN"/>
-    </input>
-    <input node="Projection_5">
-      <mapping xsi:type="Calculation:AttributeMapping" target="IDNLF" source="IDNLF"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="NETPR" source="NETPR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="NETWR" source="NETWR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MFRNR" source="MFRNR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MFRPN" source="MFRPN"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MENGE" source="MENGE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MEINS" source="MEINS"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="EBELP" source="EBELP"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="WERKS" source="WERKS"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TXZ01" source="TXZ01"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$EBELN$EBELN" source="EBELN"/>
-    </input>
-    <joinAttribute name="JOIN$EBELN$EBELN"/>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="Join_7" cardinality="CN_N" joinType="leftOuter">
     <viewAttributes>
@@ -2891,6 +2901,8 @@
       <viewAttribute id="VENDOR_NAME"/>
       <viewAttribute id="LIFNR_EKPO"/>
       <viewAttribute id="BEDAT"/>
+    
+      <viewAttribute id="BPUMN" aggregationType="sum"/>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="LIFNR_Formated" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
@@ -3127,6 +3139,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="TXZ01" source="TXZ01"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR_EKPO" source="LIFNR_EKPO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BEDAT" source="BEDAT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="BPUMN" source="BPUMN"/>
     </input>
     <input node="Projection_8">
       <mapping xsi:type="Calculation:AttributeMapping" target="VENDOR_NAME" source="NAME1_VEND"/>
@@ -3136,9 +3150,9 @@
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="Projection_8">
     <viewAttributes>
-      <viewAttribute id="LIFNR"/>
       <viewAttribute id="NAME1_VEND"/>
-    </viewAttributes>
+    
+      <viewAttribute id="LIFNR"/></viewAttributes>
     <calculatedViewAttributes/>
     <input node="Projection_8$$$$ECC_LFA1$$">
       <mapping xsi:type="Calculation:AttributeMapping" target="NAME1_VEND" source="NAME1"/>
@@ -3378,6 +3392,8 @@
       <viewAttribute id="LIFNR_EKPO"/>
       <viewAttribute id="MAKTX"/>
       <viewAttribute id="BEDAT"/>
+    
+      <viewAttribute id="BPUMN" aggregationType="sum"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="Join_7">
@@ -3612,6 +3628,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR_Formated" source="LIFNR_Formated"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR_EKPO" source="LIFNR_EKPO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BEDAT" source="BEDAT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="BPUMN" source="BPUMN"/>
     </input>
     <input node="Projection_9">
       <mapping xsi:type="Calculation:AttributeMapping" target="MAKTX" source="MAKTX"/>
@@ -3621,9 +3639,9 @@
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="Projection_9">
     <viewAttributes>
-      <viewAttribute id="MATNR"/>
       <viewAttribute id="MAKTX"/>
-    </viewAttributes>
+    
+      <viewAttribute id="MATNR"/></viewAttributes>
     <calculatedViewAttributes/>
     <input node="ECC_MAKT"/>
   </calculationView>
@@ -3862,6 +3880,8 @@
       <viewAttribute id="MAKTX"/>
       <viewAttribute id="BUTXT"/>
       <viewAttribute id="BEDAT"/>
+    
+      <viewAttribute id="BPUMN" aggregationType="sum"/>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="BEDAT_SQL" datatype="DATE" expressionLanguage="SQL">
@@ -4101,6 +4121,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR_EKPO" source="LIFNR_EKPO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MAKTX" source="MAKTX"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="BEDAT" source="BEDAT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="BPUMN" source="BPUMN"/>
     </input>
     <input node="Projection_10">
       <mapping xsi:type="Calculation:AttributeMapping" target="BUTXT" source="BUTXT"/>
@@ -4110,9 +4132,9 @@
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="Projection_10">
     <viewAttributes>
-      <viewAttribute id="BUKRS"/>
       <viewAttribute id="BUTXT"/>
-    </viewAttributes>
+    
+      <viewAttribute id="BUKRS"/></viewAttributes>
     <calculatedViewAttributes/>
     <input node="ECC_T001"/>
   </calculationView>
@@ -4873,7 +4895,9 @@
     
       <attribute id="TXZ01" order="229" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="TXZ01"/>
+    
         <keyMapping columnObjectName="Join_9" columnName="TXZ01"/>
+    
       </attribute>
       <attribute id="VENDOR_NAME" order="230" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="VENDOR_NAME"/>
@@ -4898,6 +4922,10 @@
       <attribute id="BEDAT" order="235" displayAttribute="false" attributeHierarchyActive="false">
         <descriptions defaultDescription="BEDAT"/>
         <keyMapping columnObjectName="Join_9" columnName="BEDAT"/>
+      </attribute>
+      <attribute id="BPUMN" order="236" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="Conversion to Base Unit"/>
+        <keyMapping columnObjectName="Join_9" columnName="BPUMN"/>
       </attribute>
     </attributes>
     <calculatedAttributes/>
@@ -5069,8 +5097,7 @@
       <measure id="MENGE_PO" order="226" aggregationType="sum" measureType="simple">
         <descriptions defaultDescription="MENGE_PO"/>
         <measureMapping columnObjectName="Join_9" columnName="MENGE_PO"/>
-      </measure>
-    </baseMeasures>
+      </measure></baseMeasures>
     <calculatedMeasures>
       <measure id="Z_IncomingInvoice_DocLineCount" hidden="false" order="1" aggregationType="sum" measureType="simple" aggregatable="true" calculatedMeasureType="counter" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
         <descriptions defaultDescription="IR Document Line Count"/>
@@ -5081,6 +5108,7 @@
         <formula>1</formula>
       
         
+        
         </measure>
       <measure id="Z_IncomingInvoice_DocCount" hidden="false" order="2" aggregationType="sum" measureType="simple" aggregatable="true" calculatedMeasureType="counter" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
         <descriptions defaultDescription="IR Document Count"/>
@@ -5090,6 +5118,7 @@
         <formula>1</formula>
       
         
+        
         </measure>
     </calculatedMeasures>
     <restrictedMeasures/>
@@ -5097,19 +5126,19 @@
 <layout>
   <shapes>
       <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-        <upperLeftCorner x="750.206476738209" y="112"/>
+        <upperLeftCorner x="750" y="112"/>
         <rectangleSize height="0" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="92.00000000000007" y="1496.9999904632568"/>
+        <upperLeftCorner x="92" y="1496"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="302.0000000000003" y="1496.9999904632568"/>
+        <upperLeftCorner x="302" y="1496"/>
         <rectangleSize height="64" width="179"/>
       </shape>
       <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="118.6666666666667" y="1336.9999916553497"/>
+        <upperLeftCorner x="118" y="1336"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
     <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
@@ -5121,11 +5150,11 @@
       <rectangleSize width="250"/>
     </shape>
       <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="394.62777553997626" y="1336.9999916553497"/>
+        <upperLeftCorner x="394" y="1336"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="145.33333333333331" y="1176.9999928474426"/>
+        <upperLeftCorner x="145" y="1176"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
     <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
@@ -5137,11 +5166,11 @@
       <rectangleSize width="250"/>
     </shape>
       <shape expanded="true" modelObjectName="Projection_4" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="510.0039257265314" y="1176.9999928474426"/>
+        <upperLeftCorner x="510" y="1176"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
       <shape expanded="true" modelObjectName="Join_3" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="483.33725905986466" y="1016.9999940395355"/>
+        <upperLeftCorner x="483" y="1016"/>
         <rectangleSize height="-1" width="160"/>
       </shape>
     <shape modelObjectName="Join_2" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
@@ -5154,7 +5183,7 @@
     </shape>
   
     <shape expanded="true" modelObjectName="Join_4" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="510.00392572653135" y="856.9999952316284"/>
+      <upperLeftCorner x="510" y="856"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="Join_3" modelObjectNameSpace="Join_4" modelObjectType="JoinNodeInput">
@@ -5165,13 +5194,30 @@
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="136"/>
     </shape>
+    <shape expanded="true" modelObjectName="Join_6" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="746" y="1016"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Projection_7" modelObjectNameSpace="Join_6" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_5" modelObjectNameSpace="Join_6" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="136"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_7" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="720" y="1176"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
     <shape expanded="true" modelObjectName="Projection_5" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="930.0039257265312" y="1176.9999928474426"/>
+      <upperLeftCorner x="930" y="1176"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="Join_5" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="824.8690396820232" y="696.9999964237213"/>
+      <upperLeftCorner x="824" y="696"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="Join_4" modelObjectNameSpace="Join_5" modelObjectType="JoinNodeInput">
@@ -5183,28 +5229,11 @@
       <rectangleSize width="136"/>
     </shape>
     <shape expanded="true" modelObjectName="Projection_6" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="874.8500543652458" y="856.9999952316284"/>
+      <upperLeftCorner x="874" y="856"/>
       <rectangleSize height="30" width="160"/>
-    </shape>
-  
-    <shape expanded="true" modelObjectName="Projection_7" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="720.0039257265314" y="1176.9999928474426"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="Join_6" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="746.6705923931979" y="1016.9999940395355"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape modelObjectName="Projection_7" modelObjectNameSpace="Join_6" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="250"/>
-    </shape>
-    <shape modelObjectName="Projection_5" modelObjectNameSpace="Join_6" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="320" y="30"/>
-      <rectangleSize width="136.0234375"/>
     </shape>
     <shape expanded="true" modelObjectName="Join_7" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="641.5357063486899" y="536.9999976158142"/>
+      <upperLeftCorner x="641" y="536"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="Join_5" modelObjectNameSpace="Join_7" modelObjectType="JoinNodeInput">
@@ -5213,14 +5242,14 @@
     </shape>
     <shape modelObjectName="Projection_8" modelObjectNameSpace="Join_7" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
-      <rectangleSize width="136.0234375"/>
+      <rectangleSize width="136"/>
     </shape>
     <shape expanded="true" modelObjectName="Projection_8" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="614.8690396820232" y="696.9999964237213"/>
+      <upperLeftCorner x="614" y="696"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Join_8" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="869.3782740956553" y="376.9999988079071"/>
+      <upperLeftCorner x="869" y="376"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="Join_7" modelObjectNameSpace="Join_8" modelObjectType="JoinNodeInput">
@@ -5229,14 +5258,14 @@
     </shape>
     <shape modelObjectName="Projection_9" modelObjectNameSpace="Join_8" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
-      <rectangleSize width="136.0234375"/>
+      <rectangleSize width="136"/>
     </shape>
     <shape expanded="true" modelObjectName="Projection_9" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="928.8084278551446" y="536.9999976158142"/>
+      <upperLeftCorner x="928" y="536"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Join_9" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="750.206476738209" y="217"/>
+      <upperLeftCorner x="750" y="218"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="Join_8" modelObjectNameSpace="Join_9" modelObjectType="JoinNodeInput">
@@ -5245,10 +5274,10 @@
     </shape>
     <shape modelObjectName="Projection_10" modelObjectNameSpace="Join_9" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
-      <rectangleSize width="142.697265625"/>
+      <rectangleSize width="142"/>
     </shape>
     <shape expanded="true" modelObjectName="Projection_10" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="659.3782740956553" y="376.9999988079071"/>
+      <upperLeftCorner x="659" y="376"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   </shapes>
