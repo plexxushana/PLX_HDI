@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="3.0" id="CA_CO_COST_CENTER_FILE_ZCCA_H20" applyPrivilegeType="NONE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="3.0" id="CA_CCA_H20" applyPrivilegeType="NONE" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation" xscCompatibilityMode="true">
 <origin/>
   <descriptions defaultDescription="CA_CO_COST_CENTER_FILE_ZCCA_H20"/>
   <metadata changedAt="2021-12-07 14:05:10.369"/>
@@ -1761,7 +1761,29 @@
         <calculatedViewAttribute datatype="VARCHAR" id="STKEYFIG" length="6" expressionLanguage="COLUMN_ENGINE">
           <formula>''</formula>
         </calculatedViewAttribute>
-      </calculatedViewAttributes>
+      
+      <calculatedViewAttribute id="CREDITOR" datatype="NVARCHAR" length="10" expressionLanguage="SQL">
+      
+        <formula>case when &quot;GKOAR&quot; = 'K' then &quot;GKONT&quot;
+ else ''
+ end </formula>
+      
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="DEBITOR" datatype="NVARCHAR" length="10" expressionLanguage="SQL">
+        <formula>case when &quot;GKOAR&quot; = 'D' then &quot;GKONT&quot;
+ else ''
+ end </formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="GL_ACCOUNT" datatype="NVARCHAR" length="10" expressionLanguage="SQL">
+        <formula>case when &quot;GKOAR&quot; in ('S', 'M', 'A') then &quot;GKONT&quot;
+ else ''
+ end </formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="PART_WBSEL" datatype="NVARCHAR" length="24" expressionLanguage="SQL">
+        <formula>' '</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
       <input node="Union_2"/>
     </calculationView>
 </calculationViews>
@@ -1852,63 +1874,79 @@
         <descriptions/>
         <keyMapping columnObjectName="Projection_3" columnName="CHART"/>
       </attribute>
-      <attribute id="PART_ABCPR" order="22" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="CREDITOR" order="22" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="CREDITOR"/>
+        <keyMapping columnObjectName="Projection_3" columnName="CREDITOR"/>
+      </attribute>
+      <attribute id="DEBITOR" order="23" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="DEBITOR"/>
+        <keyMapping columnObjectName="Projection_3" columnName="DEBITOR"/>
+      </attribute>
+      <attribute id="GL_ACCOUNT" order="24" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="GL_ACCOUNT"/>
+        <keyMapping columnObjectName="Projection_3" columnName="GL_ACCOUNT"/>
+      </attribute>
+      <attribute id="PART_WBSEL" order="25" displayAttribute="false" attributeHierarchyActive="false">
+        <descriptions defaultDescription="PART_WBSEL"/>
+        <keyMapping columnObjectName="Projection_3" columnName="PART_WBSEL"/>
+      </attribute>
+      <attribute id="PART_ABCPR" order="26" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="PART_ABCPR"/>
         <keyMapping columnObjectName="Projection_3" columnName="PART_ABCPR"/>
       </attribute>
-      <attribute id="DATAORIGIN" order="23" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="DATAORIGIN" order="27" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="DATAORIGIN"/>
         <keyMapping columnObjectName="Projection_3" columnName="DATAORIGIN"/>
       </attribute>
-      <attribute id="CO_REPLINE" order="24" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="CO_REPLINE" order="28" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions/>
         <keyMapping columnObjectName="Projection_3" columnName="CO_REPLINE"/>
       </attribute>
-      <attribute id="FM_AREA" order="25" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="FM_AREA" order="29" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions/>
         <keyMapping columnObjectName="Projection_3" columnName="FM_AREA"/>
       </attribute>
-      <attribute id="FUND" order="26" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="FUND" order="30" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="GEBER"/>
         <keyMapping columnObjectName="Projection_3" columnName="GEBER"/>
       </attribute>
-      <attribute id="FUNC_AREA" order="27" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="FUNC_AREA" order="31" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="FKBER"/>
         <keyMapping columnObjectName="Projection_3" columnName="FKBER"/>
       </attribute>
-      <attribute id="GRANT_NBR" order="28" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="GRANT_NBR" order="32" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="GRANT_NBR"/>
         <keyMapping columnObjectName="Projection_3" columnName="GRANT_NBR"/>
       </attribute>
-      <attribute id="PFUNC_AREA" order="29" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="PFUNC_AREA" order="33" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="PFKBER"/>
         <keyMapping columnObjectName="Projection_3" columnName="PFKBER"/>
       </attribute>
-      <attribute id="PFUND" order="30" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="PFUND" order="34" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="PGEBER"/>
         <keyMapping columnObjectName="Projection_3" columnName="PGEBER"/>
       </attribute>
-      <attribute id="PGRANT_NBR" order="31" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="PGRANT_NBR" order="35" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="PGRANT_NBR"/>
         <keyMapping columnObjectName="Projection_3" columnName="PGRANT_NBR"/>
       </attribute>
-      <attribute id="CURRENCY" order="32" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="CURRENCY" order="36" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions/>
         <keyMapping columnObjectName="Projection_3" columnName="CURRENCY"/>
       </attribute>
-      <attribute id="MEINH" order="33" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="MEINH" order="37" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="MEINH"/>
         <keyMapping columnObjectName="Projection_3" columnName="MEINH"/>
       </attribute>
-      <attribute id="PBDGTID" order="34" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="PBDGTID" order="38" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions/>
         <keyMapping columnObjectName="Projection_3" columnName="PBDGTID"/>
       </attribute>
-      <attribute id="PU_BDGTID" order="35" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="PU_BDGTID" order="39" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions/>
         <keyMapping columnObjectName="Projection_3" columnName="PU_BDGTID"/>
       </attribute>
-      <attribute id="STKEYFIG" order="36" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="STKEYFIG" order="40" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions/>
         <keyMapping columnObjectName="Projection_3" columnName="STKEYFIG"/>
       </attribute>
@@ -1922,11 +1960,11 @@
       </layout>
     </privateDataFoundation>
     <baseMeasures>
-      <measure id="AMOUNT" order="37" aggregationType="sum" measureType="simple">
+      <measure id="AMOUNT" order="41" aggregationType="sum" measureType="simple">
         <descriptions defaultDescription="AMOUNT"/>
         <measureMapping columnObjectName="Projection_3" columnName="AMOUNT"/>
       </measure>
-      <measure id="QUANTITY" order="38" aggregationType="sum" measureType="simple">
+      <measure id="QUANTITY" order="42" aggregationType="sum" measureType="simple">
         <descriptions defaultDescription="MEGBTR"/>
         <measureMapping columnObjectName="Projection_3" columnName="MEGBTR"/>
       </measure>

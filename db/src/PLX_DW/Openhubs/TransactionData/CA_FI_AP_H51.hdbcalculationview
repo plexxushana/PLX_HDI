@@ -1,7 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CA_FI_AP_H51" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
 <descriptions defaultDescription="CA_FI_AP_H51"/>
-<localVariables/>
+<localVariables>
+  <variable id="IP_COMPANY" parameter="true">
+    <descriptions defaultDescription="Company Code"/>
+    <variableProperties datatype="NVARCHAR" length="4" scale="NaN" mandatory="true">
+      <valueDomain type="AttributeValue">
+        <attribute name="COMP_CODE"/>
+      </valueDomain>
+      <selection multiLine="false" type="SingleValue"/>
+    </variableProperties>
+  </variable>
+  <variable id="V_FISCYEAR">
+    <descriptions defaultDescription="Fiscal Year"/>
+    <variableProperties datatype="NVARCHAR" length="4" scale="NaN">
+      <valueDomain type="AttributeValue">
+        <attribute name="FISCYEAR"/>
+      </valueDomain>
+      <selection type="Range"/>
+      <defaultRange operator="EQ" including="true"/>
+    </variableProperties>
+  </variable>
+  <variable id="V_POSTING_DATE">
+    <descriptions defaultDescription="Posting Date"/>
+    <variableProperties datatype="NVARCHAR" length="8" scale="NaN">
+      <valueDomain type="AttributeValue">
+        <attribute name="PSTNG_DATE"/>
+      </valueDomain>
+      <selection type="Range"/>
+      <defaultRange operator="EQ" including="true"/>
+    </variableProperties>
+  </variable>
+</localVariables>
 <variableMappings/>
 <dataSources>
   <DataSource id="ECC_FI_AP_51">
@@ -9,7 +39,7 @@
   </DataSource>
 </dataSources>
 <calculationViews>
-  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="ZBUKR"/>
       <viewAttribute id="HBKID"/>
@@ -48,6 +78,8 @@
       <viewAttribute id="REC_GJAHR"/>
       <viewAttribute id="ZPFOR"/>
       <viewAttribute id="RWSKT"/>
+    
+      <viewAttribute id="LOC_CURRENCY"/>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CD_FISCVARNT" datatype="NVARCHAR" length="2" expressionLanguage="SQL">
@@ -57,7 +89,10 @@
         <formula>''</formula>
       </calculatedViewAttribute>
     </calculatedViewAttributes>
-    <input node="ECC_FI_AP_51"/>
+    <input node="ECC_FI_AP_51">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOC_CURRENCY" source="WAERS"/>
+    </input>
+    <filter>&quot;ZBUKR&quot; IN ('$$IP_COMPANY$$')</filter>
   </calculationView>
 </calculationViews>
 <logicalModel id="Projection_1">
@@ -88,6 +123,7 @@
     </attribute>
     <attribute id="FISCYEAR" order="7" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="GJAHR"/>
+      <localVariable>V_FISCYEAR</localVariable>
       <keyMapping columnObjectName="Projection_1" columnName="GJAHR"/>
     </attribute>
     <attribute id="COUNTRY" order="8" displayAttribute="false" attributeHierarchyActive="false">
@@ -108,6 +144,7 @@
     </attribute>
     <attribute id="PSTNG_DATE" order="12" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ZALDT"/>
+      <localVariable>V_POSTING_DATE</localVariable>
       <keyMapping columnObjectName="Projection_1" columnName="ZALDT"/>
     </attribute>
     <attribute id="DOC_CURRCY" order="14" displayAttribute="false" attributeHierarchyActive="false">
@@ -121,7 +158,12 @@
     <attribute id="ENCDT" order="16" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="BANCD"/>
       <keyMapping columnObjectName="Projection_1" columnName="BANCD"/>
-    </attribute></attributes>
+    </attribute>
+    <attribute id="LOC_CURRENCY" order="18" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Local Currency"/>
+      <keyMapping columnObjectName="Projection_1" columnName="LOC_CURRENCY"/>
+    </attribute>
+  </attributes>
   <calculatedAttributes/>
   <baseMeasures>
     <measure id="DSC_AMT_DC" order="13" aggregationType="sum" measureType="simple">
