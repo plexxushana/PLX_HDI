@@ -1,4 +1,4 @@
-FUNCTION "plx_analytics::FN_HIERARCHY_IO"(in_kokrs nvarchar(4) )
+FUNCTION "plx_analytics::FN_HIERARCHY_IO_EXTRACT"(in_kokrs nvarchar(4) )
        
        RETURNS table(
 		 "/BIC/ZIO_HIEID" NVARCHAR(25)
@@ -56,7 +56,7 @@ BEGIN
                   
     -- this is the firls ltbl that is needed to be passed as param to the Hierarchy select statement jsut below. 
     lt_all_hier = select top 1 CONTROLLING_AREA AS KOKRS, LEVEL AS "LEVEL",  PARENT AS PARENT_ID, CHILD AS NODE_ID  FROM  
-                                  "plx_analytics::FN_HIERARCHY_AUFNR_IO" ('1700', '1700_PAYIO', 'HOSP')  ; 
+                                  "plx_analytics::FN_HIERARCHY_AUFNR_IO" ('1700', 'DUMMY', 'HOSP')  ; 
                                 
     -- this lt called lt_hierarchy_top will be the main table that will be unionized so many times and it will contain the fields that we need. fields are: rank that will be nodid, parent, child  
     lt_hierarchy_top=    SELECT
@@ -250,14 +250,14 @@ FROM  :lt_hierarchy_top ;
   
    RETURN  (select  "/BIC/ZIO_HIEID"  as "/BIC/ZIO_HIEID" ,  
                        "/BIC/ZIO_OBJNM" as "/BIC/ZIO_OBJNM" , 
-                       rank as "/BIC/ZIO_NODID" ,
-                       NODE_ID as  "/BIC/ZIO_NODNM" ,  
-                       level as "/BIC/ZIO_TNLVL", 
+                       lpad(rank,8,0) as "/BIC/ZIO_NODID" ,
+                       lpad(NODE_ID,60,0) as  "/BIC/ZIO_NODNM" ,  
+                       lpad(level,2,0) as "/BIC/ZIO_TNLVL", 
                        'A'  as "/BIC/ZIO_OBJVS" ,
-    					parent_rank as "/BIC/ZIO_PRTID" , 
+    					lpad(parent_rank,8,0) as "/BIC/ZIO_PRTID" , 
     					'' as "/BIC/ZIO_LINK" ,
-    					CHILD_ID as "/BIC/ZIO_CLDID" , 
-    					"/BIC/ZIO_NXTID" as "/BIC/ZIO_NXTID"  	,
+    					lpad(CHILD_ID,8,0) as "/BIC/ZIO_CLDID" , 
+    					lpad("/BIC/ZIO_NXTID",8,0) as "/BIC/ZIO_NXTID"  	,
     					''  as "/BIC/ZIO_INTRL" , '' AS RECORDMODE  from :t)  ; 
   
 					

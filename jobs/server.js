@@ -1,7 +1,8 @@
 /*eslint no-console: 0, no-unused-vars: 0*/
 "use strict";
 
-var xsjs  = require("@sap/xsjs");
+//var xsjs  = require("@sap/xsjs");
+var async_xsjs = require("@sap/async-xsjs");
 var xsenv = require("@sap/xsenv");
 var port  = process.env.PORT || 3000;
 
@@ -40,6 +41,16 @@ try {
 }
 
 // start server
-xsjs(options).listen(port);
+//xsjs(options).listen(port);
+// start server
+async_xsjs(options).then((async_xsjs_server)=>{
+    async_xsjs_server.listen(port, (err)=>{
+      if(!err) {
+        console.log('Server listening on port %d', port);
+      }else{
+        console.log('Server failed to start on port %d', port);
+      }
+    });
+});
 
-console.log("Server listening on port %d", port);
+

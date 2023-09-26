@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CA_GM_H03N" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="CV_GM_H03N"/>
+<localVariables>
+  <variable id="IP_COMPANY" parameter="true">
+    <descriptions defaultDescription="Company Code"/>
+    <variableProperties datatype="NVARCHAR" length="4" scale="NaN" mandatory="true">
+      <valueDomain type="AttributeValue">
+        <attribute name="COMP_CODE"/>
+      </valueDomain>
+      <selection multiLine="false" type="SingleValue"/>
+    </variableProperties>
+  </variable>
+</localVariables>
+<variableMappings/>
+<dataSources>
+  <DataSource id="ECC_GM_DO03">
+    <resourceUri>ECC_GM_DO03</resourceUri>
+  </DataSource>
+  <DataSource id="ECC_GMGRTEXTS">
+    <resourceUri>ECC_GMGRTEXTS</resourceUri>
+  </DataSource>
+  <DataSource id="ECC_GMGR">
+    <resourceUri>ECC_GMGR</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="COMP_CODE"/>
+      <viewAttribute id="GM_DOCNR"/>
+      <viewAttribute id="GRANT_NBR"/>
+      <viewAttribute id="GM_SPNCL"/>
+      <viewAttribute id="CREATEDON"/>
+      <viewAttribute id="PSTNG_DATE"/>
+      <viewAttribute id="GM_BDVLN"/>
+      <viewAttribute id="GM_VLTYP"/>
+      <viewAttribute id="GM_AMT"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="ECC_GM_DO03">
+      <mapping xsi:type="Calculation:AttributeMapping" target="COMP_CODE" source="RBUKRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GM_DOCNR" source="DOCNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GRANT_NBR" source="RGRANT_NBR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GM_SPNCL" source="RSPONSORED_CLASS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDON" source="CPUDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSTNG_DATE" source="BUDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GM_BDVLN" source="RBDGT_VLDTY_NBR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GM_VLTYP" source="RVALUETYPE_9"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GM_AMT" source="BUDGET"/>
+    </input>
+    <filter>&quot;COMP_CODE&quot; IN ('$$IP_COMPANY$$')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="GRANT_NBR"/>
+      <viewAttribute id="DESCRIPTION"/>
+      <viewAttribute id="LANGUAGE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="ECC_GMGRTEXTS"/>
+    <filter>&quot;LANGUAGE&quot; = 'E'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" cardinality="CN_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="COMP_CODE"/>
+      <viewAttribute id="GM_DOCNR"/>
+      <viewAttribute id="GRANT_NBR"/>
+      <viewAttribute id="GM_SPNCL"/>
+      <viewAttribute id="CREATEDON"/>
+      <viewAttribute id="PSTNG_DATE"/>
+      <viewAttribute id="GM_BDVLN"/>
+      <viewAttribute id="GM_VLTYP"/>
+      <viewAttribute id="GM_AMT" aggregationType="sum"/>
+      <viewAttribute id="DESCRIPTION"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Projection_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="COMP_CODE" source="COMP_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GM_DOCNR" source="GM_DOCNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GRANT_NBR" source="GRANT_NBR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GM_SPNCL" source="GM_SPNCL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDON" source="CREATEDON"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSTNG_DATE" source="PSTNG_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GM_BDVLN" source="GM_BDVLN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GM_VLTYP" source="GM_VLTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GM_AMT" source="GM_AMT"/>
+    </input>
+    <input node="Projection_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DESCRIPTION" source="DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GRANT_NBR" source="GRANT_NBR"/>
+    </input>
+    <joinAttribute name="GRANT_NBR"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
+    <viewAttributes>
+      <viewAttribute id="ZZAVC_IND_CODE"/>
+      <viewAttribute id="GRANT_NBR"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="ECC_GMGR"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2" cardinality="CN_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="COMP_CODE"/>
+      <viewAttribute id="GM_DOCNR"/>
+      <viewAttribute id="GRANT_NBR"/>
+      <viewAttribute id="GM_SPNCL"/>
+      <viewAttribute id="CREATEDON"/>
+      <viewAttribute id="PSTNG_DATE"/>
+      <viewAttribute id="GM_BDVLN"/>
+      <viewAttribute id="GM_VLTYP"/>
+      <viewAttribute id="GM_AMT" aggregationType="sum"/>
+      <viewAttribute id="DESCRIPTION"/>
+      <viewAttribute id="ZZAVC_IND_CODE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="COMP_CODE" source="COMP_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GM_DOCNR" source="GM_DOCNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GRANT_NBR" source="GRANT_NBR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GM_SPNCL" source="GM_SPNCL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATEDON" source="CREATEDON"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PSTNG_DATE" source="PSTNG_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GM_BDVLN" source="GM_BDVLN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GM_VLTYP" source="GM_VLTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GM_AMT" source="GM_AMT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DESCRIPTION" source="DESCRIPTION"/>
+    </input>
+    <input node="Projection_3">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZAVC_IND_CODE" source="ZZAVC_IND_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GRANT_NBR" source="GRANT_NBR"/>
+    </input>
+    <joinAttribute name="GRANT_NBR"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Join_2">
+  <attributes>
+    <attribute id="COMP_CODE" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="RBUKRS"/>
+      <keyMapping columnObjectName="Join_2" columnName="COMP_CODE"/>
+    </attribute>
+    <attribute id="GM_DOCNR" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DOCNR"/>
+      <keyMapping columnObjectName="Join_2" columnName="GM_DOCNR"/>
+    </attribute>
+    <attribute id="GRANT_NBR" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="RGRANT_NBR"/>
+      <keyMapping columnObjectName="Join_2" columnName="GRANT_NBR"/>
+    </attribute>
+    <attribute id="TXTLG" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DESCRIPTION"/>
+      <keyMapping columnObjectName="Join_2" columnName="DESCRIPTION"/>
+    </attribute>
+    <attribute id="GM_SPNCL" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="RSPONSORED_CLASS"/>
+      <keyMapping columnObjectName="Join_2" columnName="GM_SPNCL"/>
+    </attribute>
+    <attribute id="CREATEDON" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CPUDT"/>
+      <keyMapping columnObjectName="Join_2" columnName="CREATEDON"/>
+    </attribute>
+    <attribute id="PSTNG_DATE" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="BUDAT"/>
+      <keyMapping columnObjectName="Join_2" columnName="PSTNG_DATE"/>
+    </attribute>
+    <attribute id="GM_BDVLN" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="RBDGT_VLDTY_NBR"/>
+      <keyMapping columnObjectName="Join_2" columnName="GM_BDVLN"/>
+    </attribute>
+    <attribute id="ZGM_AVCID" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ZZAVC_IND_CODE"/>
+      <keyMapping columnObjectName="Join_2" columnName="ZZAVC_IND_CODE"/>
+    </attribute>
+    <attribute id="GM_VLTYP" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="RVALUETYPE_9"/>
+      <keyMapping columnObjectName="Join_2" columnName="GM_VLTYP"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="GM_AMT" order="11" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="BUDGET"/>
+      <measureMapping columnObjectName="Join_2" columnName="GM_AMT"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="328.6900820831794" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92.00000000000001" y="536.9999976158142"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302" y="536.9999976158142"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="118.66666666666666" y="376.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="161.173828125"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="395.83468516943316" y="376.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="328.6900820831794" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Join_1" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_3" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="184.19970703125"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

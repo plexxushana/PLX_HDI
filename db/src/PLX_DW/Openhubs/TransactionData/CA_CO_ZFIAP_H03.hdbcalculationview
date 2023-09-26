@@ -1,7 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CA_CO_ZFIAP_H03" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
 <descriptions defaultDescription="CA_CO_ZFIAP_H03"/>
-<localVariables/>
+<localVariables>
+  <variable id="IP_COMPANY" parameter="true">
+    <descriptions defaultDescription="Company code"/>
+    <variableProperties datatype="NVARCHAR" length="4" scale="null" mandatory="true">
+      <valueDomain type="AttributeValue">
+        <attribute name="COMP_CODE"/>
+      </valueDomain>
+      <selection multiLine="true" type="SingleValue"/>
+    </variableProperties>
+  </variable>
+  <variable id="V_FISCYEAR">
+    <descriptions defaultDescription="Fiscal Year"/>
+    <variableProperties datatype="NVARCHAR" length="4" scale="null">
+      <valueDomain type="AttributeValue">
+        <attribute name="INV_YEAR"/>
+      </valueDomain>
+      <selection type="Range"/>
+      <defaultRange operator="EQ" including="true"/>
+    </variableProperties>
+  </variable>
+  <variable id="V_FISCPER">
+    <descriptions defaultDescription="Fiscal Period"/>
+    <variableProperties datatype="NVARCHAR" length="7" scale="null">
+      <valueDomain type="AttributeValue">
+        <attribute name="FISCPER"/>
+      </valueDomain>
+      <selection type="Range"/>
+      <defaultRange operator="EQ" including="true"/>
+    </variableProperties>
+  </variable>
+</localVariables>
 <variableMappings/>
 <dataSources>
   <DataSource id="ECC_FI_AP_4">
@@ -9,7 +39,7 @@
   </DataSource>
 </dataSources>
 <calculationViews>
-  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="REQ_ID"/>
       <viewAttribute id="BUKRS"/>
@@ -94,6 +124,8 @@
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="ECC_FI_AP_4"/>
+  
+    <filter>&quot;BUKRS&quot; IN ($$IP_COMPANY$$)</filter>
   </calculationView>
 </calculationViews>
 <logicalModel id="Projection_1">
@@ -108,6 +140,7 @@
     </attribute>
     <attribute id="FISCPER" order="3" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="FISCPER"/>
+      <localVariable>V_FISCPER</localVariable>
       <keyMapping columnObjectName="Projection_1" columnName="FISCPER"/>
     </attribute>
     <attribute id="FISCVARNT" order="4" displayAttribute="false" attributeHierarchyActive="false">
@@ -254,32 +287,33 @@
       <descriptions defaultDescription="HKONT"/>
       <keyMapping columnObjectName="Projection_1" columnName="HKONT"/>
     </attribute>
-    <attribute id="INV_ITEM" order="49" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="REBZZ"/>
-      <keyMapping columnObjectName="Projection_1" columnName="REBZZ"/>
-    </attribute>
-    <attribute id="RC_ACCOUNT" order="50" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="RC_ACCOUNT" order="49" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="SAKNR"/>
       <keyMapping columnObjectName="Projection_1" columnName="SAKNR"/>
     </attribute>
-    <attribute id="FI_SUBSID" order="51" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="FI_SUBSID" order="50" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="FILKD"/>
       <keyMapping columnObjectName="Projection_1" columnName="FILKD"/>
     </attribute>
-    <attribute id="CLR_DOC_NO" order="52" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CLR_DOC_NO" order="51" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="AUGBL"/>
       <keyMapping columnObjectName="Projection_1" columnName="AUGBL"/>
     </attribute>
-    <attribute id="REF_DOC_NO" order="53" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="REF_DOC_NO" order="52" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="XBLNR"/>
       <keyMapping columnObjectName="Projection_1" columnName="XBLNR"/>
     </attribute>
-    <attribute id="INV_DOC_NO" order="54" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="INV_DOC_NO" order="53" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="REBZG"/>
       <keyMapping columnObjectName="Projection_1" columnName="REBZG"/>
     </attribute>
+    <attribute id="INV_ITEM" order="54" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="REBZZ"/>
+      <keyMapping columnObjectName="Projection_1" columnName="REBZZ"/>
+    </attribute>
     <attribute id="INV_YEAR" order="55" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="REBZJ"/>
+      <localVariable>V_FISCYEAR</localVariable>
       <keyMapping columnObjectName="Projection_1" columnName="REBZJ"/>
     </attribute>
     <attribute id="DOC_NUMBER" order="56" displayAttribute="false" attributeHierarchyActive="false">
@@ -306,13 +340,13 @@
       <descriptions defaultDescription="XNEGP"/>
       <keyMapping columnObjectName="Projection_1" columnName="UPDMOD"/>
     </attribute>
-    <attribute id="COUNTRY" order="62" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="LAND1"/>
-      <keyMapping columnObjectName="Projection_1" columnName="LAND1"/>
-    </attribute>
-    <attribute id="POSTXT" order="63" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="POSTXT" order="62" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="SGTXT"/>
       <keyMapping columnObjectName="Projection_1" columnName="SGTXT"/>
+    </attribute>
+    <attribute id="COUNTRY" order="63" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LAND1"/>
+      <keyMapping columnObjectName="Projection_1" columnName="LAND1"/>
     </attribute>
     <attribute id="SP_GL_TT" order="64" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="UMSKS"/>
