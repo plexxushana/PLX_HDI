@@ -4,7 +4,7 @@
 <localVariables>
   <variable id="IP_CONT_AREA" parameter="true">
     <descriptions defaultDescription="Controlling Area"/>
-    <variableProperties datatype="NVARCHAR" length="4" scale="null" mandatory="true">
+    <variableProperties datatype="NVARCHAR" length="4" scale="NaN" mandatory="true">
       <valueDomain type="AttributeValue">
         <attribute name="CO_AREA"/>
       </valueDomain>
@@ -62,9 +62,35 @@
       <calculatedViewAttribute id="DATAORIGIN" datatype="NVARCHAR" length="1" expressionLanguage="SQL">
         <formula>'1'</formula>
       </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="PART_ACTTY" datatype="NVARCHAR" length="6" expressionLanguage="SQL">
+        <formula>CASE WHEN &quot;RSPOBART&quot; = '0ATY' then substr(&quot;RSPAROBVAL&quot;,14,6)
+ else ' '
+end</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="PART_CCTR" datatype="NVARCHAR" length="10" expressionLanguage="SQL">
+        <formula>CASE WHEN &quot;RSPOBART&quot; IN ('0CCT', '0ATY') 
+    THEN SUBSTR(&quot;RSPAROBVAL&quot;, 4, 10)
+ ELSE ' '
+END</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="PART_COORD" datatype="NVARCHAR" length="12" expressionLanguage="SQL">
+        <formula>CASE WHEN &quot;RSPOBART&quot; = '0COR' THEN &quot;RSPAROBVAL&quot;
+ ELSE ' '
+END </formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="PART_WBSEL" datatype="NVARCHAR" length="24" expressionLanguage="SQL">
+        <formula>CASE WHEN &quot;RSPOBART&quot; = '0POS' THEN &quot;RSPAROBVAL&quot; 
+ ELSE ' '
+END </formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="PART_ABCPR" datatype="NVARCHAR" length="12" expressionLanguage="SQL">
+        <formula>CASE WHEN &quot;RSPOBART&quot; = '0ABC' THEN SUBSTR(&quot;RSPAROBVAL&quot;, 3, 12)
+ELSE ' '
+END</formula>
+      </calculatedViewAttribute>
     </calculatedViewAttributes>
     <input node="ECC_OPA_H20"/>
-  
     <filter>&quot;KOKRS&quot; IN ($$IP_CONT_AREA$$)</filter>
   </calculationView>
 </calculationViews>
@@ -170,35 +196,55 @@
       <descriptions defaultDescription="PGRANT_NBR"/>
       <keyMapping columnObjectName="Projection_1" columnName="PGRANT_NBR"/>
     </attribute>
-    <attribute id="CURRENCY" order="27" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="WAERS"/>
-      <keyMapping columnObjectName="Projection_1" columnName="WAERS"/>
+    <attribute id="PART_ACTTY" order="28" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PART_ACTTY"/>
+      <keyMapping columnObjectName="Projection_1" columnName="PART_ACTTY"/>
     </attribute>
-    <attribute id="UNIT" order="29" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MEINH"/>
-      <keyMapping columnObjectName="Projection_1" columnName="MEINH"/>
+    <attribute id="PART_CCTR" order="29" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PART_CCTR"/>
+      <keyMapping columnObjectName="Projection_1" columnName="PART_CCTR"/>
     </attribute>
-    <attribute id="CHRT_ACCTS" order="30" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="PART_COORD" order="30" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PART_COORD"/>
+      <keyMapping columnObjectName="Projection_1" columnName="PART_COORD"/>
+    </attribute>
+    <attribute id="CHRT_ACCTS" order="31" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CHRT_ACCTS"/>
       <keyMapping columnObjectName="Projection_1" columnName="CHRT_ACCTS"/>
     </attribute>
-    <attribute id="CREDITOR" order="31" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CREDITOR" order="32" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CREDITOR"/>
       <keyMapping columnObjectName="Projection_1" columnName="CREDITOR"/>
     </attribute>
-    <attribute id="DEBITOR" order="32" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="DEBITOR" order="33" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="DEBITOR"/>
       <keyMapping columnObjectName="Projection_1" columnName="DEBITOR"/>
     </attribute>
-    <attribute id="GL_ACCOUNT" order="33" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="GL_ACCOUNT" order="34" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="GL_ACCOUNT"/>
       <keyMapping columnObjectName="Projection_1" columnName="GL_ACCOUNT"/>
     </attribute>
-    <attribute id="PU_BDGTID" order="34" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="PART_WBSEL" order="35" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PART_WBSEL"/>
+      <keyMapping columnObjectName="Projection_1" columnName="PART_WBSEL"/>
+    </attribute>
+    <attribute id="PART_ABCPR" order="36" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PART_ABCPR"/>
+      <keyMapping columnObjectName="Projection_1" columnName="PART_ABCPR"/>
+    </attribute>
+    <attribute id="CURRENCY" order="37" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="WAERS"/>
+      <keyMapping columnObjectName="Projection_1" columnName="WAERS"/>
+    </attribute>
+    <attribute id="UNIT" order="38" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MEINH"/>
+      <keyMapping columnObjectName="Projection_1" columnName="MEINH"/>
+    </attribute>
+    <attribute id="PU_BDGTID" order="39" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="BUDGET_PD"/>
       <keyMapping columnObjectName="Projection_1" columnName="BUDGET_PD"/>
     </attribute>
-    <attribute id="PBUDGET_PD" order="35" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="PBDGTID" order="40" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="PBUDGET_PD"/>
       <keyMapping columnObjectName="Projection_1" columnName="PBUDGET_PD"/>
     </attribute>
@@ -209,7 +255,7 @@
       <descriptions defaultDescription="SWG"/>
       <measureMapping columnObjectName="Projection_1" columnName="SWG"/>
     </measure>
-    <measure id="QUANTITY" order="28" aggregationType="sum" measureType="simple">
+    <measure id="QUANTITY" order="27" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="SMEG"/>
       <measureMapping columnObjectName="Projection_1" columnName="SMEG"/>
     </measure>
