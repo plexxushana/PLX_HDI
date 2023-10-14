@@ -23,20 +23,20 @@
   <DataSource id="ECC_SKAT">
     <resourceUri>ECC_SKAT</resourceUri>
   </DataSource>
-  <DataSource id="ECC_BKPF">
-    <resourceUri>ECC_BKPF</resourceUri>
-  </DataSource>
-  <DataSource id="ECC_BSEG">
-    <resourceUri>ECC_BSEG</resourceUri>
-  </DataSource>
-  <DataSource id="ECC_LFA1">
-    <resourceUri>ECC_LFA1</resourceUri>
-  </DataSource>
   <DataSource id="ECC_SKA1">
     <resourceUri>ECC_SKA1</resourceUri>
   </DataSource>
   <DataSource id="ECC_CSKU">
     <resourceUri>ECC_CSKU</resourceUri>
+  </DataSource>
+  <DataSource id="ECC_LFA1">
+    <resourceUri>ECC_LFA1</resourceUri>
+  </DataSource>
+  <DataSource id="ECC_BKPF">
+    <resourceUri>ECC_BKPF</resourceUri>
+  </DataSource>
+  <DataSource id="ECC_BSEG">
+    <resourceUri>ECC_BSEG</resourceUri>
   </DataSource>
 </dataSources>
 <calculationViews>
@@ -715,6 +715,15 @@
     <input node="ECC_SKAT"/>
     <filter>&quot;SPRAS&quot; = 'E'</filter>
   </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_8">
+    <viewAttributes>
+      <viewAttribute id="XBILK"/>
+      <viewAttribute id="SAKNR"/>
+      <viewAttribute id="KTOPL"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="ECC_SKA1"/>
+  </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
     <viewAttributes>
       <viewAttribute id="RVERS"/>
@@ -841,7 +850,9 @@
       </calculatedViewAttribute>
     
       <calculatedViewAttribute id="PROD_DESC" datatype="NVARCHAR" length="40" expressionLanguage="SQL">
+    
         <formula>'  '</formula>
+    
       </calculatedViewAttribute>
       <calculatedViewAttribute id="ZOFFNAME" datatype="NVARCHAR" length="60" expressionLanguage="SQL">
         <formula>'  '</formula>
@@ -1056,276 +1067,6 @@
     <joinAttribute name="GL_ACCOUNT"/>
     <joinAttribute name="CHARTACCTS"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_5" filterExpressionLanguage="SQL">
-    <viewAttributes>
-      <viewAttribute id="BELNR"/>
-      <viewAttribute id="GJAHR"/>
-      <viewAttribute id="BUKRS"/>
-    
-      <viewAttribute id="BLDAT"/>
-      <viewAttribute id="XBLNR"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="ECC_BKPF"/>
-  
-    <filter>&quot;BUKRS&quot; IN ($$IP_COMPANY$$)</filter>
-  </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_6" filterExpressionLanguage="SQL">
-    <viewAttributes>
-      <viewAttribute id="BUKRS"/>
-      <viewAttribute id="BELNR"/>
-      <viewAttribute id="GJAHR"/>
-      <viewAttribute id="BUZEI"/>
-    
-      <viewAttribute id="EBELN"/>
-      <viewAttribute id="EBELP"/>
-      <viewAttribute id="LIFNR"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="ECC_BSEG"/>
-  
-    <filter>&quot;BUKRS&quot; IN ($$IP_COMPANY$$)</filter>
-  </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="Join_3" cardinality="CN_N" joinType="inner">
-    <viewAttributes>
-      <viewAttribute id="BELNR"/>
-      <viewAttribute id="GJAHR"/>
-      <viewAttribute id="BUKRS"/>
-      <viewAttribute id="BUZEI"/>
-      <viewAttribute id="BLDAT"/>
-      <viewAttribute id="EBELN"/>
-      <viewAttribute id="LIFNR"/>
-      <viewAttribute id="XBLNR"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="Projection_5">
-      <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
-    </input>
-    <input node="Projection_6">
-      <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
-    </input>
-    <joinAttribute name="GJAHR"/>
-    <joinAttribute name="BUKRS"/>
-    <joinAttribute name="BELNR"/>
-  </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="Join_4" cardinality="CN_N" joinType="inner">
-    <viewAttributes>
-      <viewAttribute id="RVERS"/>
-      <viewAttribute id="RYEAR"/>
-      <viewAttribute id="RTCUR"/>
-      <viewAttribute id="POPER"/>
-      <viewAttribute id="DOCCT"/>
-      <viewAttribute id="DOCNR"/>
-      <viewAttribute id="DOCLN"/>
-      <viewAttribute id="RBUKRS"/>
-      <viewAttribute id="RGRANT_NBR"/>
-      <viewAttribute id="RSPONSORED_PROG"/>
-      <viewAttribute id="RSPONSORED_CLASS"/>
-      <viewAttribute id="RBDGT_VLDTY_NBR"/>
-      <viewAttribute id="RFUND"/>
-      <viewAttribute id="RVALUETYPE_9"/>
-      <viewAttribute id="RTRANS"/>
-      <viewAttribute id="RSTATS_IND"/>
-      <viewAttribute id="RGRANTEE_FY_9"/>
-      <viewAttribute id="BDGT_STATE"/>
-      <viewAttribute id="SGTXT"/>
-      <viewAttribute id="DOCTY"/>
-      <viewAttribute id="ACTIV"/>
-      <viewAttribute id="BUDAT"/>
-      <viewAttribute id="WSDAT"/>
-      <viewAttribute id="REFDOCNR"/>
-      <viewAttribute id="REFRYEAR"/>
-      <viewAttribute id="REFDOCLN"/>
-      <viewAttribute id="REFDOCCT"/>
-      <viewAttribute id="REFACTIV"/>
-      <viewAttribute id="REFDOC_DETAIL"/>
-      <viewAttribute id="CPUDT"/>
-      <viewAttribute id="CPUTM"/>
-      <viewAttribute id="USNAM"/>
-      <viewAttribute id="AWTYP"/>
-      <viewAttribute id="AWORG"/>
-      <viewAttribute id="GL_ACCOUNT"/>
-      <viewAttribute id="CO_AREA"/>
-      <viewAttribute id="COSTCENTER"/>
-      <viewAttribute id="ORDERID"/>
-      <viewAttribute id="WBS_ELEMENT"/>
-      <viewAttribute id="PROFIT_CTR"/>
-      <viewAttribute id="ASSETMAINO"/>
-      <viewAttribute id="ASSETSUBNO"/>
-      <viewAttribute id="MATERIAL"/>
-      <viewAttribute id="FM_AREA"/>
-      <viewAttribute id="BUS_AREA"/>
-      <viewAttribute id="FUNDS_CTR"/>
-      <viewAttribute id="CMMT_ITEM"/>
-      <viewAttribute id="FAREA"/>
-      <viewAttribute id="MEASURE"/>
-      <viewAttribute id="NETWORK"/>
-      <viewAttribute id="ROUTING_NO"/>
-      <viewAttribute id="COUNTER_9"/>
-      <viewAttribute id="OBJ_ORG_P"/>
-      <viewAttribute id="OBJ_TYP_P"/>
-      <viewAttribute id="OBJ_KEY_P"/>
-      <viewAttribute id="OBJ_POS_P"/>
-      <viewAttribute id="BELNR"/>
-      <viewAttribute id="BUZEI"/>
-      <viewAttribute id="LINETYPE"/>
-      <viewAttribute id="XSPLITMOD"/>
-      <viewAttribute id="RWCUR"/>
-      <viewAttribute id="BILLING_STATUS"/>
-      <viewAttribute id="ERLKZ"/>
-      <viewAttribute id="LOEKZ"/>
-      <viewAttribute id="BILLING_BLOCK_9"/>
-      <viewAttribute id="DOC_ORIGIN_9"/>
-      <viewAttribute id="WBS_SHORT_9"/>
-      <viewAttribute id="TIMESTAMP" aggregationType="sum"/>
-      <viewAttribute id="QUANUNIT"/>
-      <viewAttribute id="VALUETYPE"/>
-      <viewAttribute id="CURTYPE"/>
-      <viewAttribute id="FISCPER"/>
-      <viewAttribute id="FISCVAR"/>
-      <viewAttribute id="CHARTACCTS"/>
-      <viewAttribute id="UPMOD"/>
-      <viewAttribute id="VALUTYP"/>
-      <viewAttribute id="CURRUNIT"/>
-      <viewAttribute id="TURNOVER" aggregationType="sum"/>
-      <viewAttribute id="QUANTITY" aggregationType="sum"/>
-      <viewAttribute id="BDGT_PHASE"/>
-      <viewAttribute id="BDGT_STATUS"/>
-      <viewAttribute id="ZGM_INDIRECT_RAT" aggregationType="sum"/>
-      <viewAttribute id="ZZGM_TO_DATE"/>
-      <viewAttribute id="ZZGM_FROM_DATE"/>
-      <viewAttribute id="ZGM_SPONSORED_PR"/>
-      <viewAttribute id="KTEXT"/>
-      <viewAttribute id="TXT50"/>
-      <viewAttribute id="BLDAT"/>
-      <viewAttribute id="EBELN"/>
-      <viewAttribute id="LIFNR"/>
-      <viewAttribute id="XBLNR"/>
-      <viewAttribute id="XBILK"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="Join_1">
-      <mapping xsi:type="Calculation:AttributeMapping" target="RVERS" source="RVERS"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="RYEAR" source="RYEAR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="RTCUR" source="RTCUR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="POPER" source="POPER"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="DOCCT" source="DOCCT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="DOCNR" source="DOCNR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="DOCLN" source="DOCLN"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="RBUKRS" source="RBUKRS"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="RGRANT_NBR" source="RGRANT_NBR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="RSPONSORED_PROG" source="RSPONSORED_PROG"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="RSPONSORED_CLASS" source="RSPONSORED_CLASS"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="RBDGT_VLDTY_NBR" source="RBDGT_VLDTY_NBR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="RFUND" source="RFUND"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="RVALUETYPE_9" source="RVALUETYPE_9"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="RTRANS" source="RTRANS"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="RSTATS_IND" source="RSTATS_IND"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="RGRANTEE_FY_9" source="RGRANTEE_FY_9"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BDGT_STATE" source="BDGT_STATE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="SGTXT" source="SGTXT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="DOCTY" source="DOCTY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ACTIV" source="ACTIV"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="WSDAT" source="WSDAT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="REFDOCNR" source="REFDOCNR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="REFRYEAR" source="REFRYEAR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="REFDOCLN" source="REFDOCLN"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="REFDOCCT" source="REFDOCCT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="REFACTIV" source="REFACTIV"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="REFDOC_DETAIL" source="REFDOC_DETAIL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT" source="CPUDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CPUTM" source="CPUTM"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="USNAM" source="USNAM"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AWTYP" source="AWTYP"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="AWORG" source="AWORG"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCOUNT" source="GL_ACCOUNT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CO_AREA" source="CO_AREA"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="COSTCENTER" source="COSTCENTER"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ORDERID" source="ORDERID"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="WBS_ELEMENT" source="WBS_ELEMENT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="PROFIT_CTR" source="PROFIT_CTR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ASSETMAINO" source="ASSETMAINO"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ASSETSUBNO" source="ASSETSUBNO"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATERIAL" source="MATERIAL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="FM_AREA" source="FM_AREA"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BUS_AREA" source="BUS_AREA"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="FUNDS_CTR" source="FUNDS_CTR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CMMT_ITEM" source="CMMT_ITEM"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="FAREA" source="FAREA"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MEASURE" source="MEASURE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="NETWORK" source="NETWORK"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ROUTING_NO" source="ROUTING_NO"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="COUNTER_9" source="COUNTER_9"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="OBJ_ORG_P" source="OBJ_ORG_P"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="OBJ_TYP_P" source="OBJ_TYP_P"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="OBJ_KEY_P" source="OBJ_KEY_P"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="OBJ_POS_P" source="OBJ_POS_P"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="LINETYPE" source="LINETYPE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="XSPLITMOD" source="XSPLITMOD"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="RWCUR" source="RWCUR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BILLING_STATUS" source="BILLING_STATUS"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ERLKZ" source="ERLKZ"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="LOEKZ" source="LOEKZ"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BILLING_BLOCK_9" source="BILLING_BLOCK_9"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="DOC_ORIGIN_9" source="DOC_ORIGIN_9"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="WBS_SHORT_9" source="WBS_SHORT_9"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TIMESTAMP" source="TIMESTAMP"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="QUANUNIT" source="QUANUNIT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="VALUETYPE" source="VALUETYPE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CURTYPE" source="CURTYPE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="FISCPER" source="FISCPER"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="FISCVAR" source="FISCVAR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CHARTACCTS" source="CHARTACCTS"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="UPMOD" source="UPMOD"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="VALUTYP" source="VALUTYP"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CURRUNIT" source="CURRUNIT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TURNOVER" source="TURNOVER"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="QUANTITY" source="QUANTITY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BDGT_PHASE" source="BDGT_PHASE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="BDGT_STATUS" source="BDGT_STATUS"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ZGM_INDIRECT_RAT" source="ZGM_INDIRECT_RAT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ZZGM_TO_DATE" source="ZZGM_TO_DATE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ZZGM_FROM_DATE" source="ZZGM_FROM_DATE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ZGM_SPONSORED_PR" source="ZGM_SPONSORED_PR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="KTEXT" source="KTEXT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="TXT50" source="TXT50"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="XBILK" source="XBILK"/>
-    </input>
-    <input node="Join_3">
-      <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="DOCNR" source="BELNR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="DOCLN" source="BUZEI"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="RBUKRS" source="BUKRS"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="RYEAR" source="GJAHR"/>
-    </input>
-    <joinAttribute name="DOCNR"/>
-    <joinAttribute name="DOCLN"/>
-    <joinAttribute name="RBUKRS"/>
-    <joinAttribute name="RYEAR"/>
-  </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_7">
-    <viewAttributes>
-      <viewAttribute id="LIFNR"/>
-      <viewAttribute id="NAME1"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="ECC_LFA1"/>
-  </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="Join_5" cardinality="CN_1" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="RVERS"/>
@@ -1523,23 +1264,282 @@
     </input>
     <joinAttribute name="LIFNR"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_8">
-    <viewAttributes>
-      <viewAttribute id="SAKNR"/>
-      <viewAttribute id="XBILK"/>
-      <viewAttribute id="KTOPL"/>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <input node="ECC_SKA1"/>
-  </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="Projection_9">
     <viewAttributes>
-      <viewAttribute id="KTOPL"/>
-      <viewAttribute id="KSTAR"/>
       <viewAttribute id="LTEXT"/>
-    </viewAttributes>
+    
+      <viewAttribute id="KSTAR"/>
+      <viewAttribute id="KTOPL"/></viewAttributes>
     <calculatedViewAttributes/>
     <input node="ECC_CSKU"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_4" cardinality="CN_N" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="RVERS"/>
+      <viewAttribute id="RYEAR"/>
+      <viewAttribute id="RTCUR"/>
+      <viewAttribute id="POPER"/>
+      <viewAttribute id="DOCCT"/>
+      <viewAttribute id="DOCNR"/>
+      <viewAttribute id="DOCLN"/>
+      <viewAttribute id="RBUKRS"/>
+      <viewAttribute id="RGRANT_NBR"/>
+      <viewAttribute id="RSPONSORED_PROG"/>
+      <viewAttribute id="RSPONSORED_CLASS"/>
+      <viewAttribute id="RBDGT_VLDTY_NBR"/>
+      <viewAttribute id="RFUND"/>
+      <viewAttribute id="RVALUETYPE_9"/>
+      <viewAttribute id="RTRANS"/>
+      <viewAttribute id="RSTATS_IND"/>
+      <viewAttribute id="RGRANTEE_FY_9"/>
+      <viewAttribute id="BDGT_STATE"/>
+      <viewAttribute id="SGTXT"/>
+      <viewAttribute id="DOCTY"/>
+      <viewAttribute id="ACTIV"/>
+      <viewAttribute id="BUDAT"/>
+      <viewAttribute id="WSDAT"/>
+      <viewAttribute id="REFDOCNR"/>
+      <viewAttribute id="REFRYEAR"/>
+      <viewAttribute id="REFDOCLN"/>
+      <viewAttribute id="REFDOCCT"/>
+      <viewAttribute id="REFACTIV"/>
+      <viewAttribute id="REFDOC_DETAIL"/>
+      <viewAttribute id="CPUDT"/>
+      <viewAttribute id="CPUTM"/>
+      <viewAttribute id="USNAM"/>
+      <viewAttribute id="AWTYP"/>
+      <viewAttribute id="AWORG"/>
+      <viewAttribute id="GL_ACCOUNT"/>
+      <viewAttribute id="CO_AREA"/>
+      <viewAttribute id="COSTCENTER"/>
+      <viewAttribute id="ORDERID"/>
+      <viewAttribute id="WBS_ELEMENT"/>
+      <viewAttribute id="PROFIT_CTR"/>
+      <viewAttribute id="ASSETMAINO"/>
+      <viewAttribute id="ASSETSUBNO"/>
+      <viewAttribute id="MATERIAL"/>
+      <viewAttribute id="FM_AREA"/>
+      <viewAttribute id="BUS_AREA"/>
+      <viewAttribute id="FUNDS_CTR"/>
+      <viewAttribute id="CMMT_ITEM"/>
+      <viewAttribute id="FAREA"/>
+      <viewAttribute id="MEASURE"/>
+      <viewAttribute id="NETWORK"/>
+      <viewAttribute id="ROUTING_NO"/>
+      <viewAttribute id="COUNTER_9"/>
+      <viewAttribute id="OBJ_ORG_P"/>
+      <viewAttribute id="OBJ_TYP_P"/>
+      <viewAttribute id="OBJ_KEY_P"/>
+      <viewAttribute id="OBJ_POS_P"/>
+      <viewAttribute id="BELNR"/>
+      <viewAttribute id="BUZEI"/>
+      <viewAttribute id="LINETYPE"/>
+      <viewAttribute id="XSPLITMOD"/>
+      <viewAttribute id="RWCUR"/>
+      <viewAttribute id="BILLING_STATUS"/>
+      <viewAttribute id="ERLKZ"/>
+      <viewAttribute id="LOEKZ"/>
+      <viewAttribute id="BILLING_BLOCK_9"/>
+      <viewAttribute id="DOC_ORIGIN_9"/>
+      <viewAttribute id="WBS_SHORT_9"/>
+      <viewAttribute id="TIMESTAMP" aggregationType="sum"/>
+      <viewAttribute id="QUANUNIT"/>
+      <viewAttribute id="VALUETYPE"/>
+      <viewAttribute id="CURTYPE"/>
+      <viewAttribute id="FISCPER"/>
+      <viewAttribute id="FISCVAR"/>
+      <viewAttribute id="CHARTACCTS"/>
+      <viewAttribute id="UPMOD"/>
+      <viewAttribute id="VALUTYP"/>
+      <viewAttribute id="CURRUNIT"/>
+      <viewAttribute id="TURNOVER" aggregationType="sum"/>
+      <viewAttribute id="QUANTITY" aggregationType="sum"/>
+      <viewAttribute id="BDGT_PHASE"/>
+      <viewAttribute id="BDGT_STATUS"/>
+      <viewAttribute id="ZGM_INDIRECT_RAT" aggregationType="sum"/>
+      <viewAttribute id="ZZGM_TO_DATE"/>
+      <viewAttribute id="ZZGM_FROM_DATE"/>
+      <viewAttribute id="ZGM_SPONSORED_PR"/>
+      <viewAttribute id="KTEXT"/>
+      <viewAttribute id="TXT50"/>
+      <viewAttribute id="BLDAT"/>
+      <viewAttribute id="EBELN"/>
+      <viewAttribute id="LIFNR"/>
+      <viewAttribute id="XBLNR"/>
+      <viewAttribute id="XBILK"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="RVERS" source="RVERS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RYEAR" source="RYEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RTCUR" source="RTCUR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="POPER" source="POPER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DOCCT" source="DOCCT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DOCNR" source="DOCNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DOCLN" source="DOCLN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RBUKRS" source="RBUKRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RGRANT_NBR" source="RGRANT_NBR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RSPONSORED_PROG" source="RSPONSORED_PROG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RSPONSORED_CLASS" source="RSPONSORED_CLASS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RBDGT_VLDTY_NBR" source="RBDGT_VLDTY_NBR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RFUND" source="RFUND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RVALUETYPE_9" source="RVALUETYPE_9"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RTRANS" source="RTRANS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RSTATS_IND" source="RSTATS_IND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RGRANTEE_FY_9" source="RGRANTEE_FY_9"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BDGT_STATE" source="BDGT_STATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SGTXT" source="SGTXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DOCTY" source="DOCTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTIV" source="ACTIV"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUDAT" source="BUDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WSDAT" source="WSDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REFDOCNR" source="REFDOCNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REFRYEAR" source="REFRYEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REFDOCLN" source="REFDOCLN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REFDOCCT" source="REFDOCCT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REFACTIV" source="REFACTIV"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REFDOC_DETAIL" source="REFDOC_DETAIL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CPUDT" source="CPUDT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CPUTM" source="CPUTM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="USNAM" source="USNAM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AWTYP" source="AWTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AWORG" source="AWORG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCOUNT" source="GL_ACCOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CO_AREA" source="CO_AREA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COSTCENTER" source="COSTCENTER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORDERID" source="ORDERID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WBS_ELEMENT" source="WBS_ELEMENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROFIT_CTR" source="PROFIT_CTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASSETMAINO" source="ASSETMAINO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASSETSUBNO" source="ASSETSUBNO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATERIAL" source="MATERIAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FM_AREA" source="FM_AREA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUS_AREA" source="BUS_AREA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FUNDS_CTR" source="FUNDS_CTR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CMMT_ITEM" source="CMMT_ITEM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FAREA" source="FAREA"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MEASURE" source="MEASURE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NETWORK" source="NETWORK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ROUTING_NO" source="ROUTING_NO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COUNTER_9" source="COUNTER_9"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OBJ_ORG_P" source="OBJ_ORG_P"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OBJ_TYP_P" source="OBJ_TYP_P"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OBJ_KEY_P" source="OBJ_KEY_P"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OBJ_POS_P" source="OBJ_POS_P"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LINETYPE" source="LINETYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XSPLITMOD" source="XSPLITMOD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RWCUR" source="RWCUR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BILLING_STATUS" source="BILLING_STATUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ERLKZ" source="ERLKZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOEKZ" source="LOEKZ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BILLING_BLOCK_9" source="BILLING_BLOCK_9"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DOC_ORIGIN_9" source="DOC_ORIGIN_9"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WBS_SHORT_9" source="WBS_SHORT_9"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TIMESTAMP" source="TIMESTAMP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="QUANUNIT" source="QUANUNIT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALUETYPE" source="VALUETYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CURTYPE" source="CURTYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FISCPER" source="FISCPER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FISCVAR" source="FISCVAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHARTACCTS" source="CHARTACCTS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UPMOD" source="UPMOD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALUTYP" source="VALUTYP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CURRUNIT" source="CURRUNIT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TURNOVER" source="TURNOVER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="QUANTITY" source="QUANTITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BDGT_PHASE" source="BDGT_PHASE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BDGT_STATUS" source="BDGT_STATUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZGM_INDIRECT_RAT" source="ZGM_INDIRECT_RAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZGM_TO_DATE" source="ZZGM_TO_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZZGM_FROM_DATE" source="ZZGM_FROM_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZGM_SPONSORED_PR" source="ZGM_SPONSORED_PR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="KTEXT" source="KTEXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TXT50" source="TXT50"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XBILK" source="XBILK"/>
+    </input>
+    <input node="Join_3">
+      <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RBUKRS" source="BUKRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REFDOCNR" source="BELNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REFRYEAR" source="GJAHR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REFDOCLN" source="BUZEI"/>
+    </input>
+    <joinAttribute name="RBUKRS"/>
+    <joinAttribute name="REFDOCNR"/>
+    <joinAttribute name="REFRYEAR"/>
+    <joinAttribute name="REFDOCLN"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_7">
+    <viewAttributes>
+      <viewAttribute id="NAME1"/>
+    
+      <viewAttribute id="LIFNR"/></viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="ECC_LFA1"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_5" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="BELNR"/>
+      <viewAttribute id="GJAHR"/>
+      <viewAttribute id="BUKRS"/>
+    
+      <viewAttribute id="BLDAT"/>
+      <viewAttribute id="XBLNR"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="ECC_BKPF"/>
+    <filter>&quot;BUKRS&quot; IN ($$IP_COMPANY$$)</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_6" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="BUKRS"/>
+      <viewAttribute id="BELNR"/>
+      <viewAttribute id="GJAHR"/>
+      <viewAttribute id="BUZEI"/>
+    
+      <viewAttribute id="EBELN"/>
+      <viewAttribute id="EBELP"/>
+      <viewAttribute id="LIFNR"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="ECC_BSEG"/>
+    <filter>&quot;BUKRS&quot; IN ($$IP_COMPANY$$)</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_3" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="BELNR"/>
+      <viewAttribute id="GJAHR"/>
+      <viewAttribute id="BUKRS"/>
+      <viewAttribute id="BUZEI"/>
+      <viewAttribute id="BLDAT"/>
+      <viewAttribute id="EBELN"/>
+      <viewAttribute id="LIFNR"/>
+      <viewAttribute id="XBLNR"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Projection_5">
+      <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BLDAT" source="BLDAT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="XBLNR" source="XBLNR"/>
+    </input>
+    <input node="Projection_6">
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUZEI" source="BUZEI"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EBELN" source="EBELN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LIFNR" source="LIFNR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GJAHR" source="GJAHR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BELNR" source="BELNR"/>
+    </input>
+    <joinAttribute name="GJAHR"/>
+    <joinAttribute name="BUKRS"/>
+    <joinAttribute name="BELNR"/>
   </calculationView>
 </calculationViews>
 <logicalModel id="Projection_3">
@@ -1682,22 +1682,22 @@
 <layout>
   <shapes>
     <shape expanded="false" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="734.8376365168868" y="112"/>
+      <upperLeftCorner x="734" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="91.99999999999983" y="1301.9999916553497"/>
+      <upperLeftCorner x="91" y="1301"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="507.28651459240245" y="981.9999940395355"/>
+      <upperLeftCorner x="507" y="981"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="480.61984792573577" y="821.9999952316284"/>
+      <upperLeftCorner x="480" y="821"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="Join_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
@@ -1709,7 +1709,7 @@
       <rectangleSize width="136"/>
     </shape>
     <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="145.3333333333331" y="981.9999940395355"/>
+      <upperLeftCorner x="145" y="981"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="Join_6" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
@@ -1721,7 +1721,7 @@
       <rectangleSize width="136"/>
     </shape>
     <shape expanded="true" modelObjectName="Join_6" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="118.66666666666646" y="1141.9999928474426"/>
+      <upperLeftCorner x="118" y="1141"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_6" modelObjectType="JoinNodeInput">
@@ -1734,15 +1734,19 @@
     </shape>
   
     <shape expanded="true" modelObjectName="Projection_4" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="390.28160505971226" y="1141.9999928474426"/>
+      <upperLeftCorner x="390" y="1141"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_8" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302" y="1301"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="729.2765480238672" y="236.9999988079071"/>
+      <upperLeftCorner x="729" y="236"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Join_7" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="729.2765480238672" y="341.9999988079071"/>
+      <upperLeftCorner x="729" y="341"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="Join_5" modelObjectNameSpace="Join_7" modelObjectType="JoinNodeInput">
@@ -1753,46 +1757,8 @@
       <upperLeftCorner x="288" y="1407"/>
       <rectangleSize width="136"/>
     </shape>
-  
-    <shape expanded="true" modelObjectName="Projection_5" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="927.2865145924025" y="981.9999940395355"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="Projection_6" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="717.2865145924025" y="981.9999940395355"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="Join_3" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="743.9531812590691" y="821.9999952316284"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape modelObjectName="Projection_5" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="136"/>
-    </shape>
-    <shape modelObjectName="Projection_6" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="320" y="30"/>
-      <rectangleSize width="136"/>
-    </shape>
-  
-    <shape expanded="true" modelObjectName="Join_4" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="507.2865145924024" y="661.9999964237213"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape modelObjectName="Join_1" modelObjectNameSpace="Join_4" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="250"/>
-    </shape>
-    <shape modelObjectName="Join_3" modelObjectNameSpace="Join_4" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="320" y="30"/>
-      <rectangleSize width="123"/>
-    </shape>
-    <shape expanded="true" modelObjectName="Projection_7" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="884.5114064525653" y="661.9999964237213"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
     <shape expanded="true" modelObjectName="Join_5" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="836.6086232482294" y="501.9999976158142"/>
+      <upperLeftCorner x="836" y="501"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="Join_4" modelObjectNameSpace="Join_5" modelObjectType="JoinNodeInput">
@@ -1803,13 +1769,47 @@
       <upperLeftCorner x="301" y="1513"/>
       <rectangleSize width="136"/>
     </shape>
-    <shape expanded="true" modelObjectName="Projection_8" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="302" y="1301.9999916553497"/>
+    <shape expanded="true" modelObjectName="Projection_9" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="626" y="501"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape expanded="true" modelObjectName="Projection_9" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="626.6086232482294" y="501.9999976158142"/>
+  
+    <shape expanded="true" modelObjectName="Join_4" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="507" y="661"/>
       <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Join_1" modelObjectNameSpace="Join_4" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Join_3" modelObjectNameSpace="Join_4" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="317" y="259"/>
+      <rectangleSize width="123.8984375"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_7" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="884" y="661"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_5" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="927" y="981"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_6" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="717" y="981"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_3" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="743" y="821"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Projection_5" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="136"/>
+    </shape>
+    <shape modelObjectName="Projection_6" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="136"/>
     </shape></shapes>
 </layout>
 </Calculation:scenario>
