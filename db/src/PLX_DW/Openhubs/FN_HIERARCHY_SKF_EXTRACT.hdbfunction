@@ -15,14 +15,15 @@ FUNCTION "plx_analytics::FN_HIERARCHY_SKF_EXTRACT"(in_kokrs nvarchar(4) )
 		, "RECORDMODE"     NVARCHAR(01)  
 	) 
        LANGUAGE SQLSCRIPT 
-       SQL SECURITY INVOKER AS 
+       SQL SECURITY INVOKER
+        AS 
 BEGIN 
     /*****************************
         Write your function logic
     ****************************/
     declare lv_zio_hieid, LV_ZIO_CRT_HIEID , LV_GUID  nvarchar(25) := 'XXXXX';
     DECLARE lv_zio_nodnm, lv_crt_nodnm, lv_crt_prtid, lv_crt_ancestorid, lv_siblingid,lv_cldid, lv_nxtid,lv_crt_setname,
-    lv_crt_setname_next , lv_prt_back_up , lv_node_id, lv_nodnm , c_object nvarchar(60) := 'AAAA'; 
+    lv_crt_setname_next , lv_prt_back_up , lv_node_id, lv_nodnm , c_object nvarchar(60) := '00000000'; 
     DECLARE lv_skip_check, lv_is_parent, lv_det_parent, lv_first_time, lv_is_child, lv_go_up, lv_go_down , lv_enter_it   boolean :=True; 
     DECLARE lv_crt_tnlvl , lv_crt_set_cnt , lv_crt_recordid, lv_crt_nodid , lv_crt_found  integer := 1; 
     DECLARE ARR_LEVEL1  NVARCHAR(60) ARRAY;
@@ -47,8 +48,11 @@ BEGIN
     
  --SELECT NODES THAT ARE TOP NODES , for ex for comp 1700 select 1700_PAYIO and no subnodes are selected . Only top ones to start the journey. :-) 
  --we need to do this bcz the FN FN_HIERARCHY_AUFNR_IO needs a top node as parameter. 
-    VAR_OUT =     SELECT DISTINCT SETNAME  FROM  "ECC_SETNODE"    WHERE SETCLASS = :lv_class  and  subclass= :in_kokrs AND SETNAME NOT IN ( SELECT 
-                  SUBSETNAME   FROM  "ECC_SETNODE"    WHERE SETCLASS = :lv_class  and subclass= :in_kokrs) ORDER BY SETNAME ;
+ --   VAR_OUT =     SELECT DISTINCT SETNAME  FROM  "ECC_SETNODE"    WHERE SETCLASS = :lv_class  and  subclass= :in_kokrs AND SETNAME NOT IN ( SELECT 
+ --                 SUBSETNAME   FROM  "ECC_SETNODE"    WHERE SETCLASS = :lv_class  and subclass= :in_kokrs) ORDER BY SETNAME ;
+                  
+       VAR_OUT =     SELECT DISTINCT "/BIC/ZIO_NODNM"  AS SETNAME FROM "OH_HIERARCHY" WHERE KOKRS = :IN_KOKRS AND "/BIC/ZIO_OBJNM" = 'SKF'  ;
+
    
   -- this tbl was  once used but not anymore. maybe i should delete it. :-)   
     LT_LINEID = SELECT DISTINCT SUBSETNAME, LINEID  FROM  "ECC_SETNODE"    WHERE SETCLASS = :lv_class  and  subclass= :in_kokrs AND SETNAME NOT IN ( SELECT 
@@ -56,7 +60,7 @@ BEGIN
                   
     -- this is the firls ltbl that is needed to be passed as param to the Hierarchy select statement jsut below. 
     lt_all_hier = select top 1 CO_AREA AS KOKRS, LEVEL AS "LEVEL",  PARENT AS PARENT_ID, CHILD AS NODE_ID  FROM  
-                                  "plx_analytics::FN_HIERARCHY_SKF_SEQNR" ('dummy', '1700')  ; 
+                                  "plx_analytics::FN_HIERARCHY_SKF_SEQNR" ('dummy', :IN_KOKRS)  ; 
     -- we need to sort the child field by the SEQNR in the SETNODE table
     
                                 
@@ -120,8 +124,22 @@ IF :lv_crt_found > 0  then
 end if ; 
 
 --lv_crt_setname :=  '1700_PAYIO';
-lt_first_hier =  SELECT CO_AREA AS KOKRS, LEVEL AS "LEVEL", 
-                 PARENT AS PARENT_ID, CHILD AS NODE_ID , SEQNR FROM  "plx_analytics::FN_HIERARCHY_SKF_SEQNR" ( :lv_crt_setname, :in_kokrs) ORDER BY SEQNR ; 
+--lt_first_hier =  SELECT CO_AREA AS KOKRS, LEVEL AS "LEVEL", 
+--                 PARENT AS PARENT_ID, CHILD AS NODE_ID , SEQNR FROM  "plx_analytics::FN_HIERARCHY_SKF_SEQNR" ( :lv_crt_setname, :in_kokrs) ORDER BY SEQNR ; 
+                 
+                 
+                 
+                 
+lt_first_hier1 =     SELECT DISTINCT CO_AREA AS KOKRS, LEVEL AS "LEVEL", 
+                 PARENT AS PARENT_ID, CHILD AS NODE_ID , SEQNR FROM  "plx_analytics::FN_HIERARCHY_SKF_SEQNR" ( :lv_crt_setname, :in_kokrs) WHERE PARENT IS NULL AND SEQNR = '1' ORDER BY SEQNR ; 
+                 
+ lt_first_hier2 =                 
+     SELECT DISTINCT CO_AREA AS KOKRS, LEVEL AS "LEVEL", 
+                 PARENT AS PARENT_ID, CHILD AS NODE_ID , SEQNR FROM  "plx_analytics::FN_HIERARCHY_SKF_SEQNR" ( :lv_crt_setname, :in_kokrs) WHERE PARENT IS NOT NULL ORDER BY SEQNR ; 
+ lt_first_hier  = select * from    :lt_first_hier1 
+                      union 
+                   select * from    :lt_first_hier2 ; 
+                   
 
 lt_source = select a.kokrs, a.level, a.parent_id, a.node_id, b.lineid from :lt_first_hier as a inner join :LT_LINEID as b  ON A.NODE_ID = B.SUBSETNAME ; 
 
@@ -255,12 +273,13 @@ FROM  :lt_hierarchy_top ;
    RETURN  (select  "/BIC/ZIO_HIEID"  as "/BIC/ZIO_HIEID" ,  
                        "/BIC/ZIO_OBJNM" as "/BIC/ZIO_OBJNM" , 
                        lpad(rank,8,0) as "/BIC/ZIO_NODID" ,
-                       lpad(concat(:in_kokrs ,   NODE_ID), 60,0)  as  "/BIC/ZIO_NODNM" ,  
+                       ( CASE WHEN  "/BIC/ZIO_OBJNM" = '0HIER_NODE'   OR  "NODE_ID" LIKE '%A%' OR  "NODE_ID" LIKE '%B%'  OR  "NODE_ID" LIKE '%C%' OR  "NODE_ID" LIKE '%P%' 
+                        THEN concat(:in_kokrs ,   NODE_ID)  ELSE  lpad(concat(:in_kokrs ,   NODE_ID), 60,0) END  )  AS  "/BIC/ZIO_NODNM" ,  
                        lpad(level,2,0) as "/BIC/ZIO_TNLVL", 
                        'A'  as "/BIC/ZIO_OBJVS" ,
     					lpad(parent_rank,8,0) as "/BIC/ZIO_PRTID" , 
     					'' as "/BIC/ZIO_LINK" ,
-    					lpad(CHILD_ID,8,0) as "/BIC/ZIO_CLDID" , 
+    				   (CASE WHEN "CHILD_ID" IS NULL THEN '00000000' ELSE lpad(CHILD_ID,8,0)  END) AS "/BIC/ZIO_CLDID" , 
     					lpad("/BIC/ZIO_NXTID",8,0) as "/BIC/ZIO_NXTID"  	,
     					''  as "/BIC/ZIO_INTRL" , '' AS RECORDMODE  from :t)  ; 
   

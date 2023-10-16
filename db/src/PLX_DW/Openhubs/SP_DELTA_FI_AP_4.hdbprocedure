@@ -1,0 +1,248 @@
+PROCEDURE "SP_DELTA_FI_AP_4"( in ip_bukrs nvarchar(4), out t_out "HANA_FI_AP_4_C") 
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+	   --DEFAULT SCHEMA <default_schema_name>
+--	READS SQL DATA 
+	AS
+BEGIN
+/***************************** 
+	Write your procedure logic 
+ *****************************/
+ 
+	DECLARE lv_start_date VARCHAR(8) := '20180301';
+	DECLARE lv_end_date VARCHAR(8) := '20180301';
+	DECLARE lv_cpudt_start, lv_cpudt_end, lv_aedat_start, lv_aedat_end, lv_posting_Date VARCHAR(8) := '29990101';
+	DECLARE lv_cpudt_start1, lv_cpudt_end1, lv_aedat_start1, lv_aedat_end1 date := current_Date;
+	DECLARE lv_start_time, lv_end_time		time;
+	DECLARE lv_delta_flag nvarchar(5000);
+	
+	DECLARE lv_row_count, lv_step, lv_count_diff, lv_found INTEGER;
+	DECLARE i, lv_mod, lv_rest,  lv_div , lv_first_time, lv_counter, lv_req_tot, lv_row_count_req   INTEGER;
+	declare lv_belnr,lv_belnr1       nvarchar(10):='9999999999';
+	declare lv_belnr10,lv_belnr11    nvarchar(10):='9999999999';
+	declare lv_packageid, lv_req_id_search , lv_req_id			nvarchar(50); 
+	
+	DECLARE lv_bukrs nvarchar(4) := '9999'; 
+	DECLARE lv_gjahr nvarchar(4) := '9999'; 
+	DECLARE lv_buzei nvarchar(3) :='123';
+ 	DECLARE arr_dates  VARCHAR(8) ARRAY;
+ 	 
+	DECLARE ARR_DOC_SEARCH  NVARCHAR(100) ARRAY;
+	DECLARE ARR_REQ_SEARCH  NVARCHAR(100) ARRAY;
+    DECLARE lv_string_rec1, lv_string_rec2  VARCHAR(1073741823) ;
+	     
+
+	select current_date into lv_cpudt_start1 from "SYS::DUMMY";
+	select to_nvarchar(ADD_DAYS(lv_cpudt_start1, -1), 'yyyymmdd') 	into lv_cpudt_start 	from "SYS::DUMMY";
+	 lv_start_time := to_time(current_Time) ; 
+	 
+--1. Generate Request ID (date and time)
+--2. Get data from ECC_BSIK and copy into array and then start investigating each row . This is mostly for DEMO purposes.
+--3. There are 2 scenarios. 
+              --- a. When entry from ECC_BSIK is new to HANA_STAGING and HANA_DW. in this case the code simply inserts a record in both tables. 
+              ----b. When entry already exist in HANA_STAGING. Again 2 scenarios. 
+            					--b1. Entry is different from existing HANA_STAGING entry, for ex Amt is changed. In this case the code performs the following
+		            					-- b1.1. inserts into HANA_STAGING the reversal entry 
+		            					-- b1.2. inserts into HANA_STAGING the new entry with the new Amt for ex.
+		            					-- b1.3. upserts into HANA_DW the existing entry with the new Amt for ex. 
+		            			--b2. Entry is not different . In this case it does nothing. 		
+--4. Determine Delta Flag as concat of Posting Date with REquest_id 
+--5. Outputs the latest records with request_id from HANA_STAGING
+
+
+--1. Generate Request ID
+--  lv_packageid = concat ( to_nvarchar(lv_cpudt_start1 ,'yyyymmdd'), to_nvarchar(current_time, 'hhmmss') )  ; 
+ --HANA_EXTRACTOR_EXEC_LOGS
+-- SELECT REQ_ID INTO lv_req_id from "HANA_EXTRACTOR_FG_FILTER_CTRL" where FLOWGRAPH = 'DELTA_FI_AP_4';
+ SELECT max(REQ_ID) INTO lv_req_id from HANA_EXTRACTOR_EXEC_LOGS where FLOWGRAPH = 'DELTA_FI_AP_4';
+ 
+  IF :lv_req_id is not null  then 
+    select min( REQ_ID)  INTO lv_req_id_search FROM "ECC_FI_AP_4"  WHERE REQ_ID >  :lv_req_id;
+ end if;
+ 
+ -- in some cases there might be more than 1 request in the ECC_FI_AP_4 , so this program will deal with each Req one by one. 
+ lt_req_list = select distinct req_id from "ECC_FI_AP_4"  where req_id >=  :lv_req_id_search order by req_id;
+ 
+	ARR_REQ_SEARCH  := ARRAY_AGG(:lt_req_list.REQ_ID ORDER BY REQ_ID);
+	lv_req_tot := CARDINALITY(:ARR_REQ_SEARCH);
+-- now we start the big loop . the loop will get each request id and fr each request id will get data from ECC_FI_AP_4 table and will do the comparison.
+-- amt of records might be high and if needed we need to code the fragmentation by packages but now is too early . 
+
+ FOR lv_row_count_req  IN 1..lv_req_tot   do
+    -- find the latest record in HANA_DW and the latest record from HANA_STAGING 
+    lv_req_id_Search  := :ARR_REQ_SEARCH[:lv_row_count_req];
+    
+    
+ --. Get data from ECC_FI_aP_4 and copy into THE ARRAY. . 
+-- get list of docs in ECC_FI_aP_4 within this 
+	lt_doc_list = SELECT 
+             REQ_ID,BUKRS,FISCPER,BELNR,BUZEI,UPOSZ,STATUSPS,LIFNR,KKBER,MABER,KOART,UMSKZ,BLART,BSCHL,FISCVAR,BLDAT,BUDAT,CPUDT,AUGDT,MADAT,NETDT,SK1DT,SK2DT,ZFBDT,
+             ZBD1T,ZBD2T,ZBD3T,ZBD1P,ZBD2P,LAND1,ZLSCH,ZTERM,ZLSPR,RSTGR,MANSP,MSCHL,MANST,LCURR,DMSOL,DMHAB,DMSHB,SKNTO,WAERS,WRSOL,WRHAB,WRSHB,SKFBT,WSKTO,KTOPL,HKONT,
+             SAKNR,FILKD,AUGBL,XBLNR,REBZG,REBZJ,REBZZ,VBELN,XREF1,XREF2,XREF3,SGTXT,XNEGP,XARCH,UMSKS,UPDMOD,ZUONR,AWTYP,AWKEY,BSTAT,DMBTR,DMBE2,DMBE3,GJAHR,HWAE2,HWAE3,
+             MONAT,PROJK,SHKZG,WRBTR, 
+         	GJAHR || BUKRS || BELNR || BUZEI AS "SEARCH_FIELD"
+	FROM    "ECC_FI_AP_4" 
+	WHERE   ---("CPUDT" >= lv_cpudt_start  )  	and 
+--	"BUKRS" = :ip_bukrs   and 	gjahr = '2023' AND BUDAT = '20221031'; 
+	"BUKRS" = :ip_bukrs  and  req_id =  :lv_req_id_Search  ; 
+	--fiscper  = '2023001' ;  --	REQ_ID > :lv_req_id  ;   --fiscper  = '2023001' ; 
+
+
+	 
+	 -- now we consider 2 scenarios - a) line item is new and therefore gets inserted right away in hana_staging nd hana_dw
+	 -- scenario b) line item is existing and therefore it is in hana_staging and we need to compare and act accordingly a) if it is same do nothing
+	 -- if is different, then do - overwrite it hana_dw and create a reversal entry in hana_staging and enter also a new line in hana staging with the latest values. 
+	 -- for ex: if there is a doc1 item 1 amt 5 and we get a doc 1 item 1 amt 10, then in hana_dw overwrite the existing entry and enter amt 10, and in 
+	 -- hana_staging create a reversal entry with -5 and an entry with amt 10. 
+   --scenario a. 
+ 
+--3. process scenarios a) , b) . 
+	ARR_DOC_SEARCH  := ARRAY_AGG(:lt_doc_list.SEARCH_FIELD ORDER BY BUKRS, BELNR, GJAHR);
+	lv_rest := CARDINALITY(:arr_doc_search);
+    FOR lv_row_count IN 1..lv_rest  do
+    -- find the latest record in HANA_DW and the latest record from HANA_STAGING 
+    lv_gjahr := substr(:ARR_DOC_SEARCH[:lv_row_count], 1,4);
+    lv_bukrs := substr(:ARR_DOC_SEARCH[:lv_row_count], 5,4);
+    lv_belnr := substr(:ARR_DOC_SEARCH[:lv_row_count], 9,10);
+    lv_buzei := substr(:ARR_DOC_SEARCH[:lv_row_count], 19,3);
+    
+
+    lt_scenario = select * from "HANA_FI_AP_4_C"  WHERE BUKRS = :lv_bukrs and BELNR = :lv_belnr and BUZEI = :lv_buzei and LEFT(FISCPER,4)  = :lv_gjahr ;
+    
+    lt_current_line = select * from "ECC_FI_AP_4"  WHERE BUKRS = :lv_bukrs and BELNR = :lv_belnr and BUZEI = :lv_buzei and GJAHR  = :lv_gjahr ;
+    
+   
+    
+    select count(*) INTO lv_found FROM :lt_scenario;
+
+         IF :lv_found = 0  then 
+         --SCENARIO A
+       --GENERATE THE DELTA_FLAG value first
+	       LV_POSTING_DATE := ifnull(:lt_current_line.BUDAT[1],'');
+	       lv_delta_flag := 'R' || TO_NVARCHAR(:LV_PACKAGEID,'yyyymmdd') || '_' ||to_nvarchar(:LV_POSTING_DATE); 
+	  
+	    -- it means entry is totally new. so enter it in HANA_STAGING AND HANA_DB
+	         insert into "HANA_FI_AP_4_C" (SELECT :lv_req_id_search AS "REQ_ID", 'Rec0' as "REC_NR", 
+	         BUKRS,FISCPER,BELNR,BUZEI,UPOSZ,STATUSPS,LIFNR,KKBER,MABER,KOART,UMSKZ,BLART,BSCHL,FISCVAR,BLDAT,BUDAT,CPUDT,AUGDT,MADAT,
+             NETDT,SK1DT,SK2DT,ZFBDT,ZBD1T,ZBD2T,ZBD3T,ZBD1P,ZBD2P,LAND1,ZLSCH,ZTERM,ZLSPR,RSTGR,MANSP,MSCHL,MANST,LCURR,DMSOL,DMHAB,DMSHB,
+             SKNTO,WAERS,WRSOL,WRHAB,WRSHB,SKFBT,WSKTO,KTOPL,HKONT,SAKNR,FILKD,AUGBL,XBLNR,REBZG,REBZJ,REBZZ,VBELN,XREF1,XREF2,XREF3,SGTXT,
+             XNEGP,XARCH,UMSKS,UPDMOD,ZUONR,AWTYP,AWKEY,BSTAT,DMBTR,DMBE2,DMBE3,GJAHR,HWAE2,HWAE3,MONAT,PROJK,SHKZG,WRBTR
+             FROM :lt_current_line); 
+	           
+	          insert into "HANA_FI_AP_4_A" (SELECT 
+	          :lv_req_id_search AS "REQ_ID", BUKRS,FISCPER,BELNR,BUZEI,UPOSZ,STATUSPS,LIFNR,KKBER,MABER,KOART,UMSKZ,BLART,BSCHL,FISCVAR,BLDAT,BUDAT,CPUDT,AUGDT,MADAT,
+             NETDT,SK1DT,SK2DT,ZFBDT,ZBD1T,ZBD2T,ZBD3T,ZBD1P,ZBD2P,LAND1,ZLSCH,ZTERM,ZLSPR,RSTGR,MANSP,MSCHL,MANST,LCURR,DMSOL,DMHAB,DMSHB,
+             SKNTO,WAERS,WRSOL,WRHAB,WRSHB,SKFBT,WSKTO,KTOPL,HKONT,SAKNR,FILKD,AUGBL,XBLNR,REBZG,REBZJ,REBZZ,VBELN,XREF1,XREF2,XREF3,SGTXT,
+             XNEGP,XARCH,UMSKS,UPDMOD,ZUONR,AWTYP,AWKEY,BSTAT,DMBTR,DMBE2,DMBE3,GJAHR,HWAE2,HWAE3,MONAT,PROJK,SHKZG,WRBTR
+	          
+	          --:lv_delta_flag as delta_flag, DMBTR AS DMBTR 
+	           FROM :lt_current_line);   
+           
+         
+           END IF ; 
+
+IF :lv_found > 0  then 
+-- it means entry exist so let's perform the overwrite tasks
+--SCENARIO B
+
+    lt_rec1 = select TOP 1 * from :LT_CURRENT_LINE WHERE bukrs  = :lv_bukrs and belnr  = :lv_belnr and buzei = :lv_buzei and gjahr = :lv_gjahr  ; 
+
+    lv_string_rec1 = IFNULL(:lt_rec1.BUKRS[1], '') || IFNULL(:lt_rec1.FISCPER[1], '')  || IFNULL(:lt_rec1.BELNR[1], '')  
+              || IFNULL(:lt_rec1.BUZEI[1], '')  || IFNULL(:lt_rec1.UPOSZ[1], '')  || IFNULL(:lt_rec1.STATUSPS[1], '')   || IFNULL(:lt_rec1.LIFNR[1], '')  
+              || IFNULL(:lt_rec1.KKBER[1], '')  || IFNULL(:lt_rec1.MABER[1], '')  || IFNULL(:lt_rec1.KOART[1], '')   || IFNULL(:lt_rec1.UMSKZ[1], '')  
+              || IFNULL(:lt_rec1.BLART[1], '')  || IFNULL(:lt_rec1.BSCHL[1], '')  || IFNULL(:lt_rec1.FISCVAR[1], '')   || IFNULL(:lt_rec1.BLDAT[1], '')  
+              || IFNULL(:lt_rec1.BUDAT[1], '')  || IFNULL(:lt_rec1.CPUDT[1], '')  || IFNULL(:lt_rec1.AUGDT[1], '')   || IFNULL(:lt_rec1.MADAT[1], '')  
+              || IFNULL(:lt_rec1.NETDT[1], '')  || IFNULL(:lt_rec1.SK1DT[1], '')  || IFNULL(:lt_rec1.SK2DT[1], '')   || IFNULL(:lt_rec1.ZFBDT[1], '')  
+              || IFNULL(:lt_rec1.ZBD1T[1], 0)   || IFNULL(:lt_rec1.ZBD2T[1], 0)  || IFNULL(:lt_rec1.ZBD3T[1], 0)   || IFNULL(:lt_rec1.ZBD1P[1], 0)  
+              || IFNULL(:lt_rec1.ZBD2P[1], 0)   || IFNULL(:lt_rec1.LAND1[1], '')   || IFNULL(:lt_rec1.ZLSCH[1], '')  
+              || IFNULL(:lt_rec1.ZTERM[1], '')  || IFNULL(:lt_rec1.ZLSPR[1], '')  || IFNULL(:lt_rec1.RSTGR[1], '')   || IFNULL(:lt_rec1.MANSP[1], '')  
+              || IFNULL(:lt_rec1.MSCHL[1], '')  || IFNULL(:lt_rec1.MANST[1], '')  || IFNULL(:lt_rec1.LCURR[1], '')   || IFNULL(:lt_rec1.DMSOL[1], 0)  
+              || IFNULL(:lt_rec1.DMHAB[1], 0)  || IFNULL(:lt_rec1.DMSHB[1], 0)  || IFNULL(:lt_rec1.SKNTO[1], 0)   || IFNULL(:lt_rec1.WAERS[1], '')  
+              || IFNULL(:lt_rec1.WRSOL[1], 0)  || IFNULL(:lt_rec1.WRHAB[1], 0)  || IFNULL(:lt_rec1.WRSHB[1], 0)   || IFNULL(:lt_rec1.SKFBT[1], 0)  
+              || IFNULL(:lt_rec1.WSKTO[1], 0)  || IFNULL(:lt_rec1.KTOPL[1], '')  || IFNULL(:lt_rec1.HKONT[1], '')   || IFNULL(:lt_rec1.SAKNR[1], '')  
+              || IFNULL(:lt_rec1.FILKD[1], '')  || IFNULL(:lt_rec1.AUGBL[1], '')  || IFNULL(:lt_rec1.XBLNR[1], '')   || IFNULL(:lt_rec1.REBZG[1], '')  
+              || IFNULL(:lt_rec1.REBZJ[1], '')  || IFNULL(:lt_rec1.REBZZ[1], '')  || IFNULL(:lt_rec1.VBELN[1], '')   || IFNULL(:lt_rec1.XREF1[1], '')  
+              || IFNULL(:lt_rec1.XREF2[1], '')  || IFNULL(:lt_rec1.XREF3[1], '')  || IFNULL(:lt_rec1.SGTXT[1], '')   || IFNULL(:lt_rec1.XNEGP[1], '')  
+              || IFNULL(:lt_rec1.XARCH[1], '')  || IFNULL(:lt_rec1.UMSKS[1], '')  || IFNULL(:lt_rec1.UPDMOD[1], '')   || IFNULL(:lt_rec1.ZUONR[1], '')  
+              || IFNULL(:lt_rec1.AWTYP[1], '')  || IFNULL(:lt_rec1.AWKEY[1], '')  || IFNULL(:lt_rec1.BSTAT[1], '')   || IFNULL(:lt_rec1.DMBTR[1], 0) 
+              || IFNULL(:lt_rec1.DMBE2[1], 0)    || IFNULL(:lt_rec1.DMBE3[1], 0)  || IFNULL(:lt_rec1.GJAHR[1], '')   || IFNULL(:lt_rec1.HWAE2[1], '')
+              || IFNULL(:lt_rec1.HWAE3[1], '')  || IFNULL(:lt_rec1.MONAT[1], '')  || IFNULL(:lt_rec1.PROJK[1], '')   || IFNULL(:lt_rec1.SHKZG[1], '') 
+              || IFNULL(:lt_rec1.WRBTR[1], 0) 
+                ; 
+
+    lt_rec2 = select TOP 1 * from "HANA_FI_AP_4_C" WHERE BUKRS = :lv_bukrs and BELNR = :lv_belnr and BUZEI = :lv_buzei and LEFT(FISCPER,4)  = :lv_gjahr  ORDER BY REQ_ID DESC; 
+     lv_string_rec2 = IFNULL(:lt_rec2.BUKRS[1], '') || IFNULL(:lt_rec2.FISCPER[1], '')  || IFNULL(:lt_rec2.BELNR[1], '')  
+              || IFNULL(:lt_rec2.BUZEI[1], '')  || IFNULL(:lt_rec2.UPOSZ[1], '')  || IFNULL(:lt_rec2.STATUSPS[1], '')   || IFNULL(:lt_rec2.LIFNR[1], '')  
+              || IFNULL(:lt_rec2.KKBER[1], '')  || IFNULL(:lt_rec2.MABER[1], '')  || IFNULL(:lt_rec2.KOART[1], '')   || IFNULL(:lt_rec2.UMSKZ[1], '')  
+              || IFNULL(:lt_rec2.BLART[1], '')  || IFNULL(:lt_rec2.BSCHL[1], '')  || IFNULL(:lt_rec2.FISCVAR[1], '')   || IFNULL(:lt_rec2.BLDAT[1], '')  
+              || IFNULL(:lt_rec2.BUDAT[1], '')  || IFNULL(:lt_rec2.CPUDT[1], '')  || IFNULL(:lt_rec2.AUGDT[1], '')   || IFNULL(:lt_rec2.MADAT[1], '')  
+              || IFNULL(:lt_rec2.NETDT[1], '')  || IFNULL(:lt_rec2.SK1DT[1], '')  || IFNULL(:lt_rec2.SK2DT[1], '')   || IFNULL(:lt_rec2.ZFBDT[1], '')  
+              || IFNULL(:lt_rec2.ZBD1T[1], 0)   || IFNULL(:lt_rec2.ZBD2T[1], 0)  || IFNULL(:lt_rec2.ZBD3T[1], 0)   || IFNULL(:lt_rec2.ZBD1P[1], 0)  
+              || IFNULL(:lt_rec2.ZBD2P[1], 0)   || IFNULL(:lt_rec2.LAND1[1], '')   || IFNULL(:lt_rec2.ZLSCH[1], '')  
+              || IFNULL(:lt_rec2.ZTERM[1], '')  || IFNULL(:lt_rec2.ZLSPR[1], '')  || IFNULL(:lt_rec2.RSTGR[1], '')   || IFNULL(:lt_rec2.MANSP[1], '')  
+              || IFNULL(:lt_rec2.MSCHL[1], '')  || IFNULL(:lt_rec2.MANST[1], '')  || IFNULL(:lt_rec2.LCURR[1], '')   || IFNULL(:lt_rec2.DMSOL[1], 0)  
+              || IFNULL(:lt_rec2.DMHAB[1], 0)  || IFNULL(:lt_rec2.DMSHB[1], 0)  || IFNULL(:lt_rec2.SKNTO[1], 0)   || IFNULL(:lt_rec2.WAERS[1], '')  
+              || IFNULL(:lt_rec2.WRSOL[1], 0)  || IFNULL(:lt_rec2.WRHAB[1], 0)  || IFNULL(:lt_rec2.WRSHB[1], 0)   || IFNULL(:lt_rec2.SKFBT[1], 0)  
+              || IFNULL(:lt_rec2.WSKTO[1], 0)  || IFNULL(:lt_rec2.KTOPL[1], '')  || IFNULL(:lt_rec2.HKONT[1], '')   || IFNULL(:lt_rec2.SAKNR[1], '')  
+              || IFNULL(:lt_rec2.FILKD[1], '')  || IFNULL(:lt_rec2.AUGBL[1], '')  || IFNULL(:lt_rec2.XBLNR[1], '')   || IFNULL(:lt_rec2.REBZG[1], '')  
+              || IFNULL(:lt_rec2.REBZJ[1], '')  || IFNULL(:lt_rec2.REBZZ[1], '')  || IFNULL(:lt_rec2.VBELN[1], '')   || IFNULL(:lt_rec2.XREF1[1], '')  
+              || IFNULL(:lt_rec2.XREF2[1], '')  || IFNULL(:lt_rec2.XREF3[1], '')  || IFNULL(:lt_rec2.SGTXT[1], '')   || IFNULL(:lt_rec2.XNEGP[1], '')  
+              || IFNULL(:lt_rec2.XARCH[1], '')  || IFNULL(:lt_rec2.UMSKS[1], '')  || IFNULL(:lt_rec2.UPDMOD[1], '')   || IFNULL(:lt_rec2.ZUONR[1], '')  
+              || IFNULL(:lt_rec2.AWTYP[1], '')  || IFNULL(:lt_rec2.AWKEY[1], '')  || IFNULL(:lt_rec2.BSTAT[1], '')   || IFNULL(:lt_rec2.DMBTR[1], 0) 
+              || IFNULL(:lt_rec2.DMBE2[1], 0)    || IFNULL(:lt_rec2.DMBE3[1], 0)  || IFNULL(:lt_rec2.GJAHR[1], '')   || IFNULL(:lt_rec2.HWAE2[1], '')
+              || IFNULL(:lt_rec2.HWAE3[1], '')  || IFNULL(:lt_rec2.MONAT[1], '')  || IFNULL(:lt_rec2.PROJK[1], '')   || IFNULL(:lt_rec2.SHKZG[1], '') 
+              || IFNULL(:lt_rec2.WRBTR[1], 0) 
+  ; 
+    
+
+    -- time to compare the record from Staging table with the record from DW table. If they are different then a) if it is same do nothing
+	-- if is different, then do this: - overwrite it hana_dw and create a reversal entry in hana_staging and enter also a new line in hana staging with the latest values. 
+           LV_POSTING_DATE := ifnull(:lt_rec2.BUDAT[1],'');
+	       lv_delta_flag := 'R' || TO_NVARCHAR(:LV_PACKAGEID,'yyyymmdd') || '_' ||to_nvarchar(:LV_POSTING_DATE); 
+	       
+    if lv_String_rec1 <> lv_String_rec2  then 
+    --enter in hana_staging the reversal entry  . bcz there ar 2 inserts with same REQUEST_ID and other key fileds, the REC1, REC2 is created to create unique constrain. 
+    INSERT INTO "HANA_FI_AP_4_C" ( SELECT :lv_req_id_search as REQ_ID, 'Rec1' as "REC_NR", BUKRS,FISCPER,BELNR,BUZEI,UPOSZ,STATUSPS,LIFNR,KKBER,MABER,KOART,UMSKZ,BLART,BSCHL,FISCVAR,BLDAT,BUDAT,CPUDT,AUGDT,MADAT,
+             NETDT,SK1DT,SK2DT,ZFBDT,ZBD1T,ZBD2T,ZBD3T,ZBD1P,ZBD2P,LAND1,ZLSCH,ZTERM,ZLSPR,RSTGR,MANSP,MSCHL,MANST,LCURR,DMSOL,DMHAB,DMSHB,
+             SKNTO,WAERS,WRSOL,WRHAB,WRSHB,SKFBT,WSKTO,KTOPL,HKONT,SAKNR,FILKD,AUGBL,XBLNR,REBZG,REBZJ,REBZZ,VBELN,XREF1,XREF2,XREF3,SGTXT,
+             XNEGP,XARCH,UMSKS,UPDMOD,ZUONR,AWTYP,AWKEY,BSTAT,(-1)*DMBTR,DMBE2,DMBE3,GJAHR,HWAE2,HWAE3,MONAT,PROJK,SHKZG,(-1)*WRBTR  
+               FROM :LT_REC2); 
+    --insert  in hana_staging the new line that will be the last true entry  as in HANA_DW
+    INSERT INTO "HANA_FI_AP_4_C" ( SELECT :lv_req_id_search  as REQ_ID, 'Rec2' as "REC_NR",
+             BUKRS,FISCPER,BELNR,BUZEI,UPOSZ,STATUSPS,LIFNR,KKBER,MABER,KOART,UMSKZ,BLART,BSCHL,FISCVAR,BLDAT,BUDAT,CPUDT,AUGDT,MADAT,
+             NETDT,SK1DT,SK2DT,ZFBDT,ZBD1T,ZBD2T,ZBD3T,ZBD1P,ZBD2P,LAND1,ZLSCH,ZTERM,ZLSPR,RSTGR,MANSP,MSCHL,MANST,LCURR,DMSOL,DMHAB,DMSHB,
+             SKNTO,WAERS,WRSOL,WRHAB,WRSHB,SKFBT,WSKTO,KTOPL,HKONT,SAKNR,FILKD,AUGBL,XBLNR,REBZG,REBZJ,REBZZ,VBELN,XREF1,XREF2,XREF3,SGTXT,
+             XNEGP,XARCH,UMSKS,UPDMOD,ZUONR,AWTYP,AWKEY,BSTAT,DMBTR,DMBE2,DMBE3,GJAHR,HWAE2,HWAE3,MONAT,PROJK,SHKZG,WRBTR
+             FROM :LT_REC1); 
+    
+   -- overwrite in HANA_DW the corresponding entry
+   delete from  "HANA_FI_AP_4_A" where bukrs  = :lv_bukrs and belnr  = :lv_belnr and buzei = :lv_buzei and gjahr = :lv_gjahr; 
+    UPSERT  "HANA_FI_AP_4_A" 
+    SELECT :lv_req_id_search as REQ_ID, BUKRS,FISCPER,BELNR,BUZEI,UPOSZ,STATUSPS,LIFNR,KKBER,MABER,KOART,UMSKZ,BLART,BSCHL,FISCVAR,BLDAT,BUDAT,CPUDT,AUGDT,MADAT,
+             NETDT,SK1DT,SK2DT,ZFBDT,ZBD1T,ZBD2T,ZBD3T,ZBD1P,ZBD2P,LAND1,ZLSCH,ZTERM,ZLSPR,RSTGR,MANSP,MSCHL,MANST,LCURR,DMSOL,DMHAB,DMSHB,
+             SKNTO,WAERS,WRSOL,WRHAB,WRSHB,SKFBT,WSKTO,KTOPL,HKONT,SAKNR,FILKD,AUGBL,XBLNR,REBZG,REBZJ,REBZZ,VBELN,XREF1,XREF2,XREF3,SGTXT,
+             XNEGP,XARCH,UMSKS,UPDMOD,ZUONR,AWTYP,AWKEY,BSTAT,DMBTR,DMBE2,DMBE3,GJAHR,HWAE2,HWAE3,MONAT,PROJK,SHKZG,WRBTR
+              FROM :LT_REC1; 
+             
+             --   :lv_delta_flag as delta_flag , DMBTR  FROM :LT_REC1; 
+ 
+ 
+    LV_COUNT_DIFF := :LV_COUNT_DIFF + 1 ;
+    
+    end if;
+    
+  end if ;   
+    
+    end for;
+    lv_end_time		:=to_time(current_time);
+     insert into "HANA_EXTRACTOR_EXEC_LOGS" values  ( 'DELTA_FI_AP_4',:lv_req_id_search,:lv_cpudt_start ,:lv_start_time, :lv_end_time,'','','' ) ;
+
+    end for;
+
+ --UPSERT  "HANA_EXTRACTOR_FG_FILTER_CTRL" VALUES ('DELTA_FI_AP_4','A','','','','','','','','',:lv_req_id_search);
+ 
+t_out = select * from "HANA_FI_AP_4_C" WHERE REQ_ID = :lv_req_id_search;
+--t_out = :LV_COUNT_DIFF; 
+
+
+END;
